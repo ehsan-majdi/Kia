@@ -1,0 +1,102 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    
+    .item a {
+        text-decoration: none;
+    }
+
+    .uk-container {
+        margin-top: 40px;
+    }
+
+    .fa {
+        color: black;
+        font-size: 18px;
+    }
+
+        .fa:hover {
+            color: red;
+            transition: ease 0.3s;
+        }
+   
+</style>
+<div class="uk-container">
+
+    <div id="content" class="wallpaper uk-child-width-1-3@l" uk-grid>
+
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            getList();
+            $("#copy").on("copy,", function (event) {
+                event.preventDefault();
+                var sel = document.getSelection();
+                console.log(sel);
+            });
+
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف مشتری اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/allmessage/Delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+        });
+        function copyToClipboard(element) {
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val(element).select();
+            document.execCommand("copy");
+            $temp.remove();
+        }
+        function getList() {
+            var params = getParam();
+            loader(true);
+            $.get("/allmessage/Search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        {{for list}}
+        <div>
+            <div class="item">
+                <i class="uk-text-center fa fa-copy" onclick="copyToClipboard('http://@Request.Url.Authority/msg/{{:urlKey}}')" uk-tooltip="کپی"></i>
+                <a class="copy" href="/msg/{{:urlKey}}">
+                    <div class="flip-box-front block bg-success" style="background-color:deepskyblue;padding:10px">
+                        <div><h3 class="square"><span>{{:title}}</span></h3><br /> <span style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;display:block">{{:text}}</span></div>
+                    </div>
+                    <br />
+                </a>
+            </div>
+        </div>
+        {{/for}}
+    </script>
+}

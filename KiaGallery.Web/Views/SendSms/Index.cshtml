@@ -1,0 +1,72 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<div>
+    <a href="/sendsms/send" class="button-new btn btn-success">
+        <span class="fa fa-plus"></span>
+        ارسال پیام جدید
+    </a>
+
+</div>
+
+<div id="content">
+
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 200,
+
+        }
+
+        $(document).ready(function () {
+            getList();
+
+
+        });
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+
+            loader(true);
+            $.get("/smstext/Search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ترتیب</th>
+
+                    <th>دسته بندی</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td>{{:order}}</td>
+                    <td>{{:title}}</td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}
+

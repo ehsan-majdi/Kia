@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewBag.Title = "AnswerList";
+}
+<style>
+    table {
+        border-left: 2px solid deepskyblue;
+        border-right: 2px solid deepskyblue;
+        border-collapse: unset
+    }
+</style>
+<h2>گزارش نظر سنجی</h2>
+<div class="container">
+    <div id="content">
+
+    </div>
+</div>
+@section scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            getQuestionList()
+        })
+        function getQuestionList() {
+            loader(true);
+            var params = getParam();
+            $.get("/survey/getAnswerList", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>سوال</th>
+                    <th>کم</th>
+                    <th>بد</th>
+                    <th>ضعیف</th>
+                    <th>متوسط</th>
+                    <th>زیاد</th>
+                    <th>خوب</th>
+                    <th>عالی</th>
+                    <th>بله</th>
+                    <th>خیر</th>
+                  
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td>{{:#index + 1}}</td>
+                    <td>{{:title}}</td>
+                    <td>{{:low}}</td>
+                    <td>{{:bad}}</td>
+                    <td>{{:weak}}</td>
+                    <td>{{:normal}}</td>
+                    <td>{{:high}}</td>
+                    <td>{{:good}}</td>
+                    <td>{{:perfect}}</td>
+                    <td>{{:yes}}</td>
+                    <td>{{:no}}</td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}

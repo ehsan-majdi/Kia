@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="9837f20a303c476882b40db86a6880d3" Name="Diagram1" ZoomLevel="75">
+        <EntityTypeShape EntityType="KiaGalleryMainModel.Branches" Width="1.5" PointX="0.75" PointY="1.125" />
+        <EntityTypeShape EntityType="KiaGalleryMainModel.UserProfile" Width="1.5" PointX="3" PointY="1.5" />
+        <AssociationConnector Association="KiaGalleryMainModel.FK_dbo_Branches_dbo_UserProfile_CreateUserId" />
+        <AssociationConnector Association="KiaGalleryMainModel.FK_dbo_Branches_dbo_UserProfile_ModifyUserId" />
+        <AssociationConnector Association="KiaGalleryMainModel.FK_dbo_UserProfile_dbo_Branches_BranchId" />
+        <AssociationConnector Association="KiaGalleryMainModel.FK_dbo_UserProfile_dbo_UserProfile_CreateUserId" />
+        <AssociationConnector Association="KiaGalleryMainModel.FK_dbo_UserProfile_dbo_UserProfile_ModifyUserId" />
+        <EntityTypeShape EntityType="KiaGalleryMainModel.People" Width="2.125" PointX="8.25" PointY="0.75" />
+        <AssociationConnector Association="KiaGalleryMainModel.FK_dbo_People_dbo_Branches_BranchId" />
+        <AssociationConnector Association="KiaGalleryMainModel.FK_dbo_People_dbo_UserProfile_CreateUserId" />
+        <AssociationConnector Association="KiaGalleryMainModel.FK_dbo_People_dbo_UserProfile_ModifyUserId" />
+        <EntityTypeShape EntityType="KiaGalleryMainModel.Sms" Width="1.5" PointX="5.25" PointY="2.875" />
+        <AssociationConnector Association="KiaGalleryMainModel.FK_dbo_Sms_dbo_UserProfile_CreateUserId" />
+        <AssociationConnector Association="KiaGalleryMainModel.FK_dbo_Sms_dbo_UserProfile_ModifyUserId" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

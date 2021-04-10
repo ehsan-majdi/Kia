@@ -1,0 +1,342 @@
+﻿@{
+    ViewBag.Title = "ورود";
+}
+<style type="text/css">
+    body {
+        background-image: url('/Content/Image/portal BG.jpg');
+        overflow: hidden;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+    }
+
+    #main {
+        background-color: rgba(0, 0, 0, 0) !important;
+        margin-right: 0 !important;
+        padding:0
+    }
+
+    input, button {
+        border-radius: unset !important
+    }
+
+    .a {
+        background-color: rgb(153, 0, 0);
+        width: 25%;
+        margin: auto;
+        color: white;
+        text-align: center;
+        padding: 15px
+    }
+
+    .b {
+        background-color: rgba(255, 255, 255,0.2);
+        width: 25%;
+        margin: auto;
+        padding: 15px
+    }
+    .logo {
+        margin: auto;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 30px
+    }
+    @@media screen and (max-width: 992px) {
+        .a {
+            width: 100%;
+        }
+
+        .b {
+            width: 100%;
+            padding: 10px
+        }
+
+        body {
+            overflow: hidden;
+            position: relative;
+            height: 100%;
+        }
+        .logo-img {
+            width: 5%;
+        }
+        .login-text{
+            color:white !important
+        }
+    }
+
+    @@media screen and (max-width: 600px) {
+        .a {
+            width: 100%;
+        }
+
+        .b {
+            width: 100%;
+        }
+
+        body {
+            overflow: hidden;
+            position: relative;
+        }
+        .logo-img {
+           width: 20%;
+        }
+    }
+
+   
+</style>
+<div class="logo">
+    <img class="logo-img" src="~/Content/Image/kia-gallery-logo.svg" style="opacity: 0.5;display:inline-block" />
+</div>
+<div class="a">پورتال کیا</div>
+<form action="/account/login" method="post">
+    <div class="b">
+        <span class="login-text" style="margin:30px">ورود اعضا:</span>
+        <br />
+        <br />
+        <input type="hidden" name="returnUrl" value="@Request.QueryString.Get("redirect")" />
+        <div style="width:80%;margin:auto">
+            <div class="form-group txt-al-r text-center">
+                <input id="txtUsername" type="text" class="form-control" name="username" maxlength="50" data-validate="required, maxLength(50)" placeholder="نام کاربری">
+            </div>
+            <div class="form-group txt-al-r  text-center">
+                <input id="txtPassword" type="password" class="form-control" name="password" maxlength="50" data-validate="required, maxLength(50)" placeholder="گذرواژه">
+            </div>
+            <div class="text-danger" style="margin-top: 15px;">@TempData["Message"]</div>
+            <br />
+            <span class="login-text" id="forgotPassword" style="cursor:pointer">فراموشی رمز عبور</span>
+            <br />
+            <br />
+            <button style="background-color:#990000;color:white" class="btn btn-block login" type="submit">ورود</button>
+        </div>
+    </div>
+</form>
+
+<div id="modal-password" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4>بازیابی کلمه عبور</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group" id="staticParent">
+                        <div>
+                            <span> شماره تلفن یا نام کاربری </span>
+                            <input class="form-control" type="text" id="user" name="user">
+                        </div>
+                    </div>
+                    <div style="text-align:center">
+                        <div class="captcha form-group">
+                            <span><i class="reCaptcha fa fa-refresh v-middle pointer"></i> عبارت امنیتی </span>
+                            <img class="imgCaptcha" src="/captcha" style="margin: 10px;" />
+                            <input class="form-control" id="captcha" type="tel" name="captcha" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-success" id="btnSubmit" type="button"><i class="fa fa-check">&nbsp;</i>ثبت</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal-confirmation" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close btnClose hidden" data-dismiss="modal">&times;</button>
+                <h4>بازیابی کلمه عبور</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group" id="staticParent">
+                        <div>
+                            <span> کد تایید </span>
+                            <input class="form-control" type="text" id="confirmationCode">
+                        </div>
+                        <span style="color:red;display:inline-block" class="countdown"> </span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" id="btnSubmitCode" type="button"><i class="fa fa-check">&nbsp;</i>ثبت</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-change-password" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4>بازیابی کلمه عبور</h4>
+            </div>
+            <div class="modal-body">
+                <div id="content"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+
+    <script type="text/javascript">
+        var interval;
+
+        $(document).ready(function () {
+            //$("input").focusin(function () {
+            //    $(this).css({ "border-color": "red", "box-shadow":" inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(153, 0, 0,.6)"})
+            //})
+            //$("input").focusout(function () {
+            //    $(this).css({ "border-color": "silver", "box-shadow": " none" })
+            //})
+            document.getElementsByClassName('reCaptcha')[0].addEventListener('click', function () {
+                document.getElementsByClassName('imgCaptcha')[0].src = '/captcha?rnd=' + Math.random();
+            });
+
+            $("#forgotPassword").click(function () {
+                captcha()
+                clearInterval(interval);
+                $(".countdown").empty();
+                $("#modal-password").modal("show")
+                $("#user").val(null)
+                $("#captcha").val(null)
+            })
+
+            $("#btnSubmit").click(function () {
+                sendConfirmation()
+            })
+            $("#btnSubmitCode").click(function () {
+                var entity = {
+                    confirmationCode: $("#confirmationCode").val()
+                }
+                $.post("/account/verifyCode/", entity, function (response) {
+                    if (response.status == 200) {
+                        var list = response.data.list;
+                        for (var i = 0; i < list.length; i++) {
+                            $("#content").append($("#template").html())
+                            $(".userName").eq(i).html(list[i].username)
+                            $("input[name='userId']").eq(i).val(list[i].id)
+                            $("input[name='confirmationCode']").eq(i).val(list[i].confirmationCode)
+                            $(".save").eq(i).addClass("btnSave" + list[i].id)
+                            $(document).on("click", ".btnSave" + list[i].id, function () {
+                                var entity = getEntity($(this).parents(".change-password-form"));
+                                $.post("/account/forgotPassword/", entity, function (response) {
+                                    if (response.status == 200) {
+                                        alert(response.message)
+                                    }
+                                    else {
+                                        alert(response.message)
+                                    }
+
+                                });
+                            });
+
+                        }
+                        $("#modal-confirmation").modal("hide")
+                        $("#modal-change-password").modal("show")
+                    }
+                    else {
+                        alert(response.message)
+                    }
+
+                })
+            })
+
+            $(document).on("click", ".send-again", function () {
+                $('.btnClose').addClass("hidden")
+                var entity = {
+                    captcha: $("#captcha").val(),
+                    user: $("#user").val()
+                }
+                $.post("/account/sendConfirmation/", entity, function (response) {
+                    if (response.status == 200) {
+                        Timer()
+                        $("#modal-confirmation").modal("show")
+                    }
+                    else {
+                        alert(response.message)
+                    }
+
+                })
+            })
+        })
+
+        function captcha() {
+            document.getElementsByClassName('imgCaptcha')[0].src = '/captcha?rnd=' + Math.random();
+        }
+
+        function Timer() {
+            var timer2 = "01:01";
+            interval = setInterval(function () {
+
+                $(".send-again").hide()
+                var timer = timer2.split(':');
+                //by parsing integer, I avoid all extra string processing
+                var minutes = parseInt(timer[0], 10);
+                var seconds = parseInt(timer[1], 10);
+                --seconds;
+                minutes = (seconds < 0) ? --minutes : minutes;
+                if (minutes < 0) clearInterval(interval);
+                seconds = (seconds < 0) ? 59 : seconds;
+                seconds = (seconds < 10) ? '0' + seconds : seconds;
+
+                //minutes = (minutes < 10) ?  minutes : minutes;
+
+                $('.countdown').html(minutes + ':' + seconds);
+                if (seconds == 0 && minutes == 0) {
+                    $('.countdown').html("<button type=\"button\" class=\" btn btn-info send-again\" >ارسال مجدد</button>")
+                    $('.btnClose').removeClass("hidden")
+                    clearInterval(interval);
+                }
+                timer2 = minutes + ':' + seconds;
+            }, 1000);
+        }
+
+        function sendConfirmation() {
+            var entity = {
+                captcha: $("#captcha").val(),
+                user: $("#user").val()
+            }
+            $.post("/account/sendConfirmation/", entity, function (response) {
+
+                if (response.status == 200) {
+                    Timer()
+                    $("#modal-password").modal("hide")
+                    $("#modal-confirmation").modal("show")
+                }
+                else {
+                    alert(response.message)
+                }
+
+            })
+        }
+    </script>
+    <script id="template" type="text/html">
+        <div class="form-group change-password-form">
+            <h4 class="userName" style="color:red"></h4>
+            <input type="hidden" name="userId" />
+            <input type="hidden" name="confirmationCode" />
+            <div class="form-group">
+                <label>گذرواژه جدید</label>
+                <input id="txtNewPassword" type="password" class="form-control" name="newPassword" />
+            </div>
+            <div class="form-group">
+                <label>تکرار گذرواژه</label>
+                <input id="txtConfirmNewPassword" type="password" class="form-control" name="confirmNewPassword" />
+            </div>
+            <div class="modal-footer w100">
+                <button class="btn btn-success  w100 save" type="button"><i class="fa fa-check">&nbsp;</i>ثبت</button>
+            </div>
+        </div>
+        <hr />
+    </script>
+}

@@ -1,0 +1,890 @@
+﻿@{
+    ViewBag.Title = "مدیریت سبد سفارش";
+}
+
+<style type="text/css">
+
+    .pop {
+        cursor: pointer;
+        position: absolute;
+        left: 0;
+        background-color: red;
+        height: 15px;
+        width: 15px;
+        background-color: rgba(0,0,0,0.2);
+        top: -43px;
+        transition: width 0.5s, height 0.5s,font-size 0.5s,color 1s;
+    }
+
+        .pop:hover {
+            height: 109px;
+            width: 110px;
+            font-size: 100px;
+            color: green
+        }
+
+    td span {
+        line-height: 29px;
+    }
+
+    td i {
+        width: 25px;
+        text-align: center;
+    }
+
+    .border-left {
+        border-left: solid 1px silver;
+    }
+
+    #modalOrder input[type=checkbox] {
+        margin: 0;
+        vertical-align: middle;
+        margin-left: 5px;
+    }
+
+    .header-cart {
+        position: fixed;
+        width: calc(100% - 130px);
+        background: #e5e9ec;
+        top: 95px;
+        padding: 20px;
+        transition: 0.5s;
+        z-index: 9
+    }
+
+    #content {
+        margin-top: 125px;
+    }
+
+    .header-scroll {
+        top: 50px !important;
+    }
+
+    .warning {
+        -webkit-animation-name: example; /* Safari 4.0 - 8.0 */
+        -webkit-animation-duration: 2s; /* Safari 4.0 - 8.0 */
+        animation-name: example;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+        opacity: 0;
+        color: #ff0000;
+        margin-left: 5px;
+    }
+
+    /* Safari 4.0 - 8.0 */
+    @@-webkit-keyframes example {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Standard syntax */
+    @@keyframes example {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    #warningModal {
+        z-index: 9999999999;
+    }
+
+    #main {
+        padding: 20px;
+        margin-top: 20px;
+    }
+</style>
+
+<br />
+<input type="hidden" name="branchId" id="hiddenBranchId" />
+<div class="header-cart">
+    <div id="control-section" class="form-inline">
+        <div class="form-group" style="width: 200px;">
+            <select id="cmbBranch" class="form-control" name="branchId" data-placeholder="شعبه" style="width: 200px;">
+                <option value="">انتخاب شعبه</option>
+                
+            </select>
+        </div>
+        &nbsp;&nbsp;
+        <div class="form-group hide-item">
+            <label for="cmbCartTypeFilter">نوع</label>
+            <select id="cmbCartTypeFilter" class="form-control" name="cartType" style="width: 200px;">
+                <option value="">هردو</option>
+                <option value="1">ویترین</option>
+                <option value="2">مشتری</option>
+            </select>
+        </div>
+        &nbsp;&nbsp;
+        <div class="form-group hide-item" style="width: 200px;">
+            <select id="cmbWorkshop" class="form-control combo-chosen  chosen-rtl" multiple name="workshopId" data-placeholder="کارگاه" style="width: 200px;">
+                @foreach (var item in ViewBag.Workshop)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+        </div>
+        &nbsp;&nbsp;
+        <div class="form-group hide-item">
+            <label for="cmbProductType">نوع محصول</label>
+            <select id="cmbProductType" class="form-control" name="productType" style="width: 200px;">
+                <option value="">...</option>
+                <option value="1">گردنبند</option>
+                <option value="2">گوشواره</option>
+                <option value="3">انگشتر</option>
+                <option value="4">آویزساعت</option>
+                <option value="5">سنجاق بچگانه</option>
+                <option value="6">ست</option>
+                <option value="7">پابند</option>
+                <option value="8">آویز</option>
+                <option value="9">النگو</option>
+                <option value="10">خرج کار</option>
+                <option value="0">دستبند زنجیر طلا</option>
+                <option value="11">دستبند چرم</option>
+                <option value="12">دستبند ریلی</option>
+                <option value="13">دستبند سنگی</option>
+                @if (User.IsInRole("admin") || User.IsInRole("plaque"))
+                {
+                    <option value="14">پلاک لیزر</option>
+                }
+
+            </select>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-default clear-params" style="width: 100%;"><i class="fa fa-filter" aria-hidden="true"></i> حذف فیلتر ها</button>
+        </div>
+    </div>
+    <div style="margin-top: 20px;">
+        <label>
+            <input id="all" class="no-margin v-middle" type="checkbox" />&nbsp;
+            انتخاب همه
+        </label>
+        <div id="totalWeight" class="btn btn-default small-font hidden">
+            <strong id="weight"></strong>
+            <span>گرم</span>
+        </div>
+        <div id="totalCount" class="btn btn-default small-font hidden">
+            <span>تعداد انتخاب شده: </span>
+            <strong id="count"></strong>
+        </div>
+        @if (User.IsInRole("admin") || User.IsInRole("confirm-order"))
+        {
+            <a id="make-order" href="#" class="btn btn-success" style="width: 250px">ثبت سفارش و ارسال به دفتر مرکزی</a>
+        }
+        <button class="pull-left btn btn-danger btnDeleteBatch hidden hide-item">
+            <span class="fa fa-trash"></span>
+            حذف
+        </button>
+        <button class="btn btn-success print" type="button">چاپ</button>
+        @*<button class="btn btn-info " type="button">@ViewBag.BranchName</button>*@
+    </div>
+</div>
+<br />
+<div id="content">
+
+</div>
+<div id="warningModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><i class="warning fa fa-warning"></i>پیام سیستم</h4>
+            </div>
+            <div class="modal-body">
+                بدهی شما بیشتر از سقف اعتبارتان می باشد لطفا اقدام به تسویه نمایید. <br /> تا زمانی که بدهی شما بیشتر از سقف مجاز می باشد قادر به ثبت سفارش نمی باشید.
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalCustomize" class="modal fade" role="dialog" style="overflow-y: auto;">
+    <div class="modal-dialog modal-full">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">سفارشی کردن محصول</h4>
+            </div>
+            <div id="product-content" class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (User.IsInRole("admin") || User.IsInRole("confirm-order"))
+{
+    <div id="modalOrder" class="modal fade" role="dialog" style="overflow-y: auto;">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">تنظیمات ارسال سفارش</h4>
+                </div>
+                <div id="product-content" class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div>
+                                <label>
+                                    نحوه سفارشات
+                                    <select id="cmbCartType" name="cartType" class="form-control">
+                                        <option value="0">سفارشات ویترین و مشتری</option>
+                                        <option value="1">فقط سفارشات ویترین</option>
+                                        <option value="2">فقط سفارشات مشتری</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div><label><input id="allWorkshop" type="checkbox" checked />همه</label></div>
+                            @foreach (var item in ViewBag.Workshop)
+                            {
+                                <div class="workshop-wrapper"><label><input class="workshop" type="checkbox" name="workshop" value="@item.Id" checked />@item.Name <sub class="workshop-weight" data-workshop-id="@item.Id"></sub></label></div>
+                            }
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <a id="btn-modal-make-order" href="#" class="btn btn-success" style="width: 250px">ثبت سفارش و ارسال به دفتر مرکزی</a>
+                            &nbsp;&nbsp;
+                            <button class="btn btn-default">وزن سفارش داده شده: <strong id="total-order"></strong> گرم</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="printModal" class="modal fade" role="dialog" style="overflow-y: auto;">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">انتخاب گزارش</h4>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="row">
+                        <button id="btn-print" class="btn btn-success" style="width: 150px">چاپ گزارش با عکس</button>
+                        <button id="btn-print-min" class="btn btn-info" style="width: 150px">چاپ گزارش بدون عکس</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@section scripts {
+    <script type="text/javascript">
+        $(window).on('hashchange', function () {
+            getList();
+        });
+        $(window).scroll(function () {
+            var scrollTop = $(window).scrollTop();
+            if (scrollTop > 0) {
+                $(".header-cart").addClass("header-scroll");
+            }
+            else {
+                $(".header-cart").removeClass("header-scroll");
+            }
+        });
+        $(document).ready(function () {
+            $(".hide-item").hide()
+              $(".combo-chosen").chosen({ width: "100%", placeholder_text_single: 'یک مورد را انتخاب کنید.', search_contains: true });
+                $(".combo-chosen").trigger("chosen:updated");
+                $(document).on('click', ".pop", function () {
+                    $('.imagepreview').attr('src', $(this).parents("td").find('img').attr('src'));
+                    $('#imagemodal').modal('show');
+                });
+            getList();
+
+            $(document).on("change", ".cart-item", function (event) {
+                event.preventDefault();
+                checkWeight();
+            });
+
+            $(document).on("change", "#cmbWorkshop", function (event) {
+                event.preventDefault();
+                if ($(this).val()) {
+                    setParam("workshopIdList", $(this).val())
+                }
+                else {
+                    removeParam("workshopIdList");
+                }
+            });
+
+            $(document).on("change", "#cmbCartTypeFilter", function (event) {
+                event.preventDefault();
+                if ($(this).val()) {
+                    setParam("cartType", $(this).val())
+                }
+                else {
+                    removeParam("cartType");
+                }
+            });
+            $(document).on("change", "#cmbBranch", function (event) {
+                event.preventDefault();
+                $("#hiddenBranchId").val($(this).val())
+                if ($(this).val()) {
+                    $(".hide-item").show()
+                    $("#make-order").show()
+                    setParam("branchId", $(this).val())
+                }
+                else {
+                    $(".hide-item").hide()
+                    $("#make-order").hide()
+                    removeParam("branchId");
+                }
+            });
+            $(document).on("change", "#cmbProductType", function (event) {
+                event.preventDefault();
+                if ($(this).val()) {
+                    setParam("productType", $(this).val())
+                }
+                else {
+                    removeParam("productType");
+                }
+            });
+
+            $(document).on("click", ".delete", function (event) {
+                var id = $(this).attr("data-id");
+
+                var entity = {
+                    id: id,
+                    branchId: $("#hiddenBranchId").val()
+                }
+
+                confirmMessage("آیا از حذف این محصول اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/FinancialBranch/removeCartItem", entity, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            getList();
+                        }
+                        if (typeof updateCart == 'function')
+                            updateCart()
+                    });
+                });
+            });
+
+            $(document).on("click", ".btnAddCount", function (event) {
+                event.preventDefault();
+
+                if ($(this).hasClass("disabled"))
+                    return;
+
+                var id = $(this).attr("data-id");
+                var entity = {
+                    id: id,
+                    branchId: $("#hiddenBranchId").val()
+                };
+
+                loader(true);
+                $.ajax({
+                    url: "/FinancialBranch/increment",
+                    method: "POST",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status != 200)
+                            alert(response.message);
+                        else
+                            getList();
+                        loader(false);
+                        if (typeof updateCart == 'function')
+                            updateCart();
+                    }
+                });
+            });
+
+            $(document).on("click", ".btnRemoveCount", function (event) {
+                event.preventDefault();
+
+                if ($(this).hasClass("disabled"))
+                    return;
+
+                var id = $(this).attr("data-id");
+                var entity = {
+                    id: id,
+                    branchId: $("#hiddenBranchId").val()
+                };
+
+                loader(true);
+                $.ajax({
+                    url: "/FinancialBranch/decrement",
+                    method: "POST",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status != 200)
+                            alert(response.message);
+                        else
+                            getList();
+
+                        loader(false);
+                        if (typeof updateCart == 'function')
+                            updateCart();
+                    }
+                });
+            });
+
+
+            $(document).on("change", ".workshop", function () {
+                var weight = 0;
+
+                $(".workshop:checked").each(function (index, element) {
+                    weight += parseFloat($(this).closest(".workshop-wrapper").find(".workshop-weight").attr("data-weight"));
+                });
+
+                $("#total-order").html(weight);
+            });
+
+            @if(User.IsInRole("admin") || User.IsInRole("confirm-order"))
+            {
+            <text>
+                $(document).on("click", "#allWorkshop", function (event) {
+                    if ($(this).prop("checked"))
+                        $(".workshop").prop("checked", true);
+                    else
+                        $(".workshop").prop("checked", false);
+                });
+
+                $(document).on("click", "#allProductType", function (event) {
+                    if ($(this).prop("checked"))
+                        $(".productType").prop("checked", true);
+                    else
+                        $(".productType").prop("checked", false);
+                });
+
+                $(document).on("click", "#make-order", function (event) {
+                    event.preventDefault();
+
+                    if ($(".cart-item:checked").length > 0) {
+                        confirmMessage("آیا از ارسال اطلاعات اطمینان دارید؟", function () {
+                            loader(true);
+                            var cartIdList = new Array();
+                            var branchIdList = new Array();
+
+                            $(".cart-item:checked").each(function (index, element) {
+                                cartIdList.push($(this).val());
+                                console.log($(this).attr("data-branch-id"))
+                                branchIdList.push($(this).attr("data-branch-id"));
+                            })
+
+                            var params = { branchIdList: branchIdList, cartIdList: cartIdList.join("-"), cartType: 0 };
+
+                            $.post("/FinancialBranch/makeOrderAll", params, function (response) {
+                                loader(false);
+                                if (response.status == 200) {
+                                    callbackAlert("ارسال اطلاعات با موفقیت انجام شد.", function () {
+                                        document.location = "/FinancialBranch/calculate";
+                                    });
+                                }
+                                else {
+                                    alert(response.message);
+                                }
+                            });
+                        });
+                    }
+                    //else {
+                    //    $("#cmbCartType").val("0");
+                    //    $("#allWorkshop, .workshop").prop("checked", true);
+                    //    $("#allWorkshop, .workshop").prop("disabled", false);
+                    //    $("#modalOrder").modal("show");
+                    //}
+                });
+
+                $(document).on("click", "#btn-modal-make-order", function (event) {
+                    event.preventDefault();
+
+                    confirmMessage("آیا از ارسال اطلاعات اطمینان دارید؟", function () {
+                        loader(true);
+                        var params = getEntity("#modalOrder");
+                        params.branchId = $("#hiddenBranchId").val();
+                        if (params.workshop.length > 0) {
+                            $.post("/FinancialBranch/makeOrder", params, function (response) {
+                                loader(false);
+                                if (response.status == 200) {
+                                    callbackAlert("ارسال اطلاعات با موفقیت انجام شد.", function () {
+                                        document.location = "/FinancialBranch/calculate";
+                                    });
+                                }
+                                else {
+                                    alert(response.message);
+                                }
+                            });
+                        }
+                        else {
+                            alert("یک کارگاه حتما باید انتخاب کنید.");
+                        }
+                    });
+                });
+
+                $(document).on("change", "#cmbCartType", function () {
+                    if ($(this).val() == 2) {
+                        $("#allWorkshop, .workshop").prop("checked", true);
+                        $("#allWorkshop, .workshop").prop("disabled", true);
+                    }
+                    else {
+                        $("#allWorkshop, .workshop").prop("disabled", false);
+                    }
+                });
+            </text>
+            }
+
+            $(document).on("click", ".product-image", function () {
+                $(this).closest("tr").find(".cart-item").click();
+            });
+
+            $("#all").on("click", function (event) {
+                if ($(this).prop("checked") && $(".cart-item").not(":checked").length > 0) {
+                    $(".cart-item").prop("checked", true).change();
+                }
+                else {
+                    $(".cart-item").prop("checked", false).change();
+                }
+            });
+
+            $(document).on("click", ".btnDeleteBatch", function () {
+                var cartIdList = new Array();
+
+                $(".cart-item:checked").each(function (index, element) {
+                    cartIdList.push($(this).val());
+                })
+
+                var entity = {
+                    id: cartIdList.join("-"),
+                    branchId: $("#hiddenBranchId").val()
+                }
+
+                confirmMessage("آیا از حذف این محصول اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/FinancialBranch/removeCartItem", entity, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            getList();
+                        }
+                        if (typeof updateCart == 'function')
+                            updateCart()
+                    });
+                });
+            });
+
+            $(document).on("click", ".print", function () {
+                $("#printModal").modal("show");
+            });
+            $(document).on("click", "#btn-print-min", function () {
+                var idList = new Array();
+                $('.cart-item:checked').each(function () {
+                    idList.push(this.value);
+                });
+                if (idList.length > 0) {
+                    var list = idList.join(",");
+                   list = list.replaceAll("-",",")
+
+                    window.open("/order/printProductMin?type=2&id=" + list, "_blank")
+                }
+                else {
+                    alert("حد اقل یک مورد انتخاب کنید.");
+                }
+            });
+            $(document).on("click", "#btn-print", function () {
+                var idList = new Array();
+                $('.cart-item:checked').each(function () {
+                    idList.push(this.value);
+                });
+                if (idList.length > 0) {
+                    var list = idList.join(",");
+                      list = list.replaceAll("-",",")
+                    window.open("/order/printProductMin?type=1&id=" + list, "_blank")
+                }
+                else {
+                    alert("حد اقل یک مورد انتخاب کنید.");
+                }
+            });
+
+        });
+
+        function getList() {
+            updateForm();
+
+            var defaultEntity = {
+                cartType: null,
+                workshopId: [],
+                productType: null
+            }
+            var newParams = getParam();
+
+            var params = $.extend(defaultEntity, newParams);
+
+            loader(true);
+            $.post("/FinancialBranch/cartListAggregation", params, function (response) {
+                if (response.status == 200) {
+
+                    if (response.data.list.length > 0) {
+                        var data = response.data;
+                        var template = $.templates("#template");
+                        var htmlOutput = template.render(data);
+                        $("#content").html(htmlOutput);
+
+                        $('[data-toggle="tooltip"]').tooltip();
+                    }
+                    else {
+                        $("#content").html("<br /><h5 class='txt-al-c'>سبد سفارش شما خالی است.</h5>");
+                    }
+
+                    $(".workshop-weight").attr("data-weight", 0);
+                    if (response.data.workshopWeight) {
+                        for (var i = 0; i < response.data.workshopWeight.length; i++) {
+                            var item = response.data.workshopWeight[i];
+
+                            var element = $(".workshop-weight[data-workshop-id=" + item.workshopId + "]");
+                            element.attr("data-weight", item.weight);
+                            element.html(" (" + item.weight + " گرم)");
+                        }
+                    }
+
+                    $("#total-order").html(response.data.weight);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+        function updateForm() {
+            var params = getParam();
+
+
+            if (params["cartType"]) {
+                $("#cmbCartTypeFilter").val(params["cartType"]);
+            }
+            else {
+                $("#cmbCartTypeFilter").val("");
+            }
+
+            if (params["branchId"]) {
+                $("#cmbBranch").val(params["branchId"]);
+            }
+            else {
+                $("#cmbBranch").val("");
+            }
+
+            // workshopId
+            if (params["workshopIdList"]) {
+                $("#cmbWorkshop").val(params["workshopIdList"]);
+            }
+            else {
+                $("#cmbWorkshop").val("");
+            }
+
+            // productType
+            if (params["productType"]) {
+                $("#cmbProductType").val(params["productType"]);
+            }
+            else {
+                $("#cmbProductType").val("");
+            }
+        }
+
+        function checkWeight() {
+            if ($(".cart-item:checked").length > 0) {
+                var totalWeight = 0;
+                var totalCount = 0;
+                $(".cart-item:checked").each(function (index, element) {
+                    var count = parseInt($(this).attr("data-count"));
+                    var weight = parseFloat($(this).attr("data-weight"));
+                    totalWeight += count * weight;
+                    totalCount += count;
+                });
+                var precision = totalWeight.toString().split(".")[0].length + 2;
+                $("#weight").html(totalWeight.toPrecision(precision));
+                $("#count").html(totalCount);
+                $("#totalWeight, .btnDeleteBatch, #totalCount").removeClass("hidden");
+
+            }
+            else {
+                $("#totalWeight, .btnDeleteBatch, #totalCount").addClass("hidden");
+            }
+        }
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <tbody>
+                {{for list}}
+                <tr class="{{if orderType == 1 && customer}}bg-customer{{/if}} {{if orderType == 1 && !customer}}bg-vitrin{{/if}}">
+                    <td style="width: 20px; vertical-align: middle;">
+                        <input class="cart-item" type="checkbox" value="{{:id}}" data-count="{{:count}}" data-weight="{{:weight}}" data-branch-id="{{:branchId}}" />
+                    </td>
+                    <td class="txt-al-c" style="width: 120px;">
+                        <span class="v-middle relative">
+                            <span class="pop fa fa-search-plus"></span>
+                            {{if fileName}}
+                            <img class="product-image" style="width: 110px;" src="/image/product/500x500/{{:fileName}}" />
+                            {{else}}
+                            <img class="product-image" style="width: 110px;" src="/content/image/kia-gallery-logo-square.png" />
+                            {{/if}}
+                        </span>
+                    </td>
+                    <td>
+                        <i class="fa fa-bitbucket v-middle" aria-hidden="true" data-toggle="tooltip" title="کارگاه"></i>
+                        <span>
+                            {{:workshopName}}
+                        </span>
+                        <br />
+                        <i class="fa fa-calendar v-middle" aria-hidden="true" data-toggle="tooltip" title="تاریخ ثبت"></i>
+                        <span>
+                            {{:createDate}}
+                        </span>
+                        {{if setNumber}}
+                        <br />
+                        <i class="fa fa-cogs v-middle" aria-hidden="true" data-toggle="tooltip" title="کد نیم ست" style="color:#1d8619"></i>
+                        <span>
+                            {{:setNumber}}
+                        </span>
+                        {{/if}}
+                    </td>
+                    <td>
+                        <i class="fa fa-file-text-o v-middle" aria-hidden="true" data-toggle="tooltip" title="عنوان"></i>
+                        <span>
+                            {{if title}}
+                            {{:title}}
+                            {{else}}
+                            -
+                            {{/if}}
+                        </span>
+                        <br />
+                        <i class="fa fa-list-alt v-middle" aria-hidden="true" data-toggle="tooltip" title="کد"></i>
+                        <span>
+                            {{if code}}
+                            {{:code}}
+                            {{else}}
+                            -
+                            {{/if}}
+                        </span>
+                        <br />
+                        <i class="fa fa-barcode v-middle" aria-hidden="true" data-toggle="tooltip" title="کد کتاب کد"></i>
+                        <span>
+                            {{if bookCode}}
+                            {{:bookCode}}
+                            {{else}}
+                            -
+                            {{/if}}
+                        </span>
+                    </td>
+                    <td class="hidden-xs hidden-sm">
+                        <div>
+                            <i class="fa fa-sort-numeric-asc v-middle" aria-hidden="true" data-toggle="tooltip" title="تعداد"></i>
+                            <span>{{:count}}</span>
+                        </div>
+                        <div>
+                            <i class="fa fa-balance-scale v-middle" aria-hidden="true" data-toggle="tooltip" title="وزن"></i>
+                            <span>{{:weight}} گرم</span>
+                        </div>
+                        <div>
+                            {{if size}}
+                            <i class="fa fa-expand v-middle" aria-hidden="true" data-toggle="tooltip" title="اندازه"></i>
+                            <span>{{:size}}</span>
+                            {{else}}
+                            {{if productSizeId != null}}
+                            <i class="fa fa-expand v-middle" aria-hidden="true" data-toggle="tooltip" title="اندازه"></i>
+                            <span>سلیقه ای</span>
+                            {{/if}}
+                            {{/if}}
+                        </div>
+                        {{if goldType}}
+                        <div>
+                            <i class="fa fa-certificate v-middle" aria-hidden="true" data-toggle="tooltip" title="براقیت"></i>
+                            <span>{{:goldTypeTitle}}</span>
+                        </div>
+                        {{/if}}
+                        {{if outerWerkTypeTitle}}
+                        <div>
+                            <i class="fa fa-wrench  v-middle" aria-hidden="true" data-toggle="tooltip" title="نوع خرج کار"></i>
+                            <span>{{:outerWerkTypeTitle}}</span>
+                        </div>
+                        {{/if}}
+                    </td>
+                    <td>
+                        {{if stoneList && stoneList.length > 0}}
+                        {{for stoneList ~array=stoneList}}
+                        <div>
+                            <i class="fa fa-diamond v-middle" aria-hidden="true" data-toggle="tooltip" title="سنگ"></i>
+                            <span>
+                                {{:order}}: {{if stoneName}}{{:stoneName}}{{else}}سلیقه ای{{/if}}
+                            </span>
+                        </div>
+                        {{/for}}
+                        {{/if}}
+                        {{if leatherList && leatherList.length > 0}}
+                        {{for leatherList ~array=leatherList}}
+                        <div>
+                            <i class="fa fa-road v-middle" aria-hidden="true" data-toggle="tooltip" title="چرم"></i>
+                            <span>
+                                {{:order}}: {{if leatherName}}{{:leatherName}}{{else}}سلیقه ای{{/if}}
+                            </span>
+                        </div>
+                        {{/for}}
+                        {{/if}}
+                        {{if leatherLoop}}
+                        <div>
+                            <i class="fa fa-refresh v-middle" aria-hidden="true" data-toggle="tooltip" title="تعداد دور چرم"></i>
+                            <span>{{:leatherLoop}}</span>
+                        </div>
+                        {{/if}}
+                    </td>
+                    <td>
+                        {{if customer}}
+                        <div>
+                            <i class="fa fa-user v-middle" aria-hidden="true" data-toggle="tooltip" title="مشتری"></i>
+                            <span>{{:customer}}</span>
+                        </div>
+                        {{/if}}
+                        {{if phoneNumber}}
+                        <div>
+                            <i class="fa fa-phone v-middle" aria-hidden="true" data-toggle="tooltip" title="تلفن"></i>
+                            <span>{{:phoneNumber}}</span>
+                        </div>
+                        {{/if}}
+                        {{if branchLabel}}
+                        <div>
+                            <i class="fa fa-building v-middle" aria-hidden="true" data-toggle="tooltip" title="شعبه"></i>
+                            <span>{{:branchLabel}}</span>
+                        </div>
+                        {{/if}}
+                        {{if description}}
+                        <div>
+                            <i class="fa fa-comment-o v-middle" aria-hidden="true" data-toggle="tooltip" title="توضیحات"></i>
+                            <span>{{:description}}</span>
+                        </div>
+                        {{/if}}
+                        <div>
+                            <i class="fa fa-user-o v-middle" aria-hidden="true" data-toggle="tooltip" title="کاربران سفارش دهنده"></i>
+                            <span data-title='@Html.Partial("_UserList")' data-placement="bottom" data-html="true" data-toggle="tooltip">کاربران سفارش دهنده</span>
+                        </div>
+                    </td>
+                    <td style="width: 140px">
+                        <div style="border: solid 1px silver; display: inline-block">
+                            {{if !customer}}
+                            <div class="table-cell border-left"><i class="details fa fa-plus pointer btnAddCount" aria-hidden="true" title="اضافه کردن" data-id="{{:id}}" data-product-id="{{:productId}}" style="color: green; margin-top: 5px;"></i></div>
+                            <div class="table-cell border-left"><i class="details fa fa-minus pointer btnRemoveCount" aria-hidden="true" title="کم کردن" data-id="{{:id}}" data-product-id="{{:productId}}" style="color: red; margin-top: 5px;"></i></div>
+                            {{/if}}
+                            {{if orderType == 1}}
+                            <div class="table-cell border-left"><i class="details fa fa-pencil pointer btnEdit" aria-hidden="true" title="ویرایش" data-id="{{:id}}" data-product-id="{{:productId}}" style="color: green; margin-top: 5px;"></i></div>
+                            {{/if}}
+                            <div class="table-cell"><i class="delete fa fa-trash pointer" aria-hidden="true" title="حذف" data-id="{{:id}}" data-product-id="{{:productId}}" style="color: tomato; padding-top: 5px;"></i></div>
+                        </div>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+    </script>
+}

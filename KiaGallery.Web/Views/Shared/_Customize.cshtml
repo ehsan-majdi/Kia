@@ -1,0 +1,318 @@
+﻿@{
+    var cart = (List<KiaGallery.Model.Context.Order.Cart>)ViewBag.Cart;
+    var product = (Product)ViewBag.Product;
+    var stoneList = (List<Stone>)ViewBag.StoneList;
+    var leatherList = (List<Leather>)ViewBag.LeatherList;
+    var branchList = (List<Branch>)ViewBag.BranchList;
+    var relatedProduct = (List<RelatedProduct>)ViewBag.RelatedProduct;
+    var setProduct = (List<SetProduct>)ViewBag.SetProduct;
+    Layout = null;
+}
+
+
+<div class="row">
+    <div class="cartItem">
+        <input type="hidden" value="@product.Id" name="productId" />
+        <div class="col-xs-12">
+            <div id="detailList">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12">
+        <div id="addItem" class="pointer">
+            <button id="btnSave" class="btn btn-success">ذخیره</button>
+            &nbsp;&nbsp;
+            <span class="btn btn-default" onclick="addItemFast(1)">
+                <span id="btnAddItem" style="margin: 0 0 3px 10px">
+                    <i aria-hidden="true" class="fa fa-plus fa-18px v-middle"></i>
+                </span>
+                <span>اضافه کردن محصول</span>
+            </span>
+            @if (setProduct.Count > 0)
+            {
+                <span class="btn btn-default" onclick="addItemSetFast(1)">
+                    <span id="btnAddItem" style="margin: 0 0 3px 10px">
+                        <i aria-hidden="true" class="fa fa-plus fa-18px v-middle"></i>
+                    </span>
+                    <span>اضافه کردن نیم ست</span>
+                </span>
+            }
+        </div>
+        @if (ViewBag.RelatedProduct.Count > 0)
+        {
+            <div>
+                <h4 style="margin-top: 20px;">محصولات مرتبط</h4>
+                @foreach (RelatedProduct item in ViewBag.RelatedProduct)
+                {
+                    <div class="relatedItem relative">
+                        @{
+                            var fileName = item.RelatedTo.ProductFileList.FirstOrDefault(x => x.FileType == KiaGallery.Model.FileType.WhiteBack)?.FileName;
+                            var imagePath = "/content/image/kia-gallery-logo-square.png";
+                            if (!string.IsNullOrEmpty(fileName))
+                            {
+                                imagePath = "/image/product/500x500/" + fileName;
+                            }
+                        }
+                        <img src="@imagePath" class="w100" />
+                        <div class="txt-al-c">
+                            @item.RelatedTo.Title
+                        </div>
+                        <div class="hover-plus absolute txt-al-c" style="top: 0; left: 0; bottom: 0; right: 0; background-color: rgba(0, 0, 0, 0.3);">
+                            <i class="fa fa-plus fa-4x" style="margin-top: 60px; color: #CCC"></i>
+                        </div>
+                        <script class="relatedTemplate" type="text/x-jsrender">
+                            @Html.Partial("_ProductItemTemplate", new { product = item.RelatedTo, stoneList = stoneList, leatherList = leatherList, branchList = branchList })
+                        </script>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    var setCounter = 1;
+    $(document).ready(function () {
+        @if (cart == null)
+        {
+            <text>
+                addItemFast(1);
+            </text>
+        }
+        else if (cart != null && cart.Count > 0)
+        {
+            <text>
+                addItemFast('@cart.Count');
+                loader(true);
+                $.get("/cart/loadList/" + '@(string.Join("-", cart.Select(x => x.Id).ToList()))', null, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+
+
+                        $(".cart-product-item").each(function (index, element) {
+                            var entity = response.data[index];
+
+                            setEntity(entity, element);
+
+                            for (var i = 0; i < entity.stoneList.length; i++) {
+                                var item = entity.stoneList[i];
+                                $(element).find(".stone-list[data-stone-order=" + item.order + "]").val(item.stoneId);
+                            }
+
+                            for (var i = 0; i < entity.leatherList.length; i++) {
+                                var item = entity.leatherList[i];
+                                $(element).find(".leather-list[data-leather-order=" + item.order + "]").val(item.leatherId);
+                            }
+
+                            if (entity.customer || entity.phoneNumber) {
+                                $(element).find(".count").val("1");
+                                $(element).find(".count").prop("disabled", true);
+                                $(element).find(".forceOrder").prop("disabled", false);
+                                $(".combo-chosen").trigger("chosen:updated");
+                            }
+
+                        });
+
+                        $(".combo-chosen").trigger("chosen:updated");
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            </text>
+        }
+
+        $(document).on("keyup", ".customer, .phoneNumber", function () {
+            var customerValue = $(this).closest(".cart-product-item").find(".customer").val();
+            var phoneNumberValue = $(this).closest(".cart-product-item").find(".phoneNumber").val();
+            var customerValueSet = $(this).closest(".cart-product-set").find(".customer").val()
+            var phoneNumberValueSet = $(this).closest(".cart-product-set").find(".phoneNumber").val()
+            if (customerValue || phoneNumberValue || customerValueSet || phoneNumberValueSet) {
+                $(this).closest(".cart-product-item").find(".count").val("1");
+                $(this).closest(".cart-product-item").find(".count").prop("disabled", true);
+                $(this).closest(".cart-product-item").find(".forceOrder").prop("disabled", false);
+                $(this).closest(".cart-product-set").find(".count").val("1");
+                $(this).closest(".cart-product-set").find(".count").prop("disabled", true);
+                $(this).closest(".cart-product-set").find(".forceOrder").prop("disabled", false);
+                $(".combo-chosen").trigger("chosen:updated");
+            }
+            else {
+                $(this).closest(".cart-product-item").find(".count").prop("disabled", false);
+                $(this).closest(".cart-product-item").find(".forceOrder").prop("disabled", true);
+                $(this).closest(".cart-product-item").find(".forceOrder").prop("checked", false);
+                $(this).closest(".cart-product-set").find(".count").prop("disabled", false);
+                $(this).closest(".cart-product-set").find(".forceOrder").prop("disabled", true);
+                $(".combo-chosen").trigger("chosen:updated");
+            }
+        });
+
+        $("#btnSave").on("click", function (event) {
+            event.preventDefault();
+            var flag = false
+            $(".customer").each(function (index, element) {
+                if ($(this).val()) {
+                    console.log($(element).parents(".content-parent").find(".phoneNumber").val())
+                    if (!$(element).parents(".content-parent").find(".phoneNumber").val()) {
+                        flag = true
+                        alert("شماره تماس وارد نشده است.")
+                    }
+                    else {
+                        flag = false
+                    }
+                }
+            });
+            if (flag) {
+                 return;
+            }
+            var entities = [];
+            $(".cart-product-item").each(function (index, element) {
+                var entity = getEntity(element);
+                entity.stoneList = new Array();
+                if (entity.setNumber) {
+                    var shareElement = $(this).parent().find(".share-data");
+                    var shareEntity = getEntity(shareElement);
+                    $(shareElement).find(".stone-list").each(function (i, e) {
+                        var stoneEntity = {
+                            order: $(e).attr("data-stone-order"),
+                            stoneId: $(e).val()
+                        };
+                        entity.stoneList.push(stoneEntity);
+                    });
+                    entity = $.extend(shareEntity, entity);
+                }
+                $(element).find(".stone-list").each(function (i, e) {
+                        var stoneEntity = {
+                        order: $(e).attr("data-stone-order"),
+                        stoneId: $(e).val()
+                    };
+                    entity.stoneList.push(stoneEntity);
+                });
+
+                entity.leatherList = new Array();
+                $(element).find(".leather-list").each(function (i, e) {
+                    var leatherEntity = {
+                        order: $(e).attr("data-leather-order"),
+                        leatherId: $(e).val()
+                    };
+                    entity.leatherList.push(leatherEntity);
+                });
+
+                if (!isEmpty(entity))
+                    entities.push(entity);
+            });
+
+            if (entities.length == 0) {
+                alert("شما می بایست حداقل یک محصول جهت ذخیره تکمیل نمایید.");
+                return;
+            }
+
+            loader(true);
+            $.post("/cart/addToCartPersonalization", { models: entities }, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                        $("#modalCustomize").modal("hide");
+                    callbackAlert(response.message, function () {
+                        if (updateCart)
+                            updateCart();
+
+                        if (getList)
+                            getList();
+                    });
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+
+        });
+
+        $(document).on("click", ".del-item", function () {
+            $(this).closest(".cart-product-item").remove();
+        });
+        $(document).on("click", ".del-set", function () {
+            $(this).closest(".cart-product-set").remove();
+        });
+
+        $(".relatedItem").on("click", function (event) {
+            event.preventDefault();
+
+            $($(this).find(".relatedTemplate").html()).appendTo($("#detailList"));
+
+            $(".combo-chosen").chosen({ width: "100%", placeholder_text_single: 'یک مورد را انتخاب کنید.', search_contains: true });
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+    });
+
+    function addItemFast(count) {
+        if (count == 0) count = 1;
+
+        for (var i = 0; i < count; i++) {
+            $($("#templateOrder").html()).appendTo($("#detailList")).show();
+        }
+
+        $(".combo-chosen").chosen({ width: "100%", placeholder_text_single: 'یک مورد را انتخاب کنید.', search_contains: true });
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+    function addItemSetFast(count) {
+        if (count == 0) count = 1;
+
+        for (var i = 0; i < count; i++) {
+            var templateSetOrder = $("#templateSetOrder").html();
+            $($("#templateSetOrder").html()).appendTo($("#detailList")).show();
+            $(".cart-product-set:last .setNumber").val(setCounter);
+            setCounter += 1;
+        }
+
+        $(".combo-chosen").chosen({ width: "100%", placeholder_text_single: 'یک مورد را انتخاب کنید.', search_contains: true });
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+
+    function isEmpty(entity) {
+
+        if (entity.customer)
+            return false;
+
+        if (entity.description)
+            return false;
+
+        if (entity.goldType != -1)
+            return false;
+
+        if (entity.phoneNumber)
+            return false;
+
+        if (entity.size && entity.size != -1)
+            return false;
+
+        if (entity.leatherLoop)
+            return false;
+
+        if (entity.stoneList) {
+            for (var i = 0; i < entity.stoneList.length; i++) {
+                var item = entity.stoneList[i];
+                if (item.stoneId)
+                    return false;
+            }
+        }
+
+        if (entity.leatherList) {
+            for (var i = 0; i < entity.leatherList.length; i++) {
+                var item = entity.leatherList[i];
+                if (item.leatherId)
+                    return false;
+            }
+        }
+        return true;
+    }
+</script>
+
+<script id="templateOrder" type="text/x-jsrender">
+    @Html.Partial("_ProductItemTemplate", new { product = product, stoneList = stoneList, leatherList = leatherList, branchList = branchList })
+</script>
+
+<script id="templateSetOrder" type="text/x-jsrender">
+    @Html.Partial("_ProductItemSetTemplate", new { product = product, stoneList = stoneList, leatherList = leatherList, branchList = branchList, setProduct = setProduct })
+</script>

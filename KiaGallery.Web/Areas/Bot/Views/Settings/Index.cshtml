@@ -1,0 +1,407 @@
+﻿
+@{
+    ViewBag.Title = "Settings";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<style type="text/css">
+    textarea {
+        width: 250px;
+        resize: none;
+    }
+
+    input.form-control {
+        width: 250px;
+        display: inline-block;
+    }
+
+    .bold {
+        margin-top: 10px;
+    }
+    i.linkIcon {
+        color: #0078d7;
+        margin-top: -10px;
+    }
+</style>
+
+<div class="row">
+    <div class="bold">قیمت طلا:</div>
+    <div class="col-lg-4">
+        <input class="form-control" type="text" id="txtGoldPrice" />
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('GoldPrice', $('#txtGoldPrice').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">منو:</div>
+    <div class="col-lg-4">
+        <input class="form-control" type="text" id="txtMenu" />
+        <input class="form-control" type="text" id="txtPersianMenu" />
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('Menu', $('#txtMenu').val(), $('#txtPersianMenu').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">بازگشت:</div>
+    <div class="col-lg-4">
+        <input class="form-control" type="text" id="txtBack" />
+        <input class="form-control" type="text" id="txtPersianBack" />
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('Back', $('#txtBack').val(), $('#txtPersianBack').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">بیشتر:</div>
+    <div class="col-lg-4">
+        <input class="form-control" type="text" id="txtMore" />
+        <input class="form-control" type="text" id="txtPersianMore" />
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('More', $('#txtMore').val(), $('#txtPersianMore').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">ارتباط با ما:</div>
+    <div class="col-lg-4">
+        <input class="form-control" type="text" id="txtContactUs" />
+        <input class="form-control" type="text" id="txtPersianContactUs" />
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('ContactUs', $('#txtContactUs').val(), $('#txtPersianContactUs').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">شعب:</div>
+    <div class="col-lg-4">
+        <input class="form-control" type="text" id="txtBranch" />
+        <input class="form-control" type="text" id="txtPersianBranch" />
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('Branch', $('#txtBranch').val(), $('#txtPersianBranch').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">محصولات:</div>
+    <div class="col-lg-4">
+        <input class="form-control" type="text" id="txtCollection" />
+        <input class="form-control" type="text" id="txtPersianCollection" />
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('Collection', $('#txtCollection').val(), $('#txtPersianCollection').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">اخبار:</div>
+    <div class="col-lg-4">
+        <input class="form-control" type="text" id="txtNews" />
+        <input class="form-control" type="text" id="txtPersianNews" />
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('News', $('#txtNews').val(), $('#txtPersianNews').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">سفارش:</div>
+    <div class="col-lg-4">
+        <input class="form-control" type="text" id="txtOrder" />
+        <input class="form-control" type="text" id="txtPersianOrder" />
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('Order', $('#txtOrder').val(), $('#txtPersianOrder').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">ارسال شماره تماس:</div>
+    <div class="col-lg-4">
+        <input class="form-control" type="text" id="txtSendPhoneNumber" />
+        <input class="form-control" type="text" id="txtPersianSendPhoneNumber" />
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('SendPhoneNumber', $('#txtSendPhoneNumber').val(), $('#txtPersianSendPhoneNumber').val())"></i>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="bold">کنسل:</div>
+    <div class="col-lg-4">
+        <input class="form-control" type="text" id="txtCancelOrder" />
+        <input class="form-control" type="text" id="txtPersianCancelOrder" />
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('Cancel', $('#txtCancelOrder').val(), $('#txtPersianCancelOrder').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">پیام ارتباط با ما:</div>
+    <div class="col-lg-4">
+        <textarea id="txtContactUsMessage"></textarea>
+        <textarea id="txtPersianContactUsMessage"></textarea>
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('ContactData', $('#txtContactUsMessage').val(), $('#txtPersianContactUsMessage').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">پیام شعب:</div>
+    <div class="col-lg-4">
+        <textarea id="txtBranchMessage"></textarea>
+        <textarea id="txtPersianBranchMessage"></textarea>
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('ChooseCity', $('#txtBranchMessage').val(), $('#txtPersianBranchMessage').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">پیام محصولات:</div>
+    <div class="col-lg-4">
+        <textarea id="txtCollectionMessage"></textarea>
+        <textarea id="txtPersianCollectionMessage"></textarea>
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('SelectCollectionType', $('#txtCollectionMessage').val(), $('#txtPersianCollectionMessage').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">پیام خوش آمد:</div>
+    <div class="col-lg-4">
+        <textarea id="txtWelcomeMessage"></textarea>
+        <textarea id="txtPersianWelcomeMessage"></textarea>
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('WelcomeMessage', $('#txtWelcomeMessage').val(), $('#txtPersianWelcomeMessage').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">متن سفارش:</div>
+    <div class="col-lg-4">
+        <textarea id="txtOrderText"></textarea>
+        <textarea id="txtPersianOrderText"></textarea>
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('OrderText', $('#txtOrderText').val(), $('#txtPersianOrderText').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">لغو سفارش:</div>
+    <div class="col-lg-4">
+        <textarea id="txtOrderDone"></textarea>
+        <textarea id="txtPersianOrderDone"></textarea>
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('OrderDone', $('#txtOrderDone').val(), $('#txtPersianOrderDone').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">متن کنسل:</div>
+    <div class="col-lg-4">
+        <textarea id="txtCancelText"></textarea>
+        <textarea id="txtPersianCancelText"></textarea>
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('CancelText', $('#txtCancelText').val(), $('#txtPersianCancelText').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">ذخیره اطلاعات:</div>
+    <div class="col-lg-4">
+        <textarea id="txtSaveMainInfo"></textarea>
+        <textarea id="txtPersianSaveMainInfo"></textarea>
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('SaveMainInfoText', $('#txtSaveMainInfo').val(), $('#txtPersianSaveMainInfo').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">اطلاعات حساب:</div>
+    <div class="col-lg-4">
+        <textarea id="txtAccountInfo"></textarea>
+        <textarea id="txtPersianAccountInfo"></textarea>
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('AccountInfo', $('#txtAccountInfo').val(), $('#txtPersianAccountInfo').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">متن ذخیره پیش پرداخت:</div>
+    <div class="col-lg-4">
+        <textarea id="txtSavePrePaymentText"></textarea>
+        <textarea id="txtPersianSavePrePaymentText"></textarea>
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('SavePrePaymentText', $('#txtSavePrePaymentText').val(), $('#txtPersianSavePrePaymentText').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">ساخته شده:</div>
+    <div class="col-lg-4">
+        <textarea id="txtBuiltComplete"></textarea>
+        <textarea id="txtPersianBuiltComplete"></textarea>
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('BuiltComplete', $('#txtBuiltComplete').val(), $('#txtPersianBuiltComplete').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">متن ارسال:</div>
+    <div class="col-lg-4">
+        <textarea id="txtSendText"></textarea>
+        <textarea id="txtPersianSendText"></textarea>
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('SendText', $('#txtSendText').val(), $('#txtPersianSendText').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">تمام شده:</div>
+    <div class="col-lg-4">
+        <textarea id="txtOutOfStock"></textarea>
+        <textarea id="txtPersianOutOfStock"></textarea>
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('OutOfStock', $('#txtOutOfStock').val(), $('#txtPersianOutOfStock').val())"></i>
+    </div>
+</div>
+
+<div class="row">
+    <div class="bold">موجود در سبد خرید:</div>
+    <div class="col-lg-4">
+        <textarea id="txtAvailableInCart"></textarea>
+        <textarea id="txtPersianAvailableInCart"></textarea>
+        <i class="fa fa-save linkIcon" style="padding: 7px; font-size: 1.2em;" aria-hidden="true" onclick="saveSettings('AvailableInCart', $('#txtAvailableInCart').val(), $('#txtPersianAvailableInCart').val())"></i>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            getData();
+        });
+
+        function getData() {
+            loader(true);
+            $.ajax({
+                type: "GET",
+                url: "/bot/Settings/GetAllSettings",
+                data: null,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.status == 200) {
+                        for (var i = 0; i < result.data.length; i++) {
+                            var item = result.data[i];
+                            if (item.key == 'GoldPrice') {
+                                $('#txtGoldPrice').val(item.value);
+                            }
+                            else if (item.key == 'Menu') {
+                                $('#txtMenu').val(item.value);
+                                $('#txtPersianMenu').val(item.valueFa);
+                            }
+                            else if (item.key == 'Back') {
+                                $('#txtBack').val(item.value);
+                                $('#txtPersianBack').val(item.valueFa);
+                            }
+                            else if (item.key == 'More') {
+                                $('#txtMore').val(item.value);
+                                $('#txtPersianMore').val(item.valueFa);
+                            }
+                            else if (item.key == 'ContactUs') {
+                                $('#txtContactUs').val(item.value);
+                                $('#txtPersianContactUs').val(item.valueFa);
+                            }
+                            else if (item.key == 'Branch') {
+                                $('#txtBranch').val(item.value);
+                                $('#txtPersianBranch').val(item.valueFa);
+                            }
+                            else if (item.key == 'Collection') {
+                                $('#txtCollection').val(item.value);
+                                $('#txtPersianCollection').val(item.valueFa);
+                            }
+                            else if (item.key == 'News') {
+                                $('#txtNews').val(item.value);
+                                $('#txtPersianNews').val(item.valueFa);
+                            }
+                            else if (item.key == 'Order') {
+                                $('#txtOrder').val(item.value);
+                                $('#txtPersianOrder').val(item.valueFa);
+                            }
+                            else if (item.key == 'SendPhoneNumber') {
+                                $('#txtSendPhoneNumber').val(item.value);
+                                $('#txtPersianSendPhoneNumber').val(item.valueFa);
+                            }
+                            else if (item.key == 'Cancel') {
+                                $('#txtCancelOrder').val(item.value);
+                                $('#txtPersianCancelOrder').val(item.valueFa);
+                            }
+                            else if (item.key == 'ContactData') {
+                                $('#txtContactUsMessage').val(item.value);
+                                $('#txtPersianContactUsMessage').val(item.valueFa);
+                            }
+                            else if (item.key == 'ChooseCity') {
+                                $('#txtBranchMessage').val(item.value);
+                                $('#txtPersianBranchMessage').val(item.valueFa);
+                            }
+                            else if (item.key == 'SelectCollectionType') {
+                                $('#txtCollectionMessage').val(item.value);
+                                $('#txtPersianCollectionMessage').val(item.valueFa);
+                            }
+                            else if (item.key == 'WelcomeMessage') {
+                                $('#txtWelcomeMessage').val(item.value);
+                                $('#txtPersianWelcomeMessage').val(item.valueFa);
+                            }
+                            else if (item.key == 'OrderText') {
+                                $('#txtOrderText').val(item.value);
+                                $('#txtPersianOrderText').val(item.valueFa);
+                            }
+                            else if (item.key == 'OrderDone') {
+                                $('#txtOrderDone').val(item.value);
+                                $('#txtPersianOrderDone').val(item.valueFa);
+                            }
+                            else if (item.key == 'CancelText') {
+                                $('#txtCancelText').val(item.value);
+                                $('#txtPersianCancelText').val(item.valueFa);
+                            }
+                            else if (item.key == 'SaveMainInfoText') {
+                                $('#txtSaveMainInfo').val(item.value);
+                                $('#txtPersianSaveMainInfo').val(item.valueFa);
+                            }
+                            else if (item.key == 'AccountInfo') {
+                                $('#txtAccountInfo').val(item.value);
+                                $('#txtPersianAccountInfo').val(item.valueFa);
+                            }
+                            else if (item.key == 'SavePrePaymentText') {
+                                $('#txtSavePrePaymentText').val(item.value);
+                                $('#txtPersianSavePrePaymentText').val(item.valueFa);
+                            }
+                            else if (item.key == 'BuiltComplete') {
+                                $('#txtBuiltComplete').val(item.value);
+                                $('#txtPersianBuiltComplete').val(item.valueFa);
+                            }
+                            else if (item.key == 'SendText') {
+                                $('#txtSendText').val(item.value);
+                                $('#txtPersianSendText').val(item.valueFa);
+                            }
+                            else if (item.key == 'OutOfStock') {
+                                $('#txtOutOfStock').val(item.value);
+                                $('#txtPersianOutOfStock').val(item.valueFa);
+                            }
+                            else if (item.key == 'AvailableInCart') {
+                                $('#txtAvailableInCart').val(item.value);
+                                $('#txtPersianAvailableInCart').val(item.valueFa);
+                            }
+                        }
+                    }
+                    loader(false);
+                },
+                error: function (response) {
+                    alert('error');
+                    loader(false);
+                }
+            });
+        }
+
+        function saveSettings(key, value, valueFa) {
+            confirmMessage("آیا شما واقعا میخواهید این پیام را به روز کنید؟", function () {
+                loader(true);
+                var _data = {
+                    key: key,
+                    value: value,
+                    valueFa: valueFa
+                }
+                $.ajax({
+                    type: "GET",
+                    url: "/bot/Settings/SaveSettings",
+                    data: _data,
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+                        alert(result.message);
+                        loader(false);
+                    },
+                    error: function (response) {
+                        alert('error');
+                        loader(false);
+                    }
+                });
+            });
+        }
+
+    </script>
+}

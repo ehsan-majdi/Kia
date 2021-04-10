@@ -1,0 +1,248 @@
+﻿
+@{
+    ViewBag.Title = "AcceptFromOffice";
+
+}
+<head>
+    <style>
+
+        #mainparent {
+            position: relative
+        }
+
+        .change-status {
+            width: 165px;
+            margin-top: 26px;
+            background-color: #343a40;
+            color: white;
+            border-radius: 5px;
+            padding: 8px;
+            border-color: #343a40;
+        }
+
+        #image {
+            width: 965px;
+            position: absolute;
+            top: 0;
+            left: calc(50% - 482px);
+        }
+
+        h4 {
+            font-size: 20px;
+            padding: 20px;
+        }
+       
+        tr:nth-child(even) {
+            background: #eee;
+        }
+        #Searching{
+            margin:81px auto;
+        }
+    
+    </style>
+</head>
+
+<br />
+<div class="main-page">
+
+    <div class="col-lg-12 img">
+        <img id="image" src="~/Content/Image/site123.png" />
+    </div>
+    <div id="mainparent" class="text-center">
+        <h4>تحویل از دفتر مرکزی</h4>
+        <br />
+        <div class="form-inline text-center">
+            <div class="form-group text-center"><input id="Searching" class="form-control deleteVal text-center" type="text" placeholder="[--------- بارکد پیگیری ---------]" name="code" /></div>
+        </div>
+
+        <br />
+    </div>
+</div>
+<div id="changeStatusModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">بارکد محصول را وارد کنید!</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group text-center">
+                    <input class="form-control text-center number-only" id="productBarcode" type="text" name="barcode" placeholder="[--------- بارکد محصول ---------]" data-validate="required"  />
+                </div>
+
+                <div id="content">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnChangeStatus" style="display:none" type="button" class="btn btn-success btn-password btn-control">ثبت</button>
+                @*<button type="button" class="btn btn-danger btn-password btn-control" data-dismiss="modal">لغو</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+
+        var data = {
+            list: []
+        }
+        $(document).ready(function () {
+            $("#Searching").focus();
+            
+
+            $(document).on("change", "#productBarcode", function () {
+                if ($("#productBarcode").val().length == 8 || $("#productBarcode").val().length == 4) {
+                    $("#btnChangeStatus").show()
+                }
+                else {
+                    $("#btnChangeStatus").hide();
+                }
+            });
+
+            //$(document).on("change", ".orderItem", function () {
+            //    if ($(".orderItem").length > 0) {
+            //        $("#selctedCount").show();
+            //        var count = 0;
+            //        $(".orderItem").each(function (index, element) {
+            //            count += 1;
+            //        });
+            //        $("#selctedCount").html("تعداد انتخاب شده: " + count);
+            //    }
+            //    else {
+            //        $("#selctedCount").hide();
+            //    }
+            //});
+            $(document).on("keyup", "#Searching", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    var value = $(this).val();
+                    if (value != null && value != "") {
+                        $.get("/internalOrder/AcceptFromOfficeJson", { term: value }, function (response) {
+                            if (response.status == 200) {
+                                var flag = false;
+                                if (response.data.id != null) {
+                                    $("#productBarcode").focus();
+                                    $("#changeStatusModal").modal('show');
+                                    $('#changeStatusModal').on('shown.bs.modal', function () {
+                                        $('#productBarcode').focus()
+                                    })
+
+                                }
+                                for (var i = 0; i < data.list.length; i++) {
+
+                                    if (data.list[i].id == response.data.id)
+                                        flag = true
+                                }
+                                $("#Searching").val("");
+                                if (flag) return;
+                                $("#selctedCount").show();
+                                data.list.push(response.data);
+                                $("#selctedCount").html("تعداد انتخاب شده: " + data.list.length);
+                                var template = $.templates("#template");
+                                var htmlOutput = template.render(data);
+                                $("#content").html(htmlOutput);
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                            loader(false);
+                        });
+                    }
+                }
+            });
+            $("#btnChangeStatus").on("click", function (event) {
+                event.preventDefault();
+                var idList = new Array();
+                $('.orderItem').each(function () {
+                    idList.push(this.value);
+                });
+                $("#changeStatusModal").modal('hide');
+                changeStatus(idList, 0, $("#productBarcode").val(), $(".phoneNumber").val());
+                $("#Searching").val("");
+            });
+            $(document).on("click", ".change-status", function (event) {
+                event.preventDefault();
+                var idList = new Array();
+                $('.orderItem').each(function () {
+                    idList.push(this.value);
+                    console.log(idList)
+                });
+                if (idList.length > 0) {
+                    var confirm = $(this).attr("data-confirm");
+                    var status = $(this).attr("data-status");
+                        confirmMessage(confirm, function () {
+                            var idList = new Array();
+                            $('.orderItem').each(function () {
+                                idList.push(this.value);
+                            });
+                            changeStatus(idList, status, null);
+                        });
+                    
+                }
+                else {
+                    alert("حداقل یک مورد را باید انتخاب کنید.");
+                }
+            });
+
+        });
+        function changeStatus(input, status, barcode, phoneNumber,deliveredBranchId) {
+
+            var params = {
+                id: input,
+                status: status,
+                barcode: barcode,
+                phoneNumber: phoneNumber,
+                deliveredBranchId: deliveredBranchId
+
+            };
+
+            loader(true);
+            $.post("/internalOrder/ChangeStatus", params, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    callbackAlert(response.message, function () {
+                        location.reload();
+                    });
+                }
+
+            });
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        {{if list.length > 0}}
+        <table id="table" class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>نام مشتری</th>
+                    <th>نام محصول</th>
+                    <th>کد پیگیری</th>
+                    <th>شماره تلفن</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td class="v-middle">
+                        {{:id}}
+                        <input class="orderItem" name="orderItem" type="hidden" value="{{:id}}" data-code="{{:trackCode}}" />
+                    </td>
+                    <td>{{:name}}</td>
+                    <td>{{:title}}</td>
+                    <td>{{:trackCode}}</td>
+                    <td class="v-middle">
+                        {{:phoneNumber}}
+                        <input class="phoneNumber" name="phoneNumber" type="hidden" value="{{:phoneNumber}}" />
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        {{else}}
+        <h4 class="txt-al-c">موردی یافت نشد</h4>
+        {{/if}}
+        <div class="clearfix"></div>
+        @*@Html.Partial("_Pagination")*@
+    </script>
+}

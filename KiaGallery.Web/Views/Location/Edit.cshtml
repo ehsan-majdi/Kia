@@ -1,0 +1,115 @@
+﻿<div id="form" class="container">
+    <div class="row form-group">
+
+        <div class="row">
+            <div id="step1" class="col-md-4 col-md-offset-4">
+                <div class="form-group">
+                    <label for="cmbLocationType">نوع</label>
+                    <select id="cmbLocationType" name="locationType" class="form-control">
+                        <option value="">...</option>
+                        <option value="0">استان</option>
+                        <option value="1">شهر</option>
+                    </select>
+                </div>
+
+                <div id="parent-section" class="form-group relative">
+                    <label for="cmbParent">استان</label>
+                    <select id="cmbParent" class="form-control" name="parentId">
+                        <option value="">...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="txtName">نام</label>
+                    <input id="txtName" type="text" class="form-control" name="name" maxlength="50" data-validate="required, maxLength(50)">
+                    <input id="hiddenId" type="hidden" value="" name="id" />
+                </div>
+                <div class="form-group">
+                    <label for="txtEnglishName">نام انگلیسی</label>
+                    <input id="txtEnglishName" type="text" class="form-control" name="englishName" maxlength="50" data-validate="required, maxLength(50)">
+                </div>
+                <div class="form-group">
+                    <label for="txtOrder">ترتیب</label>
+                    <input id="txtOrder" type="tel" class="form-control number-only" name="order" maxlength="10" data-validate="required, maxLength(10), number">
+                </div>
+                <div class="form-group">
+                    <button id="btnSave" type="submit" class="btn btn-success">
+                        <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                        ذخیره
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script type="text/javascript">
+    var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+
+    $(document).ready(function () {
+
+        checkLocationType();
+
+        loadRemoteSelect("#cmbParent", "/location/getAllProvince", null, "id", "name", "...", function () {
+            load();
+        });
+
+        $("#cmbLocationType").on("change", function () {
+            checkLocationType();
+        });
+
+        $("#btnSave").on("click", function (event) {
+            event.preventDefault();
+            if (checkForm("#form")) {
+                var entity = getEntity("#form");
+                loader(true);
+                $.ajax({
+                    method: "POST",
+                    url: "/location/save",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                document.location = "/location";
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                        loader(false);
+                    }
+                });
+            }
+        });
+    });
+
+    function checkLocationType() {
+        if ($("#cmbLocationType").val()  == 1) {
+            $("#parent-section").show()
+        }
+        else {
+            $("#cmbParent").val("")
+            $("#parent-section").hide()
+        }
+    }
+
+    function load() {
+        if (id > 0) {
+            loader(true);
+            $.get("/location/load/" + id, function (response) {
+                if (response.status == 200) {
+                    setEntity(response.data, "#form");
+                    checkLocationType();
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    }
+
+</script>
+}

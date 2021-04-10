@@ -1,0 +1,10 @@
+﻿
+@font-face {
+    font-family: BMitra;
+   
+    src: url('eot/BMitra.eot');
+    src: url('eot/BMitra.eot?#iefix') format('embedded-opentype'), /* IE6-8 */
+    url('woff/BMitra.woff') format('woff'), /* FF3.6+, IE9, Chrome6+, Saf5.1+*/
+    url('ttf/BMitra.ttf') format('truetype');
+}
+

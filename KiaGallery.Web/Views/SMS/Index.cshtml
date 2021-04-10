@@ -1,0 +1,107 @@
+﻿
+@{
+    ViewBag.Title = "پنل ارسال پیام";
+}
+<div class="container " id="form">
+    <div class="col-md-offset-3">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="cmbBranch">شعبه</label>
+                <select id="cmbBranch" class="form-control" name="branchId">
+                    <option value="0">شعبه</option>
+                    @foreach (var branch in ViewBag.BranchList)
+                    {
+                        <option value="@branch.id">@branch.name</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <input type="hidden" id="hiddenBranchId" />
+        <div class="col-md-4 phoneNumber">
+            <div class="form-group">
+                <label>ارسال به شماره/شماره های:</label>
+                <input id="txtPhoneNumber" type="text" name="phoneNumber" class="form-control" data-validate="required,maxLength(12)" />
+            </div>
+        </div>
+        <div class="col-md-4 phoneNumber">
+            <div class="form-group">
+                <label>زمان:</label>
+                <input  class="form-control" type="time" name="time" id="myTime" value="00:00:00">
+            </div>
+        </div>
+        <div class="col-md-4 phoneNumber">
+            <div class="form-group">
+                <label>تاریخ</label>
+                <input id="date" class="form-control date" type="text" name="persianDate" >
+            </div>
+        </div>
+        <br />
+        <div class="col-md-12" style="margin:0;padding:0">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label>متن ارسالی:</label>
+                    <textarea id="txtMessageText" style="resize:none" class="form-control" name="address" data-validate="maxLength(255)" rows="10"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <button id="btnSendSms" class="btn btn-success">
+                ارسال پیام
+                <i class="fa fa-send"></i>&nbsp;
+            </button>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".date").pDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true,
+            });
+            $(document).on("change", "#cmbBranch", function (event) {
+                $("#hiddenBranchId").val($(this).val())
+                if ($(this).val() > 0) {
+                    $(".phoneNumber").hide();
+                    $("#txtPhoneNumber").val(null);
+
+                }
+                else {
+                    $(".phoneNumber").show();
+                }
+            });
+
+            $("#btnSendSms").click(function () {
+                save()
+            });
+        })
+
+        function save() {
+            var entity = {
+                branchId: $("#hiddenBranchId").val(),
+                text: $("#txtMessageText").val(),
+                phoneNumber: $("#txtPhoneNumber").val(),
+                time: $("#myTime").val(),
+                persianDate: $("#date").val(),
+
+            }
+            loader(true);
+            $.get("/sms/send", entity, function (response) {
+                if (response.status == 200) {
+                    callbackAlert(response.message, function () {
+                        location.reload
+                    })
+                }
+                else {
+                    alert(response.message)
+                }
+                loader(false);
+            });
+        }
+
+    </script>
+
+}

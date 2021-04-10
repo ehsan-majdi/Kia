@@ -1,0 +1,462 @@
+﻿@model List<KiaGallery.Web.Models.InternalDetailViewModel>
+@{
+    ViewBag.Title = "OrderSheet";
+    Layout = null;
+}
+
+<html dir="rtl">
+<head>
+    <link href="~/Content/fonts/fontawsome/font-awesome.css" rel="stylesheet" />
+    <link href="~/content/fonts/sans/fontiran.css" rel="stylesheet" />
+    <link href="~/Content/fonts/sans-fa/fontiran.css" rel="stylesheet" />
+    <link href="~/Content/fonts/Bmitra/Bmitra.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Scripts/bootstrap-rtl.js"></script>
+    <link href="~/Content/bootstrap-rtl.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width" />
+    <title>OrderSheet</title>
+    <style>
+        body {
+            background: rgb(204,204,204);
+        }
+
+        * {
+            font-family: "BMitra";
+        }
+
+        table {
+            margin: 0 auto;
+        }
+
+        #page {
+            width: 10cm;
+            background: white;
+            margin: 0 auto;
+        }
+
+            #page thead span {
+                padding-top: 2.4cm;
+                display: inline-block;
+            }
+
+            #page tfoot span {
+                height: 1.5cm;
+                display: inline-block;
+            }
+
+        tr td:nth-child(even) {
+            text-align: left;
+        }
+
+        tr td {
+            border-radius: 16px;
+        }
+
+        .img-product {
+            width: 90px;
+            margin: 0 auto;
+        }
+
+        .description {
+            word-break: break-word;
+            text-align: justify;
+            width: 160px;
+            display: -moz-inline-stack;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        label {
+            font-family: IRANSans;
+            font-weight: 700;
+            font-size: 10px !important;
+        }
+
+        .frame {
+            border-radius: 16px;
+            border: 1px solid black;
+        }
+
+        @@media print {
+            .no-print .no-print {
+                visibility: hidden;
+            }
+        }
+    </style>
+
+</head>
+<body>
+    @foreach (var detail in Model)
+    {
+        <div class="orderSheet">
+
+            <div id="page">
+                <div style="background-color:#@detail.branchColor;text-align:center">
+                    <img src="~/Content/Image/KiaGalleryLogo.png" style="width:95px;padding:10px 0;" />
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <td colspan="6">
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3">
+                                <img id="barcodeImage" style="width:145px" src="@detail.barcodeImage" />
+                                <div class="text-center" style="width:145px">
+                                    <span class="text-center">@detail.trackCode</span>
+                                </div>
+                            </td>
+                            <td colspan="3">
+                                <labe>تاریخ:</labe>
+                                <span>@KiaGallery.Common.DateUtility.GetPersianDate(detail.date) </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <label>نوع سفارش:</label>
+                                @if (detail.orderTypeForm == KiaGallery.Model.OrderTypeForm.DefineProduct)
+                                {
+                                    <span>سفارش ساخت</span>
+                                }
+                                @if (detail.orderTypeForm == KiaGallery.Model.OrderTypeForm.UnDefineProduct)
+                                {
+                                    <span>سفارش محصول</span>
+                                }
+                                @if (detail.orderTypeForm == KiaGallery.Model.OrderTypeForm.RepairProduct)
+                                {
+                                    if (detail.goldOwnership == false)
+                                    {
+                                        <span><span>تعمیری</span>(طلای ویترین)</span>
+                                    }
+                                    else
+                                    {
+                                        <span><span>تعمیری</span>(طلای مشتری)</span>
+                                    }
+                                }
+                                @if (detail.orderTypeForm == KiaGallery.Model.OrderTypeForm.DesignProduct)
+                                {
+                                    <span>سفارش طراحی</span>
+                                }
+                            </td>
+                            @if (detail.orderTypeForm == KiaGallery.Model.OrderTypeForm.DefineProduct)
+                            {
+                                if (detail.count != null)
+                                {
+                                    <td colspan="3">
+                                        <label>تعداد ساخت محصول:</label>
+                                        <span>@detail.count</span>
+                                    </td>
+                                }
+                                else if (detail.count == 1 || detail.count == null)
+                                {
+                                    <td colspan="3">
+                                        <label>تعداد ساخت محصول:</label>
+                                        <span>1</span>
+                                    </td>
+                                }
+                            }
+                            else if (detail.orderTypeForm == KiaGallery.Model.OrderTypeForm.UnDefineProduct || detail.orderTypeForm == KiaGallery.Model.OrderTypeForm.DesignProduct || detail.orderTypeForm == KiaGallery.Model.OrderTypeForm.RepairProduct)
+                            {
+                                if (detail.newCount != null)
+                                {
+                                    <td colspan="3">
+                                        <label>تعداد ساخت محصول:</label>
+                                        <span>@detail.newCount</span>
+                                    </td>
+                                }
+                                else if (detail.newCount == 1 || detail.newCount == null)
+                                {
+                                    <td colspan="3">
+                                        <label>تعداد ساخت محصول:</label>
+                                        <span>1</span>
+                                    </td>
+                                }
+                            }
+                        </tr>
+                        <tr>
+                            @if (detail.orderTypeForm == KiaGallery.Model.OrderTypeForm.DefineProduct)
+                            {
+                                <td colspan="3">
+                                    <label>عنوان :</label>
+                                    <span>@detail.prdocutTitle </span><span>(@detail.prdocutTypeTitle)</span>
+                                </td>
+                            }
+                            else
+                            {
+                                <td colspan="3">
+                                    <label>عنوان :</label>
+                                    <span>@detail.newProductTitle </span><span>(@detail.newProductTypeTitle)</span>
+                                </td>
+                            }
+
+                            <td colspan="3">
+                                @if (detail.newGoldType != null)
+                                {
+                                    if (detail.newGoldType == KiaGallery.Model.GoldType.Shiny)
+                                    {
+                                        <input type="checkbox" checked="checked" onclick="return false;" />
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" onclick="return false;" />
+                                    }
+                                    <label class="padding">براق</label>
+                                    if (detail.newGoldType == KiaGallery.Model.GoldType.Matte)
+                                    {
+                                        <input type="checkbox" checked="checked" onclick="return false;" />
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" onclick="return false;" />
+                                    }
+                                    <label class="padding">مات</label>
+                                }
+
+                                else
+                                {
+                                    if (detail.goldType == KiaGallery.Model.GoldType.Shiny)
+                                    {
+                                        <input type="checkbox" checked="checked" onclick="return false;" />
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" onclick="return false;" />
+                                    }
+                                    <label class="padding">براق</label>
+                                    if (detail.goldType == KiaGallery.Model.GoldType.Matte)
+                                    {
+                                        <input type="checkbox" checked="checked" onclick="return false;" />
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" onclick="return false;" />
+                                    }
+                                    <label class="padding">مات</label>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            @if (detail.siteCode != null)
+                            {
+                                <td colspan="3">
+                                    @if (detail.siteCode != null)
+                                    {
+                                        <label>کد محصول :</label>
+                                        if (detail.bookCode != null)
+                                        {
+                                            <span> @detail.siteCode / @detail.bookCode</span>
+                                        }
+                                        else
+                                        {
+                                            <span> @detail.siteCode</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span>@detail.bookCode</span>
+                                    }
+                                </td>
+                            }
+                            else
+                            {
+                                if (detail.newSize != null)
+                                {
+                                    <td>
+                                        <label>سایز : </label>
+                                        <span>@detail.newSize</span>
+                                    </td>
+                                }
+                            }
+                            <td colspan="3">
+                                <label>آبکاری :</label>
+                                <span>@detail.prdocutColorTitle</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                @if (detail.size != null)
+                                {
+                                    <label>سایز : </label>
+                                    <span>@detail.size</span>
+                                }
+                            </td>
+                            @if (detail.leatherLoop != null)
+                            {
+                                <td colspan="3">
+                                    @if (detail.leatherLoop != null)
+                                    {
+                                        <label>تعداد دور : </label>
+                                        @detail.leatherLoop
+                                    }
+                                    else if (detail.newLeatherLoop != null)
+                                    {
+                                        <span>@detail.newLeatherLoop</span>
+                                    }
+                                    else
+                                    {
+                                        <span>---</span>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <label>سنگ :</label>
+                                @if (detail.stoneList != null && detail.stoneList.Count > 0)
+                                {
+                                    var z = 0;
+                                    foreach (var item in detail.stoneList)
+                                    {
+                                        <span>@(z += 1): @item</span> <text> &nbsp; </text>
+                                    }
+                                }
+                                else if (detail.newStone != null)
+                                {
+                                    <span>@detail.newStone</span>
+                                }
+                                else
+                                {
+                                    <span>---</span>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <label>چرم :</label>
+                                @if (detail.leatherList != null && detail.leatherList.Count > 0)
+                                {
+                                    var z = 0;
+                                    foreach (var item in detail.leatherList)
+                                    {
+                                        <label class="font-bold-unset">@(z += 1): @item</label> <text> &nbsp; </text>
+                                    }
+                                }
+                                else if (detail.newLeather != null)
+                                {
+                                    <span>@detail.newLeather</span>
+                                }
+                                else
+                                {
+                                    <span>---</span>
+                                }
+                            </td>
+                        </tr>
+                        <tr class="form-desc">
+                            <td colspan="3" class="description">
+                                @if (detail.newDescription != null)
+                                {
+                                    <label>توضیحات :</label>
+                                    @detail.newDescription
+                                }
+                                @if (detail.description != null)
+                                {
+                                    <label>توضیحات :</label>
+                                    @detail.description
+                                }
+                            </td>
+                            <td colspan="3">
+                                @if (detail.fileName != null)
+                                {
+                                    <img class=img-product title="" src="/image/product/200x200/@detail.fileName" />
+                                }
+                                @if (detail.image != null)
+                                {
+                                    <img class=img-product title="" src="/image/internalOrderDetail/200x200/@detail.image" />
+                                }
+                                @if (detail.image == null && detail.fileName == null)
+                                {
+                                    <span>تصویر محصول</span>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <hr style="border:1px solid #eee8e8;width:100%;margin: 0;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><label>نام خریدار : </label>  @detail.cutomerName </td>
+                            <td colspan="3">
+                                <label>بیعانه : </label> @detail.depositSeparator  <span>(تومان)</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><label>موبایل : </label>@detail.phoneNumber</td>
+                            <td colspan="2"><label>کاربر ثبت کننده : </label>@detail.person</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><label>تلفن ثابت :</label>@detail.telephone</td>
+                            <td colspan="3"><label>مهر و امضاء :</label></td>
+                        </tr>
+                        <tr>
+                            <td colspan="6" class="frame">
+                                <label style="width:81px">شماره سفارش:</label>
+                                <label style="width:100px">تاریخ سفارش:</label>
+                                <label style="width:70px">ارجاع به:</label>
+                                <label style="width:87px">تاریخ ارجاع:</label>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <td colspan="6"><span></span></td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                @*@if (detail.orderType == KiaGallery.Model.OrderType.Customize)
+                    {
+                        <input type="checkbox" checked="checked" onclick="return false;" />
+                    }
+                    else
+                    {
+                        <input type="checkbox" onclick="return false;" />
+                    }
+                    <label class="padding">سفارشی</label>*@
+
+                @*@if (detail.orderType == KiaGallery.Model.OrderType.Repair)
+                    {
+                        <input type="checkbox" checked="checked" onclick="return false;" />
+                    }
+                    else
+                    {
+                        <input type="checkbox" onclick="return false;" />
+                    }
+                    <label class="padding">تعمیری</label>*@
+
+                @*<li style="float:left">
+                        <label class="padding">چند پیش فاکتور</label>
+                        @if (detail.count >= 2)
+                        {
+                            <span>بله</span>
+                            <input type="checkbox" checked="checked" onclick="return false;" />
+                        }
+                        else
+                        {
+                            <span>بله</span>
+                            <input type="checkbox" onclick="return false;" />
+                        }
+                        @if (detail.count == 1)
+                        {
+                            <span>خیر</span>
+                            <input type="checkbox" checked="checked" onclick="return false;" />
+                        }
+                        else
+                        {
+                            <span>خیر</span>
+                            <input type="checkbox" onclick="return false;" />
+                        }
+                    </li>*@
+            </div>
+        </div>
+
+    }
+
+</body>
+</html>
+
+

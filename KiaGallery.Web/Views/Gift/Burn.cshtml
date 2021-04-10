@@ -1,0 +1,305 @@
+﻿@{
+    ViewBag.Title = "سوزاندن هدیه";
+}
+<style type="text/css">
+    body {
+        background-color: #f9b5c3;
+    }
+
+    #main {
+        background-color: rgba(0, 0, 0, 0) !important;
+    }
+
+    .box {
+        position: sticky;
+        width: 300px;
+    }
+
+    .box1 {
+        z-index: 100;
+    }
+
+    .box3 {
+        z-index: 99;
+        top: 199px;
+        width: 292px;
+        margin-right: -1px;
+        margin-top: -68px;
+    }
+
+    #headSoldToTheCustomer, #searchForm {
+        position: absolute;
+        z-index: 111;
+        top: 200px;
+        right: 100px;
+        border-radius: 10px;
+    }
+
+    #headUsed {
+        position: absolute;
+        z-index: 111;
+        top: 200px;
+        left: 40px;
+        border-radius: 10px;
+    }
+
+    #headSoldToTheCustomer, #formSoldToTheCustomer {
+        background-color: #f0fef0;
+    }
+
+    #formSoldToTheCustomer {
+        border-left: 5px solid #9ddfeb
+    }
+
+    #formUsed {
+        border-right: 5px solid #9ddfeb
+    }
+
+    #headUsed, #formUsed,#searchForm {
+        background-color: #fff7f7;
+    }
+
+    .formSoldToTheCustomer {
+        border: 1px solid silver;
+        padding: 10px;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    .formUsed {
+        border: 1px solid silver;
+        padding: 10px;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    .close-gift {
+        background-color: #444;
+        color: #fff;
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: 3px;
+        border-radius: 5px;
+    }
+
+        .close-gift:hover {
+            background-color: #000;
+        }
+
+    .gift-row {
+        margin-top: -100px;
+    }
+
+    .circle3 {
+        border-radius: 100%;
+        width: 400px;
+        height: 400px;
+        padding: 50px;
+        background-color: #f3e4ef;
+    }
+
+    .circle2 {
+        border-radius: 100%;
+        width: 500px;
+        height: 500px;
+        padding: 50px;
+        background-color: #f9dde7;
+    }
+
+    .circle1 {
+        border-radius: 100%;
+        width: 600px;
+        height: 600px;
+        padding: 50px;
+        background-color: #fccadd;
+    }
+
+    .circle.gift {
+        margin-right: calc(50% - 300px);
+    }
+    .table-data{
+        background-color:#FFF;
+    }
+    .table-data tr:nth-child(2n+1){
+        background-color:#f0fef0;
+    }
+    .table-data tr:nth-child(2n){
+        background-color:#d1f6d1;
+    }
+</style>
+<div class="row">
+    <div class="col-md-4" id="searchForm">
+        <h2 class="success text-danger">جستجو</h2>
+        <div class="form-group">
+            <input type="hidden" name="status" value="4" />
+            <label for="txtCustomerName">نام، نام خانوادگی مشتری</label>
+            <input id="txtCustomerName" type="text" class="form-control" name="buyerCustomerName" maxlength="50" data-validate="required, maxLength(50)">
+        </div>
+        <div class="form-group">
+            <label for="txtCustomerPhoneNumber">شماره تلفن مشتری</label>
+            <input id="txtCustomerPhoneNumber" type="text" class="form-control" name="buyerCustomerPhoneNumber" maxlength="14" data-validate="required, maxLength(14), number">
+        </div>
+        <div class="form-group col-md-6">
+            <button id="btnSearch" type="button" class="btn btn-primary btn-block">
+                <i class="fa fa-search v-middle" aria-hidden="true"></i>&nbsp;
+                جستجو
+            </button>
+        </div>
+        <div class="form-group col-md-6">
+            <button id="btnBurn" type="button" class="btn btn-danger btn-block change-status" data-status="7" data-confirm="آیا از تغییر وضعیت به سوزاندن اطمینان دارید؟">
+                <i class="fa fa-free-code-camp v-middle" aria-hidden="true"></i>&nbsp;
+                سوزاندن
+            </button>
+        </div>
+    </div>
+    <div class="text-center circle gift">
+        <div class="circle1">
+            <div class="circle2">
+                <div class="circle3">
+                    <img class="box1 box" src="~/Content/Image/gift.png" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+
+    </div>
+</div>
+<div id="content" class="row gift-row">
+</div>
+@section scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 500,
+            status: 4,
+            term: null,
+            order: null,
+            filter: null
+        }
+        $(document).ready(function () {
+            $(document).on("click", "#btnSearch", function (event) {
+                event.preventDefault();
+                getList();
+            });
+            $(document).on("click", ".change-status", function (event) {
+                event.preventDefault();
+                var idList = new Array();
+                $('.giftItem:checked').each(function () {
+                    idList.push(this.value);
+                });
+                if (idList.length > 0) {
+                    var confirm = $(this).attr("data-confirm");
+                    var status = $(this).attr("data-status");
+                    confirmMessage(confirm, function () {
+                        var idList = new Array();
+                        $('.giftItem:checked').each(function () {
+                            idList.push(this.value);
+                        });
+                        changeStatus(idList, status, null, null, null, null);
+                    });
+                }
+                else {
+                    alert("حداقل یک مورد را باید انتخاب کنید.");
+                }
+            });
+        });
+        function getList() {
+            var newParams = getEntity("#searchForm");
+            if (newParams.buyerCustomerPhoneNumber != "" || newParams.buyerCustomerName != ""){
+                var params = $.extend(defaultEntity, newParams);
+                params.status = 4;
+                loader(true);
+                $.get("/gift/search", params, function (response) {
+                    if (response.status == 200) {
+                        var data = response.data;
+                        var template = $.templates("#template");
+                        var htmlOutput = template.render(data);
+                        $("#content").html(htmlOutput);
+                        $('[data-toggle="tooltip"]').tooltip();
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            }
+            else {
+                alert("لطفا شماره تماس یا نام و نام خانوادگی مشتری را وارد کنید");
+            }
+        }
+        function changeStatus(input, status, branchIdShopping, companyIdShopping, customerName, customerPhoneNumber) {
+
+            var params = {
+                id: input,
+                status: status,
+                branchIdShopping: branchIdShopping,
+                companyIdShopping: companyIdShopping,
+                customerName: customerName,
+                customerPhoneNumber: customerPhoneNumber
+            };
+
+            loader(true);
+            $.post("/gift/changeStatus", params, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    $("#content").html("");
+                    clearEntity("#searchForm");
+                }
+                alert(response.message)
+            });
+        }
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        {{if list.length > 0}}
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th> </th>
+                    <th>کد</th>
+                    <th>نوع</th>
+                    <th>مبلغ</th>
+                    <th>وضعیت</th>
+                    <th>شعبه خریدار گیفت</th>
+                    <th>شرکت خریدار گیفت</th>
+                    <th>نام مشتری خریدکننده</th>
+                    <th>تلفن مشتری خریدکننده</th>
+                    <th>تاریخ فروخته شده به مشتری</th>
+                    <th>شعبه دریافت کننده گیفت از مشتری</th>
+                    <th>نام مشتری باطل کننده</th>
+                    <th>تلفن مشتری باطل کننده</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr class="{{if valueToSeparator == "5,000,000"}}bg-gold{{/if}}{{if valueToSeparator == "2,000,000"}}bg-crimson{{/if}}{{if valueToSeparator == "1,000,000" && giftType == "0"}}bg-white{{/if}}{{if giftType == "1"}}bg-green{{/if}}{{if giftType == "2"}}bg-green2{{/if}}">
+                    <td class="v-middle">
+                        <input id="chkOrder{{:id}}" class="giftItem" name="giftItem" type="checkbox" value="{{:id}}" data-code="{{:code}}" />
+                    </td>
+                    <td>{{:code}}</td>
+                    <td>{{:giftTypeTitle}}</td>
+                    <td>{{:valueToSeparator}} ریال</td>
+                    <td>{{:giftStatusTitle}}</td>
+                    <td>{{:branchShopping}}</td>
+                    <td>{{:companyShopping}}</td>
+                    <td>{{:buyerCustomerName}}</td>
+                    <td>{{:buyerCustomerPhoneNumber}}</td>
+                    <td>{{:dateSoldToTheCustomer}}</td>
+                    <td>{{:branchReceiverCustomer}}</td>
+                    <td>{{:revocationCustomerName}}</td>
+                    <td>{{:revocationCustomerPhoneNumber}}</td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+        {{else}}
+        <h4 class="txt-al-c">موردی یافت نشد</h4>
+        {{/if}}
+        
+    </script>
+
+}

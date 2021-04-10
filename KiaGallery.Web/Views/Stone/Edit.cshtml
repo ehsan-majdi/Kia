@@ -1,0 +1,108 @@
+﻿<div id="form" class="container">
+    <div class="row form-group">
+
+        <div class="row">
+            <div id="step1" class="col-md-4 col-md-offset-4">
+                <div class="form-group">
+                    <label for="txtName">نام</label>
+                    <input id="txtName" type="text" class="form-control" name="name" maxlength="50" data-validate="required, maxLength(50)">
+                    <input id="hiddenId" type="hidden" value="" name="id" />
+                </div>
+                <div class="form-group">
+                    <label for="txtEnglishName">نام انگلیسی</label>
+                    <input id="txtEnglishName" type="text" class="form-control" name="englishName" maxlength="50" data-validate="required, maxLength(50)">
+                </div>
+                <div class="form-group relative">
+                    <label for="cmbStoneType">نوع سنگ</label>
+                    <select id="cmbStoneType" name="stoneType" class="form-control" data-validate="required">
+                        <option value="0">براق</option>
+                        <option value="1">رسوبی</option>
+                        <option value="2">مروارید</option>
+                        <option value="3">اتمی</option>
+                        <option value="4">سنگ دستبند چرمی</option>
+                        <option value="5">دستبند سنگی</option>
+                    </select>
+                </div>
+                <div class="form-group relative">
+                    <label for="txtFileName">تصویر</label>
+                    <input id="txtFileName" type="text" name="fileName" class="file form-control" disabled data-validate="required" />
+                    <input id="file" type="file" class="hidden" />
+                    <i id="openFile" class="fa fa-upload fa-20px file-icon" aria-hidden="true" style="left: 13px; top: 32px;"></i>
+                    <i id="deleteFile" class="fa fa-remove fa-20px file-icon" aria-hidden="true" style="left: 45px; top: 32px;"></i>
+                </div>
+                <div class="form-group">
+                    <label for="txtOrder">ترتیب</label>
+                    <input id="txtOrder" type="tel" class="form-control number-only" name="order" maxlength="10" data-validate="required, maxLength(10), number">
+                </div>
+                <div class="form-group">
+                    <label for="cmbActive">وضعیت</label>
+                    <select id="cmbActive" class="form-control" data-validate="required" name="active">
+                        <option value="">...</option>
+                        <option value="true">فعال</option>
+                        <option value="false">غیرفعال</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button id="btnSave" type="submit" class="btn btn-success">
+                        <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                        ذخیره
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+    var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+
+    $(document).ready(function () {
+
+        setupUpload("stone");
+
+        load();
+
+        $("#btnSave").on("click", function (event) {
+            event.preventDefault();
+            if (checkForm("#form")) {
+                var entity = getEntity("#form");
+                loader(true);
+                $.ajax({
+                    method: "POST",
+                    url: "/stone/save",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                document.location = "/stone";
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                        loader(false);
+                    }
+                });
+            }
+        });
+    });
+
+    function load() {
+        if (id > 0) {
+            loader(true);
+            $.get("/stone/load/" + id, function (response) {
+                if (response.status == 200) {
+                    setEntity(response.data, "#form");
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    }
+
+    </script>
+}

@@ -1,0 +1,257 @@
+﻿@{
+    ViewBag.Title = "Track";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - سیستم پیگیری سفارشات مشتریان گالری کیا</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="~/Content/sans/fontiran.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="~/Content/uikit.min.css" rel="stylesheet" />
+    <link href="~/Content/fontawsome/font-awesome.css" rel="stylesheet" />
+    <script src="~/Script/jquery-1.12.4.min.js"></script>
+    <script src="~/Script/modernizr-2.8.3.js"></script>
+    <script src="~/Script/bootstrap.min.js"></script>
+    <script src="~/Script/bootstrap-rtl.min.js"></script>
+    <script src="~/Script/General.js"></script>
+    <script src="~/Script/Entity.js"></script>
+    <script src="~/Script/Validate.js"></script>
+    <script src="~/Script/uikit.min.js"></script>
+    <script src="~/Script/jsrender.js"></script>
+
+
+</head>
+<body class="persianNumber">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        .div-father {
+            height: 100%;
+        }
+
+        .background-page {
+            background-image: url('/Content/ui-background.jpg');
+            height: 100%;
+            position: relative;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .background-form {
+            background-color: rgba(255,255,255,0.6);
+            position: absolute;
+            top: 50%;
+            right: 50%;
+            width: 550px;
+            border-radius: 5px;
+            transform: translate(50%, -50%);
+            height: 550px;
+            padding-left: 50px;
+        }
+
+        .cherry {
+            color: #6c3837;
+        }
+
+        label {
+            font-weight: 700 !important;
+            word-wrap: break-word;
+        }
+
+        #desc {
+            color: black !important;
+        }
+
+        .labels {
+            margin-top: 20px;
+        }
+
+        #phone-address {
+            position: fixed;
+            bottom: 0;
+            text-align: center;
+            right: 0;
+        }
+
+        i {
+            font-size: 18px !important;
+        }
+
+        /*.mobile {
+            font-size: 25px !important;
+        }*/
+        .order-button {
+            bottom: 0;
+            position: fixed;
+            left: 0;
+        }
+
+        /*.wpexplorer {
+            font-size: 25px !important;
+        }*/
+
+        @@media screen and (max-width:1200px) and (min-width: 200px) {
+            .background-form {
+                background-color: rgba(255,255,255,0.6);
+                position: fixed;
+                width: 500px;
+                padding: 0;
+            }
+
+            #phone-address {
+                text-align: center;
+                /*padding-top: 70px;*/
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                left: 0;
+            }
+        }
+    </style>
+    <div class="div-father">
+        <div class="background-page">
+            <div class="background-form">
+                <div class="labels ">
+                    <div class="col-md-6 col-xs-6">
+                        <div class="form-group">
+                            <label class="cherry">
+                                <i class="fa fa-user-circle-o"></i>
+                                نام خریــدار :
+                            </label>
+                            <label>@ViewBag.Name</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="cherry">
+                                <i class="mobile fa fa-mobile-phone"></i>
+                                شماره همراه :
+                            </label>
+                            <label>@ViewBag.PhoneNumber</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="cherry">
+                                <i class="wpexplorer fa fa-search"></i>
+                                کدپیگیری :
+                            </label>
+                            <label>@ViewBag.TrackCode</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="cherry">
+                                <i class="fa fa-bar-chart"></i>
+                                وضعیت :
+                            </label>
+                            <label>@ViewBag.Status</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="cherry">
+                                <i class="fa fa-calendar"></i>
+                                تاریخ :
+                            </label>
+                            <label>@ViewBag.Date</label>
+                        </div>
+                        @*<div class="form-group">
+                            <label class="cherry">
+                                <i class="fa fa-image"></i>
+                                تصویر محصول :
+                            </label>
+                        </div>*@
+                  
+                    </div>
+                    <div class="col-md-6 col-xs-6" style="padding-right:60px;">
+                        <div class="form-group">
+                            <label class="cherry">
+                                <i class="fa fa-barcode fa-2x"></i>
+                                نام محصول :
+                            </label>
+                            <label>@ViewBag.ProductName</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="cherry">
+                                <i class="fa fa-circle fa-2x"></i>
+                                نوع طلا :
+                            </label>
+                            <label>
+                                @ViewBag.ProductType
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="cherry">
+                                <i class="fa fa-money "></i>
+                                بیعانه :
+                            </label>
+                            <label>@ViewBag.Deposit</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="cherry">
+                                <i class="fa fa-road fa-2x"></i>
+                                چرم :
+                            </label>
+                            <label>
+                                @ViewBag.Leather
+                            </label>
+                        </div> <div class="form-group">
+                            <label class="cherry">
+                                <i class="fa fa-diamond fa-2x"></i>
+                                سنگ :
+                            </label>
+                            <label>
+                                @ViewBag.Stone
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="cherry">
+                                <i class="fa fa-list-alt"></i>
+                                شرح :
+                            </label>
+                            <label>@ViewBag.Description</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="cherry">
+                                <i class="fa fa-arrows-v"></i>
+                                سایز :
+                            </label>
+                            <label>@ViewBag.Size</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="cherry">
+                                <i class="fa fa-circle-o-notch"></i>
+                                تعداد دور چرم :
+                            </label>
+                            <label>
+                                @ViewBag.LeathearLoop
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-12" id="phone-address">
+                        <p>قیمت طلای سفارشی به نرخ روز تحویل ، محاسبه میگردد</p>
+                        <p><span><i class="mdi mdi-phone-classic"></i></span> &nbsp;تلفن : 22771934-021 </p>
+                    </div>
+                    <div>
+                        <a href="/tracking/orderlist?phoneNumber=@ViewBag.PhoneNumber" class="order-button btn btn-danger">سفارش های من</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<script type="text/javascript">
+
+    //$(document).ready(function () {
+
+    //    $('.persianNumber').persiaNumber();
+
+    //});
+</script>
+
+

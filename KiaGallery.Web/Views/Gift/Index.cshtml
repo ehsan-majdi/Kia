@@ -1,0 +1,1231 @@
+﻿@{
+    ViewBag.Title = "مدیریت گیفت";
+    List<KiaGallery.Web.Models.BranchListViewModel> branchList = ViewBag.BranchList;
+    List<KiaGallery.Web.Models.CompanyListViewModel> companyList = ViewBag.CompanyList;
+}
+<link href="~/Content/ios-switch-rtl.css" rel="stylesheet" />
+<link href="~/content/order-page.css" rel="stylesheet" />
+<style>
+
+
+    .table-responsive .table {
+        max-width: none;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    #main {
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    #main {
+        min-height: 85vh;
+    }
+
+    .product-item .small-font .fa {
+        width: 25px;
+        color: #555;
+        text-align: center;
+    }
+
+    #filter-list {
+        width: 15%;
+        padding-left: 0;
+        padding-right: 0px;
+        padding-top: 25px;
+    }
+
+    #menu-holder {
+        width: calc(100% - 130px);
+        transition: 0.5s;
+        padding-top: 15px
+    }
+
+    td span {
+        line-height: 29px;
+    }
+
+    .border-left {
+        border-left: solid 1px silver;
+    }
+
+    .table-head {
+        padding-bottom: 5px;
+    }
+
+    .table-cell {
+        padding: 5px 0;
+        border-top: solid 1px silver;
+    }
+
+    td {
+        vertical-align: middle !important;
+    }
+
+    #button-bar {
+        margin-top: 8px;
+        padding-bottom: 8px;
+        border-bottom: solid 1px silver;
+    }
+
+    .bg-gold {
+        background-color: #FFD700;
+    }
+
+        .bg-gold:nth-child(2n+1) {
+            background-color: #ffe44d;
+        }
+
+    .bg-crimson {
+        background-color: #800000;
+        color: #fff;
+    }
+
+        .bg-crimson:nth-child(2n+1) {
+            background-color: #cc0000;
+            color: #fff;
+        }
+
+    .bg-white:nth-child(2n+1) {
+        background-color: #eee;
+    }
+
+    .bg-green {
+        background-color: #677b5f;
+    }
+
+        .bg-green:nth-child(2n+1) {
+            background-color: #bcc8b7;
+        }
+
+    .bg-green2 {
+        background-color: #003300;
+        color: #fff;
+    }
+
+        .bg-green2:nth-child(2n+1) {
+            background-color: #001a00;
+            color: #fff;
+        }
+
+    #txtDelivery {
+        width: 200px;
+        display: inline-block;
+    }
+
+    .header-scroll {
+        top: 50px;
+    }
+
+    /* #cmbOrder, #cmbFilter, #cmDateSort, #txtTerm, #cmbGiftType, #branchIdShopping, #branchReceiverCustomer, #txtBuyerCustomerPhoneNumber, #txtBuyerCustomerName, #companyIdShopping {
+        width: 160px;
+        display: inline-block;
+    }*/
+
+    #control-section > div {
+        display: inline-block;
+    }
+
+    /* tooltips container */
+
+</style>
+<link href="~/Content/ToolTip.css" rel="stylesheet" />
+<link href="~/content/chosen/chosen.css" rel="stylesheet" />
+<div class="row">
+    <div class="col-md-12">
+        <div id="menu-holder" class="affix hidden-xs hidden-sm">
+            <div id="control-section">
+                <a href="/gift/add" class="btn btn-primary">
+                    <i class="fa fa-plus v-middle" aria-hidden="true"></i>&nbsp;
+                    <span>جدید</span>
+                </a>
+                <div>
+                    <select id="cmbOrder" class="form-control">
+                        <option value="">مرتب سازی</option>
+                        <option value="price">ارزش کارت</option>
+                        <option value="Date">تاریخ ایجاد</option>
+                    </select>
+                </div>
+                <div>
+                    <select id="cmbFilter" class="form-control">
+                        <option value="">فیلتر</option>
+                        <option value="5">5 درصد</option>
+                        <option value="500000">ریال 500,000</option>
+                        <option value="2500000">ریال 2,500,000</option>
+                        <option value="1000000">ریال 1,000,000</option>
+                        <option value="2000000">ریال 2,000,000</option>
+                        <option value="3000000">ریال 3,000,000</option>
+                        <option value="5000000">ریال 5,000,000</option>
+                        <option value="10000000">ریال 10,000,000</option>
+                        <option value="20000000">ریال 20,000,000</option>
+                        <option value="50000000">ریال 50,000,000</option>
+                    </select>
+                </div>
+                <div>
+                    <select id="cmbGiftType" class="form-control">
+                        <option value="">نوع هدیه</option>
+                        <option value="5">کارت تخفیف </option>
+                        <option value="4">کارت تخفیف بدون ثبت</option>
+                        <option value="0">کارت هدیه</option>
+                        <option value="3">کارت هدیه بدون ثبت</option>
+                        <option value="1">بن خرید</option>
+                        <option value="2">بن خرید بدون ثبت</option>
+                    </select>
+                </div>
+                <div id="branchIdShopping">
+                    <select id="cmbBranchIdShopping" class="form-control combo-chosen chosen-rtl" name="branchIdShopping">
+                        <option value="">شعبه خریدار گیفت</option>
+                        @foreach (KiaGallery.Web.Models.BranchListViewModel branch in branchList)
+                        {
+                            <option value="@branch.id">@branch.name</option>
+                        }
+                    </select>
+                </div>
+                <div id="companyIdShopping">
+                    <select id="cmbCompanyIdShopping" class="form-control combo-chosen chosen-rtl" name="companyIdShopping">
+                        <option value="">شرکت خریدار گیفت</option>
+                        @foreach (KiaGallery.Web.Models.CompanyListViewModel company in companyList)
+                        {
+                            <option value="@company.id">@company.name</option>
+                        }
+                    </select>
+                </div>
+                <div id="branchReceiverCustomer">
+                    <select id="cmbBranchReceiverCustomer" class="form-control combo-chosen chosen-rtl" name="branchReceiverCustomer">
+                        <option value="">شعبه دریافت کننده گیفت از مشتری</option>
+                        @foreach (KiaGallery.Web.Models.BranchListViewModel branch in branchList)
+                        {
+                            <option value="@branch.id">@branch.name</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <select id="cmDateSort" class="form-control" name="dateSort">
+                        <option value=""> تاریخ</option>
+                        <option value="OrderByDescending">جدیدترین</option>
+                        <option value="OrderBy">قدیمی ترین</option>
+                    </select>
+                </div>
+                <div>
+                    <input id="txtTerm" type="text" class="form-control deleteVal" maxlength="12" placeholder="کد کارت هدیه برای فیلتر" />
+                </div>
+                <button id="deleteFilter" class="btn btn-danger clear-params btnDeleteVal">حذف فیلتر</button>
+                <button id="changeExpirationTime" class="btn btn-info">افزودن زمان انقضا</button>
+                <a href="/gift/selltobranch" class=" selltobranch btn btn-primary">فروش به شعبه/شرکت </a>
+                <a href="/gift/operation" class=" btn btn-primary"> عملیات </a>
+            </div>
+            <div id="menu">
+                <ul>
+                    <li><a href="#" class="status" data-id="0">ثبت شده</a></li>
+                    <li><a href="#" class="status" data-id="1">ارسال شده به چاپخانه</a></li>
+                    <li><a href="#" class="status" data-id="2">تحویل از چاپخانه</a></li>
+                    <li><a href="#" class="status" data-id="3">فروخته شده به شعبه/شرکت</a></li>
+                    <li><a href="#" class="status" data-id="4">فروخته شده به مشتری</a></li>
+                    <li><a href="#" class="status" data-id="5">استفاده شده</a></li>
+                    <li><a href="#" class="status" data-id="6">لغو شده</a></li>
+                    <li><a id="all" href="#">همه</a></li>
+                </ul>
+            </div>
+
+            <div id="button-bar">
+                <input type="button" class="select-all btn btn-default" value="انتخاب همه" />
+
+                <input type="button" class="change-status printingHouse btn btn-primary" value="ارسال شود به چاپخانه" data-status="1" data-confirm="آیا از تغییر وضعیت به ارسال شود به چاپخانه اطمینان دارید؟" />
+
+                <input type="button" class="change-status deliveryFromPrintingHouse btn btn-primary" value="تحویل از چاپخانه" data-status="2" data-confirm="آیا از تغییر وضعیت به تحویل از چاپخانه اطمینان دارید؟" />
+                <a class="print btn btn-success"><i class="fa fa-print v-middle" aria-hidden="true"></i>&nbsp;<span>چاپ</span></a>
+                @*<a class="printCheck btn btn-success"><i class="fa fa-print v-middle" aria-hidden="true"></i>&nbsp;<span>چاپ بن خرید</span></a>*@
+                <input type="button" class="change-status soldToTheBranch btn btn-primary" value="فروخته شود به شعبه" data-status="3" data-confirm="آیا از تغییر وضعیت به فروخته شود به شعبه اطمینان دارید؟" />
+                <input type="button" class="change-status soldToTheCompany btn btn-primary" value="فروخته شود به شرکت" data-status="3" data-confirm="آیا از تغییر وضعیت به فروخته شود به شرکت اطمینان دارید؟" />
+                @*<input type="button" class="change-status soldToTheCustomer btn btn-primary" value="فروخته شده به مشتری" data-status="4" data-confirm="آیا از تغییر وضعیت به فروخته شده به مشتری اطمینان دارید؟" />*@
+                @*<input type="button" class="change-status used btn btn-success" value="استفاده شده" data-status="5" data-confirm="آیا از تغییر وضعیت به استفاده شده اطمینان دارید؟" />*@
+                <input type="button" class="change-status cancel btn btn-danger" value="لغو" data-status="6" data-confirm="آیا از تغییر وضعیت به لغو اطمینان دارید؟" />
+                <input type="button" class="change-status deleteSelected btn btn-danger" value="حذف" data-status="7" data-confirm="آیا از تغییر وضعیت به حذف اطمینان دارید؟" />
+
+
+                <div id="selctedCount" class="btn btn-default" style="display:none"></div>
+                <input id="txtDelivery" type="text" class="form-control" maxlength="12" style="display:none" placeholder="کد کارت هدیه برای انتخاب" />
+            </div>
+        </div>
+        <div>
+            <div class="hidden-xs hidden-sm" style="padding-top: 120px;">
+            </div>
+            <div id="content" style="padding-top: 40px;">
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="changeStatusModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">فروش به شعبه</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>انتخاب شعبه</label>
+                    <select id="cmbBranchId" class="form-control" name="branchIdShopping">
+                        <option value="">...</option>
+                        @foreach (KiaGallery.Web.Models.BranchListViewModel branch in branchList)
+                        {
+                            <option value="@branch.id">@branch.name</option>
+                        }
+                    </select>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btnChangeStatus" type="button" class="btn btn-success btn-password btn-control">ثبت</button>
+                <button type="button" class="btn btn-danger btn-password btn-control" data-dismiss="modal">لغو</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="companyModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">فروش به شرکت</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>انتخاب شرکت</label>
+                    <select id="cmbCompanyId" class="form-control" name="companyIdShopping">
+                        <option value="">...</option>
+                        @foreach (KiaGallery.Web.Models.CompanyListViewModel company in companyList)
+                        {
+                            <option value="@company.id">@company.name</option>
+                        }
+                    </select>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btnCompanyStatus" type="button" class="btn btn-success btn-password btn-control">ثبت</button>
+                <button type="button" class="btn btn-danger btn-password btn-control" data-dismiss="modal">لغو</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="customerModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">فروش به مشتری</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input id="customeStatus" type="hidden" name="status" value="4" />
+                    <label for="txtCustomerName">نام، نام خانوادگی مشتری</label>
+                    <input id="txtCustomerName" type="tel" class="form-control" name="CustomerName" placeholder="نام مشتری" maxlength="50" data-validate="required, maxLength(50)">
+                </div>
+                <div class="form-group">
+                    <label for="txtCustomerPhoneNumber">شماره تلفن مشتری</label>
+                    <input id="txtCustomerPhoneNumber" type="tel" class="form-control" name="customerPhoneNumber" placeholder="شماره تلفن مشتری" maxlength="14" data-validate="required, maxLength(14), number">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnCustomer" type="button" class="btn btn-success btn-control">ثبت</button>
+                <button type="button" class="btn btn-danger btn-control" data-dismiss="modal">لغو</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="changeExpirationTimeModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">افزودن تاریخ انقضا</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input id="customeStatus" type="hidden" name="status" value="4" />
+                    <label for="txtExpirationTime">انقضا</label>
+                    <input id="txtExpirationTime" type="text" class="form-control" name="expirationTime" placeholder="روز" maxlength="50" data-validate="required, maxLength(50)">
+                </div>
+                <div class="form-group">
+                    <label for="txtExpiryDateToSolar">تاریخ انقضا به شمسی</label>
+                    <input id="txtExpiryDateToSolar" type="text" class="form-control date" autocomplete="off" name="expiryDateToSolar" placeholder="تاریخ">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="btnChangeExpirationTime" type="button" class="btn btn-success btn-control">ثبت</button>
+                <button type="button" class="btn btn-danger btn-control" data-dismiss="modal">لغو</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="logDetailModal" class="modal fade" role="dialog" style="overflow-y: auto;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">سوابق گیفت</h4>
+            </div>
+            <div id="log-content" class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 350,
+            status: null,
+            term: null,
+            order: null,
+            filter: null
+        }
+
+
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(".btnDeleteVal").on("click", function () {
+            $(".deleteVal").val(null)
+        });
+
+        $(window).scroll(function () {
+            var scrollTop = $(window).scrollTop();
+            if (scrollTop > 0) {
+                $("#menu-holder").addClass("header-scroll");
+            }
+            else {
+                $("#menu-holder").removeClass("header-scroll");
+            }
+        });
+
+        $(document).ready(function () {
+            $(".combo-chosen").chosen({ width: "100%", placeholder_text_single: 'یک مورد را انتخاب کنید.', search_contains: true });
+            //$(".combo-chosen").trigger("chosen:updated");
+
+            $(".date").pDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true,
+            });
+            //$(window).on("hashchange", function () {
+
+            //    $(".status").on("click", function () {
+            //        if ($(this).attr("data-id") == 0) {
+
+            //            $(".deliveryFromPrintingHouse").hide()
+            //        }
+            //        else {
+            //            $(".deliveryFromPrintingHouse").show()
+            //        }
+
+            //    });
+            //})
+            getList();
+            $(document).on("click", ".status", function (event) {
+                event.preventDefault();
+                var entity = {
+                    status: $(this).attr("data-id")
+                };
+                manipulateParam(entity, "page");
+            });
+            $(document).on("click", "#all", function (event) {
+                $("#changeExpirationTime").show()
+            });
+            $(".select-all").on("click", function (event) {
+                if ($(".giftItem").not(":checked").length > 0) {
+                    $(".giftItem").prop("checked", true);
+                }
+                else {
+                    $(".giftItem").prop("checked", false);
+                }
+                $(".giftItem").change();
+            });
+
+            $("#btnChangeStatus").on("click", function (event) {
+                var idList = new Array();
+                $('.giftItem:checked').each(function () {
+                    idList.push(this.value);
+                });
+                $("#changeStatusModal").modal('hide');
+                changeStatus(idList, 3, $("#changeStatusModal #cmbBranchId").val(), null, null, null);
+            });
+            $("#changeExpirationTime").on("click", function (event) {
+                $("#txtExpirationTime").val(null)
+                var idList = new Array();
+                $('.giftItem:checked').each(function () {
+                    idList.push(this.value);
+                });
+                if (idList.length > 0) {
+                    $("#changeExpirationTimeModal").modal('show');
+                }
+                else {
+
+                    alert("حداقل یک مورد را باید انتخاب کنید.");
+                }
+            });
+            $("#btnChangeExpirationTime").on("click", function (event) {
+                var idList = new Array();
+                $('.giftItem:checked').each(function () {
+                    idList.push(this.value);
+
+                });
+                console.log(idList)
+                changeExpirationTime(idList, $("#txtExpirationTime").val() != null && $("#txtExpirationTime").val() > 0 ? $("#txtExpirationTime").val() : $("#txtExpiryDateToSolar").val());
+            });
+
+            $("#btnCompanyStatus").on("click", function (event) {
+                var idList = new Array();
+                $('.giftItem:checked').each(function () {
+                    idList.push(this.value);
+                });
+                $("#companyModal").modal('hide');
+                changeStatus(idList, 3, null, $("#cmbCompanyId").val(), null, null);
+            });
+
+            $("#btnCustomer").on("click", function (event) {
+                var idList = new Array();
+                $('.giftItem:checked').each(function () {
+                    idList.push(this.value);
+                });
+                $("#customerModal").modal('hide');
+                changeStatus(idList, 4, null, null, $("#txtCustomerName").val(), $("#txtCustomerPhoneNumber").val());
+            });
+
+            $("#txtDelivery").on("change", function (event) {
+                var code = $(this).val();
+                if (code.length == 12) {
+                    $(".giftItem[data-code=" + code + "]").prop("checked", true);
+                    $(".giftItem").change();
+                    $(this).val("");
+                }
+            });
+
+            $(document).on("click", ".change-status", function (event) {
+                event.preventDefault();
+                var idList = new Array();
+                $('.giftItem:checked').each(function () {
+                    idList.push(this.value);
+                });
+                if (idList.length > 0) {
+                    var confirm = $(this).attr("data-confirm");
+                    var status = $(this).attr("data-status");
+                    if (status == 3) {
+                        if ($(this).hasClass("soldToTheBranch"))
+                            $("#changeStatusModal").modal('show');
+                        else
+                            $("#companyModal").modal('show');
+                    }
+                    else if (status == 4) {
+                        $("#customerModal").modal('show');
+                    }
+                    else {
+                        confirmMessage(confirm, function () {
+                            var idList = new Array();
+                            $('.giftItem:checked').each(function () {
+                                idList.push(this.value);
+                            });
+                            changeStatus(idList, status, null, null, null, null);
+                        });
+                    }
+                }
+                else {
+                    alert("حداقل یک مورد را باید انتخاب کنید.");
+                }
+            });
+
+            $(document).on("change", ".giftItem", function () {
+                if ($(".giftItem:checked").length > 0) {
+                    $("#selctedCount").show();
+                    var count = 0;
+                    $(".giftItem:checked").each(function (index, element) {
+                        count += 1;
+                    });
+                    $("#selctedCount").html("تعداد انتخاب شده: " + count);
+                }
+                else {
+                    $("#selctedCount").hide();
+                }
+            });
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف گیفت اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/gift/delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    });
+                });
+
+            });
+            $(document).on("click", ".deleteSelected", function (event) {
+
+                var idList = new Array();
+                $('.giftItem:checked').each(function () {
+                    idList.push(this.value);
+                });
+                loader(true);
+                confirmMessage("آیا از حذف گیفت اطمینان دارید؟", function () {
+                    $.post("/gift/delete/", { id: idList }, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    });
+                });
+            });
+
+            $(document).on("click", ".showLog", function () {
+                var id = $(this).attr("data-id");
+                loader(true);
+                $.get("/gift/GetLog/" + id, function (response) {
+                    loader(false);
+                    var data = response.data;
+                    var template = $.templates("#template-log");
+                    var htmlOutput = template.render(data);
+                    $("#log-content").html(htmlOutput);
+                    $("#logDetailModal").modal('show');
+
+                    $(".orderDetailItem").change();
+                });
+            });
+            $(document).on("click", ".print", function () {
+                var idList = new Array();
+                $('.giftItem:checked').each(function () {
+                    idList.push(this.value);
+                });
+                if (idList.length > 0) {
+                    var list = idList.join();
+                    window.open("/gift/printingHouse?id=" + list, "_blank");
+                }
+                else {
+                    alert("حد اقل یک مورد انتخاب کنید.");
+                }
+            });
+            $(document).on("click", ".printCheck", function () {
+                var idList = new Array();
+                $('.giftItem:checked').each(function () {
+                    idList.push(this.value);
+                });
+                if (idList.length > 0) {
+                    var list = idList.join();
+                    window.open("/gift/printCheck?id=" + list, "_blank");
+                }
+                else {
+                    alert("حد اقل یک مورد انتخاب کنید.");
+                }
+            });
+            $(document).on("change", "#cmbFilter", function (event) {
+                var value = $(this).val();
+                if (value != null && value != "") {
+                    var param = { filter: value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["filter", "page"]);
+                    defaultEntity.filter = null;
+                }
+            });
+            $(document).on("change", "#cmbGiftType", function (event) {
+                var value = $(this).val();
+                if (value != null && value != "") {
+                    var param = { giftType: value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["giftType", "page"]);
+                    defaultEntity.giftType = null;
+                }
+            });
+            $(document).on("change", "#cmbDateSort", function (event) {
+                var value = $(this).val();
+                if (value != null && value != "") {
+                    var param = { dateSort: value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["dateSort", "page"]);
+                    defaultEntity.dateSort = null;
+                }
+            });
+            $(document).on("change", "#cmbBranchIdShopping", function (event) {
+                var value = $(this).val();
+                if (value != null && value != "") {
+                    var param = { branchIdShopping: value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["branchIdShopping", "page"]);
+                    defaultEntity.branchIdShopping = null;
+                }
+            });
+
+            $(document).on("change", "#cmbCompanyIdShopping", function (event) {
+
+                var value = $(this).val();
+                if (value != null && value != "") {
+                    var param = { companyIdShopping: value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["companyIdShopping", "page"]);
+                    defaultEntity.companyIdShopping = null;
+                }
+            });
+
+            $(document).on("change", "#cmbBranchReceiverCustomer", function (event) {
+                var value = $(this).val();
+                if (value != null && value != "") {
+                    var param = { branchReceiverCustomer: value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["branchReceiverCustomer", "page"]);
+                    defaultEntity.branchReceiverCustomer = null;
+                }
+            });
+            $(document).on("change", "#cmDateSort", function (event) {
+                var value = $(this).val();
+                if (value != null && value != "") {
+                    var param = { dateSort: value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["dateSort", "page"]);
+                    defaultEntity.dateSort = null;
+                }
+            });
+            $(document).on("keyup", "#txtTerm", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    var value = $(this).val();
+                    if (value != null && value != "") {
+                        var param = { term: value }
+                        manipulateParam(param, "page");
+                    }
+                    else {
+                        removeParam(["term", "page"]);
+                        defaultEntity.term = null;
+                    }
+                }
+            });
+            $(document).on("keyup", "#txtBuyerCustomerName", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    var value = $(this).val();
+                    if (value != null && value != "") {
+                        var param = { buyerCustomerName: value }
+                        manipulateParam(param, "page");
+                    }
+                    else {
+                        removeParam(["buyerCustomerName", "page"]);
+                        defaultEntity.buyerCustomerName = null;
+                    }
+                }
+            });
+            $(document).on("keyup", "#txtBuyerCustomerPhoneNumber", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    var value = $(this).val();
+                    if (value != null && value != "") {
+                        var param = { buyerCustomerPhoneNumber: value }
+                        manipulateParam(param, "page");
+                    }
+                    else {
+                        removeParam(["buyerCustomerPhoneNumber", "page"]);
+                        defaultEntity.buyerCustomerPhoneNumber = null;
+                    }
+                }
+            });
+            $(document).on("change", "#cmbOrder", function (event) {
+                var value = $(this).val();
+                if (value != null && value != "") {
+                    var param = { order: value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["order", "page"]);
+                    defaultEntity.order = null;
+                }
+            });
+
+        });
+
+        function changeStatus(input, status, branchIdShopping, companyIdShopping, customerName, customerPhoneNumber) {
+
+            var params = {
+                id: input,
+                status: status,
+                branchIdShopping: branchIdShopping,
+                companyIdShopping: companyIdShopping,
+                customerName: customerName,
+                customerPhoneNumber: customerPhoneNumber
+            };
+
+            loader(true);
+            $.post("/gift/changeStatus", params, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    getList();
+                    if (status == 1) {
+                        idList = input.join();
+                        window.open("/gift/printingHouse?id=" + idList, "_blank");
+                    }
+                }
+                getList();
+            });
+        }
+        function changeExpirationTime(input, expirationTime, status) {
+
+            var params = {
+                id: input,
+                expirationTime: expirationTime,
+                expirationDate: expirationTime
+            };
+            $.post("/gift/changeExpirationTime", params, function (response) {
+                if (response.status == 200) {
+                    $("#changeExpirationTimeModal").modal('hide');
+                    alert(response.message)
+                    getList()
+                }
+                else {
+                    alert(response.message)
+                }
+            });
+        }
+
+        function getList() {
+            updateForm();
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+
+            loader(true);
+            $.get("/gift/search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                    $(".change-status").hide();
+                    //$(".change-status.cancel").show();
+                    $("#selctedCount, #txtDelivery").hide();
+
+                    if (params["status"] && params["status"] >= 0) {
+                        $(".toggleShow").addClass("hidden")
+                        switch (parseInt(params["status"])) {
+                            case 0:
+                                $(".toggleShow").each(function (index, e) {
+                                    var a = $(e).attr("data-show").split(",")
+                                    for (var i = 0; i < a.length; i++) {
+                                        if (a[i] == "0") {
+                                            $(e).removeClass("hidden");
+                                        }
+                                    }
+
+                                });
+                                $(".toggleShow").each(function (index, e) {
+                                    var a = $(e).attr("data-show").split(",")
+                                    for (var i = 0; i < a.length; i++) {
+                                        console.log(a[i])
+                                        if (a[i] == "0") {
+                                            console.log(true)
+                                            $(e).removeClass("hidden");
+                                        }
+                                    }
+
+                                });
+                                $(".change-status.printingHouse,#changeExpirationTime").show();
+                                $("#branchIdShopping,#companyIdShopping,#branchReceiverCustomer,.deliveryFromPrintingHousepage,.selltobranch").hide();
+                                break;
+                            case 1:
+                                $(".toggleShow").each(function (index, e) {
+                                    var a = $(e).attr("data-show").split(",")
+                                    for (var i = 0; i < a.length; i++) {
+                                        if (a[i] == "1") {
+                                            $(e).removeClass("hidden");
+                                            console.log(true)
+                                        }
+                                    }
+
+                                });
+                                $(".toggleShow").each(function (index, e) {
+                                    var a = $(e).attr("data-show").split(",")
+                                    for (var i = 0; i < a.length; i++) {
+                                        console.log(a[i])
+                                        if (a[i] == "1") {
+                                            console.log(true)
+                                            $(e).removeClass("hidden");
+                                        }
+                                    }
+
+                                });
+                                $("#changeExpirationTime,.change-status.deliveryFromPrintingHouse, #txtDelivery,.change-status.cancel,.deliveryFromPrintingHousepage").show();
+                                $("#branchIdShopping,#companyIdShopping,#branchReceiverCustomer,.selltobranch").hide();
+                                break;
+                            case 2:
+                                $(".toggleShow").each(function (index, e) {
+                                    var a = $(e).attr("data-show").split(",")
+                                    for (var i = 0; i < a.length; i++) {
+                                        if (a[i] == "2") {
+                                            $(e).removeClass("hidden");
+                                            console.log(true)
+                                        }
+                                    }
+
+                                });
+                                $(".toggleShow").each(function (index, e) {
+                                    var a = $(e).attr("data-show").split(",")
+                                    for (var i = 0; i < a.length; i++) {
+                                        console.log(a[i])
+                                        if (a[i] == "2") {
+                                            console.log(true)
+                                            $(e).removeClass("hidden");
+                                        }
+                                    }
+
+                                });
+                                $("#changeExpirationTime,.change-status.soldToTheBranch, .change-status.soldToTheCompany, #txtDelivery,.change-status.cancel,.selltobranch").show();
+                                $("#branchIdShopping,#companyIdShopping,#branchReceiverCustomer,.deliveryFromPrintingHousepage").hide();
+                                break;
+                            case 3:
+                                $(".toggleShow").each(function (index, e) {
+                                    var a = $(e).attr("data-show").split(",")
+                                    for (var i = 0; i < a.length; i++) {
+                                        if (a[i] == "3") {
+                                            $(e).removeClass("hidden");
+                                            console.log(true)
+                                        }
+                                    }
+
+                                });
+                                $(".toggleShow").each(function (index, e) {
+                                    var a = $(e).attr("data-show").split(",")
+                                    for (var i = 0; i < a.length; i++) {
+                                        console.log(a[i])
+                                        if (a[i] == "3") {
+                                            console.log(true)
+                                            $(e).removeClass("hidden");
+                                        }
+                                    }
+
+                                });
+                                $("#changeExpirationTime,.change-status.soldToTheCustomer, #txtDelivery,.change-status.cancel,#branchReceiverCustomer,#companyIdShopping,#branchIdShopping").show();
+                                $("#branchReceiverCustomer,.deliveryFromPrintingHousepage,.selltobranch").hide();
+                                break;
+                            case 4:
+                                $(".toggleShow").each(function (index, e) {
+                                    var a = $(e).attr("data-show").split(",")
+                                    for (var i = 0; i < a.length; i++) {
+                                        if (a[i] == "4") {
+                                            $(e).removeClass("hidden");
+                                            console.log(true)
+                                        }
+                                    }
+
+                                });
+                                $(".toggleShow").each(function (index, e) {
+                                    var a = $(e).attr("data-show").split(",")
+                                    for (var i = 0; i < a.length; i++) {
+                                        console.log(a[i])
+                                        if (a[i] == "4") {
+                                            console.log(true)
+                                            $(e).removeClass("hidden");
+                                        }
+                                    }
+
+                                });
+                                $("#changeExpirationTime,#txtDelivery,.change-status.cancel,.select-all,#branchIdShopping,#companyIdShopping,#branchReceiverCustomer").show();
+                                $(".print,.deliveryFromPrintingHousepage,.selltobranch").hide();
+                                break;
+                            case 5:
+                                $(".toggleShow").each(function (index, e) {
+                                    var a = $(e).attr("data-show").split(",")
+                                    for (var i = 0; i < a.length; i++) {
+                                        if (a[i] == "5") {
+                                            $(e).removeClass("hidden");
+                                            console.log(true)
+                                        }
+                                    }
+
+                                });
+                                $(".toggleShow").each(function (index, e) {
+                                    var a = $(e).attr("data-show").split(",")
+                                    for (var i = 0; i < a.length; i++) {
+                                        console.log(a[i])
+                                        if (a[i] == "5") {
+                                            console.log(true)
+                                            $(e).removeClass("hidden");
+                                        }
+                                    }
+
+                                });
+                                $("#changeExpirationTime,.select-all,.print,.deliveryFromPrintingHousepage,.selltobranch").hide();
+                                break;
+                            case 6:
+                                $(".toggleShow").each(function (index, e) {
+                                    var a = $(e).attr("data-show").split(",")
+                                    for (var i = 0; i < a.length; i++) {
+                                        if (a[i] == "6") {
+                                            $(e).removeClass("hidden");
+                                            console.log(true)
+                                        }
+                                    }
+
+                                });
+                                $(".toggleShow").each(function (index, e) {
+                                    var a = $(e).attr("data-show").split(",")
+                                    for (var i = 0; i < a.length; i++) {
+                                        console.log(a[i])
+                                        if (a[i] == "6") {
+                                            console.log(true)
+                                            $(e).removeClass("hidden");
+                                        }
+                                    }
+
+                                });
+                                $(".change-status.deleteSelected,.select-all").show();
+                                $("#changeExpirationTime,.print,.deliveryFromPrintingHousepage,.selltobranch").hide();
+                                break;
+                            case 7:
+                                $(".select-all,.print,.deliveryFromPrintingHousepage,.selltobranch").hide();
+                                break;
+                            default:
+                                break;
+                        }
+                        $('[data-toggle="tooltip"]').tooltip();
+                    }
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+        function updateForm() {
+            var params = getParam();
+            // workshop id
+            $("#menu li").removeClass("active");
+            if (params["status"] && params["status"] >= 0)
+                $("#menu li a[data-id=" + params["status"] + "]").closest("li").addClass("active");
+            else {
+                $("#menu li:last").addClass("active");
+                defaultEntity.status = null;
+            }
+
+            //Order
+            if (params["order"]) {
+                $("#cmbOrder").val(params["order"]);
+            }
+            else {
+                $("#cmbOrder").val("");
+            }
+            //term
+            if (params["term"]) {
+                $("#txtTerm").val(params["term"]);
+            }
+            else {
+                $("#txtTerm").val("");
+            }
+            //buyerCustomerPhoneNumber
+            if (params["buyerCustomerPhoneNumber"]) {
+                $("#txtBuyerCustomerPhoneNumber").val(params["buyerCustomerPhoneNumber"]);
+            }
+            else {
+                $("#txtBuyerCustomerPhoneNumber").val("");
+            }
+            //buyerCustomerName
+            if (params["buyerCustomerName"]) {
+                $("#txtBuyerCustomerName").val(params["buyerCustomerName"]);
+            }
+            else {
+                $("#txtBuyerCustomerName").val("");
+            }
+            //giftType
+            if (params["giftType"]) {
+                $("#cmbGiftType").val(params["giftType"]);
+            }
+            else {
+                $("#cmbGiftType").val("");
+            }
+            if (params["dateSort"]) {
+                $("#cmbDateSort").val(params["dateSort"]);
+            }
+            else {
+                $("#cmbDateSort").val("");
+            }
+            //branchIdShopping
+            if (params["branchIdShopping"]) {
+                $("#cmbBranchIdShopping").val(params["branchIdShopping"]);
+            }
+            else {
+                $("#cmbBranchIdShopping").val("");
+            }
+
+            //companyIdShopping
+            if (params["companyIdShopping"]) {
+                $("#cmbCompanyIdShopping").val(params["companyIdShopping"]);
+            }
+            else {
+                $("#cmbCompanyIdShopping").val("");
+            }
+
+            //branchReceiverCustomer
+            if (params["branchReceiverCustomer"]) {
+                $("#cmbBranchReceiverCustomer").val(params["branchReceiverCustomer"]);
+            }
+            else {
+                $("#cmbBranchReceiverCustomer").val("");
+            }
+            //filter
+            if (params["filter"]) {
+                $("#cmbFilter").val(params["filter"]);
+            }
+            else {
+                $("#cmbFilter").val("");
+            }
+        }
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        {{if list.length > 0}}
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th> </th>
+                    <th class="toggleShow" data-show="0,1,2,3,4,5">کد</th>
+                    <th class="toggleShow" data-show="0,1,2,3,4,5">نوع</th>
+                    <th class="toggleShow" data-show="0,1,2,3,4,5">اعتبار</th>
+                    <th class="toggleShow" data-show="">وضعیت</th>
+                    <th class="toggleShow" data-show="3,4,5">شعبه/شرکت خریدار گیفت</th>
+                    @*<th class="toggleShow" data-show="3,4,5">شرکت خریدار گیفت</th>*@
+                    <th class="toggleShow text-center" data-show="4,5">نام مشتری خریدکننده</th>
+                    @*<th class="toggleShow" data-show="">تلفن مشتری خریدکننده</th>*@
+                    <th class="toggleShow" data-show="5">شعبه دریافت کننده گیفت از مشتری</th>
+                    <th class="toggleShow text-center" data-show="5">نام مشتری باطل کننده</th>
+                    <th class="toggleShow" data-show="">تلفن مشتری باطل کننده</th>
+                    <th class="toggleShow" data-show="5">شماره فاکتور</th>
+                    <th class="toggleShow" data-show="5">مبلغ فاکتور</th>
+                    <th class="toggleShow" data-show="3,4">تاریخ انقضا</th>
+                    <th class="toggleShow" data-show="6">کاربر لغو کننده</th>
+                    <th class="icon-col text-center">سوابق</th>
+                    <th class="icon-col text-center">ویرایش</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr class="{{if valueToSeparator == "5,000,000"}}bg-gold{{/if}}{{if valueToSeparator == "2,000,000"}}bg-crimson{{/if}}{{if valueToSeparator == "1,000,000" && giftType == "0"}}bg-white{{/if}}{{if giftType == "1"}}bg-green{{/if}}{{if giftType == "2"}}bg-green2{{/if}}">
+                    <td class="v-middle">
+                        <input id="chkOrder{{:id}}" class="giftItem" name="giftItem" type="checkbox" value="{{:id}}" data-code="{{:code}}" data-status="{{:giftStatus}}" />
+                    </td>
+                    <td class="toggleShow" data-show="0,1,2,3,4,5">{{:code}}</td>
+                    <td class="toggleShow" data-show="0,1,2,3,4,5">{{:giftTypeTitle}}</td>
+                    {{if valueToSeparator == 5}}
+                    <td class="toggleShow" data-show="0,1,2,3,4,5">{{:valueToSeparator}}%</td>
+                    {{else}}
+                    <td class="toggleShow" data-show="0,1,2,3,4,5">{{:valueToSeparator}} ریال</td>
+                    {{/if}}
+                    <td class="toggleShow" data-show="">{{:giftStatusTitle}}</td>
+                    <td class="toggleShow" data-show="3,4,5">{{:branchShopping}} {{:companyShopping}}</td>
+                    @*<td class="toggleShow" data-show="3,4,5">{{:companyShopping}}</td>*@
+                    <td class="toggleShow tooltips text-center" data-show="4,5">{{:buyerCustomerName}}{{if buyerCustomerPhoneNumber}}<span class="tooltipstext">{{:buyerCustomerPhoneNumber}}</span>{{/if}}</td>
+                    @*<td class="toggleShow" data-show=""><span>{{:buyerCustomerPhoneNumber}}</span></td>*@
+                    <td class="toggleShow" data-show="5">{{:branchReceiverCustomer}}</td>
+                    <td class="toggleShow tooltips text-center" data-show="5">{{:revocationCustomerName}}{{if revocationCustomerPhoneNumber}}<span class="tooltipstext">{{:revocationCustomerPhoneNumber}}</span>{{/if}}</td>
+                    <td class="toggleShow" data-show=""><span>{{:revocationCustomerPhoneNumber}}</span></td>
+                    <td class="toggleShow" data-show="5">
+                        {{if factorNumber == null || factorNumber == 0 }}
+                        <i class="fa fa-close" style="color:#d9534f"></i>
+
+                        {{else}}
+                        {{:factorNumber}}
+                        {{/if}}
+                    </td>
+                    <td class="toggleShow" data-show="5">
+                        {{if factorPrice == null || factorPrice == 0 }}
+                        <i class="fa fa-close" style="color:#d9534f"></i>
+                        {{else}}
+                        {{:factorPrice}}
+                        {{/if}}
+                    </td>
+                    <td class="toggleShow" data-show="3,4">
+                        {{if persianExpireTime != null}}
+                        {{:persianExpireTime}}
+                        {{/if}}
+                    </td>
+                    <td class="toggleShow" data-show="6">
+                        {{:canceledUserName}}
+                    </td>
+                    <td class="txt-al-c">
+                        <a data-id="{{:id}}" class="showLog btn btn-primary btn-xs" data-title="سوابق"><i class="fa fa-info-circle" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <a href="/gift/edit/{{:id}}" class="btn btn-primary btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        {{else}}
+        <h4 class="txt-al-c">موردی یافت نشد</h4>
+        {{/if}}
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+
+    <script id="template-log" type="text/x-jsrender">
+        <div class="table row column no-padding w100">
+            <div class="table-heading text-center">
+                <div class="table-head">
+                    کاربر
+                </div>
+                <div class="table-head">
+                    تاریخ
+                </div>
+                <div class="table-head">
+                    وضعیت
+                </div>
+            </div>
+            {{for list}}
+            <div class="table-row text-center">
+                <div class="table-cell ltr">
+                    {{:createUser}}
+                </div>
+                <div class="table-cell ltr">
+                    {{:createdDate}}
+                </div>
+                <div class="table-cell">
+                    {{:status}}
+                </div>
+            </div>
+            {{/for}}
+        </div>
+    </script>
+}

@@ -1,0 +1,66 @@
+﻿@{
+    List<Settings> settingsList = ViewBag.SettingsList;
+}
+
+<div id="form" class="container">
+    <div class="row form-group">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="form-group">
+                    <label for="txtSalaryBaseBranch">پایه حقوق شعبه</label>
+                    <input id="txtSalaryBaseBranch" name="@KiaGallery.Model.Context.Settings.KeySalaryBaseBranch" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeySalaryBaseBranch).Value" />
+                </div>
+                <div class="form-group">
+                    <label for="txtSalaryBaseOffice">پایه حقوق دفتر مرکزی</label>
+                    <input id="txtSalaryBaseOffice" name="@KiaGallery.Model.Context.Settings.KeySalaryBaseOffice" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeySalaryBaseOffice).Value" />
+                </div>
+                <div class="form-group">
+                    <label for="txtOvertime">پایه اضافه کار</label>
+                    <input id="txtOvertime" name="@KiaGallery.Model.Context.Settings.KeyOverTime" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeyOverTime).Value" />
+                </div>
+                <div class="form-group">
+                    <label for="txtSupervisor">پایه سرپرست</label>
+                    <input id="txtSupervisor" name="@KiaGallery.Model.Context.Settings.KeySupervisor" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeySupervisor).Value" />
+                </div>
+                <div class="form-group">
+                    <label for="txtYearAddedRate">اضافی در سال</label>
+                    <input id="txtYearAddedRate" name="@KiaGallery.Model.Context.Settings.KeyYearAddedRate" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeyYearAddedRate).Value" />
+                </div>
+                <div class="form-group">
+                    <label for="txtWorkingHourOffice">ساعت کار دفتر مرکزی</label>
+                    <input id="txtWorkingHourOffice" name="@KiaGallery.Model.Context.Settings.KeyWorkingHourOffice" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeyWorkingHourOffice).Value" data-validate="required,number" />
+                </div>
+                <div class="form-group">
+                    <label for="txtWorkingHourBranch">ساعت کار شعبه</label>
+                    <input id="txtWorkingHourBranch" name="@KiaGallery.Model.Context.Settings.KeyWorkingHourBranch" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeyWorkingHourBranch).Value" data-validate="required,number" />
+                </div>
+                <div class="form-group">
+                    <button id="btnSave" type="submit" class="btn btn-success">
+                        <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                        ذخیره
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#form").find("[name]").each(function (index, element) {
+                moneySeparator(element);
+            });
+            $("#btnSave").on("click", function (event) {
+                event.preventDefault();
+                if (checkForm("#form")) {
+                    var entity = getEntity(form)
+                    $.post("/salary/settingSave", entity, function (response) {
+                        alert(response.message);
+                    });
+                }
+            });
+        });
+    </script>
+}

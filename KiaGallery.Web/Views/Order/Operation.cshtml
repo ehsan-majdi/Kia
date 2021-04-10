@@ -1,0 +1,231 @@
+﻿
+@{
+    ViewBag.Title = "Operation";
+}
+<style>
+    .margin {
+        margin: 5px
+    }
+
+    .card {
+        color: white;
+        background-color: #5cb85c;
+        border-radius: 3px;
+        -webkit-box-shadow: 10px 11px 14px -9px rgba(0,0,0,0.75);
+        -moz-box-shadow: 10px 11px 14px -9px rgba(0,0,0,0.75);
+        box-shadow: 10px 11px 14px -9px rgba(0,0,0,0.75);
+        border: 1px solid silver;
+        margin: 5px;
+        vertical-align: middle;
+        font-size: 30px
+    }
+
+        /*.card:hover {
+            background-color: #4587ff;
+            transition: 500ms ease
+        }*/
+</style>
+<form id="form">
+    <div class="col-md-12 relative">
+        <div class="col-md-4">
+            <div class="col-md-12 margin">
+                <div class="col-md-10">
+                    <label for="cmbStatus">وضعیت</label>
+                    <select id="cmbStatus" class="form-control" name="status">
+                        <option value="">...</option>
+                        <option value="0">ثبت شده</option>
+                        <option value="1">ارسال شده به کارگاه</option>
+                        <option value="2">در حال ساخت</option>
+                        <option value="3">اتمام ساخت</option>
+                        <option value="4">در حال آماده سازی</option>
+                        <option value="5">آماده تحویل</option>
+                        <option value="6">ارسال شده</option>
+                        <option value="7">کسری</option>
+                        <option value="8">سفارش مجدد</option>
+                        <option value="9">لغو شده</option>
+                        <option value="10">ارسال شده به کارگاه دوم/مونتاژ</option>
+                        <option value="11">در حال ساخت در کارگاه دوم/مونتاژ</option>
+                        <option value="12">اتمام ساخت در کارگاه دوم/مونتاژ</option>
+                        <option value="13">سفارش داده شده</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-12 margin">
+                <div class="col-md-10">
+                    <label>تاریخ</label>
+                    <div style="margin-top: 5px;position:relative">
+                        <input id="txtFromDate" class="date form-control" type="text" placeholder="از تاریخ" name="fromDate" />
+                    </div>
+                    <div style="margin-top: 5px;position:relative">
+                        <input id="txtToDate" class="date form-control" type="text" placeholder="تا تاریخ" name="toDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 margin">
+                <div class="col-md-10">
+                    <label for="cmbWorkshop">کارگاه</label>
+                    <select id="cmbWorkshop" class="form-control combo-chosen chosen-rtl col-md-3" name="workshopList" multiple data-placeholder="کارگاه">
+                        @foreach (var item in ViewBag.WorkshopList)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-12 margin">
+                <div class="col-md-10">
+                    <label for="cmbProductType">نوع محصول</label>
+                    <select id="cmbProductType" class="form-control combo-chosen chosen-rtl" multiple name="productTypeList" data-placeholder="انتخاب دسته بندی">
+                        <option value="0">دستبند زنجير طلا</option>
+                        <option value="11">دستبند چرمی</option>
+                        <option value="12">دستبند ریلی</option>
+                        <option value="13">دستبند سنگی</option>
+                        <option value="16">دستبند نخی</option>
+                        <option value="1">گردنبند</option>
+                        <option value="2">گوشواره</option>
+                        <option value="3">انگشتر</option>
+                        <option value="4">آویزساعت</option>
+                        <option value="15">آویزساعت2</option>
+                        <option value="5">سنجاق بچگانه</option>
+                        <option value="6">ست</option>
+                        <option value="7">پابند</option>
+                        <option value="8">آویز</option>
+                        <option value="9">النگو</option>
+                        <option value="10">خرج کار</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-12 margin">
+                <div class="col-md-10">
+                    <label for="cmbOrderType">نوع سفارش</label>
+                    <select id="cmbOrderType" class="form-control" name="orderType">
+                        <option value=""> هردو </option>
+                        <option value="1"> ویترین </option>
+                        <option value="2"> مشتری </option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-12 margin">
+                <div class="col-md-10">
+                    <label for="cmbBranchType">نوع شعبه</label>
+                    <select id="cmbBranchType" class="form-control" name="branchType">
+                        <option value=""> هردو </option>
+                        <option value="0"> شعبه </option>
+                        <option value="1"> نمایندگی </option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-12 margin">
+                <div class="col-md-10">
+                    <label for="cmbBranch">شعبه</label>
+                    <select id="cmbBranch" class="form-control combo-chosen chosen-rtl" name="branch" multiple data-placeholder="شعبه">
+                        @foreach (var item in ViewBag.BranchList)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-12 margin">
+                <div class="col-md-10">
+                    <button style="width:100%" type="button" id="btnSearch" class="btn btn-success"> اعمال <span class="fa fa-refresh"></span></button>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-md-6 absolute" style="bottom:0;left:0;border-right: 1px solid silver;">
+            <div class="col-md-12">
+                <div class="col-md-12 ">
+                    <div class="col-md-10 card" style="background-color:#4587ff;">
+                        تعداد انتخاب شده: <span id="count" class="pull-left">0</span>
+                        <hr />
+                        وزن انتخاب شده: <span id="weight" class="pull-left">0</span>
+                    </div>
+                </div>
+                <div class="col-md-12 ">
+                    <div class="col-md-10 card">
+                        تعداد کل: <span id="allCount" class="pull-left"></span>
+                        <hr />
+                        وزن کل: <span id="allWeight" class="pull-left"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                @*<div class="col-md-12 margin">
+                    <div class="col-md-10">
+                        <hr />
+                        <label>تغیر وضعیت به:</label>
+                        <select class="form-control ">
+                            <option value="">انتخاب وضعیت</option>
+                            <option value="0">ثبت شده</option>
+                            <option value="1">ارسال شده به کارگاه</option>
+                            <option value="2">در حال ساخت</option>
+                            <option value="3">اتمام ساخت</option>
+                            <option value="4">در حال آماده سازی</option>
+                            <option value="5">آماده تحویل</option>
+                            <option value="6">ارسال شده</option>
+                            <option value="7">کسری</option>
+                            <option value="8">سفارش مجدد</option>
+                            <option value="9">لغو شده</option>
+                            <option value="10">ارسال شده به کارگاه دوم/مونتاژ</option>
+                            <option value="11">در حال ساخت در کارگاه دوم/مونتاژ</option>
+                            <option value="12">اتمام ساخت در کارگاه دوم/مونتاژ</option>
+                            <option value="13">سفارش داده شده</option>
+                        </select>
+                    </div>
+                </div>*@
+                @*<div class="col-md-12 margin">
+                    <div class="col-md-10">
+                        <button style="width:100%" type="button" class="btn btn-success">ثبت</button>
+                    </div>
+                </div>*@
+            </div>
+
+        </div>
+    </div>
+
+</form>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            search()
+            $(".date").pDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true
+            });
+            $(".date").val("");
+            $(".combo-chosen").chosen({ width: "100%", placeholder_text_single: 'یک مورد را انتخاب کنید.', search_contains: true });
+            $("#btnSearch").click(function () {
+                var entity = getEntity("#form");
+                entity.workshopList = $("#cmbWorkshop").val();
+                entity.productTypeList = $("#cmbProductType").val();
+                entity.branchList = $("#cmbBranch").val();
+                console.log(entity)
+                search(entity)
+            })
+            $("#cmbProductType").change(function () {
+                console.log($(this).val())
+            })
+        })
+        function search(entity) {
+            console.log(entity)
+            loader(true)
+            $.post("/order/searchOperation/", entity, function (response) {
+                if (response.status == 200) {
+                    $("#count").html(response.data.count + " محصول ")
+                    $("#weight").html(response.data.weight + " گرم ")
+                    $("#allCount").html(response.data.allCount + " محصول ")
+                    $("#allWeight").html(response.data.allWeight + " گرم ")
+                }
+                else {
+                    alert(response.message)
+                }
+                loader(false)
+            })
+        }
+    </script>
+
+}

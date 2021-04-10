@@ -1,0 +1,162 @@
+﻿
+@{
+    ViewBag.Title = "Send";
+}
+
+<style>
+    .cart {
+        background-color: #5cb85c;
+        padding: 10px 10px;
+        margin-bottom: 20px;
+        border-radius: 3px;
+        cursor: pointer;
+        height: 200px;
+        overflow: hidden;
+        margin: 0px 1px 5px
+    }
+
+    textarea {
+        resize: none;
+    }
+
+    .margin {
+    }
+</style>
+<div class="row">
+    <div class="container">
+        <div class="category">
+            <div class="form-group col-md-3">
+                <label for="cmbCategory">دسته بندی پیام</label>
+                <select id="cmbCategory" class="form-control" name="categoryType" data-validate="required">
+                    <option>...</option>
+                </select>
+            </div>
+
+        </div>
+        <div class="form-group col-md-9">
+            <div class="col-md-6">
+                <label for="phoneNumber">شماره همراه</label>
+                <input id="phoneNumber" class="form-control" name="phoneNumber" placeholder="ارسال به شماره" />
+            </div>
+          
+        </div>
+        <div id="content"></div>
+        <div class="form-group col-md-12">
+            <div id="divDroppedFields">
+                <textarea id="textArea" name="txtMessageFields" rows="10" class="required form-control" onclick="getCaretPosition()" onkeyup="getCaretPosition()"></textarea>
+            </div>
+        </div>
+        @*<div class="inputs col-md-2">
+            <input id="price" class="select-input form-control money-separator" placeholder="مبلغ" />
+        </div>
+        <div class="inputs col-md-2">
+            <input id="name" class="select-input form-control" placeholder="نام" />
+        </div>
+        <div class="inputs col-md-2">
+            <input id="cardNumber" class="select-input form-control" placeholder="شماره کارت" />
+        </div>
+        <div class="inputs col-md-2">
+            <input id="phone" class="select-input form-control" placeholder="شماره تماس" />
+        </div>*@
+    </div>
+    <br />
+    <div class="row">
+        <div class="text-center">
+            <button class="btn btn-success" type="submit" id="btnSending">ارسال پیام</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#cmbCategory").on("change", function () {
+                var id = $(this).val();
+                getSmsText(id);
+
+            });
+            $("#name").change(function () {
+                var value = " " + $(this).val() + " ";
+                var newValue = $("#textArea").val();
+                newValue = newValue.replace("{نام}", value);
+                $("#textArea").val(newValue);
+            });
+            $("#phone").change(function () {
+                var value = " " + $(this).val() + " ";
+                var newValue = $("#textArea").val();
+                newValue = newValue.replace("{شماره تماس}", value);
+                $("#textArea").val(newValue);
+            });
+            $("#cardNumber").change(function () {
+                var value = " " + $(this).val() + " ";
+                var newValue = $("#textArea").val();
+                newValue = newValue.replace("{شماره کارت}", value);
+                $("#textArea").val(newValue);
+            });
+            $("#price").change(function () {
+                var value = " " + $(this).val() + " ";
+                var newValue = $("#textArea").val();
+                newValue = newValue.replace("{مبلغ}", value);
+                $("#textArea").val(newValue);
+            });
+            $("#btnSending").click(function () {
+                Sms();
+            });
+        });
+        loadRemoteSelect("#cmbCategory", "/SmsCategory/CategoryList", null, "id", "title", "...", function () {
+
+        });
+
+        function Sms() {
+            var sending = { text: $("#textArea").val(), phoneNumber: $("#phoneNumber").val() };
+            $.post("/sendSms/sendsms/", sending, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    callbackAlert(response.message, function () {
+
+                    });
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        }
+
+        function getSmsText(id) {
+            $.get("/sendSms/GetSmsText/" + id, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                    $(".cart").on("click", function () {
+                        var value = $(this).find("p").last().html()
+                        $("#textArea").val(value);
+                    });
+                }
+                else {
+                    alert(response.message);
+                }
+
+            });
+
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <div class="row">
+            <div class="container">
+                {{for list}}
+                <div class="col-md-3">
+                    <div class="cart">
+                        @*<p><span class="margin">{{:order}}</span></p>*@
+                        <p><span class="margin">{{:title}}</span></p>
+                        @*<p><b>متن پیام:</b></p>*@
+                        <p class="messageText">{{:text}}</p>
+                    </div>
+                </div>
+                {{/for}}
+            </div>
+        </div>
+    </script>
+}

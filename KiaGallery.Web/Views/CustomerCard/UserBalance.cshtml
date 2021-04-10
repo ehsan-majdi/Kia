@@ -1,0 +1,80 @@
+﻿
+@{
+    ViewBag.Title = "تراز مالی";
+}
+
+<style>
+    .form-item {
+        margin: 10px auto;
+        width: 30%;
+    }
+</style>
+<h3>تراز مالی</h3>
+<div class="container" id="form">
+    <div style="margin:0 auto">
+        <div class="form-group form-item">
+            <label>کد مشتری:</label>
+            <input id="txtCustomerCode" type="text" class="form-control" name="card" maxlength="7" data-validate="required, maxLength(7)" />
+        </div>
+        <div class="form-item text-center">
+            <button id="btnSave" class="btn btn-success">
+                جستجوی تراز
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-detail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="exampleModalLabel">تراز</h5>
+            </div>
+            <div class="modal-body">
+                <div id="content">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btnSave").on("click", function () {
+                save()
+            })
+        })
+        function save() {
+            var entity = getEntity("#form");
+            if (checkForm("#form")) {
+                console.log(entity);
+                loader(true);
+                $.get("/customerCard/balance", entity, function (response) {
+                    if (response.status == 200) {
+                        $("#content").html($("#template").html().replace("{{amount}}", response.data.balanceAmount))
+                        $("#modal-detail").modal("show")
+                    }
+                    else {
+                        alert(response.message)
+                    }
+                    loader(false);
+                });
+            }
+
+        }
+    </script>
+    <script id="template" type="text/html">
+        <div style="text-align:center">
+            <span>تراز مالی: {{amount}} ریال</span>
+        </div>
+    </script>
+}

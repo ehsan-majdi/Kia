@@ -1,0 +1,242 @@
+﻿
+@{
+    ViewBag.Title = "مدیریت چرم";
+}
+<link href="~/Content/ios-switch-rtl.css" rel="stylesheet" />
+<link href="~/content/order-page.css" rel="stylesheet" />
+<br />
+<div id="control-section">
+    <a href="/leather/add" class="btn btn-primary">
+        <i class="fa fa-plus v-middle" aria-hidden="true"></i>&nbsp;
+        <span>جدید</span>
+    </a>
+</div>
+
+<br />
+<div id="control-section" class="form-inline">
+    <input id="txtTerm" type="text" name="term" class="form-control" />
+    <div class="form-group">
+        <label for="cmbActive">وضعیت</label>
+        <select id="cmbActive" class="form-control" name="active" style="width: 200px;">
+            <option value="">...</option>
+            <option value="true">فعال</option>
+            <option value="false">غیر فعال</option>
+        </select>
+    </div>
+    <input id="btnSearch" type="button" value="جستجو" class="btn btn-primary" />
+</div>
+<br />
+<div>
+    <div id="menu">
+        <ul>
+            <li><a href="#" class="leatherType" data-id="0">لوله ای</a></li>
+            <li><a href="#" class="leatherType" data-id="1">دوخت</a></li>
+            <li><a href="#" class="leatherType" data-id="2">بافت</a></li>
+            <li><a href="#" class="leatherType" data-id="3">ریلی</a></li>
+            <li><a href="#" class="leatherType" data-id="4">مردانه</a></li>
+            <li><a href="#" class="leatherType" data-id="5">رشته ای</a></li>
+            <li><a id="all" href="#">همه</a></li>
+        </ul>
+    </div>
+    <div id="content">
+
+    </div>
+</div>
+
+
+@section scripts {
+    <script type="text/javascript">
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(document).ready(function () {
+            getList();
+
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف چرم اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/leather/delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+
+            $(document).on("click", ".leatherType", function (event) {
+                event.preventDefault();
+                var entity = {
+                    leatherType: $(this).attr("data-id")
+                };
+                $("#productList").empty();
+                manipulateParam(entity, "page");
+            });
+
+            $(document).on("click", "#btnSearch", function (event) {
+                event.preventDefault();
+                manipulateParam({ status: $(".active .status").attr("data-id"), term: $("#txtTerm").val(), active: $("#cmbActive").val() }, "page");
+            });
+
+            $("#txtTerm").on("keyup", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    if ($("#txtTerm").val()) {
+                        var param = {term: $("#txtTerm").val() }
+                        manipulateParam(param, "page");
+                    }
+                    else
+                        removeParam("term");
+                }
+            });
+
+            $("#cmbActive").on("change", function (e) {
+                if ($("#cmbActive").val()) {
+                    var param = { active: $("#cmbActive").val() }
+                    manipulateParam(param, "page");
+                }
+                else
+                    removeParam("active");
+            });
+
+            $(document).on("click", ".active", function (event) {
+                loader(true);
+                var id = $(this).attr("data-id");
+                $.post("/leather/active/" + id, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        getList();
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+            $(document).on("click", ".inactive", function (event) {
+                loader(true);
+                var id = $(this).attr("data-id");
+                $.post("/leather/inactive/" + id, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        getList();
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+        });
+        function getList() {
+            updateForm();
+            var defaultEntity = {
+                page: 0,
+                count: 200,
+                term: null,
+                active: null,
+                leatherType: null
+            }
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+            // workshop id
+            $("#menu li").removeClass("active");
+            if (params["leatherType"] && params["leatherType"] >= 0)
+                $("#menu li a[data-id=" + params["leatherType"] + "]").closest("li").addClass("active");
+            else {
+                $("#menu li:last").addClass("active");
+            }
+
+            if (params["term"]) {
+                $("#txtTerm").val(params["term"]);
+            }
+            if (params["active"]) {
+                $("#cmbActive").val(params["active"]);
+            }
+
+            loader(true);
+            $.get("/leather/search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+        function updateForm() {
+            var params = getParam();
+
+            // term
+            if (params["term"]) {
+                $("#txtTerm").val(params["term"]);
+            }
+            else {
+                $("#txtTerm").val("");
+            }
+            // active
+            if (params["active"]) {
+                $("#cmbActive").val(params["active"]);
+            }
+            else {
+                $("#cmbActive").val("");
+            }
+        }
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th>نام</th>
+                    <th class="hidden-xs">نوع چرم</th>
+                    <th class="hidden-xs">تصویر</th>
+                    <th class="txt-al-c">ترتیب</th>
+                    <th class="hidden-xs hidden-sm">وضعیت</th>
+                    <th class="icon-col text-center">ویرایش</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td>{{:name}}</td>
+                    <td class="hidden-xs">{{:leatherTypeTitle}}</td>
+                    <td class="hidden-xs"><img src="/image/leather/50x50/{{:fileName}}" style="height: 35px;" /></td>
+                    <td class="txt-al-c">{{:order}}</td>
+                    <td class="hidden-xs hidden-sm">
+                        {{if active}}
+                        <i class="fa fa-check green pointer inactive" data-id="{{:id}}" aria-hidden="true"></i>
+                        فعال
+                        {{else}}
+                        <i class="fa fa-times red pointer active" data-id="{{:id}}" aria-hidden="true"></i>
+                        غیرفعال
+                        {{/if}}
+                    </td>
+                    <td class="txt-al-c">
+                        <a href="/leather/edit/{{:id}}" class="btn btn-primary btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+}

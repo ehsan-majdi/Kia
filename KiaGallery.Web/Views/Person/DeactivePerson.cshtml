@@ -1,0 +1,224 @@
+﻿
+@{
+    ViewBag.Title = "پرسنل غیر فعال";
+}
+
+    <div class=" form-inline">
+        <input id="txtFirstName" type="text" name="firstName" placeholder="نام" class="form-control" />
+        <input id="txtLastName" type="text" name="lastName" placeholder="نام خانوادگی" class="form-control" />
+        <input id="txtPersonNumber" type="text" name="personNumber" placeholder="شماره پرسنلی" class="form-control" />
+        <select id="cmbBranch" name="branchId" class="form-control">
+            <option value="">انتخاب شعبه</option>
+        </select>
+        <input id="btnSearch" type="button" value="جستجو" class="btn btn-primary" />
+        <input type="hidden" class="hiddenPersonId"  />
+    </div>
+
+<div id="content">
+
+</div>
+@section scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 200,
+            firstName: null,
+            lastName: null,
+            personNumber: null,
+            branchId: null,
+        }
+
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(document).ready(function () {
+
+            loadRemoteSelect("#cmbBranch", "/branch/getAll", null, "id", "name", "انتخاب شعبه ...", function () {
+                getList();
+            });
+
+            setupUpload("person");
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف پرسنل اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/person/delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+
+            $(document).on("click", ".active-user", function () {
+                var id = $(this).attr("data-id");
+                loader(true);
+                $.post("/person/activepersonal/" + id , function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        callbackAlert(response.message, function () {
+                            getList();
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+            $(document).on("click", "#btnSearch", function (event) {
+                event.preventDefault();
+                manipulateParam({ firstName: $("#txtFirstName").val(), lastName: $("#txtLastName").val(), personNumber: $("#txtPersonNumber").val(), branchId: $("#cmbBranch").val(), }, "page");
+            });
+
+            $("#txtFirstName").on("keyup", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    var param = { firstName: $("#txtFirstName").val() }
+                    manipulateParam(param, "page");
+                }
+            });
+            $("#txtLastName").on("keyup", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    var param = { lastName: $("#txtLastName").val() }
+                    manipulateParam(param, "page");
+                }
+            });
+            $("#txtPersonNumber").on("keyup", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    var param = { personNumber: $("#txtPersonNumber").val() }
+                    manipulateParam(param, "page");
+                }
+            });
+            $("#cmbBranch").on("change", function (e) {
+                e.preventDefault();
+                var param = { branchId: $("#cmbBranch").val() }
+                manipulateParam(param, "page");
+            });
+        });
+
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+            updateForm();
+            loader(true);
+            $.get("/person/getDeactivePerson", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+        
+        function updateForm() {
+            var params = getParam();
+            
+            // firstName
+            if (params["firstName"]) {
+                $("#txtFirstName").val(params["firstName"]);
+            }
+            else {
+                $("#txtFirstName").val("");
+            }
+
+            // lastName
+            if (params["lastName"]) {
+                $("#txtLastName").val(params["lastName"]);
+            }
+            else {
+                $("#txtLastName").val("");
+            }
+            // personNumber
+            if (params["personNumber"]) {
+                $("#txtPersonNumber").val(params["personNumber"]);
+            }
+            else {
+                $("#txtPersonNumber").val("");
+            }
+
+            // branch
+            if (params["branchId"]) {
+                $("#cmbBranch").val(params["branchId"]);
+            }
+            else {
+                $("#cmbBranch").val("");
+            }
+        }
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>نام</th>
+                    <th>نام خانوادگی</th>
+                    <th>تصویر</th>
+                    <th>شماره پرسنلی</th>
+                    <th>شعبه</th>
+                    <th class="icon-col text-center">غیرفعال</th>
+                    <th class="icon-col text-center">فرم تسویه حساب</th>
+                    <th class="icon-col text-center">فرم سنوات</th>
+                    <th class="icon-col text-center">مشاهده</th>
+                    <th class="icon-col text-center">ویرایش</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td>{{:#getIndex() + 1}}</td>
+                    <td>{{:firstName}}</td>
+                    <td>{{:lastName}}</td>
+                    <td>
+                        <img src="/upload/person/{{:fileName}}" width="150px" />
+                    </td>
+                    <td>{{:personNumber}}</td>
+                    <td>{{:branchName}}</td>
+                    <td>
+                        <a class="fa fa-close btn btn-danger active-user btn-xs" aria-hidden="true" title="غیرفعال" data-id="{{:id}}"></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <a href="/person/reckoning/{{:id}}" class="btn btn-primary btn-xs" data-title="تسویه حساب"><i class="fa fa-money" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <a href="/person/YearSum/{{:id}}" class="btn btn-primary btn-xs" data-title="سنوات"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <a href="/person/view/{{:id}}" class="btn btn-primary btn-xs" data-title="مشاهده"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <a href="/person/edit/{{:id}}" class="btn btn-primary btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+}

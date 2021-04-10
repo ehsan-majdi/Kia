@@ -1,0 +1,346 @@
+﻿
+@{
+                /**/
+
+                ViewBag.Title = "ویرایش";
+}
+<style>
+
+    .accountDetail {
+        background-color: #CFD8DC !important
+    }
+
+    .close-gift {
+        font-size: 20px;
+        position: absolute;
+        margin-right: -6px;
+        cursor: pointer;
+        background: black;
+        border-radius: 4px;
+        padding: 5px;
+        margin-top: -20px;
+    }
+
+    #append {
+        font-size: 19px;
+        right: 16px;
+        position: absolute;
+        margin-right: 0
+    }
+
+    #txtIban {
+        overflow: hidden;
+        direction: ltr !important;
+        padding: 10px 10px 10px 30px;
+    }
+
+    #frst-title {
+        position: absolute;
+        top: 24px;
+        right: -296px;
+        border: solid black 3px;
+        border-radius: 5px;
+        width: 250px;
+        height: 130px;
+        text-align: center;
+    }
+
+    .carttitleposition {
+        font-size: 21px;
+        top: 10px;
+    }
+
+    #sec-title {
+        position: absolute;
+        top: 250px;
+        right: -296px;
+        border: solid black 3px;
+        border-radius: 5px;
+        width: 250px;
+        height: 130px;
+        text-align: center;
+    }
+
+        #sec-title p {
+            background-color: #e0e3e7 !important;
+            height: 126px;
+        }
+
+    hr {
+        height: 4px;
+        background-color: black;
+        border-radius: 4px;
+    }
+
+    .input-box {
+        position: relative;
+    }
+
+    .unit {
+        position: absolute;
+        display: block;
+        left: 22px;
+        top: 32px;
+        z-index: 9;
+    }
+
+    #txtIbanList {
+        overflow: hidden;
+        direction: ltr !important;
+        padding: 10px 10px 10px 30px;
+    }
+
+    textarea {
+        resize: none;
+    }
+
+    @@media screen and (max-width:1200px) and (min-width: 200px) {
+        #frst-title {
+            right: calc(45% - 65px);
+            top: 0;
+            position: sticky;
+        }
+
+        #sec-title {
+            right: calc(45% - 65px);
+            margin-top: 20px;
+            position: sticky;
+        }
+
+        #append {
+            margin-right: 2px;
+        }
+
+        hr {
+            display: none;
+        }
+
+        .inputs {
+            margin-top: 20px;
+        }
+
+        .close-gift {
+            float: left;
+            position: relative;
+            margin-top: -25px;
+            margin-left: -20px;
+        }
+    }
+</style>
+<div class="col-lg-9 col-lg-offset-3">
+    <form id="form">
+        <div class="row">
+            <input type="hidden" name="id" />
+            <div id="frst-title">
+                <h3 class="carttitleposition">اطلاعات شخص</h3>
+                <div>
+                    <i class="fa fa-user-circle fa-4x v-middle"></i>
+                </div>
+            </div>
+            <div class="inputs">
+                <div class="form-group col-lg-3 col-xs-3">
+                    <label for="txtOrgan">شخص</label>
+                    <div>
+                        <select id="txtOrgan" class="form-control" name="organ">
+                            <option value="">...</option>
+                            <option value="true">شرکت/سازمان/شخص</option>
+                            <option value="false">پرسنل کیا</option>
+
+                        </select>
+                    </div>
+
+                </div>
+                <div class="form-group col-lg-3 col-xs-3">
+                    <label for="txtFirstName">نام صاحب حساب</label>
+                    <input type="text" class="form-control" id="txtFirstName" name="firstName" maxlength="20" />
+                </div>
+                @*<div class="form-group col-lg-3">
+                        <label for="txtLastName">نام خانوادگی صاحب حساب</label>
+                        <input type="text" class="form-control" id="txtLastName" name="lastName" maxlength="20" />
+                    </div>*@
+                <div class="form-group col-lg-3 col-xs-3">
+                    <label for="txtPhoneNumber">شماره همراه </label>
+                    <input type="text" class="form-control number-only" id="txtPhoneNumber" name="phoneNumber" />
+                </div>
+                <div class="form-group col-lg-3 col-xs-3">
+                    <label for="txtTelephone">شماره ثابت </label>
+                    <input type="text" class="form-control number-only" id="txtTelephone" name="telephone" />
+                </div>
+                <div class="form-group col-lg-12 col-xs-12">
+                    <label for="txtDescription">توضیحات</label>
+                    <textarea type="text" class="form-control" id="txtDescription" rows="2" name="description"></textarea>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div id="sec-title">
+                <h3 class="carttitleposition">اطلاعات حساب بانکی</h3>
+                <div>
+                    <i class="fa fa-university fa-4x v-middle"></i>
+                </div>
+            </div>
+            <hr />
+        </div>
+        <div class="col-md-12" id="accountDetailList">
+        </div>
+        <div class="form-group col-xs-12 row" style="top:20px">
+            <button class="btn btn-success" id="append" style="">افزودن شماره حساب جدید</button>
+            <button id="btnSubmit" type="submit" class="btn btn-success pull-left col-lg-3 col-xs-3" style="font-size: 19px;">ثبت</button>
+        </div>
+    </form>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+        var counterAppendButton = 0;
+        var newAppend =
+            '<div class="txt-al-r col-md-12 col-xs-3 col-xs-offset-6 row accountDetail detailEntity" id="back-color" style="padding:10px;margin-top:20px;margin-right:0px">' +
+            '<div class="fa fa-close close-gift "style="color:white"></div>' +
+            '<div class="form-group col-lg-2 col-xs-2">' +
+            '<label for="txtBankList">نام بانک</label>' +
+            '<select id="txtBankList" class="form-control" name="bankList">' +
+            '<option value="پاسارگاد">پاسارگاد</option>' +
+            '<option value="پارسیان">پارسیان</option>' +
+            '<option value="صادرات">صادرات</option>' +
+            '<option value="مسکن">مسکن</option>' +
+            '<option value="ملی">ملی</option>' +
+            '<option value="تجارت">تجارت</option>' +
+            '<option value="انصار">انصار</option>' +
+            '<option value="آینده">آینده</option>' +
+            '<option value="کشاورزی">کشاورزی</option>' +
+            '<option value="دی">دی</option>' +
+            '<option value="توسعه صادرات">توسعه صادرات</option>' +
+            '<option value="اقتصاد نوین">اقتصاد نوین</option>' +
+            '<option value="قوامین">قوامین</option>' +
+            '<option value="حکمت ایرانیان">حکمت ایرانیان</option>' +
+            '<option value="تجارت">مشترک ایران و ونزویلا</option>' +
+            '<option value="ایران زمین">ایران زمین</option>' +
+            '<option value="کارآفرین">کارآفرین</option>' +
+            '<option value="مسکن">مسکن</option>' +
+            '<option value="خاورمیانه">خاورمیانه</option>' +
+            '<option value="ملت">ملت</option>' +
+            '<option value="پست بانک ایران">پست بانک ایران</option>' +
+            '<option value="رفاه کارگران">رفاه کارگران</option>' +
+            '<option value="سرمایه">سرمایه</option>' +
+            '<option value="سامان">سامان</option>' +
+            '<option value="شهر">شهر</option>' +
+            '<option value="سینا">سینا</option>' +
+            '<option value="گردشگری">گردشگری</option>' +
+            '<option value="توسعه تعاون">توسعه تعاون</option>' +
+            '</select>' +
+            '</div>' +
+            ' <div class="form-group col-lg-3 col-xs-3">' +
+            '<label for="txtCardNumberList"> شماره کارت </label >' +
+            '<input type="text" class="form-control number-only" id="txtCardNumberList" name="cardNumberList" />' +
+            '</div>' +
+            '<div class="form-group col-lg-3 col-xs-3">' +
+            '<label for="txtAccountNumberList">شماره حساب </label>' +
+            '<input type="text" class="form-control number-only" id="txtAccountNumberList" name="accountNumberList" />' +
+            '</div>' +
+            '<div class="form-group input-box col-lg-4 col-xs-4 ">' +
+            '<label for="txtIbanList">شماره شبا </label>' +
+            '<input type="text" class="form-control number-only" id="txtIbanList" name="ibanList"/>' +
+            '<span class="unit">: IR<span>' +
+            '</div>' +
+            '<div class="form-group col-lg-12 col-xs-12">' +
+            '<label for="txtExplanationList">شرح نوع حساب</label>' +
+            ' <input type="text" class="form-control" id="txtExplanationList" name="explanationList" />' +
+            '</div>' +
+            '</div>';
+
+        $(document).ready(function () {
+            load();
+            $("#append").on("click", function (event) {
+                event.preventDefault();
+                $("#accountDetailList").append(newAppend);
+                counterAppendButton += 1;
+                $("#accountDetailList .accountDetail:last-child").attr("id", "accountDetail" + counterAppendButton);
+                $("#accountDetailList").css({ "margint-top": "40px" });
+            });
+
+            $(document).on("click", ".close-gift", function (event) {
+                event.preventDefault();
+                $(this).parent().remove();
+                
+            });
+
+            $("#btnSubmit").on("click", function (event) {
+                event.preventDefault();
+
+                var entity = getEntity("#form");
+
+                console.log(entity)
+
+                if (!entity.firstName) {
+                    alert("نام به درستی وارد نشده است.");
+                    return;
+                }
+
+                if (entity.phoneNumber.length > 11 || entity.phoneNumber.length < 11 ) {
+                    alert("شماره همراه به درستی وارد نشده است.");
+                    return;
+
+                }
+               
+               
+                entity.bankAccountDetailViewModelList = [];
+                $(".detailEntity").each(function (index, element) {
+                    var detailEntity = getEntity(element);
+                    entity.bankAccountDetailViewModelList.push(detailEntity);
+                });
+
+                if (checkForm("#form")) {
+                    loader(true);
+                    $.post("/bankaccount/save", entity, function (response) {
+
+                        loader(false);
+                        if (response.status == 200) {
+
+
+                            callbackAlert(response.message, function () {
+                                document.location = "/bankaccount/";
+                            })
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    });
+                }
+
+            });
+        });
+        function load() {
+            if (id > 0) {
+                loader(true);
+                $.get("/bankAccount/load/" + id, function (response) {
+                    if (response.status == 200) {
+                        var list = response.data.bankAccountDetailViewModelList;
+                        setEntity(response.data, "#form");
+                        if (list.length > 0) {
+
+                            for (var i = 0; i < list.length; i++) {
+                                var element = $(newAppend).clone();
+                                var item = list[i];
+                                element.find("[name=cardNumberList]").val(item.cardNumberList);
+                                element.find("[name=accountNumberList]").val(item.accountNumberList);
+                                element.find("[name=ibanList]").val(item.ibanList);
+                                element.find("[name=explanationList]").val(item.explanationList);
+                                element.find("[name=bankList]").val(item.bankList);
+                                $("#accountDetailList").append(element);
+                                counterAppendButton += i;
+                                $("#accountDetailList .accountDetail:last-child").attr("id", "accountDetail" + counterAppendButton);
+                                $("#accountDetailList").css({ "margint-top": "40px" });
+
+                            }
+                        }
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            }
+        }
+    </script>
+}

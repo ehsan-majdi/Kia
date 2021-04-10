@@ -1,0 +1,771 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StiSerializer version="1.02" type="Net" application="StiReport">
+  <Dictionary Ref="1" type="Dictionary" isKey="true">
+    <BusinessObjects isList="true" count="0" />
+    <Databases isList="true" count="0" />
+    <DataSources isList="true" count="1">
+      <DataSource Ref="2" type="Stimulsoft.Report.Dictionary.StiDataViewSource" isKey="true">
+        <Alias>DataSource</Alias>
+        <Columns isList="true" count="5">
+          <value>Row,System.String</value>
+          <value>Customer,System.String</value>
+          <value>Weight,System.String</value>
+          <value>Address,System.String</value>
+          <value>PostalCode,System.String</value>
+        </Columns>
+        <Dictionary isRef="1" />
+        <Name>DataSource</Name>
+        <NameInSource>DataSource</NameInSource>
+      </DataSource>
+    </DataSources>
+    <Relations isList="true" count="0" />
+    <Report isRef="0" />
+    <Variables isList="true" count="23">
+      <value>,Name,Name,System.String,,False,False</value>
+      <value>,FatherName,FatherName,System.String,,False,False</value>
+      <value>,BirthCertificateNumber,BirthCertificateNumber,System.String,,False,False</value>
+      <value>,NationalCode,NationalCode,System.String,,False,False</value>
+      <value>,ExpertFrom,ExpertFrom,System.String,,False,False</value>
+      <value>,Birthday,Birthday,System.String,,False,False</value>
+      <value>,City,City,System.String,,False,False</value>
+      <value>,Major,Major,System.String,,False,False</value>
+      <value>,Married,Married,System.String,,False,False</value>
+      <value>,Address,Address,System.String,,False,False</value>
+      <value>,Job,Job,System.String,,False,False</value>
+      <value>,ContractSubject,ContractSubject,System.Boolean,false,False,False</value>
+      <value>,MonthDate,MonthDate,System.String,,False,False</value>
+      <value>,FromDate,FromDate,System.String,,False,False</value>
+      <value>,Todate,Todate,System.String,,False,False</value>
+      <value>,HourlyWageRate,HourlyWageRate,System.String,,False,False</value>
+      <value>,OvertimeYearPriceRate,OvertimeYearPriceRate,System.String,,False,False</value>
+      <value>,DateTimeNow,DateTimeNow,System.String,,False,False</value>
+      <value>,Education,Education,System.String,,False,False</value>
+      <value>,SupervisorText,SupervisorText,System.String,,False,False</value>
+      <value>,OvertimeRate,OvertimeRate,System.String,,False,False</value>
+      <value>,ContractStartDate,ContractStartDate,System.String,,False,False</value>
+      <value>,Employee,Employee,System.String,,False,False</value>
+    </Variables>
+  </Dictionary>
+  <EngineVersion>EngineV2</EngineVersion>
+  <GlobalizationStrings isList="true" count="0" />
+  <MetaTags isList="true" count="0" />
+  <Pages isList="true" count="1">
+    <Page1 Ref="3" type="Page" isKey="true">
+      <Border>None;Black;2;Solid;False;4;Black</Border>
+      <Brush>Transparent</Brush>
+      <Components isList="true" count="1">
+        <DataBand1 Ref="4" type="DataBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,0.2,7.72,19.1</ClientRectangle>
+          <Components isList="true" count="40">
+            <Text2 Ref="5" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0,0.7,7.7,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,11</Font>
+              <Guid>42b926842a2b466ba0d66d559479bfac</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text2</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>بسمه تعالی</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text2>
+            <Text3 Ref="6" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0,1,7.7,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14,Bold</Font>
+              <Guid>a9a36703df1d45e9b17817dcc1384187</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text3</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>قرارداد همکاری</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text3>
+            <Text4 Ref="7" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>1.2,1.4,6.4,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,13,Bold</Font>
+              <Guid>f3877e42628144d3ba7e648ae2b7f786</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text4</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>ماده1
+</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text4>
+            <Text6 Ref="8" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>1.7,3.5,5.9,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,13,Bold</Font>
+              <Guid>a8119569764e49d59ca670bdb2673040</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text6</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>ماده 2
+</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text6>
+            <Text7 Ref="9" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>1.5,3.8,5.9,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14</Font>
+              <Guid>9d13b7351a5240f8a37d583a061caf7d</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text7</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>موضوع قرارداد:</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,RightToLeft=True,,,A=0</TextOptions>
+              <Type>Expression</Type>
+            </Text7>
+            <Text9 Ref="10" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>1.7,4.5,5.9,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,13,Bold</Font>
+              <Guid>54398a7146104e01814f53911260d579</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text9</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>ماده 3
+</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text9>
+            <Text1 Ref="11" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <CanGrow>True</CanGrow>
+              <ClientRectangle>0.3,4.7,7,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14</Font>
+              <GrowToHeight>True</GrowToHeight>
+              <Guid>f2d464bc1454474195929e721073aca0</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text1</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>حرفه یا وظیفه ای که پرسنل مکلف به انجام آن میباشد: 
+</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,RightToLeft=True,,,A=0</TextOptions>
+              <Type>Expression</Type>
+            </Text1>
+            <Text10 Ref="12" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>1.9,5.8,5.7,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,13,Bold</Font>
+              <Guid>aa648dbcb83a42ef8bc2d3c74f9a40a2</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text10</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>ماده 4
+</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text10>
+            <Text11 Ref="13" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.2,6,7.1,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14</Font>
+              <Guid>2e32b94721064b19bae2de6e92e09fc0</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text11</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>محل انجام کار با توافق طرفین در حوزه عملیاتی گالری کیا خواهد بود.</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,RightToLeft=True,,,A=0</TextOptions>
+              <Type>Expression</Type>
+            </Text11>
+            <Text12 Ref="14" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>1.9,6.3,5.7,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,13,Bold</Font>
+              <Guid>a0f5817a446f4e6dbe78a2b2f0064e91</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text12</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>ماده 5
+</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text12>
+            <Text13 Ref="15" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.2,6.5,7.2,1.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14</Font>
+              <Guid>72021161ac96444b9b4e404a5f2a2beb</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text13</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>مدت این قرارداد {MonthDate} ماه ، از تاریخ {FromDate} لغایت {Todate}  میباشد.
+                 ماه اول این قرارداد به عنوان دوره آموزشی تلقی شده و در پایان یک ماه،کارفرما میتواند در خصوص ادامه یا قطع همکاری با کارمند تصمیم گیری نماید.
+                 هر کارمند در کل دوره کاری خود تنها یک بار دوره آزمایشی را خواهد داشت.
+تاریخ شروع همکاری در گالری کیا: {ContractStartDate}
+</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,RightToLeft=True,,WordWrap=True,A=0</TextOptions>
+              <Type>Expression</Type>
+            </Text13>
+            <Text14 Ref="16" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>1.9,7.8,5.7,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,13,Bold</Font>
+              <Guid>2ea168a60f8b4185b688e7728ee3867e</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text14</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>ماده 6
+</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text14>
+            <Text15 Ref="17" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.2,8,7.2,1.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14</Font>
+              <Guid>733f54c704ee4fe892d54a41104eee28</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text15</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>میزان حقوق و مزایا:
+- دستمزد پایه روزانه(براساس نرخ ثابت ساعتی) در سال { HourlyWageRate}     ریال
+- دستمزد پایه اضافه کار(براساس نرخ ثابت ساعتی) در سال{OvertimeRate}     ریال
+{SupervisorText}
+که در پایان هر ماه قابل پرداخت می باشد.</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,RightToLeft=True,,,A=0</TextOptions>
+              <Type>Expression</Type>
+            </Text15>
+            <Text23 Ref="18" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>6.1,4.1,1,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,13,Bold</Font>
+              <Guid>b87ebaf6dc4a4e57922eea1350502495</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text23</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>قراردادکارموقت</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,RightToLeft=True,,,A=0</TextOptions>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text23>
+            <Text24 Ref="19" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>2.1,4.1,1.4,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,13,Bold</Font>
+              <Guid>b345881970fa472294d0603cedc9a3d4</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text24</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>قراردادکارمعین</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,RightToLeft=True,,,A=0</TextOptions>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text24>
+            <Text16 Ref="20" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>1.7,11.1,5.9,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,13,Bold</Font>
+              <Guid>9b3e51a494f1449d90048bd70373b851</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text16</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>ماده 7
+</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text16>
+            <Text17 Ref="21" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.2,11.4,7.2,2.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14</Font>
+              <Guid>6e8ceef4156846198122c9285bf97745</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text17</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>در حین اجرای قراردادکار،کارفرما می تواند به استناد هر یک از دلایل زیر نسبت به فسخ قرار داد اقدام نماید.
+الف)غیبت های غیرموجه کارمند و تکرار این عمل خلاف مقررات کاری.
+ب)تخلف از اجرای مقررات و ضوابط کار حاکم بر فروشگاه،قانون کار و عدم انجام صحیح وظایف محوله.
+پ)عدم موفقیت در زمینه برقراری ارتباط موثر و مناسب با خریداران،ارائه و فروش اقلام و کالاهای فروشگاه
+ت)هرگونه اختلاس،خرابکاری،خیانت در امانت و یا سرقت در محل کار.
+ث)عدم رعایت شعائر اسلامی و اخلاقی در عرف جامعه.
+ج)هر گونه درگیری فیزیکی یا کلامی با همکاران و مشتریان در محل فروشگاه.
+                 در طی دوره آزمایشی سه ماهه،کارفرما میتواند راساً اقدام به فسخ قرار داد کارمند نماید و کارمند حق هیچگونه اعتراضی را 
+نخواهد داشت.
+</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,RightToLeft=True,,,A=0</TextOptions>
+              <Type>Expression</Type>
+            </Text17>
+            <Text18 Ref="22" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>1.7,13.9,5.9,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,13,Bold</Font>
+              <Guid>0e86085babbe471593a4ac49e8fb4f35</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text18</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>ماده 8
+</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,,,WordWrap=True,A=0</TextOptions>
+              <Type>Expression</Type>
+            </Text18>
+            <Text19 Ref="23" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.3,14.1,7.2,2.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14</Font>
+              <Guid>eeba38c6389f44e2abaada1d26407619</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text19</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>کارمند موظف است در صورت عدم تمایل به ادامه همکاری،مراتب را کتباً و حداقل 30 روز قبل به کارفرما و مدیریت رسمی واحد مربوطه اطلاع دهد.چنانچه بدون اعلام قبلی و رعایت قرارداد ویا بدون موافقیت کارفرما،کارمند اقدام به ترک نماید،کارفرما می تواند مورد را تخلف کارمند و ترک کار غیر موجه منظور نموده و ضمن برخورد قانونی ،مانده حقوق قانونی کارمند(اعم از حقوق ماهانه،سنوات و...)را به عنوان خسارت مطالبه نماید.
+                 کارفرما مجاز است کلیه مطالبات خود را از کارمند بابت وام و ابزار تحویلی و یا هر دین دیگری را راساً از حقوق و مزایای کارمند کسر و باقیمانده را در وجه وی واریز نماید و کارمند به هیچ وجه مجاز به اعتراض در این مورد نمی باشد.
+                 در صورت اعلام عدم تمایل به همکاری ،کارمند موظف به تسویه کامل دیون  و بدهی های خود قبل از ترک کار و تسویه نهایی می باشد.مابقی شرایط و الزامات در این قرارداد مطابق با ضوابط و مواد قانونی اعلامی و جاریه قانون وزارت تعاون،کار و رفاه اجتماعی جمهوری اسلامی ایران می باشد.
+         </Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,RightToLeft=True,,WordWrap=True,A=0</TextOptions>
+              <Type>Expression</Type>
+            </Text19>
+            <Text5 Ref="24" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0,1.6,7.4,1.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14</Font>
+              <Guid>3a827d0ecfbf4f738ad772603e916cc1</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text5</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>قرار داد زیر براساس قانون کار جمهوری اسلامی ایران ، مصوب آبان 1369 بین گالری کیا به مدیریت خانم/ آقای                    فرزند محمد رسول به شماره شناسنامه 4871  کدملی 0451285867 به نشانی خیابان پاسداران ، بوستان هفتم ، پلاک 167  که در این قرارداد                 خوانده میشود و خانم / آقای                                 فرزند {FatherName} به شماره شناسنامه   {BirthCertificateNumber}  کد ملی {NationalCode}  ، صادره از  {ExpertFrom }  ، تاریخ تولد {Birthday}  ،  محل تولد  { City}  ،  دارای مدرک تحصیلی  {Education}  ،  رشته تحصیلی {Major}  ، وضعیت تاهل {Married} به نشانی محل سکونت : {Address} که در این قرار داد {Employee} خوانده می شود منعقد میگردد.</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,RightToLeft=True,,WordWrap=True,A=0</TextOptions>
+              <TextQuality>Typographic</TextQuality>
+              <Type>Expression</Type>
+            </Text5>
+            <Text22 Ref="25" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.9,1.6,0.6,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,13,Bold</Font>
+              <Guid>5dce1e1738ce410c95a4d6c45e105e40</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text22</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>ایمان کیا</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,RightToLeft=True,,,A=0</TextOptions>
+              <Type>Expression</Type>
+            </Text22>
+            <Text20 Ref="26" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>1.7,16.7,5.9,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,13,Bold</Font>
+              <Guid>fb9fe472cfd24bc3a16d3ede5c50090f</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text20</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>ماده 9
+</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text20>
+            <Text21 Ref="27" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.3,17,7.2,1.8</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14</Font>
+              <Guid>afc5c7cf2b014c1fa901664e1cd08cb3</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text21</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>این قرارداد در 9 ماده و 5 تبصره و در دونسخه که هریک حکم واحد دارد تهیه و تنظیم شده است.
+با اطلاع و قبول موارد مندرج در این قرارداد و تعهد به رعایت آنها قرارداد را پذیرفته و امضا مینمایم
+نام و نام خانوادگی پرسنل:                                                                        نام و نام خانوادگی نماینده گالری کیا:                
+تاریخ: {DateTimeNow}                                                                               تاریخ: {DateTimeNow}
+ 
+                                            
+امضا و اثر انگشت                                                                                   امضا و اثر انگشت              
+
+
+</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,RightToLeft=True,,,A=0</TextOptions>
+              <Type>Expression</Type>
+            </Text21>
+            <CheckBox3 Ref="28" type="CheckBox" isKey="true">
+              <Brush>Transparent</Brush>
+              <Checked>{!ContractSubject}</Checked>
+              <CheckStyleForTrue>CheckRectangle</CheckStyleForTrue>
+              <ClientRectangle>3.6,4.2,0.2,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <ContourColor>Black</ContourColor>
+              <Name>CheckBox3</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <TextBrush>Black</TextBrush>
+            </CheckBox3>
+            <CheckBox1 Ref="29" type="CheckBox" isKey="true">
+              <Brush>Transparent</Brush>
+              <Checked>{ContractSubject}</Checked>
+              <CheckStyleForTrue>CheckRectangle</CheckStyleForTrue>
+              <ClientRectangle>7.2,4.2,0.2,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <ContourColor>Black</ContourColor>
+              <Guid>1c3e1b2aa7c845b1a229698d68ab5a0a</Guid>
+              <Name>CheckBox1</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <TextBrush>Black</TextBrush>
+            </CheckBox1>
+            <Text26 Ref="30" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.2,1.9,0.6,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,13,Bold</Font>
+              <Guid>86ea9f90cf934758a9cb8de9503e104b</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text26</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>کارفرما</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,RightToLeft=True,,,A=0</TextOptions>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text26>
+            <Text28 Ref="31" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>4.6,2.1,1.4,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14,Bold</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text28</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>{Name}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text28>
+            <Text29 Ref="32" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>6.6,6.8,0.8,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14,Bold</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text29</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>تبصره 1):</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text29>
+            <Text31 Ref="33" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>6.6,7.3,0.8,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14,Bold</Font>
+              <Guid>c000120f274d446ebef041d4763002b5</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text31</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>تبصره 2):</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text31>
+            <Text30 Ref="34" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.3,5,7,0.8</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text30</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>  {Job} </Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text30>
+            <Text32 Ref="35" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.1,1,2,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14</Font>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text32</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>تاریخ : {DateTimeNow}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text32>
+            <Text33 Ref="36" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>6.6,9.3,0.8,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14,Bold</Font>
+              <Guid>9ae9d7fa83f440829ffedd8a94c928b0</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text33</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>تبصره 3):</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text33>
+            <Text8 Ref="37" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.3,9.3,7.1,0.7</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14</Font>
+              <Guid>345bf6b71ee1448fa700b755e0b335c3</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text8</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>                به ازای هر سال سابقه کارکرد پرسنل در مجموعه گالری کیا ، مبلغ {OvertimeYearPriceRate}ریال به صورت ماهانه 
+(به ازای هر ماه ، یک دوازدهم مبلغ {OvertimeYearPriceRate}ریال) بر پایه حقوق افزوده خواهد شد.</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,RightToLeft=True,,,A=0</TextOptions>
+              <Type>Expression</Type>
+            </Text8>
+            <Text25 Ref="38" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>6.6,13.3,0.8,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14,Bold</Font>
+              <Guid>ff64bdd7e2a14560853379c5607d7e6c</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text25</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>تبصره 4):</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text25>
+            <Text34 Ref="39" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>6.6,15.2,0.8,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14,Bold</Font>
+              <Guid>c3726397dea34f1d8aa513c960acad64</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text34</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>تبصره 5):</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text34>
+            <Text35 Ref="40" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>6.6,15.7,0.8,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14,Bold</Font>
+              <Guid>68f47a1d7f58464c86c0f5695766ab71</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text35</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>تبصره 6):</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text35>
+            <CheckBox2 Ref="41" type="CheckBox" isKey="true">
+              <Brush>Transparent</Brush>
+              <Checked>{ContractSubject}</Checked>
+              <CheckStyleForTrue>NoneRectangle</CheckStyleForTrue>
+              <ClientRectangle>3.6,4.2,0.2,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <ContourColor>Black</ContourColor>
+              <Guid>ff9537612f3d4a4f95b6e210c7755160</Guid>
+              <Name>CheckBox2</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <TextBrush>Black</TextBrush>
+            </CheckBox2>
+            <CheckBox4 Ref="42" type="CheckBox" isKey="true">
+              <Brush>Transparent</Brush>
+              <Checked>{!ContractSubject}</Checked>
+              <CheckStyleForTrue>NoneRectangle</CheckStyleForTrue>
+              <ClientRectangle>7.2,4.2,0.2,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <ContourColor>Black</ContourColor>
+              <Guid>3c0975a802034aeca6e8a8c1da39094f</Guid>
+              <Name>CheckBox4</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <TextBrush>Black</TextBrush>
+            </CheckBox4>
+            <Text36 Ref="43" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>4.1,17.5,2,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,14,Bold</Font>
+              <Guid>d168d3595bf041dfa9aa4c41335c8406</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text36</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>{Name}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text36>
+            <Text27 Ref="44" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.6,17.5,0.6,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Mitra,13,Bold</Font>
+              <Guid>00c449c866684b4f81538cf9c02ee8df</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text27</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>ایمان کیا</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,RightToLeft=True,,,A=0</TextOptions>
+              <Type>Expression</Type>
+              <VertAlignment>Bottom</VertAlignment>
+            </Text27>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Filters isList="true" count="0" />
+          <Name>DataBand1</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Sort isList="true" count="0" />
+        </DataBand1>
+      </Components>
+      <Conditions isList="true" count="0" />
+      <Guid>ea4253fe4ff14de9965edac391416279</Guid>
+      <Margins>0.39,0.39,0.39,0.39</Margins>
+      <Name>Page1</Name>
+      <PageHeight>11</PageHeight>
+      <PageWidth>8.5</PageWidth>
+      <PaperSize>Letter</PaperSize>
+      <Report isRef="0" />
+      <Watermark Ref="45" type="Stimulsoft.Report.Components.StiWatermark" isKey="true">
+        <Font>Arial,100</Font>
+        <TextBrush>[50:0:0:0]</TextBrush>
+      </Watermark>
+    </Page1>
+  </Pages>
+  <PrinterSettings Ref="46" type="Stimulsoft.Report.Print.StiPrinterSettings" isKey="true" />
+  <ReferencedAssemblies isList="true" count="8">
+    <value>System.Dll</value>
+    <value>System.Drawing.Dll</value>
+    <value>System.Windows.Forms.Dll</value>
+    <value>System.Data.Dll</value>
+    <value>System.Xml.Dll</value>
+    <value>Stimulsoft.Controls.Dll</value>
+    <value>Stimulsoft.Base.Dll</value>
+    <value>Stimulsoft.Report.Dll</value>
+  </ReferencedAssemblies>
+  <ReportAlias>Report</ReportAlias>
+  <ReportChanged>7/5/2018 12:28:55 PM</ReportChanged>
+  <ReportCreated>6/21/2018 2:37:40 PM</ReportCreated>
+  <ReportFile>D:\Project\KiaGallery\KiaGallery.Web\Report\WorkContractForm\Contract.mrt</ReportFile>
+  <ReportGuid>0fc72a41f4944608940bc3c87fc5e383</ReportGuid>
+  <ReportName>Report</ReportName>
+  <ReportUnit>Inches</ReportUnit>
+  <ReportVersion>2015.1.0</ReportVersion>
+  <Script>using System;
+using System.Drawing;
+using System.Windows.Forms;
+using System.Data;
+using Stimulsoft.Controls;
+using Stimulsoft.Base.Drawing;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Dialogs;
+using Stimulsoft.Report.Components;
+
+namespace Reports
+{
+    public class Report : Stimulsoft.Report.StiReport
+    {
+        public Report()        {
+            this.InitializeComponent();
+        }
+
+        #region StiReport Designer generated code - do not modify
+		#endregion StiReport Designer generated code - do not modify
+    }
+}
+</Script>
+  <ScriptLanguage>CSharp</ScriptLanguage>
+  <Styles isList="true" count="0" />
+</StiSerializer>

@@ -1,0 +1,343 @@
+﻿
+@{
+    ViewBag.Title = "ویرایش";
+}
+<style>
+    html {
+        background-color: #f2f3f8;
+    }
+
+    body {
+        min-width: 100%;
+    }
+
+        body * {
+            direction: rtl;
+        }
+
+    .uk-container {
+        padding-bottom: 40px;
+        margin-top: 30px;
+    }
+
+    .content {
+        padding: 30px;
+        background-color: white;
+    }
+    /* HIDE RADIO */
+    [type=radio] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+        /* IMAGE STYLES */
+        [type=radio] + img {
+            cursor: pointer;
+        }
+
+        /* CHECKED STYLES */
+        [type=radio]:checked + img {
+            box-shadow: inset 4px 3px 42px 37px rgba(182,214,196,1);
+        }
+</style>
+<div class="container">
+    <form>
+        <div id="form">
+            <input type="hidden" name="id" />
+            <div class="row" style="margin:10px">
+                <div class="col-md-12">
+                    <div class="col-md-3">
+                        <label id="lbl-order" for="txtOrder">ترتیب</label>
+                        <input type="text" class="form-control empty-val" name="order" />
+                    </div>
+                </div>
+
+                <div class="col-md-12" style="margin-top:5px">
+                    <div class="col-md-3">
+                        <label id="lbl-order" for="cmbQuestion">نوع سوال</label>
+                        <select id="cmbQuestionType" class="form-control" name="questionType">
+                            <option value="">...</option>
+                            <option value="0">کم-متوسط-زیاد</option>
+                            <option value="1">بد-متوسط-خوب</option>
+                            <option value="2">ضعیف-متوسط-خوب</option>
+                            <option value="3">بد-متوسط-عالی</option>
+                            <option value="4">ضعیف-متوسط-عالی</option>
+                            <option value="5">بله-خیر</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-top:5px">
+                    <div class="col-md-6">
+                        <label id="lbl-title" for="txtTitle">عنوان سوال</label>
+                        <textarea class="form-control" id="txtTitle" name="title" data-validate="required"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div id="temp">
+                <div id="tmpl0" class="col-md-12 appended-element-content singleChoice" style="margin:10px">
+                    <div class="col-md-12 ">
+                        <div class="form-inline form-element-content detail-entity">
+                            <input type="hidden" name="questionValueId" value="" />
+                            <label>
+                                <input type="text" class="form-control" value="کم" readonly />
+                                <img style="width:30px" src="/Content/surveyIcon/smiley face-03.png">
+                            </label>
+                            <label>
+                                <input type="text" class="form-control" value="متوسط" readonly />
+                                <img style="width:30px" src="/Content/surveyIcon/smiley face-02.png">
+                            </label>
+                            <label>
+                                <input type="text" class="form-control" value="زیاد" readonly />
+                                <img style="color:green;width:30px" src="/Content/surveyIcon/smiley face-01.png">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div id="tmpl1" class="col-md-12 appended-element-content singleChoice" style="margin:10px">
+                    <div class="col-md-12 ">
+                        <div class="form-inline form-element-content detail-entity">
+                            <input type="hidden" name="questionValueId" value="" />
+                            <label>
+                                <input type="text" class="form-control" value="بد" readonly />
+                                <img style="width:30px" src="/Content/surveyIcon/smiley face-03.png">
+                            </label>
+                            <label>
+                                <input type="text" class="form-control" value="متوسط" readonly />
+                                <img style="width:30px" src="/Content/surveyIcon/smiley face-02.png">
+                            </label>
+                            <label>
+                                <input type="text" class="form-control" value="خوب" readonly />
+                                <img style="color:green;width:30px" src="/Content/surveyIcon/smiley face-01.png">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div id="tmpl2" class="col-md-12 appended-element-content singleChoice" style="margin:10px">
+                    <div class="col-md-12 ">
+                        <div class="form-inline form-element-content detail-entity">
+                            <label>
+                                <input type="text" class="form-control" value="ضعیف" readonly />
+                                <img style="width:30px" src="/Content/surveyIcon/smiley face-03.png">
+                            </label>
+                            <label>
+                                <input type="text" class="form-control" value="متوسط" readonly />
+                                <img style="width:30px" src="/Content/surveyIcon/smiley face-02.png">
+                            </label>
+                            <label>
+                                <input type="text" class="form-control" value="خوب" readonly />
+                                <img style="color:green;width:30px" src="/Content/surveyIcon/smiley face-01.png">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div id="tmpl3" class="col-md-12 appended-element-content singleChoice" style="margin:10px">
+                    <div class="col-md-12 ">
+                        <div class="form-inline form-element-content detail-entity">
+                            <input type="hidden" name="questionValueId" value="" />
+                            <label>
+                                <input type="text" class="form-control" value="بد" readonly />
+                                <img style="width:30px" src="/Content/surveyIcon/smiley face-03.png">
+                            </label>
+                            <label>
+                                <input type="text" class="form-control" value="متوسط" readonly />
+                                <img style="width:30px" src="/Content/surveyIcon/smiley face-02.png">
+                            </label>
+                            <label>
+                                <input type="text" class="form-control" value="عالی" readonly />
+                                <img style="color:green;width:30px" src="/Content/surveyIcon/smiley face-01.png">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div id="tmpl4" class="col-md-12 appended-element-content singleChoice" style="margin:10px">
+                    <div class="col-md-12 ">
+                        <div class="form-inline form-element-content detail-entity">
+                            <input type="hidden" name="questionValueId" value="" />
+                            <label>
+                                <input type="text" class="form-control" value="ضعیف" readonly />
+                                <img style="width:30px" src="/Content/surveyIcon/smiley face-03.png">
+                            </label>
+                            <label>
+                                <input type="text" class="form-control" value="متوسط" readonly />
+                                <img style="width:30px" src="/Content/surveyIcon/smiley face-02.png">
+                            </label>
+                            <label>
+                                <input type="text" class="form-control" value="عالی" readonly />
+                                <img style="color:green;width:30px" src="/Content/surveyIcon/smiley face-01.png">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div id="tmpl5" class="col-md-12 appended-element-content yesNo" style="margin:10px">
+                    <div class="col-md-12 ">
+                        <div class="form-inline form-element-content detail-entity">
+                            <input type="hidden" name="questionValueId" value="" />
+                            <div class="default-YesNo" data-question-id="{{:id}}">
+                                <label>
+                                    <input type="text" class="form-control" value="خیر" readonly />
+                                    <i class="fa fa-check" style="color:forestgreen"></i>
+                                </label>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <label>
+                                    <input type="text" class="form-control" value="بله" readonly />
+                                    <i class="fa fa-times" style="color:darkred"></i>
+                                </label>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="col-md-6" style="margin:10px">
+                        <div style="margin-bottom:10px">
+                            <button id="btnSubmit" class="btn btn-success pull-left" style="margin-left: 10px;">ثبت</button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <br />
+        <br />
+    </form>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+
+          var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+        $(document).ready(function () {
+            $("#tmpl0").hide();
+            $("#tmpl1").hide();
+            $("#tmpl2").hide();
+            $("#tmpl3").hide();
+            $("#tmpl4").hide();
+            $("#tmpl5").hide();
+            $("#cmbQuestionType").on("change", function () {
+                if ($(this).val() == 0) {
+                    $("#tmpl0").show();
+                    $("#tmpl1").hide();
+                    $("#tmpl2").hide();
+                    $("#tmpl3").hide();
+                    $("#tmpl4").hide();
+                    $("#tmpl5").hide();
+                }
+                if ($(this).val() == 1) {
+                    $("#tmpl0").hide();
+                    $("#tmpl1").show();
+                    $("#tmpl2").hide();
+                    $("#tmpl3").hide();
+                    $("#tmpl4").hide();
+                    $("#tmpl5").hide();
+                }
+                if ($(this).val() == 2) {
+                    $("#tmpl0").hide();
+                    $("#tmpl1").hide();
+                    $("#tmpl2").show();
+                    $("#tmpl3").hide();
+                    $("#tmpl4").hide();
+                    $("#tmpl5").hide();
+                }
+                if ($(this).val() == 3) {
+                    $("#tmpl0").hide();
+                    $("#tmpl1").hide();
+                    $("#tmpl2").hide();
+                    $("#tmpl3").show();
+                    $("#tmpl4").hide();
+                    $("#tmpl5").hide();
+                }
+                if ($(this).val() == 4) {
+                    $("#tmpl0").hide();
+                    $("#tmpl1").hide();
+                    $("#tmpl2").hide();
+                    $("#tmpl3").hide();
+                    $("#tmpl4").show();
+                    $("#tmpl5").hide();
+                }
+                if ($(this).val() == 5) {
+                    $("#tmpl0").hide();
+                    $("#tmpl1").hide();
+                    $("#tmpl2").hide();
+                    $("#tmpl3").hide();
+                    $("#tmpl4").hide();
+                    $("#tmpl5").show();
+                }
+                if ($(this).val() == "") {
+                    $("#tmpl0").hide();
+                    $("#tmpl1").hide();
+                    $("#tmpl2").hide();
+                    $("#tmpl3").hide();
+                    $("#tmpl4").hide();
+                    $("#tmpl5").hide();
+                }
+            })
+            load()
+            $(".empty-check").prop('checked', false);
+
+            $(document).on("click", ".remove", function (event) {
+                event.preventDefault();
+                $(this).parents(".appended-element-content").remove();
+            });
+
+
+            var valueTypeId = []
+            $("#btnSubmit").on("click", function (event) {
+                event.preventDefault();
+                var entity = getEntity("#form");
+
+                loader(true);
+                $.post("/survey/save", entity, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        callbackAlert(response.message, function () {
+                            document.location = "/survey/index/";
+                        })
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+        });
+
+        function load() {
+            if (id > 0) {
+                $.get("/survey/load/" + id, function (response) {
+                    if (response.status == 200) {
+                        var data = response.data;
+                        setEntity(data, "#form");
+                        $("#cmbQuestionType").change();
+                        setEntity(data, "#form");
+
+                        for (var i = 0; i < data.surveyQuestionValueViewModelList.length - 1; i++) {
+                            $("#temp").append($("#tmplSingle").text());
+                        }
+                        $("#temp").find(".detail-entity").each(function (index, element) {
+                            setEntity(data.surveyQuestionValueViewModelList[index], element);
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            }
+
+        }
+
+        function emptyValue() {
+            $(".appended-element").remove();
+            $(".empty-val").val('');
+            $(".empty-check").prop('checked', false);
+        }
+    </script>
+
+
+
+}
+

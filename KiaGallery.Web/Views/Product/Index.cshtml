@@ -1,0 +1,752 @@
+﻿
+@{
+    ViewBag.Title = "مدیریت محصولات";
+}
+<link href="~/Content/ios-switch-rtl.css" rel="stylesheet" />
+<div id="control-section" class="form-inline">
+    <a href="/product/add" class="btn btn-primary">
+        <i class="fa fa-plus v-middle" aria-hidden="true"></i>&nbsp;
+        <span>جدید</span>
+    </a>
+</div>
+<div style="display:inline-block">
+    <span class="inline-block"><span class="checkbox ios-switch"><label><input class="chkOrderableBranchType" type="checkbox" name="orderableBranchType" value="true"><span>شعبه</span></label> </span></span>
+    &nbsp;
+    <span class="inline-block"><span class="checkbox ios-switch"><label><input class="chkOrderableSolicitorshipType" type="checkbox" name="orderableSolicitorshipType" value="true"><span>نمایندگی</span></label></span></span>
+    &nbsp;
+    <span class="inline-block"><span class="checkbox ios-switch"><label><input class="chkOrderableCoWorkerType" type="checkbox" name="orderableCoWorkerType" value="true"><span>همکار</span></label></span></span>
+    &nbsp;
+    <span class="inline-block"><span class="checkbox ios-switch"><label><input class="chkOrderableOtherType" type="checkbox" name="orderableOtherType" value="true"><span>سایر</span></label></span></span>
+    &nbsp;
+</div>
+<br />
+<div id="control-section" class="form-inline">
+    <input id="txtTerm" type="text" name="term" class="form-control" />
+    <select id="cmbProductType" class="form-control" name="productType">
+        <option value="">انتخاب دسته بندی ... </option>
+        <option value="0">دستبند زنجير طلا</option>
+        <option value="11">دستبند چرمی</option>
+        <option value="12">دستبند ریلی</option>
+        <option value="13">دستبند سنگی</option>
+        <option value="16">دستبند نخی</option>
+        <option value="1">گردنبند</option>
+        <option value="2">گوشواره</option>
+        <option value="3">انگشتر</option>
+        <option value="4">آویزساعت</option>
+        <option value="15">آویزساعت2</option>
+        <option value="5">سنجاق بچگانه</option>
+        <option value="6">ست</option>
+        <option value="7">پابند</option>
+        <option value="8">آویز</option>
+        <option value="9">النگو</option>
+        <option value="10">خرج کار</option>
+    </select>
+    <select id="cmbActive" class="form-control" data-validate="required" name="active">
+        <option value="">انتخاب وضعیت ... </option>
+        <option value="true">فعال</option>
+        <option value="false">غیرفعال</option>
+    </select>
+    <select id="cmbRelated" class="form-control" data-validate="required" name="related">
+        <option value="">انتخاب مرتبط دارد ... </option>
+        <option value="true">مرتبط دارد</option>
+    </select>
+    <select id="cmbSet" class="form-control" data-validate="required" name="related">
+        <option value="">انتخاب ست دارد ... </option>
+        <option value="true">ست دارد</option>
+    </select>
+    <select id="cmbCollection" class="form-control" data-validate="required" name="collectionId">
+        <option value="">کالکشن...</option>
+        @foreach (var item in ViewBag.CollectionList)
+        {
+            <option value="@item.id">@item.title</option>
+        }
+    </select>
+
+    <select id="cmbNotOrderable" class="form-control" data-validate="required" name="notOrderable">
+        <option value="">غیر قابل سفارش ... </option>
+        <option value="true">هست</option>
+    </select>
+    <select id="cmbSpecialProduct" class="form-control" data-validate="required" name="specialProduct">
+        <option value="">محصول ویژه</option>
+        <option value="true">بله</option>
+        <option value="false">خیر</option>
+    </select>
+    <input id="btnSearch" type="button" value="جستجو" class="btn btn-primary" />
+</div>
+
+<div id="content" class="table-data table-responsive">
+
+</div>
+<div id="modalUploadFile" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">تصویر جدید</h4>
+            </div>
+            <div class="modal-body">
+
+                <div id="screenshot" class="form-group txt-al-c">
+                    @*<div class="form-group txt-al-c circle" id="clear">
+                            <div>
+                                <img id="screenshot-img" style="display:none;width:348px;height:349px;object-fit:cover;">
+                            </div>
+                            <img id="imgUserImage" src="~/content/image/kia-gallery-logo-square.png" style="height:350px;max-width: 350px;" />
+                            <video class="videostream" autoplay style="display:none;max-width: 348px;height:349px;object-fit:cover;"></video>
+                        </div>*@
+                    <p><button class="hidden" id="screenshot-button" disabled>Take screenshot</button></p>
+                    <div class="form-group">
+                        <input id="file" type="file" class="hidden" />
+                        <input id="hiddenTypeTitle" type="hidden" />
+                        <div class="progress hidden">
+                            <div id="progressBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                <span class="sr-only">45%</span>
+                            </div>
+                        </div>
+                        <select id="cmbFileType" class="form-control">
+                            <option value="">...</option>
+                            <option value="0">زمینه سفید</option>
+                            <option value="4">مدل</option>
+                            @*<option class="capture-button camera" value="5">دوربین</option>*@
+                            <option value="1">سفارش</option>
+                            <option value="2">ربات و سایت</option>
+                            <option value="3">سایر</option>
+                        </select>
+                    </div>
+                    <div class="form-group txt-al-c">
+                        <i id="openFile" class="fa fa-upload btn btn-success btn-icon" aria-hidden="true"></i>
+                        @*<i class="capture-button btn btn-info fa fa-camera" style="display: none;"></i>*@
+                        <i id="btnSave" class="btn btn-info fa fa-save"></i>
+                        <i style="display:none;" id="btnSubmitImage" class="btn btn-success fa fa-check"></i>
+                    </div>
+                    <div id="contentFiles" class="table-data table-responsive">
+                        <h4 class="txt-al-c no-image">تصویری یافت نشد</h4>
+
+                        <table class="table-image table hidden">
+                            <thead>
+                                <tr>
+                                    <th class="hidden-xs">نوع</th>
+                                    <th>عنوان</th>
+                                    <th></th>
+                                    <th class="icon-col text-center">حذف</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-body-image"></tbody>
+                        </table>
+                    </div>
+
+
+                    <input type="hidden" id="camreImageName" />
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="hiddenId" />
+@section scripts {
+    <script src="~/scripts/chosen/chosen.jquery.js"></script>
+    <script type="text/javascript">
+        $(".combo-chosen").chosen({ width: "100%", placeholder_text_single: 'یک مورد را انتخاب کنید.', search_contains: true });
+        $("#cmbFileType").on("change", function () {
+            var fileTypeTitle;
+            switch ($(this).val()) {
+                case "0":
+                    fileTypeTitle = "Shop";
+                    break;
+                case "1":
+                    fileTypeTitle = "Order";
+                    break;
+                case "2":
+                    fileTypeTitle = "Gallery";
+                    break;
+                case "3":
+                    fileTypeTitle = "Other";
+                    break;
+                case "4":
+                    fileTypeTitle = "Model";
+                    break;
+                case "5":
+                    fileTypeTitle = "Camera";
+                    break;
+            }
+
+            $("#hiddenTypeTitle").val(fileTypeTitle)
+            console.log($("#hiddenTypeTitle").val())
+            if ($(this).val() == 0) {
+
+                $(".capture-button").show()
+
+                //$("video").on("click", function () {
+                //    $(".capture-button").show()
+                //})
+            }
+            else {
+                $("#openFile").show();
+                $(".capture-button").hide();
+                $(".camera").hide();
+                $("#screenshot-img").hide();
+                $("#imgUserImage").show();
+                $("#btnSubmitImage").hide();
+                $(".camera").show()
+
+            }
+        });
+
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(document).ready(function () {
+            getList();
+            $(document).on("change", ".cmbBranchOrderType", function (event) {
+                event.preventDefault();
+                if ($(this).val()) {
+                    setParam("branchOrderTypeId", $(this).val())
+                }
+                else {
+                    removeParam("branchOrderTypeId");
+                }
+            });
+            $(document).on("change", ".chkOrderableBranchType", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { orderableBranchType: true }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["orderableBranchType", "page"]);
+                }
+            });
+            $(document).on("change", ".chkOrderableSolicitorshipType", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { orderableSolicitorshipType: true }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["orderableSolicitorshipType", "page"]);
+                }
+            });
+            $(document).on("change", ".chkOrderableCoWorkerType", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { orderableCoWorkerType: true }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["orderableCoWorkerType", "page"]);
+                }
+            });
+            $(document).on("change", ".chkOrderableOtherType", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { orderableOtherType: true }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["orderableOtherType", "page"]);
+                }
+            });
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف محصول اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/product/delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+
+            $(document).on("click", "#btnSearch", function (event) {
+                event.preventDefault();
+                if ($("#cmbProductType").val() != "") {
+                    var params = { term: $("#txtTerm").val(), type: [$("#cmbProductType").val()], related: $("#cmbRelated").val(), set: $("#cmbSet").val(), active: $("#cmbActive").val() ,notOrderable:$("#cmbNotOrderable"),collectionId:$("#cmbCollection"),specialProduct:$("#cmbSpecialProduct")};
+                }
+                else {
+                    var params = { term: $("#txtTerm").val(), related: $("#cmbRelated").val(), set: $("#cmbSet").val(), active: $("#cmbActive").val(),notOrderable:$("#cmbNotOrderable"),collectionId:$("#cmbCollection"),specialProduct:$("#cmbSpecialProduct") };
+                }
+                manipulateParam(params, "page");
+            });
+
+            $("#txtTerm").on("keyup", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    if ($("#txtTerm").val()) {
+                        var param = { term: $("#txtTerm").val() }
+                        manipulateParam(param, "page");
+                    }
+                    else
+                        removeParam(["term", "page"]);
+                }
+            });
+
+            $("#cmbActive").on("change", function (e) {
+                e.preventDefault();
+                if ($("#cmbActive").val() != "") {
+                    var param = { active: $("#cmbActive").val() }
+                    manipulateParam(param, "page");
+                }
+                else
+                    removeParam(["active", "page"]);
+            });
+
+            $("#cmbProductType").on("change", function (e) {
+                e.preventDefault();
+                if ($("#cmbProductType").val() != "") {
+                    var param = { type: [$("#cmbProductType").val()] }
+                    manipulateParam(param, "page");
+                }
+                else
+                    removeParam(["type", "page"]);
+            });
+
+            $("#cmbRelated").on("change", function (e) {
+                e.preventDefault();
+                if ($("#cmbRelated").val() != "") {
+                    var param = { related: $("#cmbRelated").val() }
+                    manipulateParam(param, "page");
+                }
+                else
+                    removeParam(["related", "page"]);
+            });
+
+            $("#cmbSet").on("change", function (e) {
+                e.preventDefault();
+                if ($("#cmbSet").val() != "") {
+                    var param = { set: $("#cmbSet").val() }
+                    manipulateParam(param, "page");
+                }
+                else
+                    removeParam(["set", "page"]);
+            });
+
+            $("#cmbCollection").on("change", function (e) {
+                e.preventDefault();
+                if ($("#cmbCollection").val() != "") {
+                    var param = { collectionId: $("#cmbCollection").val() }
+                    manipulateParam(param, "page");
+                }
+                else
+                    removeParam(["collectionId", "page"]);
+            });
+
+             $("#cmbNotOrderable").on("change", function (e) {
+                e.preventDefault();
+                if ($("#cmbNotOrderable").val() != "") {
+                    var param = { notOrderable: $("#cmbNotOrderable").val() }
+                    manipulateParam(param, "page");
+                }
+                else
+                    removeParam(["notOrderable", "page"]);
+             });
+
+            $("#cmbSpecialProduct").on("change", function (e) {
+                e.preventDefault();
+                if ($("#cmbSpecialProduct").val() != "") {
+                    var param = { specialProduct: $("#cmbSpecialProduct").val() }
+                    manipulateParam(param, "page");
+                }
+                else
+                    removeParam(["specialProduct", "page"]);
+            });
+
+            $(document).on("click", ".active", function (event) {
+                loader(true);
+                var id = $(this).attr("data-id");
+                $.post("/product/active/" + id, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        getList();
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+            $(document).on("click", ".inactive", function (event) {
+                loader(true);
+                var id = $(this).attr("data-id");
+                $.post("/product/inactive/" + id, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        getList();
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+
+            $(document).on("click", ".btnUploadNewImage", function (event) {
+                event.preventDefault();
+                $(".table-body-image").empty();
+                loadFile($(this).attr("data-id"))
+                $("#cmbFileType").val("");
+                $("#hiddenId").val($(this).attr("data-id"));
+                $('.progress .progress-bar').css('width', '0%');
+
+                $("#modalUploadFile").modal('show');
+            });
+
+            $("#openFile").on("click", function () {
+
+
+                if ($("#cmbFileType").val() != "") {
+                    if ($("#cmbFileType").val() == 5) {
+
+                    }
+                    $("#file").click();
+                }
+                else {
+                    alert("ابتدا نوع فایل را مشخص کنید.");
+                }
+            });
+
+            $("#file").on("change", function () {
+                save()
+            });
+            $("#btnSave").on("click", function () {
+                var entity = {
+                    id: $("#hiddenId").val(),
+
+                }
+                var fileList = new Array();
+                $(".file-list").each(function (index, element) {
+                    fileList.push({
+                        fileName: $(this).attr("data-file-name"),
+                        fileType: $(this).attr("data-file-type"),
+                        paddingImg: $(this).find("#cmbPaddingImg").val()
+                    });
+                });
+                entity.fileList = fileList;
+                $.post("/product/saveFile", entity, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        callbackAlert(response.message, function () {
+                            document.location = "/product";
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            })
+        });
+
+        function getList() {
+            updateForm();
+
+            var defaultEntity = {
+                page: 0,
+                count: 200,
+                term: null,
+                type: [],
+                active: null
+            }
+
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+
+            loader(true);
+            $.post("/product/search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+        function updateForm() {
+            var params = getParam();
+
+              // branchOrderTypeId
+            if (params["branchOrderTypeId"]) {
+                $("#cmbBranchOrderType").val(params["branchOrderTypeId"]);
+            }
+            else {
+                $("#cmbBranchOrderType").val("");
+            }
+
+            // term
+            if (params["term"]) {
+                $("#txtTerm").val(params["term"]);
+            }
+            else {
+                $("#txtTerm").val("");
+            }
+            // cmbActive
+            if (params["active"]) {
+                $("#cmbActive").val(params["active"]);
+            }
+            else {
+                $("#cmbActive").val("");
+            }
+            // productType
+            if (params["type"]) {
+                $("#cmbProductType").val(params["type"]);
+            }
+            else {
+                $("#cmbProductType").val("");
+            }
+
+            // Related
+            if (params["related"]) {
+                $("#cmbRelated").val(params["related"]);
+            }
+            else {
+                $("#cmbRelated").val("");
+            }
+
+            // set
+            if (params["set"]) {
+                $("#cmbSet").val(params["set"]);
+            }
+            else {
+                $("#cmbSet").val("");
+            }
+
+            if (params["collectionId"]) {
+                $("#cmbCollection").val(params["collectionId"]);
+            }
+            else {
+                $("#cmbCollection").val("");
+            }
+
+            if (params["notOrderable"]) {
+                $("#cmbNotOrderable").val(params["notOrderable"]);
+            }
+            else {
+                $("#cmbNotOrderable").val("");
+            }
+
+            if (params["specialProduct"]) {
+                $("#cmbSpecialProduct").val(params["specialProduct"]);
+            }
+            else {
+                $("#cmbSpecialProduct").val("");
+            }
+        }
+        $(document).on("click", ".delete-file", function (event) {
+            $(this).closest(".file-list").remove();
+
+            if ($(".file-list").length == 0) {
+                $(".no-image").show();
+                $(".table-image").addClass("hidden");
+            }
+
+        });
+        function loadFile(id) {
+            loader(true);
+            $.get("/product/loadFile/" + id, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    setEntity(response.data, "#form");
+
+                    for (var i = 0; i < response.data.fileList.length; i++) {
+                        var item = response.data.fileList[i];
+                        addFile(item.fileType, item.fileName);
+                        $(".table-body-image tr:last-child #cmbPaddingImg").val(item.paddingImg);
+                    }
+                }
+                else {
+                    callbackAlert(response.message, function () {
+                        document.location = "/product";
+                    });
+                }
+            });
+        }
+        function save() {
+
+            var params = { id: $("#hiddenId").val(), type: $("#hiddenTypeTitle").val() };
+
+            $("#fileModal").find("button").prop("disabled", true);
+            $("#fileModal").find("input").prop("disabled", true);
+            $("#fileModal").find("textarea").prop("disabled", true);
+            $("#fileModal").find("select").prop("disabled", true);
+
+            var filesList = $("#file").prop("files");
+            $("#file").fileupload({
+                dataType: 'json',
+                url: "/product/uploadFile",
+                formData: params,
+                autoUpload: false,
+                start: function () {
+                    $("#progressBar").closest(".progress").removeClass("hidden");
+                },
+                success: function (response, textStatus, jqXHR) {
+                    $("#fileModal").find("button").prop("disabled", false);
+                    $("#fileModal").find("input").prop("disabled", false);
+                    $("#fileModal").find("textarea").prop("disabled", false);
+                    $("#fileModal").find("select").prop("disabled", false);
+                    $("#file").fileupload("destroy");
+
+                    if (response.status === 403 || response.status === 401) {
+                        document.location.href = "/login?redirect=" + document.location.pathname;
+                    }
+                    else if (response.status === 200) {
+                        alert()
+                        addFile($("#cmbFileType").val(), response.data.name);
+                        //$("#modalUploadFile").modal('hide');
+
+                        alert(response.message);
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $("#file").fileupload("destroy");
+                    $("#progressBar").closest(".progress").removeClass("hidden");
+                },
+                complete: function (result, textStatus, jqXHR) {
+                    $("#file").fileupload("destroy");
+                    $("#progressBar").closest(".progress").addClass("hidden");
+                },
+                progressall: function (e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    console.log(progress)
+                    $('#progressBar').css({ 'width': progress + "%" });
+                    $('#progressBar').find(".sr-only").html(progress + "%");
+                }
+            });
+
+            $("#file").fileupload('send', { files: filesList });
+        }
+        function addFile(type, fileName) {
+            $(".no-image").hide();
+            $(".table-image").removeClass("hidden");
+
+            var fileTypeTitle = "";
+            switch (parseInt(type)) {
+                case 0:
+                    fileTypeTitle = "زمینه سفید";
+                    break;
+                case 1:
+                    fileTypeTitle = "سفارش";
+                    break;
+                case 2:
+                    fileTypeTitle = "ربات و سایت";
+                    break;
+                case 3:
+                    fileTypeTitle = "سایر";
+                    break;
+                case 4:
+                    fileTypeTitle = "مدل";
+                    break;
+                case 5:
+                    fileTypeTitle = "دوربین";
+                    break;
+            }
+
+              var row =
+        "<tr class=\"file-list\" data-file-name=\"{{fileName}}\" data-file-type=\"{{fileType}}\">" +
+        "<td class=\"hidden-xs\">{{fileTypeTitle}}</td>" +
+        "<td> <img src=\"/image/product/500x500/{{fileName}}\" style=\"max-width:100px;height:100px;\" \></td>" +
+        "<td class=\"txt-al-c\">" +
+        "<select id=\"cmbPaddingImg\" class=\"form-control\"><option value=\"\">...</option><option value=\"0\">0</option><option value=\"12.5\">12.5</option><option value=\"25\">25</option><option value=\"37.5\">37.5</option><option value=\"50\">50</option><option value=\"62.5\">62.5</option><option value=\"75\">75</option><option value=\"87.5\">87.5</option><option value=\"100\">100</option></select>" +
+        "</td>" +
+        "<td class=\"txt-al-c\">" +
+        "<button class=\"delete-file btn btn-danger btn-xs\" data-title=\"حذف\"><i class=\"fa fa-times\" aria-hidden=\"true\"></i></button>" +
+        "</td>" +
+        "</tr>";
+
+            row = row.replaceAll("{{fileName}}", fileName).replaceAll("{{fileType}}", type).replaceAll("{{fileTypeTitle}}", fileTypeTitle);
+
+         if (type == 1) {
+        $("#orderFileName").attr("src", "/upload/product/" + fileName).show();
+            };
+
+            $(".table-body-image").append(row);
+        }
+
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="hidden-xs">کد</th>
+                    <th class="hidden-xs">کد کتاب کد</th>
+                    <th>عنوان</th>
+                    <th class="hidden-xs hidden-sm">تصویر</th>
+                    <th class="hidden-xs hidden-sm">کالکشن</th>
+                    <th class="hidden-xs hidden-sm">وضعیت</th>
+                    <th class="text-center" width="70px">ست</th>
+                    <th class="text-center" width="70px">مرتبط</th>
+                    <th class="icon-col text-center">آپلود عکس</th>
+                    <th class="icon-col text-center">ویرایش</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td class="hidden-xs v-middle">{{:code}}</td>
+                    <td class="hidden-xs v-middle">{{:bookCode}}</td>
+                    <td class="v-middle">{{:title}}</td>
+                    <td class="hidden-xs hidden-sm v-middle">
+                        {{if fileName}}
+                        <img style="width: 55px;" src="/image/product/500x500/{{:fileName}}" />
+                        {{else}}
+                        <img style="width: 55px;" src="/content/image/kia-gallery-logo-square.png" />
+                        {{/if}}
+                    </td>
+                    <td>{{:productCollectionTitle}}</td>
+                    <td class="hidden-xs hidden-sm v-middle">
+                        {{if active}}
+                        <i class="fa fa-check green pointer inactive" data-id="{{:id}}" aria-hidden="true"></i>
+                        فعال
+                        {{else}}
+                        <i class="fa fa-times red pointer active" data-id="{{:id}}" aria-hidden="true"></i>
+                        غیرفعال
+                        {{/if}}
+                    </td>
+                    <td class="txt-al-c v-middle">
+                        {{if set > 0}}
+                        <i class="fa fa-check v-middle green" aria-hidden="true" title="تعداد موارد ست {{:related}}"></i>
+                        {{/if}}
+                        <a href="/product/set/{{:id}}" class="btn btn-primary btn-xs" data-title="ست" target="_blank"><i class="fa fa-cogs" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c v-middle">
+                        {{if related > 0}}
+                        <i class="fa fa-check v-middle green" aria-hidden="true" title="تعداد موارد مرتبط {{:related}}"></i>
+                        {{/if}}
+                        <a href="/product/related/{{:id}}" class="btn btn-primary btn-xs" data-title="مرتبط" target="_blank"><i class="fa fa-tag" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="btnUploadNewImage txt-al-c v-middle" data-id="{{:id}}">
+                        <i class="fa fa-upload btn btn-success btn-xs" aria-hidden="true"></i>
+                    </td>
+                    <td class="txt-al-c v-middle">
+                        <a href="/product/edit/{{:id}}" class="btn btn-primary btn-xs" data-title="ویرایش" target="_blank"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c v-middle">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+}
+
+

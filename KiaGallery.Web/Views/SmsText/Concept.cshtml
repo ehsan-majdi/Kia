@@ -1,0 +1,122 @@
+﻿
+@{
+    ViewBag.Title = "Concept";
+}
+
+<style>
+    .flip-box-front {
+        border-radius: 20px;
+    }
+
+    .item a {
+        text-decoration: none;
+    }
+
+    .title {
+        background-color: #8f0119;
+        border-top-right-radius: 20px;
+        border-top-left-radius: 20px;
+        padding: 3px;
+        top: 0;
+        width: 100%;
+        right: 0;
+        position: absolute;
+        text-align: center;
+        color: white;
+    }
+
+    .uk-container {
+        margin-top: 40px;
+    }
+
+    .fa-copy {
+        color: white;
+        font-size: 18px;
+        padding: 5px;
+        margin-bottom: 2px;
+    }
+
+        .fa-copy:hover {
+            transition: ease 0.3s;
+            color: #ff6a00;
+        }
+</style>
+<div class="container">
+
+    <div id="content" class="wallpaper">
+
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            getList();
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف پیام اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/smstext/Delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+        });
+        function copyToClipboard(element) {
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val(element).select();
+            document.execCommand("copy");
+            $temp.remove();
+        }
+        function getList() {
+            var params = getParam();
+            loader(true);
+            $.get("/smsText/LoadConcept", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                    $('[data-toggle="tooltip"]').tooltip()
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        {{for list}}
+        <div class="item col-md-4">
+            <div class="flip-box-front block bg-success" style="background-color:#a2a1a1;padding:43px;position:relative">
+                <div class="title">
+                    {{:title}}
+                    <i class=" fa fa-copy pull-left" onclick="copyToClipboard('http://localhost:50446/msg/{{:urlKey}}')" data-toggle="tooltip" title="کپی"></i>
+
+                </div>
+                <div class="txt-al-c">
+                    <button class="delete btn btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    <a href="/smstext/edit/{{:id}}" class="btn btn-default btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                </div>
+
+
+            </div>
+            <br />
+        </div>
+        {{/for}}
+    </script>
+}
+
+

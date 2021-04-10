@@ -1,0 +1,209 @@
+﻿
+@{
+    Layout = null;
+
+}
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/ios-switch-rtl.css" rel="stylesheet" />
+    <link href="~/content/internal-order-page.css" rel="stylesheet" />
+    <link href="~/content/fonts/fontawsome/font-awesome.css" rel="stylesheet" />
+    <link href="~/content/fonts/sans/fontiran.css" rel="stylesheet" />
+    <link href="~/content/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="~/content/chosen/chosen.css" rel="stylesheet" />
+    <link href="~/content/chosen/imageSelect.css" rel="stylesheet" />
+    <link href="~/Content/persian-datepicker.css" rel="stylesheet" />
+    <link href="~/content/general.css" rel="stylesheet" />
+    <link href="~/Content/froala/css/froala_style.css" rel="stylesheet" />
+    <link href="~/Content/froala/css/froala_editor.css" rel="stylesheet" />
+    <link href="~/content/site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/fonts/Bmitra/Bmitra.css" rel="stylesheet" />
+    <script src="~/scripts/modernizr-2.8.3.js"></script>
+    <link href="~/Content/jqueryui/jquery-ui.css" rel="stylesheet" />
+
+    <style>
+        * {
+            font-family: BMitra;
+        }
+
+        .container {
+            width: 615px !important
+        }
+
+        ul {
+            line-height: 190%;
+        }
+
+        p {
+            text-align: justify !important
+        }
+
+        li {
+            text-align: justify !important
+        }
+
+        .border {
+            border: 1px solid black;
+        }
+
+        tr th {
+            padding: 5px;
+            font-size: 17px !important;
+        }
+
+        td {
+            padding: 5px;
+            font-weight: 700;
+            font-size: 17px !important;
+        }
+        .thead {
+            background-color: gray;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        .branch-title {
+            display: inline-block;
+            font-size: 20px
+        }
+
+        .order-title {
+            display: inline-block;
+            font-size: 20px
+        }
+
+        .h-title {
+            display: inline-block;
+            float: left;
+            font-size: 20px
+        }
+    </style>
+</head>
+
+<body class="persianNumber">
+    <div class="container">
+        <div class="text-left">
+            <img src="~/Content/Image/logokia.png" style="width:100px;" />
+        </div>
+        <div>
+            <h2 class="bold text-center">سفارش کالا</h2>
+            <div class="branch-title">
+                <span>گالری کیا - شعبه :</span>
+                <span>@ViewBag.Branch</span>
+            </div>
+
+            @*<div class="h-title">
+                    <span class="text-left">تاریخ تحویل:</span>
+                    <span>@ViewBag.NowTime</span>
+                </div>*@
+            <div class="h-title">
+                <span class="text-left">نام چاپخانه:</span>
+                <span>@ViewBag.PrintingHouseOrderTitle</span>
+            </div>
+        </div>
+        <div class="order-title" style="float:left">
+            <span class="text-left">تاریخ سفارش:</span>
+            <span>@ViewBag.Date</span>
+        </div>
+
+        <div class="order-title">
+            <span class="text-left">شماره سفارش:</span>
+            <span>@ViewBag.Order</span>
+        </div>
+        <div class="" style=" font-size: 20px">
+            @if (ViewBag.BranchPhone != null)
+            {
+                <span>تلفن:</span>
+                <span class="bold">@ViewBag.BranchPhone</span>
+            }
+            else
+            {
+                <span>تلفن:</span>
+                <span>ندارد</span>
+            }
+        </div>
+        <div class="" style=" font-size: 20px">
+            @if (ViewBag.Address != null)
+            {
+                <span>آدرس:</span>
+                <span class="bold">@ViewBag.Address</span>
+            }
+            else
+            {
+                <span>آدرس:</span>
+                <span>ندارد</span>
+            }
+        </div>
+
+        <table>
+            <thead>
+                <tr class="thead">
+                    <th class="border text-center">ردیف</th>
+                    <th class="border text-center" style="padding:0 80px">عنوان</th>
+                    <th class="border w15 text-center">تعداد درخواستی</th>
+                    <th class="border text-center">موجودی انبار دفتر</th>
+                    <th class="border text-center">قابل ساخت </th>
+                    @*<th class="border text-center"> آماده تحویل</th>*@
+                    @*<th class="border text-center">تحویل داده شده</th>*@
+                    @*<th class="border text-center">مانده</th>*@
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int number = 1;
+                }
+                @foreach (var item in ViewBag.OrderUsableProductDetailList)
+                {
+                    <tr class="color-row">
+
+                        <td class="border text-center">@(number++)</td>
+                        <td class="border text-center">@item.name ( @(item.unit) )</td>
+                        <td class="border text-center">@item.productCount</td>
+                        <td class="border w15 text-center">@item.officeInventory</td>
+                        <td class="border w15 text-center">@item.printingHouseInventory</td>
+                        @*<td class="border w15 text-center">@item.readyForDelivery</td>*@
+                        @*<td class="border w15 text-center">@item.delivered</td>*@
+                        @*<td class="border w15 text-center">@item.remainFinal</td>*@
+
+                    </tr>
+                    <tr>
+                        @if (item.specification != null)
+                        {
+                            <td colspan="9" class="text-right border" style="font-size:12px !important">مشخصات : @item.specification</td>
+                        }
+                        else
+                        {
+                            <td colspan="9" class="text-right border" style="font-size:12px;display:none;"></td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br />
+        <br />
+        <div class="footer text-left">
+            <div class="sign">
+                <span class="bold">امضاء:</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/scripts/jquery-1.12.4.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            //$('.persianNumber').persiaNumber();
+            $(".color-row:odd").css("background-color", "#eeeeee");
+        });
+
+    </script>
+</body>
+</html>
+

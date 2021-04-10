@@ -1,0 +1,681 @@
+﻿
+@{
+    ViewBag.Title = "معامله طلا";
+}
+
+<style type="text/css">
+
+
+    thead th {
+        width: 14%;
+    }
+
+        thead th div {
+            padding: 6px 10px;
+            margin: 7px 3px 0px 3px;
+            border-radius: 4px;
+            text-align: center;
+            color: white;
+        }
+
+    .spring {
+        background-color: #66BB6A;
+    }
+
+    .summer {
+        background-color: #ef5350;
+    }
+
+    .autumn {
+        background-color: #FF9800;
+    }
+
+    .winter {
+        background-color: #0AC5DB
+    }
+
+    tbody td {
+        height: 80px;
+        vertical-align: top;
+    }
+
+    .day .day-card {
+        margin: 7px 3px 0px 3px;
+        background-color: #CFD8DC !important;
+        height: 100%;
+        overflow: hidden;
+    }
+
+        .day .day-card .header {
+            display: block;
+            background-color: #78909C;
+            padding: 3px 7px;
+        }
+
+        .day .day-card .count {
+            padding: 3px 7px;
+        }
+
+    tbody td:last-child .day-card .header {
+        background-color: #e57373;
+    }
+
+    #modal-branch input[type=checkbox] {
+        vertical-align: middle;
+        margin: 0 0 0 10px;
+    }
+
+    .gap-day .day-card {
+        margin: 7px 3px 0px 3px;
+        background-color: #CFD8DC !important;
+        height: 100%;
+        overflow: hidden;
+        opacity: 0.5;
+    }
+
+        .gap-day .day-card .header {
+            display: block;
+            background-color: #78909C !important;
+            padding: 3px 7px;
+        }
+
+        .gap-day .day-card .count {
+            padding: 3px 7px;
+        }
+
+
+    .today .day-card .header {
+        background-color: #9CCC65;
+    }
+
+  
+  
+    table > tr > td {
+        border-radius: 15px;
+    }
+
+
+    .day-position {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    a {
+        text-decoration: none !important;
+        color: black;
+        text-decoration-style:none
+    }
+    a:hover{
+        color:unset
+    }
+        
+    .management-position {
+        position: absolute;
+        top: 56px;
+        right: 150px;
+    }
+
+
+
+
+    .count-position {
+        color: green;
+        position: absolute;
+        top: 12px;
+        right: 140px;
+    }
+    .count {
+        text-align: center
+    }
+</style>
+
+<div class="container">
+    <h3 class="no-margin">تقویم</h3>
+    <br />
+    <div>
+        <label>
+            سال:
+            <select id="cmbYear" class="form-control" style="width: 120px;">
+                @foreach (int item in ViewBag.YearList)
+                {
+                    if (item == ViewBag.Year)
+                    {
+                        <option value="@item" selected>@item</option>
+                    }
+                    else
+                    {
+                        <option value="@item">@item</option>
+                    }
+                }
+            </select>
+        </label>
+
+        <label>
+            ماه:
+            <select id="cmbMonth" class="form-control" style="width: 120px;">
+                <option value="1">فروردین</option>
+                <option value="2">اردیبهشت</option>
+                <option value="3">خرداد</option>
+                <option value="4">تیر</option>
+                <option value="5">مرداد</option>
+                <option value="6">شهریور</option>
+                <option value="7">مهر</option>
+                <option value="8">آبان</option>
+                <option value="9">آذر</option>
+                <option value="10">دی</option>
+                <option value="11">بهمن</option>
+                <option value="12">اسفند</option>
+            </select>
+        </label>
+    </div>
+    <table style="width: 100%">
+        <thead>
+            <tr>
+                <th><div>شنـبـه</div></th>
+                <th><div>یک شنـبـه</div></th>
+                <th><div>دو شنـبـه</div></th>
+                <th><div>سه شنـبـه</div></th>
+                <th><div>چهار شنـبـه</div></th>
+                <th><div>پنج شنـبـه</div></th>
+                <th><div>جمـعـه</div></th>
+            </tr>
+        </thead>
+        <tbody id="days" class="table-body"></tbody>
+    </table>
+</div>
+
+
+@*<div class="modal fade" id="modal-office" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <input type="hidden" id="hiddenDate" name="date" />
+                    <div class="col-lg-6">
+                        <br />
+                        <label>طلای فروخته شده</label>
+                        <div id="branchGold-modal"></div>
+                    </div>
+                    <div class="col-lg-6">
+                        <br />
+                        <label>طلای خریداری شده</label>
+                        <input id="boughtGold" class="form-control col-md-6" type="text" />
+                        <div id="boughtGold-modal"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="SaveBoughtGold" type="button" class="btn btn-success btn-block" data-dismiss="modal">ذخیره</button>
+                    <button type="button" class="btn btn-default btn-block" data-dismiss="modal" style="margin-right: 0;">بستن</button>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+@if (User.IsInRole("soldGold"))
+{
+
+    <div class="modal fade" id="modal-branch" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <input type="hidden" id="hiddenDate" name="date" />
+                    <div class="col-lg-6">
+                        <label>طلای فروش رفته</label>
+                        <input id="soldGold" class="form-control col-md-6" type="text" />
+                    </div>
+                    <br />
+                    <div class="soldGold-modal"></div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnSave" type="button" class="btn btn-success btn-block" data-dismiss="modal">ذخیره</button>
+                    <button type="button" class="btn btn-default btn-block" data-dismiss="modal" style="margin-right: 0;">بستن</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-branch-nottoday" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <br />
+                    <div class="soldGold-modal"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+@section Scripts {
+    <script type="text/javascript">
+        var weekdaysGap = [6, 0, 1, 2, 3, 4, 5];
+
+        $(document).ready(function () {
+
+            $("#cmbMonth").on("change", function () {
+
+                setParam("month", $(this).val());
+                switch (parseInt($(this).val())) {
+                    case 1:
+                    case 2:
+                    case 3:
+                        $("thead th div").removeClass("summer").removeClass("autumn").removeClass("winter");
+                        $("thead th div").addClass("spring");
+                        break;
+                    case 4:
+                    case 5:
+                    case 6:
+                        $("thead th div").removeClass("spring").removeClass("autumn").removeClass("winter");
+                        $("thead th div").addClass("summer");
+                        break;
+                    case 7:
+                    case 8:
+                    case 9:
+                        $("thead th div").removeClass("spring").removeClass("summer").removeClass("winter");
+                        $("thead th div").addClass("autumn");
+                        break;
+                    case 10:
+                    case 11:
+                    case 12:
+                        $("thead th div").removeClass("spring").removeClass("summer").removeClass("autumn");
+                        $("thead th div").addClass("winter");
+                        break;
+                }
+
+                draw();
+            });
+            getList()
+
+            $("#btnSave").on("click", function () {
+
+                var time = new Date();
+                var entity =
+                {
+                    date: $("#hiddenDate").val(),
+                    hour: time.getHours(),
+                    minute: time.getMinutes(),
+                    second: time.getSeconds(),
+                    soldGold: $("#soldGold").val()
+                }
+
+                loader(true);
+                $.post('/goldtrade/SaveSoldGold', entity, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        $("#modal-branch").modal("hide");
+                        callbackAlert(response.message, function () {
+                            getList();
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+
+
+            });
+
+
+            $("#SaveBoughtGold").on("click", function () {
+                var time = new Date();
+                var entity =
+                {
+                    date: $("#hiddenDate").val(),
+                    hour: time.getHours(),
+                    minute: time.getMinutes(),
+                    second: time.getSeconds(),
+                    boughtGold: $("#boughtGold").val()
+                }
+
+                loader(true);
+                $.post('/goldtrade/SaveBoughtGold', entity, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        $("#modal-branch").modal("hide");
+                        callbackAlert(response.message, function () {
+                            getList();
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+            var date = new persianDate();
+
+            var params = getParam();
+
+            if (params.year)
+                $("#cmbYear").val(params.year);
+            else
+                $("#cmbYear").val(date.pDate.year);
+
+            if (params.month)
+                $("#cmbMonth").val(params.month).change();
+            else
+                $("#cmbMonth").val(date.pDate.month).change();
+
+            draw();
+
+            $("#cmbMonth").on("change", function () {
+                setParam("month", $(this).val());
+                draw();
+            });
+
+            $("#cmbYear").on("change", function () {
+                setParam("year", $(this).val());
+                draw();
+            });
+
+            //$(document).on("click", ".add-activity", function () {
+            //    var date = $(this).attr("data-date");
+            //    $("#hiddenDate").val(date);
+            //    $("#modal-office").modal("show");
+            //    //$("#modal-branch").modal("show");
+
+
+            //});
+
+            $(document).on("click", ".day", function () {
+                var date = $(this).attr("data-date");
+                $("#hiddenDate").val(date);
+                $("#soldGold").val("");
+                $("#modal-branch").modal("show")
+                soldGoldList(date);
+                boughtGold(date);
+                branchGold(date);
+
+            });
+            $(document).on("click", ".not-today", function () {
+                var date = $(this).attr("data-date");
+                $("#hiddenDate").val(date);
+                $("#soldGold").val("");
+                $("#modal-branch-nottoday").modal("show")
+                soldGoldList(date);
+                boughtGold(date);
+                branchGold(date);
+
+            });
+
+
+
+            $("#btnSelectFile").on("click", function () {
+                $("#file").click();
+            });
+
+            $("#btnRemoveFile").on("click", function () {
+                $("#hiddenFileId, #txtFileName, #file").val("");
+                $("#btnRemoveFile").hide();
+                $("#btnSelectFile").fadeIn();
+            });
+
+            $("#cmbTypeId").on("change", function () {
+                if ($(this).val() >= 1) {
+
+                    $("#contentFile").removeClass("hide");
+                }
+                else {
+
+                    $("#contentFile").addClass("hide");
+                    $("#hiddenFileId").val("");
+                    $("#txtFileName").val("").change();
+                    $("#btnSelectFile").hide();
+                    $("#btnRemoveFile").fadeIn();
+                }
+            });
+
+
+
+        });
+
+
+        function selectFile(selectedFile) {
+            var file = selectedFile.files[0];
+            var filename = file.name;
+            $("#hiddenFileId").val("");
+            $("#txtFileName").val(filename).change();
+            $("#btnSelectFile").hide();
+            $("#btnRemoveFile").fadeIn();
+        }
+
+
+        function draw() {
+            var year = parseInt($("#cmbYear").val());
+            var month = parseInt($("#cmbMonth").val());
+
+            var date = new persianDate([year, month, 1]);
+
+            var days = [];
+
+            for (var i = 0; i < weekdaysGap[date.pDate.weekDayNumber]; i++) {
+                days.push("<td class=\"gap-day\"><div class='day-card'> <span class='header'>&nbsp;</span></div ></td>");
+            }
+
+            month = month < 10 ? "0" + month : month;
+            for (var i = 1; i <= getMonthDay(year, month); i++) {
+                var day = i < 10 ? "0" + i : i;
+                if (isToday(year, month, i)) {
+                    days.push("<td class=\"day today relative\" data-date=\"" + year + "/" + month + "/" + day + "\" data-day=\"" + i + "\"><a <a href=\" /goldBalance/trade/" + year + "-" + month + "-" + day + " \"><div class='day-card'><span class='header'>" + day + "</span> <span class='count block small-font'></span></div></a></td>");
+                }
+                else {
+                    days.push("<td class=\"day relative  not-today\"  data-date=\"" + year + "/" + month + "/" + day + "\"  data-day=\"" + i + "\"><a href=\" /goldBalance/trade/" + year + "-" + month + "-" + day + " \"> <div class='day-card'><span class='header'>" + day + "</span> <span class='count block small-font'></span></div></a></td>");
+                }
+            }
+            
+            var str = "<tr>";
+            var len = days.length;
+            if (days.length % 7 != 0) // ساخت مقدار های اضافه برای وقتی که ستون های جدول کمتر از تعداد رند باشد
+                len += 7 - days.length % 7;
+
+            for (var i = 0; i < len; i++) {
+                if (days[i])
+                    str += days[i];
+                else
+                    str += "<td class=\"gap-day\"><div class='day-card'> <span class='header'>&nbsp;</span></div ></td>";
+
+                if ((i + 1) % 7 == 0) {
+                    str += "</tr>";
+                    if (i < days.length) {
+                        str += "<tr>";
+                    }
+                }
+            }
+
+            $("#days").html(str);
+
+            getList();
+        }
+
+        function getMonthDay(year, month) {
+            if (month <= 6) {
+                return 31;
+            }
+            else if (month < 12) {
+                return 30;
+            }
+            else {
+                if (isLeapYear(parseInt(year)))
+                    return 30;
+                else
+                    return 29;
+            }
+        }
+
+        function isLeapYear(year) {
+            var a = 0, b = 1309, c = parseInt(year);
+            for (var i = 1309; i <= c - 4; i += 4) {
+                b += 4;
+                a += 1;
+                if (a % 8 === 0)
+                    b++;
+            }
+
+            if (c === b) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        function isToday(year, month, day) {
+            var date = new persianDate().pDate;
+            return date.year == year && date.month == month && date.date == day;
+        }
+
+        function getList() {
+            $.get('/goldBalance/getcount', function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    var ss = response.data.stringDate
+                    for (var i = 0; i < response.data.list.length; i++) {
+                        var item = response.data.list[i];
+                        console.log(item)
+                        $("td[data-date='" + item.stringDate + "']").find("span.count").html("<span data-date=\"" + item.stringDate + "\" ><span class=\" weight-position\"><b>" + item.lastWeight + "</b> </span><span class=\" count-position\" style=\" color:black  \" ><b>&nbsp " + item.count + " </b></span></span>");
+
+                    }
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        }
+
+        function soldGoldList(date) {
+            $.get('/goldtrade/SearchSoldGold', { date: date }, function (response) {
+                loader(false);
+                if (response.status == 200) {
+
+                    var data = response.data;
+                    var template = $.templates("#template-soldGold");
+                    var htmlOutput = template.render(data);
+                    $(".soldGold-modal").html(htmlOutput);
+
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        }
+        function branchGold(date) {
+            $.get('/goldtrade/getBranchGold', { date: date }, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template-branchGold");
+                    var htmlOutput = template.render(data);
+                    $("#branchGold-modal").html(htmlOutput);
+                    //$("#modal-office").modal("show")
+                    $('[data-toggle="tooltip"]').tooltip();
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        }
+        function boughtGold(date) {
+            $.get('/goldtrade/searchBoughtGold', { date: date }, function (response) {
+                loader(false);
+                if (response.status == 200) {
+
+                    var data = response.data;
+                    var template = $.templates("#template-boughtGold");
+                    var htmlOutput = template.render(data);
+                    $("#boughtGold-modal").html(htmlOutput);
+                    //$("#modal-office").modal("show")
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        }
+
+    </script>
+
+    <script id="template-soldGold" type="text/x-jsrender">
+        {{if list != null && list.length > 0}}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ساعت</th>
+                    <th>گرم</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td>{{:stringDate}}</td>
+                    <td>{{:soldGold}}</td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        {{else}}
+        <h5>سوابقی برای این روز یافت نشد</h5>
+        {{/if}}
+    </script>
+    <script id="template-branchGold" type="text/x-jsrender">
+        {{if list != null && list.length > 0}}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>شعبه</th>
+                    <th>گرم</th>
+                    <th>ساعت</th>
+                    <th></th>
+                </tr>
+
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td>{{:branchName}}</td>
+                    <td>{{:soldGold}}</td>
+                    <td>{{:stringDate}}</td>
+
+                    <td data-toggle="tooltip" title="
+                         {{for detail}}
+                        {{:soldGold}}
+                    {{/for}}
+
+                        ">
+                        <i class="fa fa-info"></i>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        {{else}}
+        <h5>سوابقی برای این روز یافت نشد</h5>
+        {{/if}}
+    </script>
+
+    <script id="template-boughtGold" type="text/x-jsrender">
+        {{if list != null && list.length > 0}}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ساعت</th>
+                    <th>گرم</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td>{{:stringDate}}</td>
+                    <td>{{:boughtGold}}</td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        {{else}}
+        <h5>سوابقی برای این روز یافت نشد</h5>
+        {{/if}}
+    </script>
+}

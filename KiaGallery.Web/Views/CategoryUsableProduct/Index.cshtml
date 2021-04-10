@@ -1,0 +1,272 @@
+﻿
+@{
+    ViewBag.Title = "لیست دسته بندی محصولات چاپخانه";
+}
+
+<style>
+    .addParent {
+        width: 60px;
+        padding: 23px 0;
+        border-radius: 50%;
+        position: relative;
+        display: inline-block;
+        text-align: center;
+        height: 60px;
+        background: rgb(16,8,133);
+        background: linear-gradient(90deg, rgba(16,8,133,1) 0%, rgba(7,28,162,1) 50%, rgba(16,8,133,1) 100%);
+        z-index: 1;
+    }
+
+        .addParent:hover {
+            color: white;
+        }
+
+    .addChild {
+        background: blue;
+        color: white;
+        border: none;
+        padding: 4px 20px;
+    }
+
+    hr.line {
+        border: 0;
+        height: 1px;
+        border-radius: 15px;
+        background-image: -moz-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+        position: relative;
+        top: -50px;
+    }
+
+    .child {
+        display: none;
+    }
+
+    .even {
+        background-color: white;
+    }
+
+    .odd {
+        background-color: #ddd;
+    }
+</style>
+<div>
+    <h3>لیست دسته بندی</h3>
+    <input type="hidden" id="hiddenId" name="id" />
+    <a href="/CategoryUsableProduct/Add/" class="addParent">
+        <span class="fa fa-plus"></span>
+    </a>
+    <hr class="line" />
+</div>
+
+<div id="modal-parentId" class="modal fade" tabindex="-1" role="dialog">
+    <form id="form">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <input type="hidden" id="hiddenId" name="id" value="" />
+                <input type="hidden" class="hiddenId" name="parentId" value="" />
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">زیردسته بندی</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="txtOrder">ترتیب</label>
+                        <input id="txtOrder" type="tel" class="form-control" name="order" placeholder="نام " maxlength="50" data-validate="required, maxLength(50)">
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="txtName">نام</label>
+                        <input id="txtName" type="tel" class="form-control" name="title" placeholder="نام " maxlength="50" data-validate="required, maxLength(50)">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnSave" type="button" class="btn btn-success btn-block" data-dismiss="modal">ذخیره</button>
+                    <button type="button" class="btn btn-default btn-block" data-dismiss="modal" style="margin-right: 0;">بستن</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="content">
+    <div id="child"></div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+
+        var defaultEntity = {
+            page: 0,
+            count: 200,
+        }
+        $(document).ready(function () {
+            getList();
+            $(document).on("click", ".toggleChild", function () {
+                var parentId = $(this).attr('data-id');
+                $(".child-" + parentId).toggle("fast");
+            });
+            $("#btnSave").on("click", function (event) {
+                event.preventDefault();
+                var entity = getEntity("#form")
+                loader(true);
+                $.post('/categoryusableproduct/SaveChild', entity, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        getList();
+                        $("#txtName").val("");
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+            $(document).on("click", ".addChild", function () {
+                $("#modal-parentId").modal('show');
+                var id = $(this).attr('data-id');
+                $(".hiddenId").val(id);
+                $("#txtName").val();
+            });
+
+            $(document).on("click", ".editChild", function () {
+                $("#modal-parentId").modal('show');
+                $(".hiddenId").val($(this).attr("data-id"));
+                loadChild($(this).attr("data-id"));
+            });
+
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف دسته بندی اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/categoryusableproduct/Delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+
+            $(document).on("click", ".deleteChild", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف فرزند دسته بندی اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/categoryusableproduct/DeleteChild/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+
+        });
+
+
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+            loader(true);
+            $.get("/categoryusableproduct/Search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                    $("[data-toggle=tooltip]").tooltip();
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+        function loadChild(id) {
+            loader(true);
+            $.get("/categoryusableproduct/loadChild/" + id, function (response) {
+                if (response.status == 200) {
+                    setEntity(response.data, "#form");
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+
+    </script>
+    <script id="template" type="text/x-jsrender">
+
+        <table class="table">
+
+            <thead>
+                <tr>
+                    <th class="w15">ترتیب</th>
+                    <th class="">عنوان </th>
+                    <th class=" icon-col text-center">ویرایش</th>
+                    <th class=" icon-col text-center">حذف</th>
+                    <th class=" icon-col text-center" style="width:150px">افزودن فرزند</th>
+                    <th class="w15 text-center">مشاهده زیردسته بندی</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {{for list}}
+                <tr class="{{if #index % 2 == 0}}odd{{else}}even{{/if}}">
+
+                    <td>{{:order}}</td>
+                    <td>{{:title}}</td>
+                    <td class="txt-al-c v-middle">
+                        <a href="/categoryusableproduct/Edit/{{:id}}" class="btn btn-info btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c v-middle">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                    <td class="txt-al-c v-middle ">
+                        <button class="addChild" data-id="{{:id}}">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                    <td class="toggleChild txt-al-c v-middle" data-id="{{:id}}">
+                        {{if children.length>0}}
+                        <i class="fa fa-angle-down fa-2x icon-angle"></i>
+                        {{/if}}
+                    </td>
+
+                </tr>
+                {{for children ~parent=#index}}
+                <tr class="child-{{:parentId}} child @*{{if ~parent % 2 == 0}}odd{{else}}even{{/if}}*@">
+                    <td>{{:order}}</td>
+                    <td class=""><strong>{{:childTitle}}</strong></td>
+                    <td class="text-center">
+                        <a class="editChild btn btn-info btn-xs" data-title="ویرایش" data-id="{{:id}}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c v-middle">
+                        <a class="deleteChild btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></a>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {{/for}}
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+
+}

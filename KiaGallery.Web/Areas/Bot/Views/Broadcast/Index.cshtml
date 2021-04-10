@@ -1,0 +1,390 @@
+﻿@{
+    ViewBag.Title = "پیام عمومی ربات اصلی";
+}
+
+<h2>@ViewBag.Title</h2>
+<style type="text/css">
+    .btnAdd {
+        background-color: #009688;
+    }
+
+    .btnFiles {
+        color: #0088cc;
+        margin: 5px;
+        cursor: pointer;
+    }
+
+    table {
+        width: 100%;
+        border: 1px solid gray;
+        margin: 10px 0px;
+    }
+
+    th {
+        background-color: whitesmoke;
+    }
+
+    tr:not(:last-child) td, th {
+        border-bottom: 1px solid gray;
+    }
+
+    td, th {
+        padding: 4px 20px;
+    }
+</style>
+<button class="btnAdd">
+    <i class="fa fa-plus" aria-hidden="true"></i>
+    Add
+</button>
+<div id="content">
+
+</div>
+
+<div id="form" style="display: none;">
+    <form id="frmData">
+        <input id="hiddenId" type="hidden" value="" name="id" />
+        <div>
+            <span class="header">Type:</span>
+            <select id="cmbType" name="type">
+                <option value="0">Text</option>
+                <option value="1">Image</option>
+                <option value="2">Video</option>
+                <option value="3">DailyOffer</option>
+            </select>
+        </div>
+        <div>
+            <span class="header">Text:</span>
+            <textarea id="txtText" cols="60" rows="3" name="text"></textarea>
+        </div>
+        <div id="charCount" class="txt-al-r" style="margin: 0 10px;">
+            0/199
+        </div>
+        <div>
+            <span class="header">Persian Text:</span>
+            <textarea id="txtTextFa" cols="60" rows="3" name="textFa"></textarea>
+        </div>
+        <div id="fileUploadContainer">
+            <span class="header">File:</span>
+            <input id="txtFileName" type="text" name="fileName" readonly />
+            <input id="hiddenFileId" type="hidden" name="fileId" />
+            <input id="fileUpload" type="file" class="gone" />
+            <div style="display: inline-block; padding-top: 16px;">
+                <i id="imgBrowser" class="fa fa-folder btnFiles" aria-hidden="true"></i>
+                <i id="imgDownload" class="fa fa-download btnFiles" aria-hidden="true"></i>
+            </div>
+        </div>
+        <div id="dataCodeContainer">
+            <div>
+                <span class="header">Product Code:</span>
+                <input id="txtProductCode" type="text" name="dataCode" />
+            </div>
+            <div>
+                <span class="header">Count:</span>
+                <input id="txtProductCount" type="text" name="count" />
+            </div>
+        </div>
+        <div class="controlBox" style="padding: 5px;">
+            <span class="header"></span>
+            <button id="btnSave" class="btnForm">
+                <i class="fa fa-check" aria-hidden="true"></i>
+                Save
+            </button>
+            <button id="btnCancel" class="btnForm">
+                <i class="fa fa-remove" aria-hidden="true"></i>
+                Cancel
+            </button>
+        </div>
+        <div class="controlBox" style="padding: 5px;">
+            <span class="header"></span>
+            <input type="text" id="txtUserId" style="margin-left: 0; margin-right: 0;" placeholder="User ID" />
+            <button id="btnSendTest" class="btnForm" style="margin: 12px;">
+                <i class="fa fa-check" aria-hidden="true"></i>
+                Send Test
+            </button>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#cmbType").change(function () {
+            if ($(this).val() == 0) {
+                $("#fileUploadContainer").slideUp();
+            }
+            else {
+                $("#fileUploadContainer").slideDown();
+            }
+            if ($(this).val() == 3) {
+                $("#dataCodeContainer").slideDown();
+            }
+            else {
+                $("#dataCodeContainer").slideUp();
+            }
+        });
+
+        $("#imgBrowser").click(function () {
+            $("#fileUpload").click();
+        });
+
+        $("#imgDownload").click(function () {
+            download($("#txtFileName").val());
+        });
+
+        $('#fileUpload').fileupload({
+            dataType: 'json',
+            url: '/File/Upload?path=Broadcast',
+            autoUpload: true,
+            done: function (e, data) {
+                var response = data.result;
+                if (response.status == 200) {
+                    $('#txtFileName').val(response.data.name);
+                    $('#hiddenFileId').val("");
+                    $(this).removeClass("textError");
+                }
+                alert(response.message);
+            }
+        }).on('fileuploadprogressall', function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('.progress .progress-bar').css('width', progress + '%');
+        });
+
+        $("#btnSave").click(function (event) {
+            event.preventDefault();
+            var entity = getEntity("#frmData");
+
+            //validate
+            var flagValid = true;
+
+            if (!entity.text) {
+                $("#txtText").addClass("textError");
+                flagValid = false;
+            }
+
+            if (!entity.textFa) {
+                $("#txtTextFa").addClass("textError");
+                flagValid = false;
+            }
+
+            if (entity.type > 0 && !entity.fileName) {
+                $("#txtFileName").addClass("textError");
+                flagValid = false;
+            }
+
+            if (entity.type == 3 && !entity.dataCode) {
+                $("#txtProductCode").addClass("textError");
+                flagValid = false;
+            }
+
+            if (entity.type == 3 && (!entity.count || entity.count <= 0)) {
+                $("#txtProductCount").addClass("textError");
+                flagValid = false;
+            }
+
+            if (!flagValid) return;
+            //end validate
+
+            $.post("/bot/Broadcast/Save", entity, function (response) {
+                if (response.status == 200) {
+                    closeModal($("#form"));
+                    getList();
+                }
+                alert(response.message);
+            });
+        });
+
+        $("#btnCancel").click(function (event) {
+            event.preventDefault();
+            closeModal($("#form"));
+        });
+
+        $("#txtText, #txtTextFa").keypress(function () {
+            $(this).removeClass("textError");
+        });
+
+        $("#txtFileName").change(function () {
+            $(this).removeClass("textError");
+        });
+
+        $(".btnAdd").click(function (event) {
+            event.preventDefault();
+            newBroadcast();
+        });
+
+        getList();
+
+        $("#btnSendTest").click(function (event) {
+            event.preventDefault();
+            var entity = getEntity("#frmData");
+
+            entity.userId = $("#txtUserId").val();
+
+            //validate
+            var flagValid = true;
+
+            if (!entity.text) {
+                $("#txtText").addClass("textError");
+                flagValid = false;
+            }
+
+            if (!entity.textFa) {
+                $("#txtTextFa").addClass("textError");
+                flagValid = false;
+            }
+
+            if (entity.type > 0 && !entity.fileName) {
+                $("#txtFileName").addClass("textError");
+                flagValid = false;
+            }
+
+            if (entity.type == 3 && !entity.dataCode) {
+                $("#txtProductCode").addClass("textError");
+                flagValid = false;
+            }
+
+            if (entity.type == 3 && (!entity.count || entity.count <= 0)) {
+                $("#txtProductCount").addClass("textError");
+                flagValid = false;
+            }
+
+            if (!entity.userId) {
+                $("#txtUserId").addClass("textError");
+                flagValid = false;
+            }
+
+            if (!flagValid) return;
+            //end validate
+
+            $.post("/bot/Broadcast/SendSample", entity, function (response) {
+                alert(response.message);
+            });
+        });
+
+        $("#txtText").on("keyup", function () {
+            $("#charCount").html(($("#txtText").val().replaceAll("\n", "nn").length) + "/199")
+        });
+
+    });
+
+    var _totalPage = 0;
+    var _page = 0;
+    var _count = 10;
+    var _listData = [];
+
+    function getList() {
+        var data = {
+            page: _page,
+            count: _count
+        };
+        $.get("/bot/Broadcast/GetData", data, function (response) {
+            if (response.status == 200) {
+                var data = response.data;
+                var template = $.templates("#tmplBroadcast");
+                var htmlOutput = template.render(data);
+                $("#content").html(htmlOutput);
+
+                if (_page == 0)
+                    $("#previewsPage").css({ 'visibility': 'hidden' });
+                else
+                    $("#previewsPage").css({ 'visibility': 'visible' });
+
+                if (response.data.pageCount == 0 || _page + 1 == response.data.pageCount)
+                    $("#nextPage").css({ 'visibility': 'hidden' });
+                else
+                    $("#nextPage").css({ 'visibility': 'visible' });
+
+                _listData = response.data.list;
+                _totalPage = response.data.pageCount;
+            }
+            else {
+                alert(response.message);
+            }
+        });
+
+    }
+
+    function newBroadcast() {
+        $("#frmData").get(0).reset();
+        $("#hiddenId").val("");
+        $("#hiddenFileId").val("");
+        $("#fileUploadContainer").hide();
+        $("#dataCodeContainer").hide();
+        showModal($("#form"));
+    }
+
+    function setPageNo() {
+        var pageNo = $("#txtPageNo").val();
+        if (pageNo <= 0 || pageNo > _totalPage) {
+            alert("Your selected page is invalid.");
+            return;
+        }
+
+        _page = pageNo - 1;
+        getList();
+    }
+
+    function previewsPage() {
+        _page--;
+        getList();
+    }
+
+    function nextPage() {
+        _page++;
+        getList();
+    }
+
+    function openGoto() {
+        $("#goto").slideToggle();
+    }
+
+</script>
+
+<script type="text/x-jsrender" id="tmplBroadcast">
+    <table>
+        <tr>
+            <th>
+                Type
+            </th>
+            <th>
+                Text
+            </th>
+            <th>
+                Sent Date
+            </th>
+            <th></th>
+        </tr>
+        {{for list}}
+        <tr>
+            <td style="width: 100px;">
+                {{:type}}
+            </td>
+            <td>
+                {{:text}}
+            </td>
+            <td width="140px">
+                {{:persianCreatedDate}}
+            </td>
+            <td style="width: 20px;">
+                {{if fileName}}
+                <i class="fa fa-download linkIcon" aria-hidden="true" onclick="download('{{:fileName}}', 'Broadcast')"></i>
+                {{/if}}
+            </td>
+        </tr>
+        {{/for}}
+    </table>
+    <div>
+        <i id="previewsPage" class="fa fa-angle-double-left linkIcon" aria-hidden="true" onclick="previewsPage()"></i>
+        <span id="pageNo">{{:pageNo}}</span>
+        <i id="nextPage" class="fa fa-angle-double-right linkIcon" aria-hidden="true" onclick="nextPage()"></i>
+        <div class="relative inline-block">
+            <i class="fa fa-exchange linkIcon" aria-hidden="true" onclick="openGoto()" style="padding: 6px;"></i>
+            <div id="goto" class="absolute gone">
+                <input id="txtPageNo" type="text" style="width: 30px;" />
+                <i class="fa fa-chevron-circle-right linkIcon" aria-hidden="true" onclick="setPageNo()" style="font-size: 1.25em; margin: 10px 0px 0 10px;"></i>
+            </div>
+        </div>
+        <i class="fa fa-refresh linkIcon" aria-hidden="true" onclick="getList()" style="padding: 6px;"></i>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <i class="fa fa-list-ul linkIcon" aria-hidden="true" style="padding: 6px;"></i>{{:count}}
+    </div>
+</script>

@@ -1,0 +1,94 @@
+﻿<div id="form" class="container">
+    <div class="row form-group">
+
+        <div class="row">
+            <div id="step1" class="col-md-4 col-md-offset-4">
+                <div class="form-group">
+                    <label for="txtFirstName">نام</label>
+                    <input id="txtFirstName" type="text" class="form-control number-only" name="firstName">
+                    <input id="hiddenId" type="hidden" name="id">
+                </div>
+                <div class="form-group">
+                    <label for="txtLastName">نام خانوادگی</label>
+                    <input id="txtLastName" type="text" class="form-control number-only" name="lastName">
+                </div>
+                <div class="form-group">
+                    <label for="txtUserName">نام کاربری</label>
+                    <input id="txtUserName" type="text" class="form-control number-only" name="userName">
+                </div>
+                <div class="form-group">
+                    <label for="cmbBranch">شعبه</label>
+                    <select id="cmbBranch" class="form-control" name="branchId">
+                        <option value="">...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cmbActive">توقف</label>
+                    <select id="cmbActive" class="form-control" data-validate="required" name="stoped">
+                        <option value="">...</option>
+                        <option value="true">فعال</option>
+                        <option value="false">غیرفعال</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button id="btnSave" type="submit" class="btn btn-success">
+                        <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                        ذخیره
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+    var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+    $(document).ready(function () {
+        loadRemoteSelect("#cmbBranch", "/branch/getAll", null, "id", "name", "...", function () {
+            load();
+        });
+
+        $("#btnSave").on("click", function (event) {
+            event.preventDefault();
+            if (checkForm("#form")) {
+                var entity = getEntity("#form");
+                loader(true);
+                $.ajax({
+                    method: "POST",
+                    url: "/userData/save",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                document.location = "/userData";
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                        loader(false);
+                    }
+                });
+            }
+        });
+    });
+
+    function load() {
+        if (id > 0) {
+            loader(true);
+            $.get("/userData/load/" + id, function (response) {
+                if (response.status == 200) {
+                    setEntity(response.data, "#form");
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    }
+
+    </script>
+}

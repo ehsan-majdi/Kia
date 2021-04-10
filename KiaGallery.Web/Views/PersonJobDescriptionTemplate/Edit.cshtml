@@ -1,0 +1,91 @@
+﻿
+@{
+    ViewBag.Title = "شرح وظایف";
+}
+
+<style>
+    textarea {
+        resize: none;
+        width: 100%;
+    }
+</style>
+<div class="container">
+    <form id="form">
+        <div class="row">
+            <div class="form-group col-md-3">
+                <label for="txtTitle">عنوان شرح وظایف:</label>
+                <input id="txtTitle" class="form-control" name="title" />
+            </div>
+            <div class="form-group col-md-3">
+                <input type="hidden" name="id" />
+                <label for="cmbStatus">وضعیت:</label>
+                <select id="cmbStatus" class="form-control" data-validate="required" name="status">
+                    <option value="">...</option>
+                    <option value="true">فعال</option>
+                    <option value="false">غیر فعال</option>
+                </select>
+            </div>
+            
+            <div class="form-group col-md-12">
+                <div id="divDroppedFields">
+                    <textarea id="textArea" name="text" rows="10" class="form-control editor" onclick="getCaretPosition()" onkeyup="getCaretPosition()" required></textarea>
+                </div>
+            </div>
+
+        </div>
+    </form>
+    <div class="text-center">
+        <button class="btn btn-success" type="submit" id="btnSave">ثبت</button>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        var id = @(ViewBag.Id != null? ViewBag.Id:0);
+        $('.editor').froalaEditor();
+        $(document).ready(function () {
+
+            load()
+            $("#btnSave").on("click", function () {
+                Save()
+            })
+        })
+        function Save() {
+            var entity = getEntity("#form");
+           
+            if (checkForm("#form")) {
+                loader(true);
+
+                $.post("/PersonJobDescriptionTemplate/save", entity, function (response) {
+                    console.log(entity)
+
+                    loader(false);
+                    if (response.status == 200) {
+
+
+                        callbackAlert(response.message, function () {
+                            document.location = "/PersonJobDescriptionTemplate/";
+                        })
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            }
+        }
+        function load() {
+            if (id > 0) {
+                loader(true);
+                $.get("/PersonJobDescriptionTemplate/load/" + id, function (response) {
+                    if (response.status == 200) {
+                        $('#textArea').froalaEditor('html.set', response.data.text);
+                        setEntity(response.data, "#form");
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            }
+        }
+    </script>
+}

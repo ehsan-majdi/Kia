@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewBag.Title = "List";
+}
+
+@*<div>
+        <a class="btn btn-success" href="/ticket/message">جدید</a>
+    </div>*@
+
+<div id="content"></div>
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            getListTicket();
+        })
+        function getListTicket() {
+            var params = {
+                page: 0,
+                count: 100,
+            }
+            $.get("/ticket/search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template-ticket");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    </script>
+  
+    <script id="template-ticket" type="text/x-jsrender">
+
+            <table class="table" >
+                <thead>
+                    <tr>
+                        <th>ردیف</th>
+                        <th></th>
+                        <th>وضعیت</th>
+                        <th>مشاهده</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{for list }}
+                    <tr style="border-top: solid 1px silver">
+                        <td>{{:id}}</td>
+                        <td>{{:text}}</td>
+                        <td>{{:ticketStatusTitle}}</td>
+                        <td><a href="/ticket/message/{{:id}}"><i class="fa fa-eye"></i></a></td>
+                    </tr>
+                    {{/for}}
+                </tbody>
+            </table>
+            <div class="clearfix"></div>
+            @Html.Partial("_Pagination")
+        </script>
+}

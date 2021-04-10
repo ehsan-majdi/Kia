@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="KiaGalleryMainContextModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Branches">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CityId" Type="int" Nullable="false" />
+          <Property Name="BranchType" Type="int" Nullable="false" />
+          <Property Name="OrderNo" Type="int" Nullable="false" />
+          <Property Name="Alias" Type="nvarchar" MaxLength="5" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="EnglishName" Type="nvarchar" MaxLength="100" />
+          <Property Name="Address" Type="nvarchar" MaxLength="1000" />
+          <Property Name="EnglishAddress" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Color" Type="nvarchar" MaxLength="7" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="100" />
+          <Property Name="CreditCard" Type="int" />
+          <Property Name="Latitude" Type="nvarchar" MaxLength="38" />
+          <Property Name="Longitude" Type="nvarchar" MaxLength="38" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="GoldDebt" Type="real" Nullable="false" />
+          <Property Name="RialDebt" Type="bigint" Nullable="false" />
+          <Property Name="GoldCredit" Type="real" Nullable="false" />
+          <Property Name="CreateUserId" Type="int" Nullable="false" />
+          <Property Name="ModifyUserId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifyDate" Type="datetime" Nullable="false" />
+          <Property Name="Ip" Type="nvarchar" MaxLength="45" />
+        </EntityType>
+        <EntityType Name="BranchGolds">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BranchId" Type="int" Nullable="false" />
+          <Property Name="Weight" Type="float" Nullable="false" />
+          <Property Name="Price" Type="bigint" Nullable="false" />
+          <Property Name="Date" Type="datetime" />
+          <Property Name="CreateUserId" Type="int" Nullable="false" />
+          <Property Name="ModifyUserId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifyDate" Type="datetime" Nullable="false" />
+          <Property Name="Ip" Type="nvarchar(max)" />
+        </EntityType>
+        <Association Name="FK_dbo_BranchGolds_dbo_Branches_BranchId">
+          <End Role="Branches" Type="Self.Branches" Multiplicity="1" />
+          <End Role="BranchGolds" Type="Self.BranchGolds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branches">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BranchGolds">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="KiaGalleryMainContextModelStoreContainer">
+          <EntitySet Name="Branches" EntityType="Self.Branches" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BranchGolds" EntityType="Self.BranchGolds" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_dbo_BranchGolds_dbo_Branches_BranchId" Association="Self.FK_dbo_BranchGolds_dbo_Branches_BranchId">
+            <End Role="Branches" EntitySet="Branches" />
+            <End Role="BranchGolds" EntitySet="BranchGolds" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="KiaGalleryMainContextModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="KiaGalleryMainContextEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Branches" EntityType="KiaGalleryMainContextModel.Branches" />
+          <EntitySet Name="BranchGolds" EntityType="KiaGalleryMainContextModel.BranchGolds" />
+          <AssociationSet Name="FK_dbo_BranchGolds_dbo_Branches_BranchId" Association="KiaGalleryMainContextModel.FK_dbo_BranchGolds_dbo_Branches_BranchId">
+            <End Role="Branches" EntitySet="Branches" />
+            <End Role="BranchGolds" EntitySet="BranchGolds" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Branches">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CityId" Type="Int32" Nullable="false" />
+          <Property Name="BranchType" Type="Int32" Nullable="false" />
+          <Property Name="OrderNo" Type="Int32" Nullable="false" />
+          <Property Name="Alias" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EnglishName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="EnglishAddress" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Color" Type="String" MaxLength="7" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CreditCard" Type="Int32" />
+          <Property Name="Latitude" Type="String" MaxLength="38" FixedLength="false" Unicode="true" />
+          <Property Name="Longitude" Type="String" MaxLength="38" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="GoldDebt" Type="Single" Nullable="false" />
+          <Property Name="RialDebt" Type="Int64" Nullable="false" />
+          <Property Name="GoldCredit" Type="Single" Nullable="false" />
+          <Property Name="CreateUserId" Type="Int32" Nullable="false" />
+          <Property Name="ModifyUserId" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifyDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Ip" Type="String" MaxLength="45" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BranchGolds" Relationship="KiaGalleryMainContextModel.FK_dbo_BranchGolds_dbo_Branches_BranchId" FromRole="Branches" ToRole="BranchGolds" />
+        </EntityType>
+        <EntityType Name="BranchGolds">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BranchId" Type="Int32" Nullable="false" />
+          <Property Name="Weight" Type="Double" Nullable="false" />
+          <Property Name="Price" Type="Int64" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="CreateUserId" Type="Int32" Nullable="false" />
+          <Property Name="ModifyUserId" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifyDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Ip" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Branches" Relationship="KiaGalleryMainContextModel.FK_dbo_BranchGolds_dbo_Branches_BranchId" FromRole="BranchGolds" ToRole="Branches" />
+        </EntityType>
+        <Association Name="FK_dbo_BranchGolds_dbo_Branches_BranchId">
+          <End Type="KiaGalleryMainContextModel.Branches" Role="Branches" Multiplicity="1" />
+          <End Type="KiaGalleryMainContextModel.BranchGolds" Role="BranchGolds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branches">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BranchGolds">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="KiaGalleryMainContextModelStoreContainer" CdmEntityContainer="KiaGalleryMainContextEntities">
+          <EntitySetMapping Name="Branches">
+            <EntityTypeMapping TypeName="KiaGalleryMainContextModel.Branches">
+              <MappingFragment StoreEntitySet="Branches">
+                <ScalarProperty Name="Ip" ColumnName="Ip" />
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ModifyUserId" ColumnName="ModifyUserId" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="GoldCredit" ColumnName="GoldCredit" />
+                <ScalarProperty Name="RialDebt" ColumnName="RialDebt" />
+                <ScalarProperty Name="GoldDebt" ColumnName="GoldDebt" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="CreditCard" ColumnName="CreditCard" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="EnglishAddress" ColumnName="EnglishAddress" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="EnglishName" ColumnName="EnglishName" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Alias" ColumnName="Alias" />
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+                <ScalarProperty Name="BranchType" ColumnName="BranchType" />
+                <ScalarProperty Name="CityId" ColumnName="CityId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BranchGolds">
+            <EntityTypeMapping TypeName="KiaGalleryMainContextModel.BranchGolds">
+              <MappingFragment StoreEntitySet="BranchGolds">
+                <ScalarProperty Name="Ip" ColumnName="Ip" />
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ModifyUserId" ColumnName="ModifyUserId" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

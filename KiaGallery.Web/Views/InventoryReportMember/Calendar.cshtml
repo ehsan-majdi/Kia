@@ -1,0 +1,383 @@
+﻿
+@{
+    ViewBag.Title = "تقویم";
+}
+
+<style type="text/css">
+    table * {
+        font-family: 'IRANSans(FaNum)';
+    }
+
+    thead th {
+        width: 14%;
+    }
+
+        thead th div {
+            padding: 6px 10px;
+            margin: 7px 3px 0px 3px;
+            border-radius: 4px;
+            text-align: center;
+            color: white;
+        }
+
+    .spring {
+        background-color: #66BB6A;
+    }
+
+    .summer {
+        background-color: #ef5350;
+    }
+
+    .autumn {
+        background-color: #FF9800;
+    }
+
+    .winter {
+        background-color: #00ACC1;
+    }
+
+    tbody td {
+        height: 80px;
+        vertical-align: top;
+    }
+
+    .day .day-card {
+        margin: 7px 3px 0px 3px;
+        background-color: #CFD8DC !important;
+        height: 100%;
+        overflow: hidden;
+    }
+
+        .day .day-card .header {
+            display: block;
+            background-color: #78909C;
+            padding: 3px 7px;
+        }
+
+        .day .day-card .count {
+            padding: 3px 7px;
+        }
+
+    tbody td:last-child .day-card .header {
+        background-color: #e57373;
+    }
+
+    #modal-branch input[type=checkbox] {
+        vertical-align: middle;
+        margin: 0 0 0 10px;
+    }
+
+    .gap-day .day-card {
+        margin: 7px 3px 0px 3px;
+        background-color: #CFD8DC !important;
+        height: 100%;
+        overflow: hidden;
+        opacity: 0.5;
+    }
+
+        .gap-day .day-card .header {
+            display: block;
+            background-color: #78909C !important;
+            padding: 3px 7px;
+        }
+
+        .gap-day .day-card .count {
+            padding: 3px 7px;
+        }
+
+
+    .today .day-card .header {
+        background-color: #9CCC65;
+    }
+</style>
+
+<div class="container">
+    <h3 class="no-margin">تقویم</h3>
+    <br />
+    <div>
+        <label>
+            سال:
+            <select id="cmbYear" class="form-control" style="width: 120px;">
+                @foreach (int item in ViewBag.YearList)
+                {
+                    if (item == ViewBag.Year)
+                    {
+                        <option value="@item" selected>@item</option>
+                    }
+                    else
+                    {
+                        <option value="@item">@item</option>
+                    }
+                }
+            </select>
+        </label>
+
+        <label>
+            ماه:
+            <select id="cmbMonth" class="form-control" style="width: 120px;">
+                <option value="1">فروردین</option>
+                <option value="2">اردیبهشت</option>
+                <option value="3">خرداد</option>
+                <option value="4">تیر</option>
+                <option value="5">مرداد</option>
+                <option value="6">شهریور</option>
+                <option value="7">مهر</option>
+                <option value="8">آبان</option>
+                <option value="9">آذر</option>
+                <option value="10">دی</option>
+                <option value="11">بهمن</option>
+                <option value="12">اسفند</option>
+            </select>
+        </label>
+    </div>
+    <table style="width: 100%">
+        <thead>
+            <tr>
+                <th><div>شنـبـه</div></th>
+                <th><div>یک شنـبـه</div></th>
+                <th><div>دو شنـبـه</div></th>
+                <th><div>سه شنـبـه</div></th>
+                <th><div>چهار شنـبـه</div></th>
+                <th><div>پنج شنـبـه</div></th>
+                <th><div>جمـعـه</div></th>
+            </tr>
+        </thead>
+        <tbody id="days" class="table-body"></tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="modal-branch" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <input type="hidden" id="hiddenDate" name="date" />
+                <div>
+                    <label><input id="chkAll" type="checkbox" /> همه</label>
+                </div>
+                @foreach (Branch item in ViewBag.BranchList)
+                {
+                    <div>
+                        <label><input type="checkbox" name="branchList" value="@item.Id" /> @item.Name</label>
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" type="button" class="btn btn-success btn-block" data-dismiss="modal">ذخیره</button>
+                <button type="button" class="btn btn-default btn-block" data-dismiss="modal" style="margin-right: 0;">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        var weekdaysGap = [6, 0, 1, 2, 3, 4, 5];
+
+        $(document).ready(function () {
+            var date = new persianDate();
+
+            var params = getParam();
+
+            $("#cmbMonth").on("change", function () {
+                setParam("month", $(this).val());
+
+                switch (parseInt($(this).val())) {
+                    case 1:
+                    case 2:
+                    case 3:
+                        $("thead th div").removeClass("summer").removeClass("autumn").removeClass("winter");
+                        $("thead th div").addClass("spring");
+                        break;
+                    case 4:
+                    case 5:
+                    case 6:
+                        $("thead th div").removeClass("spring").removeClass("autumn").removeClass("winter");
+                        $("thead th div").addClass("summer");
+                        break;
+                    case 7:
+                    case 8:
+                    case 9:
+                        $("thead th div").removeClass("spring").removeClass("summer").removeClass("winter");
+                        $("thead th div").addClass("autumn");
+                        break;
+                    case 10:
+                    case 11:
+                    case 12:
+                        $("thead th div").removeClass("spring").removeClass("summer").removeClass("autumn");
+                        $("thead th div").addClass("winter");
+                        break;
+                }
+
+                draw();
+            });
+
+            $("#cmbYear").on("change", function () {
+                setParam("year", $(this).val());
+                draw();
+            });
+
+            if (params.year)
+                $("#cmbYear").val(params.year);
+            else
+                $("#cmbYear").val(date.pDate.year);
+
+            if (params.month)
+                $("#cmbMonth").val(params.month).change();
+            else
+                $("#cmbMonth").val(date.pDate.month).change();
+
+            draw();
+
+            $(document).on("click", ".day", function () {
+                var date = $(this).attr("data-date");
+                var params = { date: date };
+                loader(true);
+                $.get('/dailyReport/loadBranchData', params, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        setEntity(response.data, "#modal-branch");
+                        $("#hiddenDate").val(date);
+                        $("#modal-branch input[type=checkbox]").prop("ckecked", false);
+                        $("#chkAll").prop("ckecked", false);
+                        $("#modal-branch").modal("show");
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+            $("#btnSave").on("click", function () {
+                var entity = getEntity($("#modal-branch"));
+                loader(true);
+                $.post('/dailyReport/saveBranchDate', entity, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        $("#modal-branch").modal("hide");
+                        callbackAlert(response.message, function () {
+                            getList();
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+            $("#chkAll").on("click", function (event) {
+
+                if ($(this).prop("checked")) {
+                    $("[name=branchList]").prop("checked", true);
+                }
+                else {
+                    $("[name=branchList]").prop("checked", false);
+                }
+            });
+
+        });
+
+
+        function draw() {
+            var year = parseInt($("#cmbYear").val());
+            var month = parseInt($("#cmbMonth").val());
+
+            var date = new persianDate([year, month, 1]);
+
+            var days = [];
+
+            for (var i = 0; i < weekdaysGap[date.pDate.weekDayNumber]; i++) {
+                days.push("<td class=\"gap-day\"><div class='day-card'> <span class='header'>&nbsp;</span></div ></td>");
+            }
+
+            month = month < 10 ? "0" + month : month;
+            for (var i = 1; i <= getMonthDay(year, month); i++) {
+                var day = i < 10 ? "0" + i : i;
+                if (isToday(year, month, i)) {
+                    days.push("<td class=\"day today\" data-date=\"" + year + "/" + month + "/" + day + "\" data-day=\"" + i + "\"><div class='day-card'><span class='header'>" + day + "</span> <span class='count block small-font'></span></div></td>");
+                }
+                else {
+                    days.push("<td class=\"day\"  data-date=\"" + year + "/" + month + "/" + day + "\"  data-day=\"" + i + "\"><div class='day-card'><span class='header'>" + day + "</span> <span class='count block small-font'></span></div></td>");
+                }
+            }
+
+            var str = "<tr>";
+            var len = days.length;
+            if (days.length % 7 != 0) // ساخت مقدار های اضافه برای وقتی که ستون های جدول کمتر از تعداد رند باشد
+                len += 7 - days.length % 7;
+
+            for (var i = 0; i < len; i++) {
+                if (days[i])
+                    str += days[i];
+                else
+                    str += "<td class=\"gap-day\"><div class='day-card'> <span class='header'>&nbsp;</span></div ></td>";
+
+                if ((i + 1) % 7 == 0) {
+                    str += "</tr>";
+                    if (i < days.length) {
+                        str += "<tr>";
+                    }
+                }
+            }
+
+            $("#days").html(str);
+
+            getList();
+        }
+
+        function getMonthDay(year, month) {
+            if (month <= 6) {
+                return 31;
+            }
+            else if (month < 12) {
+                return 30;
+            }
+            else {
+                if (isLeapYear(parseInt(year)))
+                    return 30;
+                else
+                    return 29;
+            }
+        }
+
+        function isLeapYear(year) {
+            var a = 0, b = 1309, c = parseInt(year);
+            for (var i = 1309; i <= c - 4; i += 4) {
+                b += 4;
+                a += 1;
+                if (a % 8 === 0)
+                    b++;
+            }
+
+            if (c === b) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        function isToday(year, month, day) {
+            var date = new persianDate().pDate;
+            return date.year == year && date.month == month && date.date == day;
+        }
+
+        function getList() {
+            var params = { year: $("#cmbYear").val(), month: $("#cmbMonth").val() };
+            loader(true);
+            $.get('/dailyReport/getDailyBranch', params, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    $("td[data-date]").find("span.count").html('');
+                    for (var i = 0; i < response.data.length; i++) {
+                        var item = response.data[i];
+                        $("td[data-date='" + item.date + "']").find("span.count").html(item.count + " شعبه");
+                    }
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        }
+
+    </script>
+}

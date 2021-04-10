@@ -1,0 +1,89 @@
+﻿
+@{
+    ViewBag.Title = "Financial";
+    List<KiaGallery.Web.Models.BranchFinancial> listBranchFinancial = ViewBag.ListBranchFinancial;
+}
+
+<div id="content">
+    <table>
+        <thead>
+            <tr>
+                <th>ردیف</th>
+                <th>نام</th>
+                <th>بدهی حساب طلا</th>
+                <th>بدهی حساب ریالی</th>
+                <th>سقف حساب طلا</th>
+                <th>سقف حساب طلا</th>
+                <th>سقف حساب طلا</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for(int i = 0; i < listBranchFinancial.Count(); i++)
+            {
+                <tr>
+                    <td>@i</td>
+                    <td>@listBranchFinancial[i].name</td>
+                    <td><input name="goldDebt" value="@listBranchFinancial[i].goldDebt"/> </td>
+                    <td>@listBranchFinancial[i].rialDebt</td>
+                    <td>@listBranchFinancial[i].goldCredit</td>
+                    <td><button class="btn btn-primary fa fa-check confirmation"></button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".confirmation").on("click", function (event) {
+                event.preventDefault();
+                loader(true);
+                $.ajax({
+                    method: "POST",
+                    url: "/financial/saveFinancial",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status == 200) {
+                            var data = response.data;
+                            var template = $.templates("#template");
+                            var htmlOutput = template.render(data);
+                            $("#content").html(htmlOutput);
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                        loader(false);
+                    }
+                });
+            });
+        });
+    </script>
+
+<script id="template" type="text/x-jsrender">
+    <table class="table table-data table-responsive">
+        <thead>
+            <tr>
+                <th>ردیف</th>
+                <th>نام</th>
+                <th>بدهی حساب طلا</th>
+                <th>بدهی حساب ریالی</th>
+                <th>سقف حساب طلا</th>
+                <th>سقف حساب طلا</th>
+                <th>تایید فاکتور</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{for list}}
+            <tr>
+                <td>{{:#index + 1}}</td>
+                <td>{{:name}}</td>
+                <td><input name="goldDebt" value="{{:goldDebt}}"/></td>
+                <td><input name="rialDebt" value="{{:rialDebt}}"/></td>
+                <td><input name="goldCredit" value="{{:goldCredit}}"/></td>
+                <td><button class="btn btn-primary fa fa-check confirmation" data-id="{{:id}}"></button></td>
+            </tr>
+            {{/for}}
+        </tbody>
+    </table>
+</script>
+}

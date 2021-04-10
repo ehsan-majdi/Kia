@@ -1,0 +1,377 @@
+﻿
+@{
+    ViewBag.Title = "ReportDaily";
+}
+<style>
+    .btnCategory {
+        margin: 5px;
+    }
+
+    #category {
+        display: flex;
+    }
+
+    .divCategory {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        width: 200px;
+    }
+
+    .btnHide {
+        display: none;
+    }
+</style>
+<div>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#CreateCategoryModal">+دسته بندی جدید</button>
+</div>
+<input id="hiddenMemberId" type="hidden" />
+<div class="container">
+    <div class="row" id="category">
+    </div>
+</div>
+<div style="border-top: solid 1px silver"></div>
+<button class="btn btn-success btn-xs addDetail" style="display:none;"><i class="fa fa-plus" aria-hidden="true"></i></button>
+<div id="content">
+</div>
+<input type="hidden" class="getDate" value="@ViewBag.Date" name="date" />
+
+<div id="CreateCategoryModal" class="modal fade" role="dialog" style="overflow-y: auto;">
+    <form id="form">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <input type="hidden" class="hiddenCategoryId" />
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div id="inactive-content" class="modal-body">
+                    <div class="form-group">
+                        <label for="txtCategoryOrder">ترتیب</label>
+                        <input id="txtCategoryOrder" type="text" class="form-control clearval" name="order" maxlength="25" data-validate="required,">
+                    </div>
+                    <div class="form-group">
+                        <label for="txtCategoryTitle">عنوان</label>
+                        <input id="txtCategoryTitle" type="text" class="form-control clearval" name="title" maxlength="45" data-validate="required,maxLength(45)">
+                    </div>
+                    <div class="form-group">
+                        <label for="cmbStatus">وضعیت</label>
+                        <select id="cmbStatus" class="form-control" name="active" data-validate="required">
+                            <option value="true">فعال</option>
+                            <option value="false">غیرفعال</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-success saveCategory">تایید</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+@*<input type="hidden" id="txtDate" value="@ViewBag.Date" />
+
+    <div class="container">
+        <div class="row">
+            <form id="form">
+                <input type="hidden" class="getDate" value="@ViewBag.Date" name="date" />
+
+                @if (ViewBag.InventoryReportMembers != null && ViewBag.InventoryReportMembers.Count > 0)
+                {
+                    <span>@ViewBag.Date&nbsp;&nbsp;<i class="fa fa-calendar-o fa-20px v-middle" aria-hidden="true"></i></span>
+                    <br />
+                    <label id="lbl-margin-1">نام</label>
+                    <label id="lbl-margin-2">وزن</label>
+                    <label id="lbl-margin-3">تعداد</label>
+
+
+                    foreach (var item in ViewBag.InventoryReportMembers)
+                    {
+                        <div class="detail" data-daily-inventory-report-id="@item.Id">
+                            <br />
+                            <div class="col-md-4">
+                                <input type="hidden" class="txtDailyInventoryReportId" value="@item.Id" name="inventoryReportMemberId" />
+
+                                <input class="form-control" value="@item.Title" readonly />
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control txtWeight text-center" type="text" name="weight" placeholder="وزن" data-validate="required" />
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control txtCount text-center" type="text" name="count" placeholder="تعداد" data-validate="required" />
+                            </div>
+                            <br />
+                            <br />
+                            <br />
+
+                        </div>
+                    }
+                    <br />
+                    <br />
+                    <div class="col-md-4 col-md-offset-4 text-center">
+                        <button class="btn btn-success" type="submit" id="btnSave" style="">ثبت </button>
+                    </div>
+                }
+                else
+                {
+                    <h4 class="text-center">اطلاعاتی ثبت نگردیده است.</h4>
+                }
+            </form>
+        </div>
+
+
+    </div>*@
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            getListCategory();
+
+            $(".addDetail").on("click", function (event) {
+                event.preventDefault();
+                $("#content").append($("#template-append").text());
+            });
+            $(document).on("click", ".btnCategory", function (event) {
+                $("#hiddenMemberId").val($(this).attr("data-id"));
+                getListInventoryDetail($(this).attr("data-id"));
+                $(".addDetail").show();
+            });
+        });
+
+        $(document).on("click", ".saveCategory", function () {
+            var entity = {
+                id: $(".hiddenCategoryId").val(),
+                order: $("#txtCategoryOrder").val(),
+                title: $("#txtCategoryTitle").val(),
+                active: $("#cmbStatus").val(),
+            }
+            $.post("/inventoryreportmember/saveCategory/", entity, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    alert(response.message);
+                    $(".clearval").val("")
+                    getListCategory()
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+            $("#CreateCategoryModal").modal('show');
+            loader(false);
+        });
+
+
+        $(document).on("click", ".delete", function (event) {
+            event.preventDefault();
+            var id = $(this).attr("data-id");
+            var categoryId = $("#hiddenMemberId").val();
+            confirmMessage("آیا از حذف اطمینان دارید؟", function () {
+                loader(true);
+                $.post("/inventoryreportmember/DeleteDailyInventory/" + id, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        callbackAlert(response.message, function () {
+                            getListInventoryDetail(categoryId);
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                })
+            });
+        });
+
+        $(document).on("click", ".remove", function (event) {
+            $(this).parents("table").remove();
+        });
+
+        $(document).on('click', '.editCategory', function () {
+            $("#CreateCategoryModal").modal('show');
+            load($(this).attr('data-id'))
+            $(".hiddenCategoryId").val($(this).attr('data-id'));
+        });
+
+        function getListCategory() {
+            $.ajax({
+                type: "GET",
+                url: "/inventoryreportmember/getListCategory/",
+                data: {},
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    $.each(response.data.list, function (index) {
+                        $('#category').append("<div class='divCategory'><a><i class='fa fa-edit editCategory' data-id=" + response.data.list[index].id + "></i></a>" + "<button class='btnCategory btn btn-default active' data-id=" + response.data.list[index].id + " >" + response.data.list[index].title + "</button></div>");
+                    });
+                },
+                error: function (response) {
+                    alert(response.message);
+                }
+            });
+        }
+
+        function getListInventoryDetail(id) {
+            loader(true);
+            $.get("/inventoryreportmember/getListInventoryDetail/" + id, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    if (data.list.length > 0) {
+                        var template = $.templates("#template");
+                        var htmlOutput = template.render(data);
+                        $("#content").html(htmlOutput);
+                    }
+                    else {
+                        $("#content").html("");
+                    }
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+        function load(id) {
+            if (id > 0) {
+                loader(true);
+                $.get("/inventoryReportMember/LoadDetailCategory/" + id, function (response) {
+                    if (response.status == 200) {
+                        var data = response.data;
+                        $("#txtCategoryOrder").val(data.order);
+                        $("#txtCategoryTitle").val(data.title);
+                        if (data.active == true)
+                            $("#cmbStatus").val('true');
+                        else {
+                            $("#cmbStatus").val('false');
+                        }
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            }
+        }
+
+        $(document).on("click", ".save", function (event) {
+            event.preventDefault();
+            var el = this;
+            var entity = {
+                id: $(this).attr("data-id"),
+                categoryInventoryReportMemberId: $("#hiddenMemberId").val(),
+                persianDate: $(".getDate").val(),
+                order: $(this).parents("tr").find(".txtOrder").val(),
+                title: $(this).parents("tr").find(".txtTitle").val(),
+                count: $(this).parents("tr").find(".txtCount").val(),
+                weight: $(this).parents("tr").find(".txtWeight").val(),
+            }
+            loader(true);
+            $.post("/inventoryReportMember/saveDailyInventory/", entity, function (response) {
+                if (response.status == 200) {
+                    loader(false);
+                    var pe = response.data.Id;
+                    $(el).attr("data-id", pe);
+                    getListInventoryDetail($("#hiddenMemberId").val());
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        });
+
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <div class="appended-element-content detail-Entity">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:90px">ترتیب</th>
+                        <th style="width:90px">عنوان </th>
+                        <th style="width:70px;padding-right: 24px;">وزن </th>
+                        <th style="width:70px;padding-right: 24px;">تعداد </th>
+                        <th style="width:90px" class="icon-col text-center">ویرایش</th>
+                        <th style="width:90px" class="icon-col text-center">حذف</th>
+                        <th style="width:90px" class="icon-col text-center">ذخیره</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{for list}}
+                    <tr>
+                        <td class="hidden"><input type="hidden" {{:categoryInventoryReportMemberId}} /></td>
+                        <td>
+                            <div><input class="txtOrder form-control" style="width:80px;" value="{{:order}}" /></div>
+                        </td>
+                        <td>
+                            <div><input class="txtTitle form-control" style="width:180px;" value="{{:title}}" /></div>
+                        </td>
+                        <td>
+                            <div><input class="txtWeight form-control" style="width:80px;margin-right:20px" value="{{:weight}}" /></div>
+                        </td>
+                        <td>
+                            <div><input class="txtCount form-control" style="width:80px;margin-right:20px" value="{{:count}}" /></div>
+                        </td>
+                        <td class="txt-al-c v-middle">
+                            <a href="/inventoryReportMember/EditDailyInventory/{{:id}}" class="btn btn-info btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                        </td>
+                        <td class="txt-al-c v-middle">
+                            <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                        </td>
+                        <td class="txt-al-c v-middle">
+                            <button class="save btn btn-success btn-xs" data-title="ذخیره" data-id="{{:id}}"><i class="fa fa-check" aria-hidden="true"></i></button>
+                        </td>
+                        <td>
+                            <button class="btn btn-success messageShow btnHide" data-id="{{:id}}">عملیات با موفقیت انجام شد.</button>
+                        </td>
+                    </tr>
+                    {{/for}}
+                </tbody>
+            </table>
+        </div>
+    </script>
+
+    <script id="template-append" type="text/x-jsrender">
+        <div class="appended-element-content-temp detail-Entity">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:90px">ترتیب</th>
+                        <th style="width:90px">عنوان </th>
+                        <th style="width:70px;padding-right: 24px;">وزن </th>
+                        <th style="width:70px;padding-right: 24px;">تعداد </th>
+                        <th style="width:90px" class="icon-col text-center">ویرایش</th>
+                        <th style="width:90px" class="icon-col text-center">حذف</th>
+                        <th style="width:90px" class="icon-col text-center">ذخیره</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="hidden"><input type="hidden" /></td>
+                        <td>
+                            <div><input class="txtOrder form-control" style="width:80px;" /></div>
+                        </td>
+                        <td>
+                            <div><input class="txtTitle form-control" style="width:180px;" /></div>
+                        </td>
+                        <td>
+                            <div><input class="txtWeight form-control" style="width:80px;margin-right:20px" /></div>
+                        </td>
+                        <td>
+                            <div><input class="txtCount form-control" style="width:80px;margin-right:20px" /></div>
+                        </td>
+                        <td class="txt-al-c v-middle">
+                            <a href="/inventoryReportMember/EditDailyInventory/{{:id}}" class="btn btn-info btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                        </td>
+                        <td class="txt-al-c v-middle">
+                            <button class="remove btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                        </td>
+                        <td class="txt-al-c v-middle">
+                            <button class="save btn btn-success btn-xs" data-title="ذخیره" data-id="{{:id}}"><i class="fa fa-check" aria-hidden="true"></i></button>
+                        </td>
+                        <td>
+                            <button class="btn btn-success messageShow btnHide" data-id="{{:id}}">عملیات با موفقیت انجام شد.</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </script>
+}

@@ -1,0 +1,111 @@
+﻿
+@{
+    ViewBag.Title = "فاکتورهای منقضی";
+}
+
+<h2>فاکتورهای منقضی</h2>
+<div class="col-md-2">
+    <div class="form-group">
+        <label for="cmbBranch">شعبه</label>
+        <select id="cmbBranch" class="form-control" name="branchId">
+            <option value="">شعبه</option>
+            @foreach (KiaGallery.Model.Context.Branch item in ViewBag.branchList)
+            {
+                <option value="@item.Id">@item.Name </option>
+
+            }
+        </select>
+    </div>
+    <div>
+        تعداد:
+        <span class="count deleteHtml"></span>
+    </div>
+</div>
+<br />
+
+
+<div id="content"></div>
+
+@section scripts {
+
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 100,
+            branchId: null
+        }
+        $(window).on('hashchange', function () {
+            getList();
+        });
+        $(document).ready(function () {
+            getList()
+            $(document).on("change", "#cmbBranch", function (event) {
+                event.preventDefault();
+                var param = { branchId: $(this).val() }
+                manipulateParam(param, "page");
+            });
+        });
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend({}, defaultEntity, newParams);
+            updateForm();
+            loader(true);
+            $.get("/customerLoyality/getExpiredCustomer", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    $(".count").html(data.count);
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+        function updateForm() {
+            var params = getParam();
+            // branch
+            if (params["branchId"]) {
+                $("#cmbBranch").val(params["branchId"]);
+            }
+            else {
+                $("#cmbBranch").val("");
+            }
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        {{if list.length > 0}}
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th>نام</th>
+                    <th>تلفن</th>
+                    <th>شعبه</th>
+                    <th>تاریخ خرید</th>
+                    <th>تاریخ مرجوع</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+
+                    <td>{{:fullName}}</td>
+                    <td>{{:phoneNumber}}</td>
+                    <td>{{:branchName}}</td>
+                    <td>{{:persianDate}}</td>
+                    <td>{{:persianReturnDate}}</td>
+
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        {{else}}
+        <h4 class="txt-al-c">موردی یافت نشد</h4>
+        {{/if}}
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+}

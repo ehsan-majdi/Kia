@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewBag.Title = "Advertisment";
+}
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        background-color:#808080;
+    }
+    .uk-container{
+
+        height:100%;
+    }
+
+    #middle {
+        text-align: justify;
+        vertical-align: middle;
+    }
+
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 7%;
+        margin-top: 20px;
+    }
+
+    #title {
+        font-size: 18px;
+        color: black;
+        background-color: #808080;
+        border-radius: 3px;
+        margin:0;
+    }
+    .text-con{
+        color:white;
+        height:100%;
+    }
+</style>
+    <div class="uk-container">
+        <div class="logo text-center ">
+            <img src="~/Content/Image/KiaGalleryLogo.png" />
+            <hr />
+            <img />
+        </div>
+        @foreach (var item in ViewBag.Text)
+        {
+            <p id="title" class="uk-text-center">@item.title</p>
+            <hr />
+            <div class="text-con">
+                <p>@Html.Raw(item.text)</p>
+            </div>
+        }
+    </div>
+@section Scripts {
+    <script type="text/javascript">
+       
+    </script>
+}
+

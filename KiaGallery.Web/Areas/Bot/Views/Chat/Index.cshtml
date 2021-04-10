@@ -1,0 +1,455 @@
+﻿@{
+    ViewBag.Title = "Chat";
+}
+<link href="~/Library/fancybox/jquery.fancybox.css" rel="stylesheet" />
+<script src="~/Library/fancybox/jquery.fancybox.js"></script>
+<script src="~/Library/fancybox/jquery.mousewheel-3.0.6.pack.js"></script>
+
+<style type="text/css">
+    html, body, .chat-container {
+        height: 100%;
+    }
+
+    #container {
+        height: 90%;
+    }
+
+    .contacts {
+        background-color: ghostwhite;
+        border: 1px solid silver;
+        color: #333;
+        display: inline-block;
+        height: 100%;
+        overflow-y: scroll;
+        vertical-align: top;
+        width: 20%;
+    }
+
+    .chat {
+        display: inline-block;
+        width: 75%;
+        height: 100%;
+        vertical-align: top;
+    }
+
+    .contact {
+        border: 1px solid silver;
+        border-radius: 3px;
+        cursor: pointer;
+        height: 50px;
+        margin: 5px;
+    }
+
+        .contact:hover {
+            background-color: #b3e5fc;
+            transition: background-color 300ms;
+        }
+
+        .contact span {
+            display: inline-block;
+            overflow: hidden;
+            padding: 5px 0;
+            text-overflow: ellipsis;
+            vertical-align: top;
+            white-space: nowrap;
+            width: 75%;
+        }
+
+        .contact img {
+            border-radius: 50%;
+            height: 40px;
+            margin: 5px;
+            width: 40px;
+        }
+
+    .footer {
+        bottom: 0;
+        height: 75px;
+        position: relative;
+        width: 100%;
+    }
+
+        .footer textarea {
+            width: 90%;
+            resize: none;
+        }
+
+    #attachData, #send {
+        color: #0088cc;
+        cursor: pointer;
+        font-size: 1.5em;
+        margin: 10px;
+    }
+
+    #send {
+        font-size: 1.2em;
+    }
+
+    .receiver {
+        background-color: #b3e5fc;
+        border-radius: 5px;
+        display: inline-block;
+        margin: 2px 3px 2px 30px;
+        padding: 2px 15px;
+        direction: rtl;
+    }
+
+    .receiverUnknown {
+        background-color: #4fc3f7;
+        border-radius: 5px;
+        display: inline-block;
+        margin: 2px 2px 2px 30px;
+        padding: 2px 15px;
+        direction: rtl;
+    }
+
+    .awnser {
+        background-color: #ccff90;
+        border-radius: 5px;
+        display: inline-block;
+        margin: 2px 30px 2px 30px;
+        padding: 2px 15px;
+        direction: rtl;
+    }
+
+    .messageList {
+        height: 90%;
+        overflow-y: scroll;
+        width: 100%;
+        border: solid 1px silver;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        background-color: ghostwhite;
+    }
+
+    .selected {
+        background-color: lightgreen;
+    }
+
+    #reply {
+        background: gray none repeat scroll 0 0;
+        border-radius: 3px;
+        color: white;
+        left: 1px;
+        padding: 5px 10px;
+        position: absolute;
+        top: -34px;
+        width: 90%;
+        display: none;
+    }
+
+    .date {
+        color: gray;
+        font-size: 0.8em;
+    }
+</style>
+
+<script type="text/javascript">
+
+    var _listMessage = [];
+
+    $(document).ready(function () {
+
+        window.setInterval(function () {
+            updateChats();
+            updateMessage();
+        }, 10000)
+
+        calculateHeight();
+
+        $("#attachData").click(function () {
+            var chatId = $("#hiddenChatId").val();
+
+            if (!chatId) {
+                alert("Selected chat not found.");
+                return;
+            }
+
+            var url = "/Data/DataSelector?chatId=" + chatId;
+            $.fancybox.open({
+                width: '80%',
+                height: '80%',
+                href: url,
+                type: 'iframe',
+                padding: 5,
+                afterClose: function () {
+                    updateChats();
+                    updateMessage();
+                }
+            });
+        });
+
+        $("#closeReply").click(function () {
+            hideReply();
+        });
+
+        $("#send").click(function () {
+            var chatId = $("#hiddenChatId").val();
+            var messageId = $("#replyMessageId").val();
+            var text = $("#txtMessage").val();
+
+            if (!chatId) {
+                alert("Selected chat not found.");
+                return;
+            }
+
+            if (!text) {
+                alert("Text is required");
+                return;
+            }
+
+            var data = {
+                chatId: chatId,
+                messageId: messageId,
+                text: text
+            }
+            loaderFrame(".chat", true);
+            $.post("/bot/Chat/ResponseMessage", data, function (response) {
+                if (response.status == 200) {
+                    hideReply();
+                    $("#txtMessage").val("");
+                }
+                updateChats();
+                loaderFrame(".chat", false);
+            });
+
+        });
+
+        $(".contacts").on("click", ".contact", function () {
+            hideReply();
+
+            $(".contact").removeClass("selected");
+            $(this).addClass("selected");
+
+            var chatId = $(this).find(".hiddenChatId").val();
+            $("#hiddenChatId").val(chatId);
+
+            getMessage();
+        });
+
+        loaderFrame(".contacts", true);
+        updateChats();
+
+        $(document).on("mouseenter", ".receiverMessage", function (element) {
+            $(this).find("i").fadeIn(200);
+        });
+        $(document).on("mouseleave", ".receiverMessage", function (element) {
+            $(this).find("i").fadeOut(200);
+        });
+
+        $("#txtMessage").keyup(function (event) {
+            var key = e.which || e.keyCode || 0;
+            if (key == 13) {
+                alert("enter pressed");
+            }
+        });
+
+    });
+
+    $(window).on("resize", function () {
+        calculateHeight();
+    });
+
+    function calculateHeight() {
+        $(".contacts").height(($(window).height() - 55) + "px");
+        $(".messageList").height(($(window).height() - 140) + "px");
+    }
+
+    function updateChats() {
+        var date = new persianDate();
+        date.formatPersian = false;
+        var stringDate = date.format("YYYY/MM/DD");
+        var lastWeek = date.add('day', -5);
+        lastWeek.formatPersian = false;
+        var stringLastWeek = lastWeek.format("YYYY/MM/DD");
+        var params = {
+            unknown: true,
+            fromDate: stringLastWeek,
+            toDate: stringDate
+        };
+
+        $.getJSON("/bot/Chat/GetChats", params, function (response) {
+            if (response.status == 200) {
+                var data = response.data;
+                var template = $.templates("#tmplContact");
+                var htmlOutput = template.render(data);
+                $(".contacts").html(htmlOutput);
+
+                var selected = $("#hiddenChatId").val();
+                if (selected) {
+                    $(".contact").each(function (index, element) {
+                        var chatId = $(this).find(".hiddenChatId").val();
+                        if (selected == chatId)
+                            $(this).addClass("selected");
+                    })
+                }
+            }
+            else {
+                alert(response.message);
+            }
+            loaderFrame(".contacts", false);
+        });
+    }
+
+    function getMessage() {
+        var params = {
+            chatId: $("#hiddenChatId").val(),
+            lastId: 0
+        };
+        loaderFrame(".chat", true);
+        $.getJSON("/bot/Chat/GetUserChat", params, function (response) {
+            var data = response.data;
+            var template = $.templates("#tmplMessage");
+            var htmlOutput = template.render(data);
+
+            _listMessage = response.data.list;
+
+            $(".messageList").html(htmlOutput);
+
+            $(".messageList").scrollTop($(".messageList")[0].scrollHeight)
+            loaderFrame(".chat", false);
+        });
+    }
+
+    function updateMessage() {
+        var lastId = $(".chat").find(".id:last").val();
+
+        if (lastId > 0) {
+            var params = {
+                chatId: $("#hiddenChatId").val(),
+                lastId: lastId
+            };
+            $.getJSON("/bot/Chat/GetUserChat", params, function (response) {
+                if (response.status == 200) {
+                    if (response.data.list.length > 0) {
+
+                        var data = response.data;
+                        var template = $.templates("#tmplMessage");
+                        var htmlOutput = template.render(data);
+
+                        _listMessage.push(response.data.list);
+                        $(".messageList").append(htmlOutput);
+                    }
+                }
+            });
+        }
+
+    }
+
+    $.views.tags("fullName", getFullName);
+    function getFullName(firstName, lastName, username) {
+        var fullName = "";
+
+        if (firstName) fullName += firstName;
+        if (lastName) fullName += " " + lastName;
+        if (username) fullName += " (" + username + ")"
+
+        return fullName;
+    }
+
+    function reply(id) {
+        for (var i = 0; i < _listMessage.length; i++) {
+            var item = _listMessage[i];
+            if (item.id == id) {
+                $("#reply").find("span").html(item.text);
+                $("#replyMessageId").val(item.messageId);
+                $("#reply").slideDown();
+                break;
+            }
+        }
+    }
+
+    function hideReply() {
+        $("#reply").find("span").html("");
+        $("#replyMessageId").val("");
+        $("#reply").slideUp();
+    }
+
+
+    function deleteMessage(id) {
+        appConfirm("Are you sure want to delete this node?", function () {
+            $.post("/bot/Chat/DeleteMessage", { id: id }, function (response) {
+                if (response.status == 200) {
+                    getMessage();
+                }
+                alert(response.message);
+            });
+        });
+    }
+</script>
+
+<div class="chat-container">
+    <div class="contacts">
+
+    </div>
+    <div class="chat relative">
+        <div class="messageList">
+
+        </div>
+        <div class="footer">
+            <input type="hidden" id="hiddenChatId" />
+            <div id="reply">
+                <input type="hidden" id="replyMessageId" />
+                <span>Sample Reply</span>
+                <i id="closeReply" aria-hidden="true" class="fa fa-close linkIcon" style="color: white; float: right;"></i>
+            </div>
+            <textarea id="txtMessage" rows="2"></textarea>
+            <div class="inline-block">
+                <i id="attachData" class="fa fa-paperclip" aria-hidden="true"></i>
+                <br />
+                <i id="send" aria-hidden="true" class="fa fa-paper-plane linkIcon"></i>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="tmplContact" type="text/x-jsrender">
+    {{for list}}
+    <div class="contact">
+        <input class="hiddenChatId" type="hidden" value="{{:chatId}}" />
+        <img src="/Content/Images/user.png" />
+        <span>
+            {{fullName firstName lastName username /}}
+            <br />
+            <span style="font-size: 0.7em; padding: 0;">{{:lastMessage}}</span>
+        </span>
+    </div>
+    {{/for}}
+</script>
+
+<script id="tmplMessage" type="text/x-jsrender">
+    {{for list}}
+    {{if messageId}}
+    {{if unknown}}
+    <div class="txt-al-l receiverMessage">
+        <div class="receiverUnknown">
+            {{:text}}
+            <br />
+            <span class="date">{{:createdDate}}</span>
+        </div>
+        <i class="fa fa-remove linkIcon gone" aria-hidden="true" onclick="deleteMessage({{:id}})" style="color: red;"></i>
+        <i class="fa fa-reply linkIcon gone" aria-hidden="true" onclick="reply({{:id}})"></i>
+        <input type="hidden" class="id" value="{{:id}}" />
+    </div>
+    {{else}}
+    <div class="txt-al-l receiverMessage">
+        <div class="receiver">
+            {{:text}}
+            <br />
+            <span class="date">{{:createdDate}}</span>
+            <input type="hidden" class="id" value="{{:id}}" />
+        </div>
+        <i class="fa fa-remove linkIcon gone" aria-hidden="true" onclick="deleteMessage({{:id}})" style="color: red;"></i>
+    </div>
+    {{/if}}
+    {{else}}
+    <div class="txt-al-r">
+        <div class="awnser">
+            {{:text}}
+            <br />
+            <span class="date">{{:createdDate}}</span>
+            <input type="hidden" class="id" value="{{:id}}" />
+        </div>
+    </div>
+    {{/if}}
+    {{/for}}
+</script>

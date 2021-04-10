@@ -1,0 +1,126 @@
+﻿
+@{
+    ViewBag.Title = "ویرایش اطلاعات کاربر";
+}
+<style>
+    .form-item {
+        margin: 10px auto;
+        width: 30%;
+    }
+</style>
+<h3>ویرایش اطلاعات کاربر</h3>
+<div class="container" id="form">
+    <div style="margin:0 auto">
+        <div class="form-group form-item">
+            <label>کد مشتری:</label>
+            <input id="txtCariorcard" type="text" class="form-control" name="cariorcard" data-validate="required" />
+        </div>
+        <div class="form-group form-item">
+            <label>نام کامل:</label>
+            <input id="txtFirstName" type="text" class="form-control" name="fullName" data-validate="required" readonly />
+        </div>
+        <div class="form-group form-item">
+            <label>کارت:</label>
+            <input id="txtFirstName" type="text" class="form-control" name="cariCode" data-validate="" readonly />
+        </div>
+        <div class="form-group form-item">
+            <label>نام:</label>
+            <input id="txtFirstName" type="text" class="form-control" name="firstName" data-validate="required" />
+        </div>
+        <div class="form-group form-item">
+            <label>نام خانوادگی:</label>
+            <input id="txtLastName" type="text" class="form-control" name="lastName" data-validate="required" />
+        </div>
+        <div class="form-group form-item">
+            <label>ایمیل:</label>
+            <input id="txtEmail" type="text" class="form-control" name="email" data-validate="required" />
+        </div>
+        <div class="form-group form-item">
+            <label>شماره موبایل:</label>
+            <input id="txtmMobile" type="text" class="form-control" name="mobile" data-validate="required" />
+        </div>
+        <div class="form-group form-item relative">
+            <label>تاریخ تولد:</label>
+            <input id="txtJbirthDate" type="text" class="form-control date" autocomplete="off" name="birthDate" data-validate="required" />
+        </div>
+        <div class="form-group form-item">
+            <label>کد ملی:</label>
+            <input id="txtNtCode" type="text" class="form-control" name="ntCode" data-validate="required" />
+        </div>
+        <div class="form-group form-item">
+            <label>شماره تلفن:</label>
+            <input id="txtTelHome" type="text" class="form-control" name="telHome" data-validate="required" />
+        </div>
+        <div class="form-group form-item">
+            <label>شماره محل کار:</label>
+            <input id="txtTelWork" type="text" class="form-control" name="TelWork" data-validate="required" />
+        </div>
+        <div class="form-group form-item">
+            <label>آدرس محل سکونت:</label>
+            <textarea id="txtHomeAddr" type="text" class="form-control" name="homeAddr" data-validate="required"></textarea>
+        </div>
+        <div class="form-item text-center">
+            <button id="btnSave" class="btn btn-success">
+                ذخیره
+            </button>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        var defaultEntity = {
+            pageNumber: "0",
+            pageSize: "50"
+        }
+        $(document).ready(function () {
+            $(".date").pDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true
+            });
+            $(".date").val("");
+            $("#btnSave").on("click", function () {
+                save()
+            })
+
+            $("#txtCariorcard").on("keyup", function (e) {
+                var code = e.which
+                if (code == 13) {
+                    loader(true);
+                    var id = $(this).val();
+                    $.get("/customerCard/loadUserInfo/" + id, function (response) {
+                        if (response.status == 200) {
+                            console.log(response.data)
+                            setEntity(response.data, "#form");
+                            $("#txtJbirthDate").attr("name", "jbirthDate")
+                        }
+                        else {
+                            alert(response.message)
+                        }
+                        loader(false);
+                    });
+                }
+            })
+        })
+        function save() {
+            var entity = getEntity("#form");
+            var param = $.extend({}, defaultEntity, entity);
+
+            if (checkForm("#form")) {
+                console.log(entity);
+                loader(true);
+                $.get("/customerCard/updateUserInfo", param, function (response) {
+                    if (response.status == 200) {
+                    }
+                    else {
+                        alert(response.message)
+                    }
+                    loader(false);
+                });
+            }
+
+        }
+    </script>
+}

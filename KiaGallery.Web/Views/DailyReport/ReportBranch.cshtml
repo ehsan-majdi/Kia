@@ -1,0 +1,630 @@
+﻿@{
+    ViewBag.Title = "گزارش";
+    var user = BaseController.GetAuthenticatedUser();
+}
+
+<style type="text/css">
+    table th, table td {
+        border: solid 1px silver;
+        padding: 5px;
+    }
+
+    table input[type=text] {
+        display: inline-block;
+        height: 30px;
+    }
+
+        table input[type=text].little {
+            width: 66px;
+            display: inline-block;
+            text-align: center;
+            height: 30px;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+    .container *:not(i) {
+        font-family: 'IRANSans(FaNum)';
+    }
+
+    .td50 {
+        text-align: center;
+    }
+
+    .td100 {
+        text-align: right;
+    }
+
+    .td160 {
+        text-align: center;
+    }
+
+    .medium {
+        width: 105px !important;
+    }
+
+    .total {
+        direction: ltr;
+        text-align: left;
+    }
+
+    .header {
+        padding: 30px 10px;
+        margin: 0;
+    }
+
+        .header span {
+            float: left;
+        }
+
+    #form tbody tr:nth-child(odd) {
+        background-color: #@(ViewBag.Branch.Color)22;
+    }
+
+    #logListBody {
+        padding: 13px;
+        margin-top: 15px;
+        border-radius: 5px;
+    }
+
+        #logListBody td, #logListBody th {
+            padding: 5px 15px !important;
+            text-align: right !important;
+        }
+</style>
+
+<div class="container">
+
+    <h4 class="header" style="background-color: #@ViewBag.Branch.Color">
+        <i class="v-nav-item fa fa-building fa-16px" aria-hidden="true"></i> شعبه @ViewBag.Branch.Name <a style="text-decoration:none;color:#03A9F4" href="/dailyReport/branchAdmin/@ViewBag.Branch.Id/report/@ViewBag.Date.Replace("/", "-")"> <i class="fa fa-edit"></i> ویرایش </a>
+        <span>@ViewBag.Date&nbsp;&nbsp;<i class="fa fa-calendar-o fa-20px v-middle" aria-hidden="true"></i></span>
+        <input type="hidden" id="txtDate" value="@ViewBag.Date" />
+    </h4>
+    <table id="form" style="width: 100%">
+        <thead>
+            <tr>
+                <th>ردیف</th>
+                <th colspan="3">شرح</th>
+                <th>خروج <sub>(ریال)</sub></th>
+                <th>ورود <sub>(ریال)</sub></th>
+                <th>مانده <sub>(ریال)</sub></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="calculate">
+                <td class="td50" rowspan="2">1</td>
+                <td rowspan="2">فروش</td>
+                <td class="td100" rowspan="2">
+                    <input type="text" class="form-control little number-only" name="numberSaleFactor" disabled value="0" placeholder="تعداد" /><span>فاکتور</span>
+                </td>
+                <td class="td100">
+                    <input type="text" class="form-control little" name="saleWeight" disabled value="0" placeholder="وزن فروش" /> گرم
+                </td>
+
+                <td class="td160" rowspan="2">
+                    <input id="txtSaleExit" type="text" class="form-control money-separator number-only item exit" name="saleExit" disabled value="0" />
+                </td>
+                <td class="td160" rowspan="2">
+                    <input id="txtSaleEntry" type="text" class="form-control money-separator number-only item entry" name="saleEntry" disabled value="0" />
+                </td>
+                <td class="td160" rowspan="2">
+                    <input id="txtSale" type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+            <tr>
+                <td class="td100">
+                    <input type="text" class="form-control little" name="saleWeightPercent" disabled value="0" placeholder="وزن درصد" /> گرم
+                </td>
+            </tr>
+            <tr class="calculate">
+                <td class="td50" rowspan="2">2</td>
+                <td rowspan="2">مرجوعی</td>
+                <td class="td100" rowspan="2">
+                    <input type="text" class="form-control little number-only" name="numberReturnedFactor" disabled value="0" placeholder="تعداد" /><span>فاکتور</span>
+                </td>
+                <td class="td100">
+                    <input type="text" class="form-control little" name="returnedWeight" disabled value="0" /> گرم
+                </td>
+                <td class="td160" rowspan="2">
+                    <input id="txtReturnedExit" type="text" class="form-control money-separator number-only item exit" name="returnedExit" disabled value="0" />
+                </td>
+                <td class="td160" rowspan="2">
+                    <input id="txtReturnedEntry" type="text" class="form-control money-separator number-only item entry" name="returnedEntry" disabled value="0" />
+                </td>
+                <td class="td160" rowspan="2">
+                    <input id="txtReturned" rowspan="2" type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+            <tr>
+                <td class="td100">
+                    <input type="text" class="form-control little" name="returnWeightPercent" disabled value="0" placeholder="وزن درصد" /> گرم
+                </td>
+            </tr>
+            @{
+                var bankList = (List<KiaGallery.Model.Context.DailyReportFinancial.Bank>)ViewBag.BankList;
+            }
+            @for (int i = 0; i < bankList.Count(); i++)
+            {
+                if (i == 0)
+                {
+                    <tr class="bank calculate">
+                        <td class="td50" rowspan="@bankList.Count">3</td>
+                        <td rowspan="@bankList.Count">بانک</td>
+                        <td colspan="2">
+                            @bankList[i].Name
+                            <input type="hidden" class="id" value="@bankList[i].Id" />
+                        </td>
+                        <td class="td160">
+                            <input type="text" class="form-control money-separator number-only item exit" disabled value="0" />
+                        </td>
+                        <td class="td160">
+                            <input type="text" class="form-control money-separator number-only item entry" disabled value="0" />
+                        </td>
+                        <td class="td160">
+                            <input type="text" class="form-control money-separator total" disabled value="0" />
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr class="bank calculate">
+                        <td colspan="2">
+                            @bankList[i].Name
+                            <input type="hidden" class="id" value="@bankList[i].Id" />
+                        </td>
+                        <td class="td160">
+                            <input type="text" class="form-control money-separator number-only item exit" disabled value="0" />
+                        </td>
+                        <td class="td160">
+                            <input type="text" class="form-control money-separator number-only item entry" disabled value="0" />
+                        </td>
+                        <td class="td160">
+                            <input type="text" class="form-control money-separator total" disabled value="0" />
+                        </td>
+                    </tr>
+                }
+            }
+            @{
+                var currencyList = (List<KiaGallery.Model.Context.DailyReportFinancial.Currency>)ViewBag.CurrencyList;
+            }
+            <tr class="calculate">
+                <td class="td50" rowspan="@(currencyList.Count() + 3)">4</td>
+                <td>اسکناس</td>
+                <td colspan="2">
+                    <input id="txtCashExit" type="text" class="form-control money-separator number-only" name="otherCash" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input id="txtCashExit" type="text" class="form-control money-separator number-only item exit" name="cashExit" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input id="txtCashEntry" type="text" class="form-control money-separator number-only item entry" name="cashEntry" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input id="txtCash" type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+
+            @for (int i = 0; i < currencyList.Count(); i++)
+            {
+                <tr class="currency calculate">
+                    <td>
+                        @currencyList[i].Name
+                        <input type="hidden" class="id" value="@currencyList[i].Id" />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control number-only medium value" value="0" data-toggle="tooltip" title="مقدار" disabled />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control money-separator number-only medium rial-value" value="0" data-toggle="tooltip" title="مقدار به ریال" disabled />
+                    </td>
+                    <td class="td160">
+                        <input type="text" class="form-control money-separator number-only item exit" value="0" disabled />
+                    </td>
+                    <td class="td160">
+                        <input type="text" class="form-control money-separator number-only item entry" value="0" disabled />
+                    </td>
+                    <td class="td160">
+                        <input type="text" class="form-control money-separator total" disabled value="0" />
+                    </td>
+                </tr>
+            }
+
+            <tr class="calculate">
+                <td>
+                    <input type="text" class="form-control" name="otherCurrency" placeholder="سایر ارزها" disabled />
+                </td>
+                <td>
+                    <input type="text" class="form-control number-only medium" name="otherCurrencyValue" value="0" data-toggle="tooltip" title="مقدار" disabled />
+                </td>
+                <td>
+                    <input type="text" class="form-control money-separator number-only medium" name="otherCurrencyRialValue" value="0" data-toggle="tooltip" title="مقدار به ریال" disabled />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item exit" name="otherCurrencyRialExit" value="0" disabled />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item entry" name="otherCurrencyRialEntry" value="0" disabled />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+            <tr class="calculate">
+                <td>موجودی صندوق</td>
+                <td colspan="2">
+                    <input type="text" class="form-control money-separator number-only item entry useless" name="inventoryCash" value="0" disabled />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item exit useless" value="0" disabled />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item entry useless" value="0" disabled />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+            <tr class="calculate">
+                <td class="td50">5</td>
+                <td>کسری طلا</td>
+                <td class="td100" colspan="2">
+                    <input type="text" class="form-control little" name="goldDeficitWeight" disabled value="0" /> گرم
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item exit" name="goldDeficitExit" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item entry" name="goldDeficitEntry" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+            <tr class="calculate">
+                <td class="td50">6</td>
+                <td>گیفت کارت کیا</td>
+                <td class="td100" colspan="2">
+                    <input type="text" class="form-control little" value="0" name="giftNumberExit" disabled placeholder="خروج" /> عدد
+                    <input type="text" class="form-control little" value="0" name="giftNumberEntry" disabled placeholder="ورود" /> عدد
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item exit" name="giftExit" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item entry" name="giftEntry" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+            <tr class="calculate">
+                <td class="td50">7</td>
+                <td>بن خرید، کارت تخفیف، سایر</td>
+                <td class="td100" colspan="2">
+                    <input type="text" class="form-control little" name="checkNumber" disabled value="0" /> عدد
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item exit" name="checkExit" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item entry" name="checkEntry" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+            <tr class="calculate">
+                <td class="td50">8</td>
+                <td>چرم و سنگ</td>
+                <td colspan="2">
+                    <input type="text" class="form-control little" value="" name="leatherStoneDescriptionExit" placeholder="خروج" disabled />
+                    <input type="text" class="form-control little" value="" name="leatherStoneDescriptionEntry" placeholder="ورود" disabled />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item exit" name="leatherStoneExit" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item entry" name="leatherStoneEntry" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+            <tr class="calculate">
+                <td class="td50">9</td>
+                <td>سکه</td>
+                <td class="td100" colspan="2">
+                    <input type="text" class="form-control little" name="coinNumber" disabled value="0" /> عدد
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item exit" name="coinExit" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item entry" name="coinEntry" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+            <tr class="calculate">
+                <td class="td50" rowspan="2">10</td>
+                <td rowspan="2">طلای متفرقه</td>
+                <td class="td100">
+                    طلای کیا
+                </td>
+                <td class="td100">
+                    <input type="text" class="form-control little" name="otherKiaGoldWeight" disabled value="0" /> گرم
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item exit" name="otherKiaGoldExit" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item entry" name="otherKiaGoldEntry" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+            <tr class="calculate">
+                <td class="td100">
+                    متفرقه
+                </td>
+                <td class="td100">
+                    <input type="text" class="form-control little" name="otherGoldWeight" disabled value="0" /> گرم
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item exit" name="otherGoldExit" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item entry" name="otherGoldEntry" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+            <tr class="calculate">
+                <td class="td50" rowspan="2">11</td>
+                <td rowspan="2">مانده مشتری</td>
+                <td class="td100" colspan="2">
+                    بستانکار
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item exit" name="creditorCustomerExit" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item entry" name="creditorCustomerEntry" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+            <tr class="calculate">
+                <td class="td100" colspan="2">
+                    بدهکار
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item exit" name="debtorCustomerExit" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item entry" name="debtorCustomerEntry" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+            <tr class="calculate">
+                <td class="td50" rowspan="2">12</td>
+                <td rowspan="2">بیعانه</td>
+                <td class="td100">
+                    از قبل
+                </td>
+                <td class="td100">
+                    <input type="text" class="form-control little" name="depositBeforeCount" disabled value="0" /> عدد
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item exit" name="depositBeforeExit" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item entry" name="depositBeforeEntry" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+            <tr class="calculate">
+                <td class="td100">
+                    جدید
+                </td>
+                <td class="td100">
+                    <input type="text" class="form-control little" name="depositNewCount" disabled value="0" /> عدد
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item exit" name="depositNewExit" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item entry" name="depositNewEntry" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+            <tr class="calculate">
+                <td class="td50">13</td>
+                <td>تخفیف</td>
+                <td colspan="2"></td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item exit" name="discountExit" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item entry" name="discountEntry" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+            <tr class="calculate">
+                <td class="td50">14</td>
+                <td>هزینه</td>
+                <td colspan="2"></td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item exit" name="costExit" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator number-only item entry" name="costEntry" disabled value="0" />
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+            <tr>
+                <td class="td50">15</td>
+                <td></td>
+                <td colspan="2"></td>
+                <td class="td160"></td>
+                <td class="td160 txt-al-l">
+                    سود
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator totalProfit" disabled value="0" />
+                </td>
+            </tr>
+            <tr>
+                <td class="td50">15</td>
+                <td></td>
+                <td colspan="2"></td>
+                <td class="td160"></td>
+                <td class="td160 txt-al-l">
+                    ارزش
+                </td>
+                <td class="td160">
+                    <input type="text" class="form-control money-separator totalValue" disabled value="0" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div id="logListBody" class="alert-info">
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("input:text").focus(function () { $(this).select(); });
+            //$("input:text").prop("disabled",false);
+            calculateReport();
+
+            $(".item").on("keyup", function () {
+                calculateReport();
+            });
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+            load();
+
+        });
+
+        function load() {
+            loader(true);
+            $.get("/dailyReport/branch/@ViewBag.Branch.Id/load/@ViewBag.Date.Replace("/", "-")", {}, function (response) {
+                if (response.status == 200) {
+                    setEntity(response.data);
+
+                    $(".bank").each(function (index, element) {
+                        var id = $(element).find(".id").val();
+                        var bankList = response.data.dailyReportBankList;
+                        for (var i = 0; i < bankList.length; i++) {
+                            if (bankList[i].bankId == id) {
+                                $(element).find(".exit").val(bankList[i].exit);
+                                $(element).find(".entry").val(bankList[i].entry);
+                            }
+                        }
+                    });
+
+                    $(".currency").each(function (index, element) {
+                        var id = $(element).find(".id").val();
+                        var currencyList = response.data.dailyReportCurrencyList;
+                        for (var i = 0; i < currencyList.length; i++) {
+                            console.log(currencyList[i]);
+                            if (currencyList[i].currencyId == id) {
+                                $(element).find(".value").val(currencyList[i].value);
+                                $(element).find(".rial-value").val(currencyList[i].rialValue);
+                                $(element).find(".exit").val(currencyList[i].rialExit);
+                                $(element).find(".entry").val(currencyList[i].rialEntry);
+                            }
+                        }
+                    });
+
+
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(response.data);
+                    $("#logListBody").html(htmlOutput);
+
+                    calculateReport();
+                }
+                else if (response.status != 201) {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+        function calculateReport() {
+            $("tr.calculate").each(function (index, element) {
+                if ($(element).find(".exit").length > 0) {
+                    var total = 0;
+                    if ($(element).prevAll("tr.calculate:first").find(".total").length > 0) {
+                        total = parseInt($(element).prevAll("tr.calculate:first").find(".total").val().replaceAll(",", ""));
+                    }
+
+                    var exit = 0;
+                    if (!$(element).find(".exit").hasClass("useless"))
+                        exit = parseInt($(element).find(".exit").val().replaceAll(",", "")) || 0;
+
+                    var entry = 0;
+                    if (!$(element).find(".entry").hasClass("useless"))
+                        entry = parseInt($(element).find(".entry").val().replaceAll(",", "")) || 0;
+
+                    $(element).find(".total").val(toSeparator(total + (exit - entry)));
+                }
+            });
+
+            $(".totalProfit").val(toSeparator(parseInt($("[name=saleExit]").val().replaceAll(",", "")) / 1000 * 59));
+            $(".totalValue").val(toSeparator(parseInt($("[name=saleExit]").val().replaceAll(",", "")) / 10000 * 818));
+
+            if (parseInt($(".total:last").val()) == 0) {
+                $("#alertIncomplete").addClass("hide");
+                $("#btnSave").removeClass("hide");
+            }
+            else {
+                $("#alertIncomplete, #btnShowSave").removeClass("hide");
+                $("#btnSave").addClass("hide");
+            }
+        }
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <h5>سوابق ویرایش</h5>
+        <table>
+            <tr>
+                <th>تاریخ</th>
+                <th>کاربر</th>
+                <th>وضعیت</th>
+                <th></th>
+            </tr>
+            {{for logListViewModel}}
+            <tr>
+                <td>{{:persianDate}}</td>
+                <td>{{:userFullName}}</td>
+                <td>{{:statusTitle}}</td>
+                <td><a target="_blank" href="/dailyReport/log/{{:id}}"><i class="fa fa-edit"></i></a></td>
+            </tr>
+            {{/for}}
+        </table>
+    </script>
+
+}

@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{44C9AEA2-4FA3-4630-AC7D-3031DF6B822F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>KiaGallery.Model</RootNamespace>
+    <AssemblyName>KiaGallery.Model</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ClosedXML, Version=0.92.1.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.0.92.1\lib\net40\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelNumberFormat, Version=1.0.3.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelNumberFormat.1.0.3\lib\net20\ExcelNumberFormat.dll</HintPath>
+    </Reference>
+    <Reference Include="FastMember.Signed, Version=1.3.0.0, Culture=neutral, PublicKeyToken=9e8f22703bef9a29, processorArchitecture=MSIL">
+      <HintPath>..\packages\FastMember.Signed.1.3.0\lib\net45\FastMember.Signed.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Context\BankAccount.cs" />
+    <Compile Include="Context\BankAccountDetail.cs" />
+    <Compile Include="Context\BranchesPayments\BranchesPaymentsLog.cs" />
+    <Compile Include="Context\BranchInventory.cs" />
+    <Compile Include="Context\CardTransaction.cs" />
+    <Compile Include="Context\CategoryInventoryReportMember.cs" />
+    <Compile Include="Context\BotDailyReport\BotGoldReportUserData.cs" />
+    <Compile Include="Context\CategoryUsableProduct.cs" />
+    <Compile Include="Context\CompanyInvoice.cs" />
+    <Compile Include="Context\CompanyInvoiceDetail.cs" />
+    <Compile Include="Context\CustomerCard.cs" />
+    <Compile Include="Context\CustomerFactorProductCode.cs" />
+    <Compile Include="Context\CustomerLocation.cs" />
+    <Compile Include="Context\CustomerCreditLog.cs" />
+    <Compile Include="Context\Department.cs" />
+    <Compile Include="Context\DepartmentPerson.cs" />
+    <Compile Include="Context\FaxOrderUsableProduct.cs" />
+    <Compile Include="Context\FoodCensus.cs" />
+    <Compile Include="Context\FoodRegistration.cs" />
+    <Compile Include="Context\FoodSetting.cs" />
+    <Compile Include="Context\InstagramPost.cs" />
+    <Compile Include="Context\InternalOrder\InternalOrderDetailLeather.cs" />
+    <Compile Include="Context\InternalOrder\InternalOrderDetailStone.cs" />
+    <Compile Include="Context\InventoryDetail.cs" />
+    <Compile Include="Context\LicencedProduct.cs" />
+    <Compile Include="Context\Notification.cs" />
+    <Compile Include="Context\OrderUsableProductDetail.cs" />
+    <Compile Include="Context\OrderUsableProduct.cs" />
+    <Compile Include="Context\BotDailyReport\BotDailyReportUserData.cs" />
+    <Compile Include="Context\BotDailyReport\DailyReportMessage.cs" />
+    <Compile Include="Context\BotDailyReport\DailyReportSettings.cs" />
+    <Compile Include="Context\Bot\BotMessage.cs" />
+    <Compile Include="Context\Bot\BotNews.cs" />
+    <Compile Include="Context\Bot\BotOrder.cs" />
+    <Compile Include="Context\Bot\BotOrderLeather.cs" />
+    <Compile Include="Context\Bot\BotOrderLog.cs" />
+    <Compile Include="Context\Bot\BotOrderStone.cs" />
+    <Compile Include="Context\Bot\BotSettings.cs" />
+    <Compile Include="Context\Bot\BotUserData.cs" />
+    <Compile Include="Context\Bot\Broadcast.cs" />
+    <Compile Include="Context\Bot\Instagram.cs" />
+    <Compile Include="Context\Bot\Replay.cs" />
+    <Compile Include="Context\Branch.cs" />
+    <Compile Include="Context\BranchesPayments\BranchesPayments.cs" />
+    <Compile Include="Context\BranchesPayments\BranchesPaymentsDetails.cs" />
+    <Compile Include="Context\BranchesPayments\BranchesPaymentsMessage.cs" />
+    <Compile Include="Context\BranchesPayments\BranchesPaymentsProduct.cs" />
+    <Compile Include="Context\BranchesPayments\BranchesPaymentsSendMessage.cs" />
+    <Compile Include="Context\BranchesPayments\BranchesPaymentsSettings.cs" />
+    <Compile Include="Context\BranchesPayments\UserData.cs" />
+    <Compile Include="Context\BranchFactor.cs" />
+    <Compile Include="Context\BranchGold.cs" />
+    <Compile Include="Context\CategoryQuestion.cs" />
+    <Compile Include="Context\Company.cs" />
+    <Compile Include="Context\CreateMessage.cs" />
+    <Compile Include="Context\CrmCustomer.cs" />
+    <Compile Include="Context\CrmCustomerAnswer.cs" />
+    <Compile Include="Context\CrmQuestion.cs" />
+    <Compile Include="Context\CrmQuestionValue.cs" />
+    <Compile Include="Context\Crm\Customer.cs" />
+    <Compile Include="Context\Crm\CrmDiscountSetting.cs" />
+    <Compile Include="Context\Crm\CrmInvoice.cs" />
+    <Compile Include="Context\Crm\CrmInvoiceDetail.cs" />
+    <Compile Include="Context\CustomerLoyality.cs" />
+    <Compile Include="Context\CustomerSurvey.cs" />
+    <Compile Include="Context\DailyReportFinancial\BranchCalendar.cs" />
+    <Compile Include="Context\DailyReportFinancial\Currency.cs" />
+    <Compile Include="Context\FileManagement\MarquisFile.cs" />
+    <Compile Include="Context\FileManagement\MarquisFileDetail.cs" />
+    <Compile Include="Context\Gift\Gift.cs" />
+    <Compile Include="Context\Gift\GiftLog.cs" />
+    <Compile Include="Context\GoldBalance.cs" />
+    <Compile Include="Context\InquiryProduct.cs" />
+    <Compile Include="Context\InquiryProductReply.cs" />
+    <Compile Include="Context\InternalOrder\InternalOrder.cs" />
+    <Compile Include="Context\InternalOrder\InternalOrderDetail.cs" />
+    <Compile Include="Context\InternalOrder\InternalOrderLog.cs" />
+    <Compile Include="Context\InternalOrder\InternalOrderStatusLog.cs" />
+    <Compile Include="Context\Location.cs" />
+    <Compile Include="Context\DailyReportFinancial\AppToken.cs" />
+    <Compile Include="Context\DailyReportFinancial\Bank.cs" />
+    <Compile Include="Context\DailyReportFinancial\DailyReport.cs" />
+    <Compile Include="Context\DailyReportFinancial\DailyReportBank.cs" />
+    <Compile Include="Context\DailyReportFinancial\DailyReportCurrency.cs" />
+    <Compile Include="Context\DailyReportFinancial\DailyReportLog.cs" />
+    <Compile Include="Context\KiaGalleryContext.cs" />
+    <Compile Include="Context\Leather.cs" />
+    <Compile Include="Context\CustomerFactor.cs" />
+    <Compile Include="Context\LoyalityCard.cs" />
+    <Compile Include="Context\Message.cs" />
+    <Compile Include="Context\OrderUsableProductLog.cs" />
+    <Compile Include="Context\Order\BranchNote.cs" />
+    <Compile Include="Context\Order\Cart.cs" />
+    <Compile Include="Context\Order\CartProductLeather.cs" />
+    <Compile Include="Context\Order\CartProductStone.cs" />
+    <Compile Include="Context\Order\FavouritesProduct.cs" />
+    <Compile Include="Context\Order\Order.cs" />
+    <Compile Include="Context\Order\OrderDetail.cs" />
+    <Compile Include="Context\Order\OrderDetailLeather.cs" />
+    <Compile Include="Context\Order\OrderDetailLog.cs" />
+    <Compile Include="Context\Order\OrderDetailLogReason.cs" />
+    <Compile Include="Context\Order\OrderDetailStone.cs" />
+    <Compile Include="Context\Order\OrderLog.cs" />
+    <Compile Include="Context\Order\WorkshopOrder.cs" />
+    <Compile Include="Context\PrintingHouse.cs" />
+    <Compile Include="Context\ProductCollection.cs" />
+    <Compile Include="Context\Sms.cs" />
+    <Compile Include="Context\Ticket.cs" />
+    <Compile Include="Context\TicketMessage.cs" />
+    <Compile Include="Context\Tutorial.cs" />
+    <Compile Include="Context\UsableProduct.cs" />
+    <Compile Include="Context\PhotographyManage.cs" />
+    <Compile Include="Context\Post\PostItem.cs" />
+    <Compile Include="Context\Product.cs" />
+    <Compile Include="Context\ProductFile.cs" />
+    <Compile Include="Context\ProductLeather.cs" />
+    <Compile Include="Context\ProductOuterWerk.cs" />
+    <Compile Include="Context\ProductStone.cs" />
+    <Compile Include="Context\RelatedProduct.cs" />
+    <Compile Include="Context\Role.cs" />
+    <Compile Include="Context\Salary\Person.cs" />
+    <Compile Include="Context\Salary\PersonFile.cs" />
+    <Compile Include="Context\Salary\PersonJobDescriptionTemplate.cs" />
+    <Compile Include="Context\Salary\Salary.cs" />
+    <Compile Include="Context\SetProduct.cs" />
+    <Compile Include="Context\Settings.cs" />
+    <Compile Include="Context\ShapeSize.cs" />
+    <Compile Include="Context\Size.cs" />
+    <Compile Include="Context\SizeValue.cs" />
+    <Compile Include="Context\SentSms.cs" />
+    <Compile Include="Context\SmsCategory.cs" />
+    <Compile Include="Context\Stone.cs" />
+    <Compile Include="Context\StoneTable\StoneOutOfStock.cs" />
+    <Compile Include="Context\SurveyCustomerAnswer.cs" />
+    <Compile Include="Context\SurveyQuestion.cs" />
+    <Compile Include="Context\UsableProductCart.cs" />
+    <Compile Include="Context\UsableProductFile.cs" />
+    <Compile Include="Context\User.cs" />
+    <Compile Include="Context\UserInfo.cs" />
+    <Compile Include="Context\UserToken.cs" />
+    <Compile Include="Context\Workshop.cs" />
+    <Compile Include="Context\WorkShopGold.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="FileContext\Entity\File.cs" />
+    <Compile Include="FileContext\Enum\BaseEnum.cs" />
+    <Compile Include="FileContext\Enum\FileStatus.cs" />
+    <Compile Include="FileContext\KiaGalleryFileContext.cs" />
+    <Compile Include="FileContext\KiaGalleryFileContextHelper.cs" />
+    <Compile Include="FileContext\KiaGalleryFileContextInitializer.cs" />
+    <Compile Include="FileContext\SaveFile.cs" />
+    <Compile Include="InventoryDetail.cs" />
+    <Compile Include="LoyalityCardLog.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SmsText.cs" />
+    <Compile Include="UserCardTransaction.cs" />
+    <Compile Include="WorkshopTag.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="KiaGalleryConvert.sql" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

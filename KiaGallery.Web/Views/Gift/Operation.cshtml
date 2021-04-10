@@ -1,0 +1,344 @@
+﻿
+@{
+    ViewBag.Title = "عملیات";
+}
+<style>
+    #mainparent {
+        position: relative;
+        margin-top: -72px;
+    }
+
+
+
+
+    /* Hide the browser's default checkbox */
+    .data input[type=checkbox] {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+        display: none;
+    }
+
+    /* Create a custom checkbox */
+    .data .checkmark {
+        position: absolute;
+        top: 5px;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .data input:checked ~ .checkmark {
+        background-color: #38A548;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .data .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+    /* Show the checkmark when checked */
+    .data input:checked ~ .checkmark:after {
+        display: block;
+    }
+    /* Style the checkmark/indicator */
+    .data .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+    #image {
+        width: 965px;
+        position: absolute;
+        top: 0;
+        left: calc(50% - 513px);
+    }
+
+    h4 {
+        font-size: 20px;
+        margin-top: 50px;
+    }
+
+    tr:nth-child(even) {
+        background: #eee;
+    }
+
+    #content {
+        margin-top: 55px;
+    }
+</style>
+<div class="main-page">
+    <div class="img">
+        <img id="image" src="~/Content/Image/site123.png" />
+    </div>
+    <div id="mainparent" class="text-center">
+        <h4>عملیات</h4>
+        <div class="form-inline text-center">
+            <div class="form-group text-center"><input id="Searching" class="form-control deleteVal text-center" type="text" placeholder="[--------- بارکد پیگیری ---------]" name="code" style="margin-top:103px;" /></div>
+        </div>
+        <div id="selectedCount" class="btn btn-danger" style="margin-top: 10px;width: 208px;height: 34px;">تعداد انتخاب شده:</div>
+        <br />
+        <div style="width:165px;margin:20px auto" class="">
+            <select id="cmbValue" class="form-control change-status" name="giftStatus"  data-validate="required">
+                <option value="">انتخاب وضعیت</option>
+                <option value="0">ثبت شده</option>
+                <option value="1">ارسال شده به چاپخانه</option>
+                <option value="2">تحویل از چاپخانه</option>
+                <option value="6">لغو شده</option>
+            </select>
+        </div>
+        <button id="btnChangeStatus" type="button" data-confirm="آیا از تغییر وضعیت اطمینان دارید؟" class="btn btn-success">تغییر وضعیت</button>
+    </div>
+
+</div>
+<div id="content">
+
+</div>
+@section scripts{
+    <script type="text/javascript">
+        var data = {
+            list: []
+        }
+
+        $(document).ready(function () {
+
+            $(".delete-item").on("click", function () {
+                $(".orderItem").prop("checked", true);
+                $(".orderItem").change();
+
+            });
+            $(document).on("change", ".orderItem", function () {
+                if ($(".orderItem:checked").length > 0) {
+                    $("#selectedCount").show();
+                    var count = 0;
+                    $(".orderItem:checked").each(function (index, element) {
+                        count += 1;
+                    });
+                    $("#selectedCount").html("تعداد انتخاب شده: " + count);
+                }
+                else {
+                    $("#selectedCount").hide();
+                }
+            });
+            $("#Searching").focus();
+
+
+            $(document).on("keyup", "#Searching", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    var value = $(this).val();
+                    if (value != null && value != "" && value.length == 6) {
+                        $(".orderItem[data-code=" + value + "]").prop("checked", true);
+                        $(".orderItem").change();
+                        $(this).val("");
+                    }
+                }
+            });
+            //$("#btnChangeStatus").on("click", function (event) {
+            //    event.preventDefault();
+            //    var idList = new Array();
+            //    $('.orderItem').each(function () {
+            //        idList.push(this.value);
+            //    });
+            //    $("#changeStatusModal").modal('hide');
+            //    changeStatus(idList, 2, $("#changeStatusModal #cmbBranchId").val());
+
+            //});
+            //$(document).on("change", ".change-status", function (event) {
+            //    console.log($(this).val())
+            //    event.preventDefault();
+            //    var idList = new Array();
+            //    $('.orderItem').each(function () {
+            //        idList.push(this.value);
+            //        console.log(idList)
+            //    });
+            //    if (idList.length > 0) {
+            //        var confirm = $(this).attr("data-confirm");
+            //        var status = $(this).val();
+            //        confirmMessage(confirm, function () {
+            //            var idList = new Array();
+            //            $('.orderItem').each(function () {
+            //                idList.push(this.value);
+            //            });
+            //            changeStatus(idList, status, null);
+            //        });
+            //    }
+            //    else {
+            //        alert("حداقل یک مورد را باید انتخاب کنید.");
+            //    }
+            //});
+            $(document).on("click", "#btnChangeStatus", function (event) {
+                event.preventDefault();
+                var idList = new Array();
+                $('.orderItem').each(function () {
+                    idList.push(this.value);
+                });
+                if (idList.length > 0) {
+                    var status = $("#cmbValue").val();
+                    if (status >= 0 && status != null && status != "") {
+                        console.log(12)
+                        var confirm = $(this).attr("data-confirm");
+                        confirmMessage(confirm, function () {
+                            var idList = new Array();
+                            $('.orderItem').each(function () {
+                                idList.push(this.value);
+                            });
+                            changeStatus(idList, status, null);
+                        });
+                    }
+                }
+                else {
+                    alert("حداقل یک مورد را باید انتخاب کنید.");
+                }
+            });
+            $(document).on("change", "#cmbBranch", function (event) {
+                getList()
+
+            });
+            $("#cmbBranch").on("change", function (e) {
+                e.preventDefault();
+                var param = { branchId: $("#cmbBranch").val() }
+                manipulateParam(param, "page");
+            });
+
+
+            $("#Searching").focus();
+
+            $(document).on("keyup", "#Searching", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    var value = $(this).val();
+                    if (value != null && value != "") {
+                        $.get("/gift/operationJson", { term: value }, function (response) {
+                            if (response.status == 200) {
+                                var flag = false;
+                                for (var i = 0; i < data.list.length; i++) {
+                                    if (data.list[i].id == response.data.id)
+                                        flag = true
+                                }
+                                $("#Searching").val("");
+                                if (flag) return;
+                                $("#selectedCount").show();
+                                data.list.push(response.data);
+                                $("#selectedCount").html("تعداد انتخاب شده: " + data.list.length);
+                                var template = $.templates("#template");
+                                var htmlOutput = template.render(data);
+                                $("#content").html(htmlOutput);
+                                $(document).on("click", ".delete-item", function (e) {
+                                    var id = $(this).attr("data-id");
+                                    $(this).parents("tr").remove();
+                                    for (var i = 0; i < data.list.length; i++) {
+                                        if (data.list[i].id == id) {
+                                            data.list.splice(i, 1)
+                                            $("#selectedCount").html("تعداد انتخاب شده: " + data.list.length);
+                                        }
+                                    };
+                                });
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                            loader(false);
+                        });
+
+                    }
+                }
+            });
+        });
+
+        var defaultEntity = {
+            page: 0,
+            count: 200,
+            firstName: null,
+            lastName: null,
+            personNumber: null,
+            branchId: null,
+            notInsurance: null,
+        }
+
+
+        function changeStatus(input, status) {
+
+            var params = {
+                id: input,
+                status: status,
+            };
+
+            loader(true);
+            $.post("/gift/ChangeStatus", params, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    location.reload();
+                }
+            });
+        }
+        function updateForm() {
+            var params = getParam();
+            // branch
+            if (params["branchId"]) {
+                $("#cmbBranch").val(params["branchId"]);
+            }
+            else {
+                $("#cmbBranch").val("");
+            }
+        }
+
+
+    </script>
+    <script id="template" type="text/x-jsrender">
+        {{if list.length > 0}}
+        <table class="table">
+            <thead>
+                <tr class="text-center">
+                    <th>کد</th>
+                    <th>نوع</th>
+                    <th>اعتبار</th>
+                    <th>وضعیت</th>
+                    <th class="txt-al-l">حذف</th>
+                </tr>
+            </thead>
+            <tbody class="data" id="TableSearch">
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td class="v-middle relative  hidden">
+                        <input disabled style="" id="chkOrder{{:id}}" class="orderItem" name="orderItem" type="checkbox" value="{{:id}}" data-code="{{:trackCode}}" />
+                    </td>
+                    <td>{{:code}}</td>
+                    <td>{{:typeTitle}}</td>
+                    {{if type == 4}}
+                    <td>{{:value}}% </td>
+                    {{else}}
+                    <td>{{:value}}</td>
+                    {{/if}}
+                    <td>{{:statusTitle}}</td>
+                    <td class="txt-al-l">
+                        <button class="delete-item btn btn-default btn-xs" data-toggle="tooltip" title="حذف" data-title="حذف" data-id="{{:id}}"><span class="fa fa-close"></span></button>
+                    </td>
+                    {{/for}}
+            </tbody>
+        </table>
+        {{else}}
+        <h4 class="txt-al-c">موردی یافت نشد</h4>
+        {{/if}}
+        <div class="clearfix"></div>
+
+        @*@Html.Partial("_Pagination")*@
+    </script>
+}
+
+
+

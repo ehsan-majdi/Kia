@@ -1,0 +1,470 @@
+﻿
+@{
+    ViewBag.Title = "Order";
+}
+
+<style type="text/css">
+    .btnAdd {
+        background-color: #009688;
+    }
+
+    .btnFiles {
+        color: #0088cc;
+        margin: 5px;
+        cursor: pointer;
+    }
+
+    table {
+        width: 100%;
+        border: 1px solid gray;
+        margin: 10px 0px;
+    }
+
+    th {
+        background-color: whitesmoke;
+    }
+
+    tr:not(:last-child) td, th {
+        border-bottom: 1px solid gray;
+    }
+
+    td, th {
+        padding: 4px 20px;
+    }
+
+    #filterContent .btn {
+        background-color: #b0bec5;
+        border-radius: 5px;
+        padding: 6px 15px;
+        text-decoration: none;
+        color: black;
+        cursor: pointer;
+    }
+
+    #filterContent {
+        background-color: ghostwhite;
+        border: 2px solid silver;
+        border-radius: 5px;
+        display: inline-block;
+        padding: 20px;
+    }
+
+        #filterContent div {
+            padding: 3px;
+        }
+
+        #filterContent label span:first-child {
+            width: 90px;
+            display: inline-block;
+            text-align: right;
+            margin-top: 3px;
+        }
+
+
+    .None {
+        color: black;
+    }
+
+    .PendingCall {
+        color: blue;
+    }
+
+    .RejectCall {
+        color: #1a237e;
+    }
+
+    .PendingPrepayment {
+        color: #4a148c;
+    }
+
+    .UnderConstruction {
+        color: orange;
+    }
+
+    .PendingPayment {
+        color: violet;
+    }
+
+    .Sent {
+        color: green;
+    }
+
+    .Canceled {
+        color: red;
+    }
+
+    .ReferredTo {
+        color: #311b92;
+    }
+
+    .PendingCustomer {
+        color: #004d40;
+    }
+
+    #statusTitle {
+        background-color: white;
+        border: 1px solid silver;
+        border-radius: 5px;
+        display: inline-block;
+        height: 20px;
+        padding: 7px 10px;
+        width: 200px;
+    }
+
+    .itemList {
+        background: white none repeat scroll 0 0;
+        border: 1px solid silver;
+        border-radius: 5px;
+        padding: 10px;
+        width: 170px;
+        left: 120px;
+        display: inline-block;
+    }
+
+        .itemList label {
+            display: block;
+        }
+</style>
+
+
+<i class="fa fa-gear linkIcon" aria-hidden="true" onclick="openFilter()"></i>&nbsp;&nbsp;
+<h3 class="inline-block" style="margin-bottom: 5px;">@ViewBag.Title</h3>
+
+<br />
+
+<div id="content">
+
+</div>
+
+<div id="form" style="display: none;">
+    <form id="frmData">
+        <input id="hiddenId" type="hidden" value="" name="id" />
+        <div>
+            <span class="header">Type:</span>
+            <select id="cmbType" name="type">
+                <option value="0">Text</option>
+                <option value="1">Image</option>
+                <option value="2">Video</option>
+            </select>
+        </div>
+        <div>
+            <span class="header">Text:</span>
+            <textarea id="txtText" cols="60" rows="3" name="text"></textarea>
+        </div>
+        <div>
+            <span class="header">Persian Text:</span>
+            <textarea id="txtTextFa" cols="60" rows="3" name="textFa"></textarea>
+        </div>
+        <div id="fileUploadContainer">
+            <span class="header">File:</span>
+            <input id="txtFileName" type="text" name="fileName" readonly />
+            <input id="hiddenFileId" type="hidden" name="fileId" />
+            <input id="fileUpload" type="file" class="gone" />
+            <div style="display: inline-block; padding-top: 16px;">
+                <i id="imgBrowser" class="fa fa-folder btnFiles" aria-hidden="true"></i>
+                <i id="imgDownload" class="fa fa-download btnFiles" aria-hidden="true"></i>
+            </div>
+        </div>
+        <div class="controlBox" style="padding: 5px;">
+            <span class="header"></span>
+            <button id="btnSave" class="btnForm">
+                <i class="fa fa-check" aria-hidden="true"></i>
+                Save
+            </button>
+            <button id="btnCancel" class="btnForm">
+                <i class="fa fa-remove" aria-hidden="true"></i>
+                Cancel
+            </button>
+        </div>
+    </form>
+</div>
+
+<div id="filter" class="gone absolute">
+    <div id="filterContent">
+        <div>
+            <label>
+                <span>Name or Phone:</span>
+                <input id="txtQuerySeach" type="text" />
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <span>Order No:</span>
+                <input id="txtOrderNumber" type="text" />
+            </label>
+        </div>
+
+        <div>
+            <span style="display: inline-block; margin-top: 3px; text-align: right;width: 90px;">Status:</span>
+            <span id="statusTitle" class="relative">
+                All
+            </span>
+            <span class="itemList" style="display: none; position: absolute;">
+                <label><input id="chkAll" type="checkbox" />...</label>
+                <label><input type="checkbox" class="chkStatus gone" name="status" value="0" /> None</label>
+                <label><input type="checkbox" class="chkStatus" name="status" checked value="1" /> Pending Call</label>
+                <label><input type="checkbox" class="chkStatus" name="status" checked value="9" /> Pending Customer</label>
+                <label><input type="checkbox" class="chkStatus" name="status" checked value="2" /> Reject Call</label>
+                <label><input type="checkbox" class="chkStatus" name="status" checked value="3" /> Pending Prepayment</label>
+                <label><input type="checkbox" class="chkStatus" name="status" checked value="4" /> Under Construction</label>
+                <label><input type="checkbox" class="chkStatus" name="status" checked value="5" /> Pending Payment</label>
+                <label><input type="checkbox" class="chkStatus" name="status" checked value="6" /> Sent</label>
+                <label><input type="checkbox" class="chkStatus" name="status" checked value="8" /> Referred To</label>
+                <label><input type="checkbox" class="chkStatus" name="status" value="7" /> Canceled</label>
+                <input id="btnCloseStatusList" style="margin-top: 10px;" type="button" value="Close" />
+            </span>
+        </div>
+
+        <div>
+            <label>
+                <span>From Date:</span>
+                <input id="txtFromDate" type="text" />
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <span>To Date:</span>
+                <input id="txtToDate" type="text" />
+            </label>
+        </div>
+
+        <div style="margin-top: 5px;">
+            <label>
+                <span>Page Count:</span>
+            </label>
+            <span class="linkIcon" onclick="setPageCount(10)">10</span>
+            <span class="linkIcon" onclick="setPageCount(20)">20</span>
+            <span class="linkIcon" onclick="setPageCount(50)">50</span>
+            <span class="linkIcon" onclick="setPageCount(100)">100</span>
+
+            <span id="pageCount" style="margin-left: 20px;">10</span>
+        </div>
+
+        <div style="margin-top: 15px;">
+            <label>
+                <span></span>
+                <span class="btn" onclick="_page = 0;closeFilter();getList()">
+                    <i class="fa fa-search" style="padding-right: 5px;" aria-hidden="true"></i>
+                    Search
+                </span>
+                &nbsp;&nbsp;
+                <span class="btn" onclick="closeFilter()">
+                    <i class="fa fa-remove" style="padding-right: 5px;" aria-hidden="true"></i>
+                    Close
+                </span>
+            </label>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var date = new persianDate();
+        date.formatPersian = false;
+        var stringDate = date.format("YYYY/MM/DD");
+        $("#txtFromDate").val(stringDate);
+        $("#txtToDate").val(stringDate);
+
+        getList();
+
+        $("#statusTitle").click(function (event) {
+            $(".itemList").slideDown();
+        });
+
+        $("#btnCloseStatusList").click(function (event) {
+            $(".itemList").slideUp();
+        });
+
+        $("#chkAll").change(function () {
+            if ($(this).prop("checked")) {
+                $(".chkStatus").prop("checked", true);
+            }
+            else {
+                $(".chkStatus").prop("checked", false);
+            }
+        });
+    });
+
+    var _totalPage = 0;
+    var _page = 0;
+    var _count = 100;
+    var _listData = [];
+    function getList() {
+
+        var statusList = new Array();
+        $("input[type=checkbox][name=status]:checked").each(function () {
+            statusList.push($(this).val());
+        });
+
+        if (statusList.length == 0) {
+            alert("You must be select a status.");
+            return;
+        }
+
+        var data = {
+            page: _page,
+            count: _count,
+            nameQuery: $("#txtQuerySeach").val(),
+            orderNo: $("#txtOrderNumber").val(),
+            status: statusList,
+            fromDate: $("#txtFromDate").val(),
+            toDate: $("#txtToDate").val()
+        };
+        loader(true);
+
+        $.ajax({
+            type: "GET",
+            url: "/Bot/Order/GetData",
+            datatype: "json",
+            traditional: true,
+            data: data,
+            success: function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#tmplOrder");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+
+                    if (_page == 0)
+                        $("#previewsPage").css({ 'visibility': 'hidden' });
+                    else
+                        $("#previewsPage").css({ 'visibility': 'visible' });
+
+                    if (response.data.pageCount == 0 || _page + 1 == response.data.pageCount)
+                        $("#nextPage").css({ 'visibility': 'hidden' });
+                    else
+                        $("#nextPage").css({ 'visibility': 'visible' });
+
+                    _listData = response.data.list;
+                    _totalPage = response.data.pageCount;
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            }
+        });
+    }
+
+    function viewItem(id) {
+        window.open("/Bot/Order/ViewOrder/" + id, "_blank");
+    }
+
+    function deleteItem(id) {
+        appConfirm("Are you sure want to delete this node?", function () {
+            var parameter = { id: id };
+            $.post("/Bot/Order/Delete", parameter, function (response) {
+                if (response.status == 200) {
+                    getList();
+                }
+                alert(response.message);
+            });
+        });
+    }
+
+    function setPageCount(pageCount) {
+        _count = pageCount;
+        $("#pageCount").html(_count);
+    }
+
+    function setPageNo() {
+        var pageNo = $("#txtPageNo").val();
+        if (pageNo <= 0 || pageNo > _totalPage) {
+            alert("Your selected page is invalid.");
+            return;
+        }
+
+        _page = pageNo - 1;
+        getList();
+    }
+
+    function previewsPage() {
+        _page--;
+        getList();
+    }
+
+    function nextPage() {
+        _page++;
+        getList();
+    }
+
+    function openGoto() {
+        $("#goto").slideToggle();
+    }
+
+    function openFilter() {
+        $("#pageCount").html(_count);
+        showModal($('#filter'));
+    }
+
+    function closeFilter() {
+        closeModal($('#filter'));
+    }
+
+</script>
+
+<script type="text/x-jsrender" id="tmplOrder">
+    <table>
+        <tr>
+            <th>
+                Order Number
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Phone Number
+            </th>
+            <th>
+                Created Date
+            </th>
+            <th></th>
+        </tr>
+        {{for list}}
+        <tr>
+            <td>
+                {{:orderNo}} &nbsp;&nbsp;
+                {{if dailyOfferId}}
+                <i class="fa fa-star" aria-hidden="true"></i>
+                {{/if}}
+            </td>
+            <td class="{{:status}}">
+                {{:statusText}}
+            </td>
+            <td>
+                {{:firstName}} {{:lastName}}
+            </td>
+            <td>
+                {{:phoneNumber}}
+            </td>
+            <td>
+                {{:createdDate}}
+            </td>
+            <td style="width: 35px; text-align: center;">
+                <i class="fa fa-desktop linkIcon" aria-hidden="true" onclick="viewItem({{:id}})"></i>
+                <i class="fa fa-remove linkIcon" aria-hidden="true" onclick="deleteItem({{:id}})"></i>
+            </td>
+        </tr>
+        {{/for}}
+    </table>
+    <div>
+        <i id="previewsPage" class="fa fa-angle-double-left linkIcon" aria-hidden="true" onclick="previewsPage()"></i>
+        <span id="pageNo">{{:pageNo}}</span>
+        <i id="nextPage" class="fa fa-angle-double-right linkIcon" aria-hidden="true" onclick="nextPage()"></i>
+        <div class="relative inline-block">
+            <i class="fa fa-exchange linkIcon" aria-hidden="true" onclick="openGoto()" style="padding: 6px;"></i>
+            <div id="goto" class="absolute gone">
+                <input id="txtPageNo" type="text" style="width: 30px;" />
+                <i class="fa fa-chevron-circle-right linkIcon" aria-hidden="true" onclick="setPageNo()" style="font-size: 1.25em; margin: 10px 0px 0 10px;"></i>
+            </div>
+        </div>
+        <i class="fa fa-refresh linkIcon" aria-hidden="true" onclick="getList()" style="padding: 6px;"></i>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <i class="fa fa-list-ul linkIcon" aria-hidden="true" style="padding: 6px;"></i>{{:count}}
+    </div>
+</script>

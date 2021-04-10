@@ -1,0 +1,391 @@
+﻿
+@{
+    ViewBag.Title = "SendToBranch";
+    List<KiaGallery.Web.Models.BranchListViewModel> branchList = ViewBag.BranchList;
+
+}
+
+<head>
+    <style>
+
+        #mainparent {
+            margin-top: -72px;
+            position: relative;
+        }
+
+        .change-status {
+            width: 165px;
+            margin-top: 26px;
+        }
+
+        /* Hide the browser's default checkbox */
+        .data input[type=checkbox] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+            display: none;
+        }
+
+        /* Create a custom checkbox */
+        .data .checkmark {
+            position: absolute;
+            top: 5px;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            background-color: #eee;
+        }
+
+        /* When the checkbox is checked, add a blue background */
+        .data input:checked ~ .checkmark {
+            background-color: #38A548;
+        }
+
+        /* Create the checkmark/indicator (hidden when not checked) */
+        .data .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+        /* Show the checkmark when checked */
+        .data input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+
+        /* Style the checkmark/indicator */
+        .data .checkmark:after {
+            left: 9px;
+            top: 5px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+
+        #image {
+            width: 965px;
+            position: absolute;
+            top: 0;
+            left: calc(50% - 513px);
+        }
+
+        h4 {
+            font-size: 20px;
+            padding: 20px;
+        }
+
+        tr:nth-child(even) {
+            background: #eee;
+        }
+
+        #content {
+            margin-top: 55px;
+        }
+        #btnBranchModal {
+            margin-top: 27px;
+            width: 165px;
+        }
+    </style>
+</head>
+
+<br />
+
+<div class="main-page">
+ 
+    <div class="img">
+        <img id="image" src="~/Content/Image/site123.png" />
+    </div>
+    <div id="mainparent" class="text-center">
+        <h4>ارسال به شعبه</h4>
+        <div id="selectedCount" class="btn btn-danger" style="margin-top:26px;width: 208px;height: 34px;">تعداد انتخاب شده:</div>
+        <div class="form-inline text-center" style="margin-top:50px">
+            <div class="form-group text-center"><input id="Searching" class="form-control deleteVal text-center" type="text" placeholder="[--------- بارکد پیگیری ---------]" name="code" /></div>
+        </div>
+
+        <br />
+        <input style="margin-top:26px;width:165px" type="button" id="btnBranchModal" class="btn btn-success" value="تایید و ارسال به شعبه" />
+    </div>
+</div>
+<div id="modal-branch" class="modal" style="overflow-y: hidden;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">انتخاب شعبه</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                            <select id="cmbBranch" name="branchId" class="form-control">
+                                @*<option value="">همه</option>*@
+                            </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="change-status btn btn-success" value="تایید" data-status="7" data-confirm="آیا از تغییر وضعیت سفارش به ارسال به شعبه اطمینان دارید؟" />
+                </div>
+            </div>
+        </div>
+    </div>
+<div id="content">
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 200,
+            branchId: null,
+
+        }
+        $(document).ready(function () {
+            getList();
+            $(document).on("change", ".orderItem", function () {
+                var all = ($(".orderItem").length);
+                if ($(".orderItem:checked").length > 0) {
+                    $("#selectedCount").show();
+                    var count = 0;
+                    $(".orderItem:checked").each(function (index, element) {
+                        count += 1;
+                    });
+                    $("#selectedCount").html("تعداد انتخاب شده: " + all + " " + " / " + count);
+                }
+                else {
+                    $("#selectedCount").hide();
+                }
+
+            });
+            $("#Searching").focus();
+
+            $(document).on("keyup", "#Searching", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    var value = $(this).val();
+                    if (value != null && value != "" && value.length == 6) {
+                        $(".orderItem[data-code=" + value + "]").prop("checked", true);
+                        $(".orderItem").change();
+                        $(this).val("");
+                    }
+                }
+            });
+            $("#btnBranchModal").on("click", function () {
+
+                $("#modal-branch").modal("show")
+            });
+
+            $("#btnChangeStatus").on("click", function (event) {
+                event.preventDefault();
+                var idList = new Array();
+                $('.orderItem:checked').each(function () {
+                    idList.push(this.value);
+                });
+                console.log(idList);
+                $("#changeStatusModal").modal('hide');
+                changeStatus(idList, 9, null);
+
+            });
+            $(document).on("click", ".change-status", function (event) {
+                event.preventDefault();
+                var idList = new Array();
+                $('.orderItem:checked').each(function () {
+                    idList.push(this.value);
+                    console.log(idList)
+                });
+                if (idList.length > 0) {
+                    var confirm = $(this).attr("data-confirm");
+                    var status = $(this).attr("data-status");
+                    confirmMessage(confirm, function () {
+                        var idList = new Array();
+                        $('.orderItem:checked').each(function () {
+                            idList.push(this.value);
+                        });
+                        changeStatus(idList, status, $("#cmbBranch").val());
+                    });
+                }
+                else {
+                    alert("حداقل یک مورد را باید انتخاب کنید.");
+                }
+            });
+            loadRemoteSelect("#cmbBranch", "/branch/getbranch", null, "id", "name", "همه", function () {
+
+            });
+
+        });
+
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend({}, defaultEntity, newParams);
+            updateForm();
+            loader(true);
+            $.get("/internalOrder/SendToBranchJson", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                    $(".delete").on("click", function () {
+                        $("#selectedCount").html("تعداد انتخاب شده:");
+                        $(this).parents("tr").find("input[type=checkbox]").prop("checked", false);
+                    });
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+        function changeStatus(input, status, deliveredBranchId) {
+
+            var params = {
+                id: input,
+                status: status,
+                deliveredBranchId,
+
+
+            };
+
+            loader(true);
+            $.post("/internalOrder/ChangeStatus", params, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    callbackAlert(response.message, function () {
+                        location.reload();
+                    });
+
+                }
+
+            });
+        }
+        function updateForm() {
+            var params = getParam();
+
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        {{if list.length > 0}}
+        <table class="table">
+            <thead>
+                <tr class="text-center">
+                    <th></th>
+                    <th>تاریخ</th>
+                    <th>تاریخ درج بارکد</th>
+                    <th>نام و نام خانوادگی</th>
+                    <th>تلفن</th>
+                    <th>محصول</th>
+                    <th>کد پیگیری</th>
+                    <th>بیعانه</th>
+                    <th>بارکد</th>
+                    <th>وضعیت</th>
+                    <th>کاربر</th>
+                    <th>شعبه</th>
+                    <th>پیش فاکتور</th>
+                    <th>حذف</th>
+                    @*<th class="icon-col">ارسال</th>
+                        <th class="icon-col">لغو</th>*@
+                </tr>
+
+            </thead>
+            <tbody class="data" id="TableSearch">
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td class="v-middle relative">
+                        <input disabled style="" id="chkOrder{{:id}}" class="orderItem" name="orderItem" type="checkbox" value="{{:id}}" data-code="{{:trackCode}}" />
+                        <span class="checkmark"></span>
+                    </td>
+                    <td>{{:date}}</td>
+                    <td>
+                        {{if  barcode != null }}
+                        {{:barcodeDate}}
+                        {{else}}
+                        --
+                        {{/if}}
+                    </td>
+                    <td>{{:name}}</td>
+                    <td>{{:phoneNumber}}</td>
+                    <td class="txt-al-c">
+
+                        {{for detail}}
+
+                        <div class="margintop">{{:title}}</div>
+
+                        {{/for}}
+                    </td>
+
+                    <td>{{:trackCode}}</td>
+                    <td>{{:deposit}}</td>
+                    <td>{{:barcode}}</td>
+                    <td>
+                        {{if statusCode == 1 && ponyUp != null}}
+                        {{if ponyUp}}
+                        <span class="text-success" style="vertical-align: middle;">تسویه شده-</span>
+                        {{else}}
+                        <span class="text-danger" style="vertical-align: middle;">تسویه نشده-</span>
+                        {{/if}}
+                        <span style="vertical-align: middle;">
+                            {{/if}}
+                            {{:status}}
+                            {{if statusCode == 1 && deliverTypeTitle}}
+                            به
+                            {{/if}}
+                            {{if deliverType == 0}}
+                            <span class=" text-success" style="vertical-align: middle;" title="پیک">پیک</span>
+                            {{/if}}
+                            {{if deliverType == 1}}
+                            <span class=" text-" style="vertical-align: middle;color:#ff6a00" title="شعبه">شعبه</span>
+                            {{:branchName}}
+                            {{/if}}
+                            {{if deliverType == 2}}
+                            <span class="" style="vertical-align: middle;color:#700d0d" title="پرسنل کیا">پرسنل کیا</span>
+                            {{/if}}
+                            {{if deliverType == 3}}
+                            <span class=" text-primary" style="vertical-align: middle;" title="پست">پست</span>
+                            {{/if}}
+                            {{if status == "جواب نداد"}}
+                            @*({{:noAnswerCount}})*@
+                            {{/if}}
+                        </span>
+                    </td>
+                    <td><span class="userColor" style="background-color:{{:userColor}}"></span> {{:user}}</td>
+                    
+                    <td>{{:orderedBranchName}}</td>
+                    <td>{{:multiOrder}}</td>
+                    <td class="txt-al-c">
+                        <button class="delete btn btn-default btn-xs" data-toggle="tooltip" title="حذف" data-title="حذف" data-id="{{:id}}"><span class="fa fa-close"></span></button>
+                    </td>
+
+                </tr>
+                {{if description}}
+                <tr>
+                    <td class="description" colspan="17" style="color: blue;">
+                        توضیحات: {{:description}}
+                    </td>
+                </tr>
+                {{/if}}
+
+                {{for log}}
+
+                <tr class="">
+                    <td colspan="15" style="color: rebeccapurple;" class="log">
+                        {{:user}} <sub>{{:createdDate}}</sub>: <span class="html">{{:text}}</span>
+                    </td>
+                </tr>
+
+                {{/for}}
+                {{/for}}
+            </tbody>
+        </table>
+        {{else}}
+        <h4 class="txt-al-c">موردی یافت نشد</h4>
+        {{/if}}
+        <div class="clearfix"></div>
+
+        @*@Html.Partial("_Pagination")*@
+    </script>
+}

@@ -1,0 +1,200 @@
+﻿
+@{
+    ViewBag.Title = "User Messages";
+}
+
+<h2>@ViewBag.Title</h2>
+<style type="text/css">
+    #more {
+        background-color: #0088cc;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        display: inline-block;
+        margin-top: 15px;
+        padding: 5px 20px;
+        text-align: center;
+        width: 150px;
+    }
+
+    #user-details {
+        background-color: ghostwhite;
+        border: 1px solid gray;
+        border-radius: 5px;
+        bottom: 20px;
+        padding: 5px 15px 10px 0;
+        position: fixed;
+        right: 20px;
+        text-align: right;
+        min-width: 150px;
+    }
+</style>
+
+<div id="user-details">
+    <div id="fullName"></div>
+    <div id="username"></div>
+</div>
+
+<div id="grid">
+
+</div>
+
+<span id="more" onclick="getList()">More</span>
+
+@Html.Partial("_Response")
+
+<script id="chat" type="text/x-jsrender">
+    {{for list}}
+    <div>
+        {{if ReplayId}}
+        <div class="answer-item">
+            {{:ReplayText}}
+            <div class="date-time"><i class="fa fa-check-square-o linkIcon" aria-hidden="true"></i>&nbsp;&nbsp;{{:ReplayDate}}</div>
+        </div>
+    </div>
+    <div>
+        {{/if}}
+        <div class="chat-item">
+            {{:Text}}
+            <div class="date-time">{{:Date}}</div>
+        </div>
+        {{if !ReplayId}}
+        {{if Unknown}}
+        <i class="linkIcon fa fa-reply" aria-hidden="true" onclick="response({{:Id}})"></i>
+        {{/if}}
+        {{/if}}
+    </div>
+    {{/for}}
+</script>
+@section Scripts {
+    <script type="text/javascript">
+
+        var _chatId = @ViewBag.ChatId;
+        var _lastId = 0;
+        var _count = 100;
+        var _unknown = false;
+
+        var _first = false;
+        var _firstId = 0;
+
+        var _user = null;
+        var _listData = [];
+
+        $(document).ready(function () {
+
+            if ("Notification" in window) {
+                Notification.requestPermission();
+            }
+
+            getList();
+        });
+
+        function getList() {
+            loader(true);
+
+            var data = {
+                chatId: _chatId,
+                lastId: _lastId,
+                count: _count,
+                unknown: _unknown
+            };
+
+            $.ajax({
+                type: "GET",
+                url: "/Conversion/GetUserChat",
+                data: data,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    var tmpl = $.templates("#chat");
+                    var html = tmpl.render(result.data);
+                    $("#grid").append(html);
+
+                    _user = result.data.user;
+                    _listData = result.data.list;
+
+                    if (_user != null) {
+                        $("#fullName").html((_user.FirstName ? _user.FirstName : "-") + " " + (_user.LastName ? _user.LastName : "-"));
+                        $("#username").html(_user.Username ? _user.Username : "-");
+                    }
+
+                    var size = _listData.length;
+
+                    if (size == 0 || size < _count) {
+                        $("#more").hide();
+                    }
+                    else {
+                        var lastItem = result.data.list[size - 1];
+                        _lastId = lastItem.Id;
+                    }
+
+                    loader(false);
+
+                    if (!_first) {
+                        _first = true;
+                        if (size > 0) {
+                            _firstId = _listData[0].Id;
+                        }
+                        getNewMessage();
+                    }
+
+                },
+                error: function (response) {
+                    alert('error');
+                    loader(false);
+                }
+            });
+        }
+
+        var _loading = false;
+        function getNewMessage() {
+            window.setInterval(function() {
+                if (!_loading) {
+                    _loading = true;
+                    $.ajax({
+                        type: "GET",
+                        url: "/Conversion/GetUserUpdates",
+                        data: { chatId: _chatId, firstId: _firstId },
+                        contentType: "application/json;charset=utf-8",
+                        dataType: "json",
+                        success: function (result) {
+                            var tmpl = $.templates("#chat");
+                            var html = tmpl.render(result.data);
+                            $("#grid").prepend(html);
+
+                            if (result.data.list.length > 0) {
+                                _firstId = result.data.list[0].Id;
+
+                                notifyDataReceived(result.data.list.length);
+                            }
+
+                            _loading = false;
+                        }
+                    })
+                }
+            }, 10000);
+        }
+
+        function notifyDataReceived(count) {
+            var title = (_user.FirstName ? _user.FirstName : "-") + " " + (_user.LastName ? _user.LastName : "-") + " (" + (_user.Username ? _user.Username : "-") + ")";
+            var options = {
+                body: count + " New message received",
+                icon: "/Content/Images/kia-logo.png"
+            }
+
+            if ("Notification" in window) {
+                if (Notification.permission === "granted") {
+                    var notification = new Notification(title, options);
+                }
+                else if (Notification.permission !== 'denied') {
+                    Notification.requestPermission(function (permission) {
+                        if (permission === "granted") {
+                            var notification = new Notification(title, options);
+                        }
+                    });
+                }
+            }
+        }
+
+    </script>
+}

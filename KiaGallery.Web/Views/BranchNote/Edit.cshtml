@@ -1,0 +1,63 @@
+﻿
+@{
+    ViewBag.Title = "یاداشت";
+}
+
+<div id="form" class="container">
+    <div class="row form-group">
+        <div class="row">
+            <input id="hiddenId" type="hidden" class="form-control" name="id" value="@ViewBag.Id">
+            <div class="form-group">
+                <label for="txtText">متن</label>
+                <textarea id="txtText" class="form-control" name="text">@ViewBag.Text</textarea>
+            </div>
+            <div class="form-group">
+                <button id="btnSave" type="submit" class="btn btn-success">
+                    <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                    ذخیره
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+        $(document).ready(function () {
+            load();
+            $("#btnSave").on("click", function (event) {
+                event.preventDefault();
+                if (checkForm("#form")) {
+                    var entity = getEntity("#form");
+                    loader(true);
+                    $.ajax({
+                        method: "POST",
+                        url: "/branchNote/save",
+                        data: entity,
+                        success: function (response) {
+                            callbackAlert(response.message, function () {
+                                document.location = "/branchNote";
+                            });
+                        }
+                    });
+                }
+            });
+        });
+        function load() {
+            if (id > 0) {
+                loader(true);
+                $.get("/branchNote/load/" + id, function (response) {
+                    if (response.status == 200) {
+                        setEntity(response.data, "#form");
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            }
+        }
+    </script>
+}

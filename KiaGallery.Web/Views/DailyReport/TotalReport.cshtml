@@ -1,0 +1,241 @@
+﻿
+@{
+    ViewBag.Title = "گزارش تجمیعی";
+}
+
+<style type="text/css">
+
+    table *, #modalData *:not(i) {
+        font-family: 'IRANSans(FaNum)';
+    }
+
+     td,  th {
+        height: 30px;
+        padding: 5px;
+        border: solid 1px silver;
+        vertical-align: middle;
+    }
+    .total {
+        background-color: #C8E6C9;
+    }
+
+    .total-last {
+        background-color: rgb(255,192,192);
+    }
+
+</style>
+
+<div class="container">
+    <h3 class="no-margin">گزارش</h3>
+    <br />
+    <div id="searchForm">
+        <label>
+            از تاریخ:
+            <input type="text" class="date form-control" autocomplete="off" name="fromDate" />
+        </label>
+
+        <label>
+            تا تاریخ:
+            <input type="text" class="date form-control" autocomplete="off" name="toDate" />
+        </label>
+
+        <button type="button" class="btn btn-primary" id="btnSearch">جستجو</button>
+    </div>
+    <div>
+    </div>
+
+    <div id="list"></div>
+
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            //$(".date").pDatepicker("destroy");
+            $(".date").pDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true
+            });
+            $(".date").val("");
+            var date = new persianDate();
+            date.formatPersian = false;
+            $(".date").val(date.format("YYYY/MM/DD"));
+
+            $("#btnSearch").on("click", function (event) {
+                event.preventDefault();
+
+                var params = getEntity("#searchForm");
+
+                loader(true);
+                $.get('/dailyReport/makeReport', params, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        var template = $.templates("#template");
+                        var htmlOutput = template.render(response.data, {
+                            separator: toSeparator
+                        });
+                        $("#list").html(htmlOutput);
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+        });
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        {{if list.length > 0}}
+
+        <div style="width: calc(99%); display: inline-block; vertical-align: top;">
+            <table style="width: 100%;">
+                <tr>
+                    <th rowspan="2">
+                        شعبه
+                    </th>
+                    <th class="txt-al-c" colspan="5">
+                        فروش <sub>ریال</sub>
+                    </th>
+                    <th class="txt-al-c" colspan="7">
+                        وزن <sub>گرم</sub>
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        فروش
+                    </th>
+                    <th>
+                        مرجوعی
+                    </th>
+                    <th>
+                        طلای کیا
+                    </th>
+                    <th>
+                        متفرقه
+                    </th>
+                    <th>
+                        مجموع
+                    </th>
+                    <th>
+                        فروش
+                    </th>
+                    <th>
+                        درصد
+                    </th>
+                    <th>
+                        مرجوعی
+                    </th>
+                    <th>
+                        درصد
+                    </th>
+                    <th>
+                        طلای کیا
+                    </th>
+                    <th>
+                        متفرقه
+                    </th>
+                    <th>
+                        مجموع
+                    </th>
+                </tr>
+                {{for list}}
+            <tr>
+                <td>
+                    <b>{{:branchName}}</b> <sub> ({{:date}} روز)</sub>
+                </td>
+                <td>
+                    {{:~separator(saleExit || 0)}}
+                </td>
+                <td>
+                    {{:~separator(returnedEntry || 0)}}
+                </td>
+                <td>
+                    {{:~separator(otherKiaGoldEntry || 0)}}
+                </td>
+                <td>
+                    {{:~separator(otherGoldEntry || 0)}}
+                </td>
+                <td class="total">
+                    <b>{{:~separator(totalPrice)}}</b>
+                </td>
+                <td>
+                    {{:saleWeight || 0}}
+                </td>
+                <td>
+                    {{:saleWeightPercent || 0}}
+                </td>
+                <td>
+                    {{:returnedWeight || 0}}
+                </td>
+                <td>
+                    {{:returnedWeightPercent || 0}}
+                </td>
+                <td>
+                    {{:otherKiaGoldWeight || 0}}
+                </td>
+                <td>
+                    {{:otherGoldWeight || 0}}
+                </td>
+                <td class="total">
+                    <b>{{:totalWeight}}</b>
+                </td>
+            </tr>
+                {{/for}}
+            <tr class="total-last">
+                <td>
+                    <b>
+                        <i class="fa fa-th v-middle"></i>
+                        مجموع
+                    </b>
+                </td>
+                <td>
+                    <b>{{:~separator(totalSaleExit)}}</b>
+                </td>
+                <td>
+                    <b>{{:~separator(totalreturnedEntry)}}</b>
+                </td>
+                <td>
+                    <b>{{:~separator(totalOtherKiaGoldEntry)}}</b>
+                </td>
+                <td>
+                    <b>{{:~separator(totalOtherGoldEntry)}}</b>
+
+                </td>
+                <td>
+                    <b>{{:~separator(sale)}}</b>
+                </td>
+                <td>
+                    <b>{{:totalSaleWeight}}</b>
+                </td>
+                <td>
+                    <b>{{:totalSaleWeightPercent}}</b>
+                </td>
+                <td>
+                    <b>{{:totalReturnedWeight}}</b>
+                </td>
+                <td>
+                    <b>{{:totalReturnedWeightPercent}}</b>
+                </td>
+                <td>
+                    <b>{{:totalOtherKiaGoldWeight}}</b>
+                </td>
+                <td>
+                    <b>{{:totalOtherGoldWeight}}</b>
+                </td>
+                <td>
+                    <b>{{:weight}}</b>
+                </td>
+            </tr>
+            </table>
+        </div>
+
+        {{else}}
+        <h5>هیچ گزارشی یافت نشد</h5>
+        {{/if}}
+    </script>
+
+
+}

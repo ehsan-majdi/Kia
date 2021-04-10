@@ -1,0 +1,141 @@
+﻿
+@{
+    ViewBag.Title = "Broadcast";
+}
+
+<h2>Broadcast</h2>
+<div class="item-row">
+    <textarea id="MessageBody" cols="60" rows="5"></textarea>
+</div>
+<div class="item-row">
+    <input id="File" type="text" readonly />
+    <input id="fileUpload" type="file" class="gone" />
+    <img id="imgDownload" src="~/Content/Images/download.png" class="icon" />
+    <img id="imgBrowser" src="~/Content/Images/folder.png" class="icon" />
+</div>
+<div class="item-row">
+    <input type="button" value="Send" onclick="Submit()" />
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#imgBrowser").click(function () {
+                $("#fileUpload").click();
+            });
+
+            $("#imgDownload").click(function () {
+                var fileName = $('#File').val();
+                if (fileName != "") {
+                    var win = window.open("Files/Upload/" + fileName, '_blank');
+                    win.focus();
+                }
+                else {
+                    alert("File not found")
+                }
+            });
+
+            $('#fileUpload').fileupload({
+                dataType: 'json',
+                url: '/bot/Home/UploadFiles',
+                autoUpload: true,
+                drop: function (e, data) {
+                    loader(true);
+                },
+                done: function (e, data) {
+                    $('#File').val(data.result.name);
+                    loader(false);
+                }
+            }).on('fileuploadprogressall', function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('.progress .progress-bar').css('width', progress + '%');
+            });
+        });
+
+        function Submit() {
+            if (!$("#MessageBody").val()) {
+                alert("Message Body is required.");
+                $("#MessageBody").focus();
+                return;
+            }
+
+            var data = {
+                Message: $("#MessageBody").val(),
+                FileName: $('#File').val()
+            };
+            loader(true);
+
+            $.ajax({
+                type: 'POST',
+                url: "/bot/Home/SaveBroadcast",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(data),
+                dataType: "text",
+                success: function (response) {
+                    if (response.result) {
+                        alert("Send successfully");
+                        $("#MessageBody").val("");
+                        $('#File').val("");
+                    }
+                    else
+                        alert("Send failed");
+
+                    loader(false);
+                }
+            });
+
+        }
+
+
+
+        var _totalPage = 0;
+        var _page = 0;
+        var _count = 10;
+        function getList() {
+            loader(true);
+
+            var _data = {
+                text: $("#txtFilterText").val(),
+                fromDate: $("#txtFromDate").val(),
+                toDate: $("#txtToDate").val(),
+                page: _page,
+                count: _count
+            };
+
+            $.ajax({
+                type: "GET",
+                url: "/bot/Home/GetBroadcast",
+                data: _data,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+
+                    console.log(result);
+                    return;
+
+                    var tmpl = $.templates("#userTmpl");
+                    var html = tmpl.render(result.data);
+                    $("#grid").html(html);
+
+                    $("#pageNo").html((_page + 1) + "/" + result.data.pageCount);
+                    if (_page == 0)
+                        $("#previewsPage").css({ 'visibility': 'hidden' });
+                    else
+                        $("#previewsPage").css({ 'visibility': 'visible' });
+
+                    if (_page + 1 == result.data.pageCount)
+                        $("#nextPage").css({ 'visibility': 'hidden' });
+                    else
+                        $("#nextPage").css({ 'visibility': 'visible' });
+
+                    _totalPage = result.data.pageCount;
+                    loader(false);
+                },
+                error: function (response) {
+                    alert('error');
+                    loader(false);
+                }
+            });
+        }
+    </script>
+}

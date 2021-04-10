@@ -1,0 +1,166 @@
+﻿@{
+    ViewBag.Title = "مدیریت سفارشات";
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <input type="button" class="btn btn-primary btn-batch-print" value="چاپ گروهی" />
+    </div>
+</div>
+<div class="row" style="margin-top: 10px;">
+    <div class="col-xs-6 col-md-3">
+        <input id="txtTerm" type="text" class="form-control" placeholder="عبارت جستجو" />
+    </div>
+</div>
+<div id="content">
+
+</div>
+
+<div id="statusDetailModal" class="modal fade" role="dialog" style="overflow-y: auto;">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="background-color: #222;">
+            <div id="status-content" class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 50,
+            archiveOnly: true
+        }
+
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(document).ready(function () {
+            getList();
+
+            $("#txtTerm").on("keyup", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    if ($("#txtTerm").val()) {
+                        var param = { term: $("#txtTerm").val() }
+                        manipulateParam(param, "page");
+                    }
+                    else
+                        removeParam("term");
+                }
+            });
+            $("#chkArchive").on("change", function () {
+                if ($(this).prop("checked")) {
+                    manipulateParam({ archive: true }, "page");
+                }
+                else {
+                    manipulateParam({ archive: false }, "page");
+                }
+            });
+            $(document).on("click", ".btn-batch-print", function (event) {
+                event.preventDefault();
+
+                var idList = new Array();
+                $(".workshop-item:checked").each(function (index, element) {
+                    idList.push($(this).val());
+                });
+
+                if (idList.length > 0)
+                    document.location = "/order/printWorkshopReplica/" + idList.join("-");
+                else
+                    alert("برای چاپ گزارش حداقل می بایست یک گزینه انتخاب شود.");
+            });
+
+            $(document).on("click", ".btnOrderDetailStatus", function () {
+                var data = $(this).attr("data-title");
+                $("#status-content").html(data);
+                $("#statusDetailModal").modal("show");
+            });
+
+        });
+
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+            // term
+            if (params["term"]) {
+                $("#txtTerm").val(params["term"]);
+            }
+            else {
+                $("#txtTerm").val("");
+            }
+            //archive
+            if (params["archive"]) {
+                $("#chkArchive").prop("checked", true);
+            }
+            else {
+                $("#chkArchive").prop("checked", false);
+            }
+
+            loader(true);
+            $.get("/order/getAllWorkshopHistoryOrder", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th style="width: 40px;"></th>
+                    <th>شماره سفارش مرجع</th>
+                    <th>سریال سفارش</th>
+                    <th class="hidden-xs">تعداد</th>
+                    <th class="hidden-xs">تعداد نیم ست</th>
+                    <th class="hidden-xs">وزن</th>
+                    <th class="hidden-xs hidden-sm">کاربر ثبت کننده</th>
+                    <th class="hidden-xs hidden-sm text-center" style="width: 110px;">تاریخ ثبت</th>
+                    <th class="icon-col text-center">وضعیت</th>
+                    <th class="icon-col text-center">جزئیات</th>
+                    <th class="icon-col text-center">چاپ</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr class="{{:bgColor}}">
+                    <td class="txt-al-c"><input type="checkbox" value="{{:id}}" class="workshop-item no-margin" /></td>
+                    <td>{{:orderNumber}}</td>
+                    <td>{{:orderSerial}}</td>
+                    <td class="hidden-xs">{{:sumCount}}</td>
+                    <td class="hidden-xs">{{:sumCountSet}}</td>
+                    <td class="hidden-xs">{{:sumWeight}} گرم</td>
+                    <td class="hidden-xs hidden-sm">{{:createUser}}</td>
+                    <td class="hidden-xs hidden-sm text-center">{{:createDate}}</td>
+                    <td class="txt-al-c">
+                        <span class="btn btn-primary btn-xs btnOrderDetailStatus" data-title='@Html.Partial("_OrderDetailStatus")'><i class="fa fa-navicon" aria-hidden="true"></i></span>
+                    </td>
+                    <td class="txt-al-c">
+                        <a href="/order/workshopManipulate/{{:id}}#order=DateAscending" class="btn btn-primary btn-xs" data-title="جزئیات"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <a href="/order/printWorkshopReplica/{{:id}}" class="btn btn-primary btn-xs" data-title="چاپ"><i class="fa fa-print" aria-hidden="true"></i></a>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+}

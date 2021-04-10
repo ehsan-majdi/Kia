@@ -1,0 +1,327 @@
+﻿
+@{
+    ViewBag.Title = "Send";
+    var user = BaseController.GetAuthenticatedUser();
+}
+<style>
+    .detail-link {
+        background-color: #ffc107;
+        margin: 5px;
+        cursor: pointer;
+        text-align: center;
+        /*overflow-y: scroll;
+        overflow: auto;*/
+    }
+
+    .detailSingle {
+        background-color: #ffc107;
+        margin: 5px;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    #phoneNumber {
+        width: 250px;
+        margin: 0 auto 5px;
+        font-weight: 700;
+    }
+        
+    .padding {
+        padding: 10px;
+    }
+
+    .curve {
+        border-radius: 5px;
+    }
+
+    #contentDetail {
+        margin-top: 50px;
+    }
+
+    .border {
+        border: 1px solid black;
+    }
+
+    #btnSending {
+        width: 220px;
+        margin-top: 5px;
+    }
+
+        #btnSending:hover {
+            background-color: #ffc107;
+            transition: all ease 0.5s;
+        }
+
+    .chosen-active {
+        background-color: #337ab7;
+        color: white;
+    }
+
+    #eraser {
+        cursor: pointer;
+    }
+
+        #eraser:hover {
+            color: red;
+            transition: ease all 0.5s;
+        }
+
+    .counter {
+        width: 200px;
+        text-align: center;
+        margin-top: 5px;
+    }
+</style>
+
+<div>
+    <form>
+        <div class="">
+            <h3 class="text-center">دسته بندی ها</h3>
+            <br />
+            <div id="content"></div>
+            <span style="height:1px;width:93%;border:2px solid #125;position:absolute"></span>
+        </div>
+        <div id="contentDetail"></div>
+        <br />
+        <br />
+        <div class="form-group text-center">
+            <input id="phoneNumber" class="form-control text-center" placeholder="شماره همراه مورد نظر" data-toggle="tooltip" data-placement="top" title="شماره همراه مشتری را وارد کنید" data-validate="required" />
+        </div>
+        <div>
+            <span id="eraser" class="fa fa-eraser pull-left" data-toggle="tooltip" data-placement="top" title="پاک کن"></span>
+            <textarea id="textarea" class="form-control" rows="5" disabled style="resize:none"></textarea>
+            <div class="form-control counter"><span id="counter">0</span> / <span id="counterPlus">0</span></div>
+        </div>
+    </form>
+</div>
+<button id="btnSending" class="form-control pull-left">ارسال پیام<span class="fa fa-arrow-up send pull-left"></span></button>
+@section Scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 500,
+        };
+
+        $(document).ready(function () {
+            getList();
+            var txt_max = 0;
+            $("#counter").html(txt_max);
+            $(document).on("change", "#textarea", function () {
+                var text_length = $(this).val();
+                text_length = text_length.length;
+                $("#counter").html(text_length % 75)
+                $("#counterPlus").html(Math.floor(text_length / 75));
+            });
+
+            //با کلیک بر روی دکمه پاک کن مقدار تکس اریا خالی میشود.
+            $(document).on("click", "#eraser", function () {
+                $("#textarea").val("").change();
+            });
+            //با هربار کلیک روی گزینه های دسته بندی مقدار تکس اریا خالی میشود.
+            $(document).on("click", ".inputs", function () {
+                $("#textarea").val("").change();
+                $("#textarea").attr("disabled", "disabled");
+            })
+            //تبدیل اعداد لاتین به فارسی برای شماره تلفن
+            //$("#phoneNumber").on("keyup", function () {
+            //    var value = $(this).val();
+            //    value = toFaNum(value);
+            //    $(this).val(value);
+            //});
+            $(document).on("click", ".inputs", function () {
+                var id = $(this).attr("data-id");
+                getListDetail(id);
+            });
+
+            $(document).on("click", ".description", function () {
+                if (!$(this).hasClass("chosen-active")) {
+                    $(this).addClass("chosen-active");
+                    $("#textarea").attr("disabled","disabled");
+                    var context = $(this).text().replace(/\s\s+/g, ' ');
+                    value = $("#textarea").val(context).change();
+                }
+                else {
+                    $(this).removeClass("chosen-active");
+                    var context = $(this).text().replace(/\s\s+/g, ' ');
+                    var value = $("#textarea").val();
+                    value = value.replace("\n" + context + "\n", "").replace(context, "");
+                    $("#textarea").val(value.trim()).change();
+                    $("#textarea").attr("disabled", "disabled");
+                }
+            });
+            $(document).on("click", ".freeMessage", function () {
+                if (!$(this).hasClass("chosen-active")) {
+                    $(this).addClass("chosen-active");
+                    $("#textarea").removeAttr("disabled");
+                    var context = $(this).text().replace(/\s\s+/g, ' ');
+                    value = $("#textarea").val(context).change();
+                }
+                else {
+                    $(this).removeClass("chosen-active");
+                    var context = $(this).text().replace(/\s\s+/g, ' ');
+                    var value = $("#textarea").val();
+                    value = value.replace("\n" + context + "\n", "").replace(context, "");
+                    $("#textarea").val(value.trim()).change();
+                    $("#textarea").attr("disabled", "disabled");
+
+                }
+            });
+            $(document).on("click", ".detailTwin", function () {
+                if (!$(this).hasClass("chosen-active")) {
+                    $(this).addClass("chosen-active");
+                    //var header = $(this).find("b").text().replace(/\s\s+/g, ' ');
+                    var text = $(this).find("p").text().replace(/\s\s+/g, ' ');
+                    $("#textarea").val(($("#textarea").val() + "\n" + text).trim()).change();
+                }
+                else {
+                    $(this).removeClass("chosen-active");
+                    //var header = $(this).find("b").text().replace(/\s\s+/g, ' ');
+                    var text = $(this).find("p").text().replace(/\s\s+/g, ' ');
+                    var value = $("#textarea").val();
+                    value = value.replace( "\n" + text, "").replace(text, "");
+                    $("#textarea").val(value.trim()).change();
+                }
+            });
+            $(document).on("click", ".detailSingle", function () {
+                if (!$(this).hasClass("chosen-active")) {
+                    $(this).addClass("chosen-active");
+                    var concept = $(this).text().replace(/\s\s+/g, ' ');
+                    var value = [];
+                    if ($("#textarea").val())
+                        value = $("#textarea").val().split("-");
+                    for (var i = 0; i < value.length; i++) {
+                        value[i] = value[i].trim();
+                    }
+                    value.push(concept.trim());
+                    $("#textarea").val(value.join(" - ")).change();
+                }
+                else {
+                    $(this).removeClass("chosen-active");
+                    var concept = $(this).text().replace(/\s\s+/g, ' ').trim();
+                    var value = $("#textarea").val();
+                    value = value.split("-");
+                    for (var i = 0; i < value.length; i++) {
+                        value[i] = value[i].trim();
+                    }
+                    value.splice(value.indexOf(concept.trim()), 1);
+                    $("#textarea").val(value.join(" - ")).change();
+                }
+            });
+            $("#btnSending").click(function () {
+                Sms();
+            });
+        });
+
+        function Sms() {
+            var send = { text: $("#textarea").val(), phoneNumber: $("#phoneNumber").val() };
+            if (!send.text) {
+                console.log(send.text);
+                alert("متن پیام انتخاب نشده است.");
+                return;
+            }
+            if (!send.phoneNumber) {
+                alert("شماره همراه وارد نشده است.");
+                return;
+            }
+            if (send.phoneNumber.length > 11) {
+                alert("شماره همراه وارد شده مجاز نیست.")
+                return;
+            }
+            if (send.phoneNumber.length < 11) {
+                alert("شماره همراه وارد شده مجاز نیست.")
+                return;
+            }
+            $.post("/smsCategory/SendMessage", send, function (response) {
+                if (response.status == 200) {
+                    callbackAlert(response.message, function () { });
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+        function getList() {
+
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+            loader(true);
+            $.get("/smsCategory/categoryList", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    callbackAlert(response.message, function () {
+                        document.location = "/home/index";
+                    });
+                }
+
+                loader(false);
+            });
+        }
+        function getListDetail(id) {
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+
+            loader(true);
+            $.get("/smsCategory/categoryListDetail/" + id, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#templateDetail");
+                    var htmlOutput = template.render(data);
+                    $("#contentDetail").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <div class="btn-group text-center" role="group">
+            {{for list}}
+            <button type="button" class="inputs  btn btn-default" data-id="{{:id}}" style="background-color:{{:color}}">{{:title}}</button>
+            {{/for}}
+        </div>
+    </script>
+
+    <script id="templateDetail" type="text/x-jsrender">
+        <div class="row">
+            {{for list}}
+            {{if description}}
+            <div class="desc">
+                <span>متن:</span>
+                <label class="description detail-link padding">{{:description}}</label>
+            </div>
+            {{/if}}
+            {{if freeMessage}}
+            <div class="msg">
+                <span>متن:</span>
+                <label class="freeMessage detail-link padding">{{:freeMessage}}</label>
+            </div>
+            {{/if}}
+            {{for detail}}
+            {{if name }}
+            <div class="col-md-1">
+                <div class="detail-link curve padding detailTwin ">
+                    <b>{{:name}}</b>
+                    <p class="hide">{{:detailName}}</p>
+                </div>
+            </div>
+            {{else}}
+            <div class="col-md-2 curve padding detailSingle">
+                <div>
+                    <b>{{:detailName}}</b>
+                </div>
+            </div>
+            {{/if}}
+            {{/for}}
+            {{/for}}
+        </div>
+    </script>
+}

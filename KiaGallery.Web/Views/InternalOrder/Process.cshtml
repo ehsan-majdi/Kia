@@ -1,0 +1,189 @@
+﻿
+@{
+    ViewBag.Title = "Process";
+}
+<head>
+    <style>
+        tr:nth-child(even) {
+            background: #eee;
+        }
+    </style>
+</head>
+
+<h2>پردازش</h2>
+<div id="content">
+</div>
+@section Scripts {
+    <script type="text/javascript">
+   
+        $(document).ready(function () {
+            getList() 
+        });
+        function getList() {
+            
+            loader(true);
+            $.get("/internalOrder/ProcessingJson", function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                   
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+                //$("[data-toggle=tooltip]").tooltip();
+            });
+        }
+    
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        {{if list.length > 0}}
+        <table class="table">
+            <thead>
+                <tr class="text-center">
+                    <th>تاریخ</th>
+                    <th>تاریخ درج بارکد</th>
+                    <th>نام و نام خانوادگی</th>
+                    <th>تلفن</th>
+                    <th>محصول</th>
+                    
+                    <th>کد پیگیری</th>
+                    <th>بیعانه</th>
+                    <th>بارکد</th>
+                    <th>وضعیت</th>
+                    <th>کاربر</th>
+                    <th>پیش فاکتور</th>
+                    @*<th class="icon-col">ارسال</th>
+                        <th class="icon-col">لغو</th>*@
+                </tr>
+            </thead>
+            <tbody id="TableSearch">
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td>{{:date}}</td>
+                    <td>
+                        {{if  barcode != null }}
+                        {{:barcodeDate}}
+                        {{else}}
+                        --
+                        {{/if}}
+                    </td>
+                    <td>{{:name}}</td>
+                    <td>{{:phoneNumber}}</td>
+                    <td>{{:product}}</td>
+                    <td>
+                        {{if status == "ارسال به دفتر مرکزی" || status == "تحویل از شعبه" || status == "ارسال به شعبه" || status == "تحویل از دفتر مرکزی" }}
+                        ---
+                        {{else}}
+                        {{:trackCode}}
+                        {{/if}}
+                    </td>
+                    <td>{{:deposit}}</td>
+                    <td>{{:barcode}}</td>
+                    <td>
+                        {{if statusCode == 1 && ponyUp != null}}
+                        {{if ponyUp}}
+                        <span class="text-success" style="vertical-align: middle;">تسویه شده-</span>
+                        {{else}}
+                        <span class="text-danger" style="vertical-align: middle;">تسویه نشده-</span>
+                        {{/if}}
+                        <span style="vertical-align: middle;">
+                            {{/if}}
+                            {{:status}}
+                            {{if statusCode == 1 && deliverTypeTitle}}
+                            به
+                            {{/if}}
+                            {{if deliverType == 0}}
+                            <span class=" text-success" style="vertical-align: middle;" title="پیک">پیک</span>
+                            {{/if}}
+                            {{if deliverType == 1}}
+                            <span class=" text-" style="vertical-align: middle;color:#ff6a00" title="شعبه">شعبه</span>
+                            {{:branchName}}
+                            {{/if}}
+                            {{if deliverType == 2}}
+                            <span class="" style="vertical-align: middle;color:#700d0d" title="پرسنل کیا">پرسنل کیا</span>
+                            {{/if}}
+                            {{if deliverType == 3}}
+                            <span class=" text-primary" style="vertical-align: middle;" title="پست">پست</span>
+                            {{/if}}
+                            {{if status == "جواب نداد"}}
+                            @*({{:noAnswerCount}})*@
+                            {{/if}}
+                        </span>
+                    </td>
+                    <td><span class="userColor" style="background-color:{{:userColor}}"></span> {{:user}}</td>
+                    <td>{{:multiOrder}}</td>
+                    @* <td class="txt-al-c">
+            {{if statusCode == 0}}
+            <button class="send btn btn-success btn-xs" data-title="ارسال" data-id="{{:id}}"><span class="mdi-set mdi-send"></span></button>
+            {{/if}}
+        </td>
+        <td>
+            {{if statusCode != 2}}
+            <button class="cancel btn btn-danger btn-xs" data-title="لغو" data-id="{{:id}}"><span class="mdi-set mdi-close"></span></button>
+            {{/if}}
+        </td>*@
+                </tr>
+                {{if description}}
+                <tr>
+                    <td class="description" colspan="17" style="color: blue;">
+                        توضیحات: {{:description}}
+                    </td>
+                </tr>
+                {{/if}}
+
+                {{for log}}
+
+                <tr class="">
+                    <td colspan="15" style="color: rebeccapurple;" class="log">
+                        {{:user}} <sub>{{:createdDate}}</sub>: <span class="html">{{:text}}</span>
+                    </td>
+                </tr>
+
+                {{/for}}
+                {{/for}}
+            </tbody>
+        </table>
+        {{else}}
+        <h4 class="txt-al-c">موردی یافت نشد</h4>
+        {{/if}}
+        <div class="clearfix"></div>
+        @*<ul class="pagination pull-right">
+            {{if page - 1 > 0}}
+            <li><a href="#"><span class="mdi-set mdi-chevron-right mdi-18px bold"></span></a></li>
+            {{/if}}
+            {{if page - 4 > 0 && page + 1 >= pageCount}}
+            <li><a class="page-number" href="#">{{:page - 4}}</a></li>
+            {{/if}}
+            {{if page - 3 > 0 && page + 2 >= pageCount}}
+            <li><a class="page-number" href="#">{{:page - 3}}</a></li>
+            {{/if}}
+            {{if page - 2 > 0}}
+            <li><a class="page-number" href="#">{{:page - 2}}</a></li>
+            {{/if}}
+            {{if page - 1 > 0}}
+            <li><a class="page-number" href="#">{{:page - 1}}</a></li>
+            {{/if}}
+            <li class="active"><a class="page-number" href="#">{{:page}}</a></li>
+            {{if page + 1 <= pageCount}}
+            <li><a class="page-number" href="#">{{:page + 1}}</a></li>
+            {{/if}}
+            {{if page + 2 <= pageCount}}
+            <li><a class="page-number" href="#">{{:page + 2}}</a></li>
+            {{/if}}
+            {{if page + 3 <= pageCount && page - 2 <= 0}}
+            <li><a class="page-number" href="#">{{:page + 3}}</a></li>
+            {{/if}}
+            {{if page + 4 <= pageCount && page - 1 <= 0}}
+            <li><a class="page-number" href="#">{{:page + 4}}</a></li>
+            {{/if}}
+            {{if page + 1 < pageCount}}
+            <li><a href="#"><span class="mdi-set mdi-chevron-left mdi-18px bold"></span></a></li>
+            {{/if}}
+        </ul>*@
+    </script>
+}

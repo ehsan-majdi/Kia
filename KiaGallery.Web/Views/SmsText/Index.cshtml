@@ -1,0 +1,102 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<div>
+    <a href="/smstext/Add" class="button-new btn btn-success">
+        <span class="fa fa-plus"></span>
+        ایجاد پیام جدید
+    </a>
+    <a href="/smstext/concept" class="button-new btn btn-default">
+        مشاهده لیست متون ارسالی
+    </a>
+</div>
+
+<div id="content">
+
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 200,
+
+        }
+
+        $(document).ready(function () {
+            getList();
+
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف دسته بندی اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/smstext/delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+        });
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+
+            loader(true);
+            $.get("/smstext/Search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ترتیب</th>
+                    <th>سوال</th>
+                    <th>دسته بندی</th>
+                    <th class="icon-col text-center">ویرایش</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td>{{:order}}</td>
+                    <td>{{:title}}</td>
+                    <td>{{:categoryTitle}}</td>
+                    <td class="txt-al-c v-middle">
+                        <a href="/smstext/edit/{{:id}}" class="btn btn-info btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c v-middle">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}
+
+
+

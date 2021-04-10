@@ -1,0 +1,2148 @@
+﻿
+@{
+    ViewBag.Title = "ProductChart";
+}
+
+<style type="text/css">
+    .chart {
+        /*min-width: 300px;
+        max-width: 444px;
+        height: 300px;*/
+        margin: 1em auto;
+    }
+
+    .item {
+        padding: 30px 0px 30px 0;
+        margin-top: 10px;
+        border-radius: 5px;
+        color: white !important;
+        text-decoration: none !important;
+        height: 150px;
+    }
+
+        .item a:hover {
+            text-decoration: none;
+        }
+
+        .item p {
+            font-size: 16px;
+            padding: 0 10px;
+        }
+
+        .item .desc {
+            font-size: 12px;
+            color: #EEE;
+        }
+
+    .square {
+        display: block;
+        position: relative;
+        text-align: center;
+        background-color: rgba(0, 0, 0,0.6);
+        top: 38px;
+        max-width: 100%;
+        border-radius: 0px 2px 4px 4px;
+        height: 20px;
+    }
+
+
+    .item-opacity:hover {
+        background-color: rgba(0, 0, 0,0.3) !important
+    }
+
+    .faplusposition {
+        margin-top: 40px;
+        display: inline;
+        position: absolute;
+        right: 50px;
+    }
+
+    .carttitleposition {
+        left: calc(50% - 35px);
+        top: 6px;
+        width: 70px;
+        font-size: 13px;
+        position: absolute;
+    }
+
+    .cartnumberposition {
+        left: calc(50% - 55px);
+        top: 20px;
+        max-width: 100%;
+        font-size: 30px
+    }
+
+    button {
+        margin-right: 16px;
+    }
+</style>
+
+<link href="~/Content/highcharts.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.12.4.js"></script>
+<script src="~/Scripts/highcharts.js"></script>
+<script src="~/Scripts/variable-pie.js"></script>
+<script src="~/Scripts/variwide.js"></script>
+
+<div>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#daily">روزانه</a></li>
+        <li><a data-toggle="tab" href="#weekly">هفتگی</a></li>
+        <li><a data-toggle="tab" href="#mounthly">ماهانه</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="daily" class="tab-pane fade in active">
+            <div>
+                <div class="row">
+                    <br />
+                    <h4 class="col-xs-12"> محصولات</h4>
+                </div>
+                <div class="row">
+                    @if (User.IsInRole("admin"))
+                    {
+                        <div class=" col-md-12 text-center ">
+                            <div class="item block bg-success col-md-2 col-xs-12 " style="background-color: #303F9F;">
+                                <strong class="carttitleposition">تعداد سفارش</strong><br />
+                                <strong class=" cartnumberposition" style=""> @ViewBag.OrderCount</strong>
+                                <br />
+                                <div class="square"><strong>&nbsp; وزن: @ViewBag.OrderWeight</strong>&nbsp;&nbsp;&nbsp;<strong> &nbsp;تعداد کالا :@ViewBag.ProductCount</strong></div>
+                            </div>
+                            <div class="chart text-center col-md-3 col-xs-12 col-sm-12" id="productChart"></div>
+                            <div class="chart text-center col-md-3 col-xs-12 col-sm-12" id="ProductTypeChart"></div>
+                            <div class="chart text-center col-md-3 col-xs-12 col-sm-12" id="BranchTypeProductChart"></div>
+                        </div>
+                    }
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <button class="btn btn-info plusButton"><i class="ChangeIcon fa fa-plus"></i>&nbsp; بیشتر</button>
+                    </div>
+                    <div class="chartSlide col-md-12 text-center" Style="display:none">
+                        <div class="chart col-md-6 col-xs-12 col-sm-12" id="BranchProductChart"></div>
+                        <div class="chart col-md-6 col-xs-12 col-sm-12" id="BranchTypeOrderCount"></div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <br />
+                    <h4 class="col-xs-12">پست</h4>
+                </div>
+                <div class="row">
+                    @if (User.IsInRole("admin"))
+                    {
+                        <div class="col-md-12  text-center ">
+                            <div class="item block bg-success col-md-2 col-xs-12" style="background-color: orange;">
+                                <strong class="carttitleposition">ارسال شده</strong><br />
+                                <strong class=" cartnumberposition"> @ViewBag.PostCount</strong>
+                                <br />
+                                <div class=" square "><strong style="visibility:hidden">&nbsp; تعداد : @ViewBag.PostCount</strong>&nbsp;&nbsp;&nbsp;<strong style="visibility:hidden"> &nbsp;تعداد : @ViewBag.PostCount</strong></div>
+                            </div>
+                            <div class=" chart col-md-6" id="postChart"></div>
+                        </div>
+                    }
+                </div>
+                <hr />
+                <div class="row">
+                    <br />
+                    <h4 class="col-xs-12"> بن خرید</h4>
+                </div>
+                <div class="row">
+                    @if (User.IsInRole("admin"))
+                    {
+                        <div class="col-md-12 text-center ">
+                            <div class="item block bg-success col-md-2 col-xs-12" style="background-color: #5bc0de;">
+                                <strong class="carttitleposition">فروخته شده</strong><br />
+                                <strong class="cartnumberposition"> @ViewBag.SoldCheckCount</strong>
+                                <br />
+                                <div class="square"><strong>&nbsp; باطل  : @ViewBag.UsedCheckCount</strong>&nbsp;&nbsp;&nbsp;<strong> &nbsp;سوخته : @ViewBag.burnedCheckCount</strong></div>
+                            </div>
+                            <div class=" chart col-md-4" id="GiftChart"></div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div id="weekly" class="tab-pane fade">
+            <div>
+                <div class="row">
+                    <br />
+                    <h4 class="col-xs-12"> محصولات</h4>
+                </div>
+                <div class="row">
+                    @if (User.IsInRole("admin"))
+                    {
+                        <div class=" col-md-12 text-center ">
+                            <div class="item block bg-success col-md-2 col-xs-12 " style="background-color: #303F9F;">
+                                <strong class="carttitleposition">تعداد سفارش</strong><br />
+                                <strong class="cartnumberposition" style=""> @ViewBag.WeeklyOrderCount</strong>
+                                <br />
+                                <div class="square"><strong>&nbsp; وزن: @ViewBag.WeeklyOrderWeight</strong>&nbsp;&nbsp;&nbsp;<strong> &nbsp;تعداد کالا :@ViewBag.WeeklyProductCount</strong></div>
+                            </div>
+                            <div class="chart text-center col-md-3 col-xs-12 col-sm-12" id="WeekproductChart"></div>
+                            <div class="chart text-center col-md-3 col-xs-12 col-sm-12" id="WeekProductTypeChart"></div>
+                            <div class="chart text-center col-md-3 col-xs-12 col-sm-12" id="WeekBranchTypeProductChart"></div>
+                        </div>
+                    }
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <button class="btn btn-info plusButton"><i class="ChangeIcon fa fa-plus"></i>&nbsp; بیشتر</button>
+                    </div>
+                    <div class="chartSlide col-md-12 text-center" Style="display:none">
+                        <div class="chart col-md-6 col-xs-12 col-sm-12" id="WeekBranchProductChart"></div>
+                        <div class="chart col-md-6 col-xs-12 col-sm-12" id="WeekBranchTypeOrderCount"></div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <br />
+                    <h4 class="col-xs-12">پست</h4>
+                </div>
+                <div class="row">
+                    @if (User.IsInRole("admin"))
+                    {
+                        <div class="col-md-12  text-center ">
+                            <div class="item block bg-success col-md-2 col-xs-12" style="background-color: orange;">
+                                <strong class="carttitleposition">ارسال شده</strong><br />
+                                <strong class=" cartnumberposition"> @ViewBag.WeeklyPostCount</strong>
+                                <br />
+                                <div class=" square "><strong style="visibility:hidden">&nbsp; تعداد : @ViewBag.WeeklyPostCount</strong>&nbsp;&nbsp;&nbsp;<strong style="visibility:hidden"> &nbsp;تعداد : @ViewBag.WeeklyPostCount</strong></div>
+                            </div>
+                            <div class=" chart col-md-6" id="WeekPostChart"></div>
+                        </div>
+                    }
+                </div>
+                <hr />
+                <div class="row">
+                    <br />
+                    <h4 class="col-xs-12"> بن خرید</h4>
+                </div>
+                <div class="row">
+                    @if (User.IsInRole("admin"))
+                    {
+                        <div class="col-md-12 text-center ">
+                            <div class="item block bg-success col-md-2 col-xs-12" style="background-color: #5bc0de;">
+                                <strong class="carttitleposition">فروخته شده</strong><br />
+                                <strong class="cartnumberposition"> @ViewBag.WeeklySoldCheckCount</strong>
+                                <br />
+                                <div class="square"><strong>&nbsp; باطل  : @ViewBag.WeeklyUsedCheckCount</strong>&nbsp;&nbsp;&nbsp;<strong> &nbsp;سوخته : @ViewBag.WeeklyburnedCheckCount</strong></div>
+                            </div>
+                            <div class=" chart col-md-4" id="WeekGiftChart"></div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div id="mounthly" class="tab-pane fade">
+            <div>
+                <div class="row">
+                    <br />
+                    <h4 class="col-xs-12"> محصولات</h4>
+                </div>
+                <div class="row">
+                    @if (User.IsInRole("admin"))
+                    {
+                        <div class=" col-md-12 text-center ">
+                            <div class="item block bg-success col-md-2 col-xs-12 " style="background-color: #303F9F;">
+                                <strong class="carttitleposition">تعداد سفارش</strong><br />
+                                <strong class=" cartnumberposition" style=""> @ViewBag.MounthlyOrderCount</strong>
+                                <br />
+                                <div class="square"><strong>&nbsp; وزن: @ViewBag.MounthlyOrderWeight</strong>&nbsp;&nbsp;&nbsp;<strong> &nbsp;تعداد کالا :@ViewBag.MounthlyProductCount</strong></div>
+                            </div>
+                            <div class="chart text-center col-md-3 col-xs-12 col-sm-12" id="mounthproductChart"></div>
+                            <div class="chart text-center col-md-3 col-xs-12 col-sm-12" id="mounthProductTypeChart"></div>
+                            <div class="chart text-center col-md-3 col-xs-12 col-sm-12" id="mounthBranchTypeProductChart"></div>
+                        </div>
+                    }
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <button class="btn btn-info plusButton"><i class="ChangeIcon fa fa-plus"></i>&nbsp; بیشتر</button>
+                    </div>
+                    <div class="chartSlide col-md-12 text-center" Style="display:none">
+                        <div class="chart col-md-6 col-xs-12 col-sm-12" id="mounthBranchProductChart"></div>
+                        <div class="chart col-md-6 col-xs-12 col-sm-12" id="mounthBranchTypeOrderCount"></div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <br />
+                    <h4 class="col-xs-12">پست</h4>
+                </div>
+                <div class="row">
+                    @if (User.IsInRole("admin"))
+                    {
+                        <div class="col-md-12  text-center ">
+                            <div class="item block bg-success col-md-2 col-xs-12" style="background-color: orange;">
+                                <strong class="carttitleposition">ارسال شده</strong><br />
+                                <strong class=" cartnumberposition"> @ViewBag.MounthlyPostCount</strong>
+                                <br />
+                                <div class=" square "><strong style="visibility:hidden">&nbsp; تعداد : @ViewBag.MounthlyPostCount</strong>&nbsp;&nbsp;&nbsp;<strong style="visibility:hidden"> &nbsp;تعداد : @ViewBag.MounthlyPostCount</strong></div>
+                            </div>
+                            <div class=" chart col-md-6" id="mounthPostChart"></div>
+                        </div>
+                    }
+                </div>
+                <hr />
+                <div class="row">
+                    <br />
+                    <h4 class="col-xs-12"> بن خرید</h4>
+                </div>
+                <div class="row">
+                    @if (User.IsInRole("admin"))
+                    {
+                        <div class="col-md-12 text-center ">
+                            <div class="item block bg-success col-md-2 col-xs-12" style="background-color: #5bc0de;">
+                                <strong class="carttitleposition">فروخته شده</strong><br />
+                                <strong class="cartnumberposition"> @ViewBag.MounthlySoldCheckCount</strong>
+                                <br />
+                                <div class="square"><strong>&nbsp; باطل  : @ViewBag.MounthlyUsedCheckCount</strong>&nbsp;&nbsp;&nbsp;<strong> &nbsp;سوخته : @ViewBag.MounthlyburnedCheckCount</strong></div>
+                            </div>
+                            <div class=" chart col-md-4" id="mounthGiftChart"></div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    setInterval(function () { $(".highcharts-credits").remove() }, 1000)
+    
+    $(document).ready(function () {
+
+        $(".plusButton").click(function () {
+            $(".chartSlide").stop().slideToggle(700);
+            $(".ChangeIcon").toggleClass("fa fa-plus fa fa-minus");
+        });
+        
+        $.ajax({
+            type: "GET",
+            url: "/home/PostChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('postChart', {
+                        
+                        chart: {
+                            type: 'variwide'
+                        },
+                        plotOptions: {
+                            series: {
+                                pointPadding: 0.6,
+                                groupPadding: 0.2,
+                                borderWidth: 3,
+                                shadow: false
+                            }
+                        },
+                        title: {
+                            text: 'تعداد پست های فرستاده شده به هر شهر'
+                        },
+                        
+                        subtitle: {
+                            text: ''
+                        },
+
+                        xAxis: {
+                            type: 'category',
+                            title: {
+                                text: ''
+                            }
+                        },
+
+                        legend: {
+                            enabled: false
+                        },
+
+                        series: [{
+                            name: 'Labor Costs',
+                            data: response.data,
+                            dataLabels: {
+                                enabled: true,
+                                format: '%{point.y:.0f}'
+                            },
+                            tooltip: {
+                                pointFormat: '%: <b>{point.y}</b><br>' +
+                                'تعداد: <b>{point.com}</b><br>'
+                            },
+                            colorByPoint: true
+                        }]
+
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+        ///چارت محصولات برای گرم و درصد کارگاه
+        $.ajax({
+            type: "GET",
+            url: "/home/productchartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('productChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'مقدار گرم سفارش داده شده به هر کارگاه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'گرم: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        ///چارت محصولات برای تعداد و درصد نوع کالا
+        $.ajax({
+            type: "GET",
+            url: "/home/producttypechartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('ProductTypeChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'کل تعداد و نوع کالا'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'تعداد: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        ///چارت محصولات برای تعداد کالا سفارش هر شعبه
+        $.ajax({
+            type: "GET",
+            url: "/home/BranchTypeOrderCountChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('BranchTypeOrderCount', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'تعداد کالای سفارش هر شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'تعداد کالا: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        /// چارت محصولات برای درصد و گرم بر اساس نام شعبه
+        $.ajax({
+            type: "GET",
+            url: "/home/BranchProductChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('BranchProductChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'مقدار گرم سفارش هر شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'گرم: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        /// چارت محصولات برای درصد و گرم بر اساس نوع شعبه یا نمایندگی
+        $.ajax({
+            type: "GET",
+            url: "/home/BranchTypeProductChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('BranchTypeProductChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'مقدار گرم سفارش نمایندگی و شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'گرم: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        ///چارت برای تعداد پست های فرستاده شده به هر شهر های فرستاده شده به هر شهر
+        $.ajax({
+            type: "GET",
+            url: "/home/weekpostchartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('WeekPostChart', {
+                        chart: {
+                            type: 'variwide'
+                        },
+                        plotOptions: {
+                            series: {
+                                pointPadding: 0.6,
+                                groupPadding: 0.2,
+                                borderWidth: 3,
+                                shadow: false
+                            }
+                        },
+                        title: {
+                            text: 'تعداد پست های فرستاده شده به هر شهر'
+                        },
+
+                        subtitle: {
+                            text: ''
+                        },
+
+                        xAxis: {
+                            type: 'category',
+                            title: {
+                                text: ''
+                            }
+                        },
+
+                        legend: {
+                            enabled: false
+                        },
+
+                        series: [{
+                            name: 'Labor Costs',
+                            data: response.data,
+                            dataLabels: {
+                                enabled: true,
+                                format: '%{point.y:.0f}'
+                            },
+                            tooltip: {
+                                pointFormat: '%: <b>{point.y}</b><br>' +
+                                'تعداد: <b>{point.com}</b><br>'
+                            },
+                            colorByPoint: true
+                        }]
+
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        /// چارت برای بن های خرید
+        $.ajax({
+            type: "GET",
+            url: "/home/giftchartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('GiftChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: ' تعداد بن های باطل شده در هر شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'تعداد: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+
+        ///گزارشات هفتگی
+        $.ajax({
+            type: "GET",
+            url: "/home/weekproductchartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('WeekproductChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'مقدار گرم سفارش داده شده به هر کارگاه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'گرم: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "/home/weekproducttypechartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('WeekProductTypeChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'کل تعداد و نوع کالا'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'تعداد: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "/home/WeekBranchTypeOrderCountChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('WeekBranchTypeOrderCount', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'تعداد کالای سفارش هر شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'تعداد کالا: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "/home/WeekBranchProductChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('WeekBranchProductChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'مقدار گرم سفارش هر شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'گرم: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "/home/WeekBranchTypeProductChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('WeekBranchTypeProductChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'مقدار گرم سفارش نمایندگی و شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'گرم: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+
+
+        $.ajax({
+            type: "GET",
+            url: "/home/BranchTypeProductChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('BranchTypeProductChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'مقدار گرم سفارش نمایندگی و شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'گرم: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "/home/weekgiftchartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('WeekGiftChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: ' تعداد بن های باطل شده در هر شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'تعداد: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        /// گزارشات ماهیانه
+        $.ajax({
+            type: "GET",
+            url: "/home/mounthproductchartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('mounthproductChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'مقدار گرم سفارش داده شده به هر کارگاه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'گرم: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "/home/mounthproducttypechartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('mounthProductTypeChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'کل تعداد و نوع کالا'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'تعداد: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+
+        $.ajax({
+            type: "GET",
+            url: "/home/mounthBranchTypeOrderCountChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('mounthBranchTypeOrderCount', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'تعداد کالای سفارش هر شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'تعداد کالا: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "/home/mounthBranchProductChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('mounthBranchProductChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'مقدار گرم سفارش هر شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'گرم: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "/home/mounthBranchTypeProductChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('mounthBranchTypeProductChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'مقدار گرم سفارش نمایندگی و شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'گرم: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+
+        $.ajax({
+            type: "GET",
+            url: "/home/mounthpostchartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('mounthPostChart', {
+
+                        chart: {
+                            type: 'variwide'
+                        },
+                        plotOptions: {
+                            series: {
+                                pointPadding: 0.6,
+                                groupPadding: 0.2,
+                                borderWidth: 3,
+                                shadow: false
+                            }
+                        },
+                        title: {
+                            text: 'تعداد پست های فرستاده شده به هر شهر'
+                        },
+
+                        subtitle: {
+                            text: ''
+                        },
+
+                        xAxis: {
+                            type: 'category',
+                            title: {
+                                text: ''
+                            }
+                        },
+
+                        legend: {
+                            enabled: false
+                        },
+
+                        series: [{
+                            name: 'Labor Costs',
+                            data: response.data,
+                            dataLabels: {
+                                enabled: true,
+                                format: '%{point.y:.0f}'
+                            },
+                            tooltip: {
+                                pointFormat: '%: <b>{point.y}</b><br>' +
+                                'تعداد: <b>{point.com}</b><br>'
+                            },
+                            colorByPoint: true
+                        }]
+
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "/home/mounthgiftchartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('mounthGiftChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: ' تعداد بن های باطل شده در هر شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'تعداد: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+    });
+
+    setInterval(function liveChart() {
+
+
+        $.ajax({
+            type: "GET",
+            url: "/home/productchartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('productChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'مقدار گرم سفارش داده شده به هر کارگاه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'گرم: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "/home/producttypechartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('ProductTypeChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'کل تعداد و نوع کالا'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'تعداد: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "/home/BranchTypeOrderCountChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('BranchTypeOrderCount', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'تعداد کالای سفارش هر شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'تعداد کالا: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "/home/BranchProductChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('BranchProductChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'مقدار گرم سفارش هر شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'گرم: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "/home/BranchTypeProductChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('BranchTypeProductChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'مقدار گرم سفارش نمایندگی و شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'گرم: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "/home/postchartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('postChart', {
+
+                        chart: {
+                            type: 'variwide'
+                        },
+                        plotOptions: {
+                            series: {
+                                pointPadding: 0.6,
+                                groupPadding: 0.2,
+                                borderWidth: 3,
+                                shadow: false
+                            }
+                        },
+                        title: {
+                            text: 'تعداد پست های فرستاده شده به هر شهر'
+                        },
+
+                        subtitle: {
+                            text: ''
+                        },
+
+                        xAxis: {
+                            type: 'category',
+                            title: {
+                                text: ''
+                            }
+                        },
+
+                        legend: {
+                            enabled: false
+                        },
+
+                        series: [{
+                            name: 'Labor Costs',
+                            data: response.data,
+                            dataLabels: {
+                                enabled: true,
+                                format: '%{point.y:.0f}'
+                            },
+                            tooltip: {
+                                pointFormat: '%: <b>{point.y}</b><br>' +
+                                'تعداد: <b>{point.com}</b><br>'
+                            },
+                            colorByPoint: true
+                        }]
+
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "/home/giftchartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('GiftChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: ' تعداد بن های باطل شده در هر شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'تعداد: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+
+        ///ایجکس برای چارت گزارشات هفتگی
+        $.ajax({
+            type: "GET",
+            url: "/home/weekproductchartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('WeekproductChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'مقدار گرم سفارش داده شده به هر کارگاه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'گرم: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "/home/weekproducttypechartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('WeekProductTypeChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'کل تعداد و نوع کالا'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'تعداد: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "/home/WeekBranchTypeOrderCountChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('weekBranchTypeOrderCount', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'تعداد کالای سفارش هر شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'تعداد کالا: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "/home/WeekBranchProductChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('weekBranchProductChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'مقدار گرم سفارش هر شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'گرم: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "/home/WeekBranchTypeProductChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('weekBranchTypeProductChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'مقدار گرم سفارش نمایندگی و شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'گرم: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+
+
+        $.ajax({
+            type: "GET",
+            url: "/home/weekpostchartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('WeekPostChart', {
+
+                        chart: {
+                            type: 'variwide'
+                        },
+                        plotOptions: {
+                            series: {
+                                pointPadding: 0.6,
+                                groupPadding: 0.2,
+                                borderWidth: 3,
+                                shadow: false
+                            }
+                        },
+                        title: {
+                            text: 'تعداد پست های فرستاده شده به هر شهر'
+                        },
+
+                        subtitle: {
+                            text: ''
+                        },
+
+                        xAxis: {
+                            type: 'category',
+                            title: {
+                                text: ''
+                            }
+                        },
+
+                        legend: {
+                            enabled: false
+                        },
+
+                        series: [{
+                            name: 'Labor Costs',
+                            data: response.data,
+                            dataLabels: {
+                                enabled: true,
+                                format: '%{point.y:.0f}'
+                            },
+                            tooltip: {
+                                pointFormat: '%: <b>{point.y}</b><br>' +
+                                'تعداد: <b>{point.com}</b><br>'
+                            },
+                            colorByPoint: true
+                        }]
+
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "/home/weekgiftchartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('WeekGiftChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: ' تعداد بن های باطل شده در هر شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'تعداد: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        ///ایجکس برای چارت گزارشات ماهیانه
+        $.ajax({
+            type: "GET",
+            url: "/home/mounthproductchartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('mounthproductChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'مقدار گرم سفارش داده شده به هر کارگاه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'گرم: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+
+        $.ajax({
+            type: "GET",
+            url: "/home/mounthproducttypechartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('mounthProductTypeChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'کل تعداد و نوع کالا'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'تعداد: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+
+        $.ajax({
+            type: "GET",
+            url: "/home/mounthBranchTypeOrderCountChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('mounthBranchTypeOrderCount', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'تعداد کالای سفارش هر شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'تعداد کالا: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "/home/mounthBranchProductChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('mounthBranchProductChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'مقدار گرم سفارش هر شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'گرم: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "/home/mounthBranchTypeProductChartJson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('mounthBranchTypeProductChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: 'مقدار گرم سفارش نمایندگی و شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'گرم: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+
+        $.ajax({
+            type: "GET",
+            url: "/home/mounthpostchartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('mounthPostChart', {
+
+                        chart: {
+                            type: 'variwide'
+                        },
+                        plotOptions: {
+                            series: {
+                                pointPadding: 0.6,
+                                groupPadding: 0.2,
+                                borderWidth: 3,
+                                shadow: false
+                            }
+                        },
+                        title: {
+                            text: 'تعداد پست های فرستاده شده به هر شهر'
+                        },
+
+                        subtitle: {
+                            text: ''
+                        },
+
+                        xAxis: {
+                            type: 'category',
+                            title: {
+                                text: ''
+                            }
+                        },
+
+                        legend: {
+                            enabled: false
+                        },
+
+                        series: [{
+                            name: 'Labor Costs',
+                            data: response.data,
+                            dataLabels: {
+                                enabled: true,
+                                format: '%{point.y:.0f}'
+                            },
+                            tooltip: {
+                                pointFormat: '%: <b>{point.y}</b><br>' +
+                                'تعداد: <b>{point.com}</b><br>'
+                            },
+                            colorByPoint: true
+                        }]
+
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "/home/mounthgiftchartjson/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.status == 200) {
+                    Highcharts.chart('mounthGiftChart', {
+                        chart: {
+                            type: 'variablepie'
+                        },
+                        plotOptions: {
+                            variablepie: {
+                                size: 150
+                            }
+                        },
+                        title: {
+                            text: ' تعداد بن های باطل شده در هر شعبه'
+                        },
+                        tooltip: {
+                            headerFormat: '',
+                            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                            '%<b>{point.y}</b><br/>' + 'تعداد: <b>{point.com}</b><br/>'
+                        },
+                        series: [{
+                            minPointSize: 10,
+                            innerSize: '20%',
+                            zMin: 0,
+                            name: 'report',
+                            data: response.data
+                        }]
+                    });
+                }
+                else {
+                    callbackAlert(response.message)
+                }
+            }
+        });
+
+    }, 300000)
+    
+</script>

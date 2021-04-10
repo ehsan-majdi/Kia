@@ -1,0 +1,723 @@
+﻿/*  dialog css */
+#dialog-loader {
+    background: none;
+    border: none;
+    text-align: center;
+    opacity: 0.8;
+}
+a {
+    outline: none !important;
+}
+
+#dialog-loader-content {
+    background-color: black;
+    border-radius: 5px;
+    display: inline-block;
+    margin-top: 100px;
+    padding: 10px 10px 20px;
+}
+
+#dialog-loader img {
+    margin: 5px 5px -5px;
+}
+
+#alert-ok-button {
+    padding: 8px 27px !important;
+}
+
+#confirm-ok-button, #confirm-cancel-button {
+    width: 80px;
+    margin: 0px;
+}
+
+* {
+    font-family: IRANSans;
+}
+
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+    background-color: white;
+}
+
+.fa-num {
+    font-family: 'IRANSans(FaNum)';
+}
+
+.element-error {
+    border: solid 1px red !important;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0) !important;
+}
+
+.toggle.ios, .toggle-on.ios, .toggle-off.ios {
+    border-radius: 20px;
+}
+
+    .toggle.ios .toggle-handle {
+        border-radius: 20px;
+    }
+
+.btn-icon {
+    padding: 3px 8px;
+    font-size: 18px;
+}
+
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#btnSave {
+    padding: 7px 30px;
+}
+
+.login-container {
+    position: relative;
+    width: 300px;
+    margin: 80px auto;
+    padding: 20px 30px 40px;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #ccc;
+}
+
+    .login-container::before, .login-container::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 3.5px;
+        left: 0;
+        background: #fff;
+        z-index: -1;
+        -webkit-transform: rotateZ(4deg);
+        -moz-transform: rotateZ(4deg);
+        -ms-transform: rotateZ(4deg);
+        border: 1px solid #ccc;
+    }
+
+    .login-container::after {
+        top: 5px;
+        z-index: -2;
+        -webkit-transform: rotateZ(-2deg);
+        -moz-transform: rotateZ(-2deg);
+        -ms-transform: rotateZ(-2deg);
+    }
+
+    .login-container .avatar {
+        width: 100px;
+        height: 100px;
+        margin: 10px auto 30px;
+        border-radius: 100%;
+        border: 2px solid #aaa;
+        background: url('/content/image/kia-gallery-logo-square.png');
+        background-size: cover;
+    }
+
+    .login-container .form-box button.login {
+        margin-top: 15px;
+        padding: 10px 20px;
+    }
+
+    .login-container .form-box input {
+        width: 100%;
+        padding: 10px;
+        text-align: center;
+        height: 40px;
+        border: 1px solid #ccc;
+        background: #fafafa;
+        transition: 0.2s ease-in-out;
+    }
+
+        .login-container .form-box input:focus {
+            outline: 0;
+            background: #eee;
+        }
+
+        .login-container .form-box input[type="text"] {
+            border-radius: 5px 5px 0 0;
+            text-transform: lowercase;
+        }
+
+        .login-container .form-box input[type="password"] {
+            border-radius: 0 0 5px 5px;
+            border-top: 0;
+        }
+
+/* The side navigation menu */
+.sidenav {
+    height: 100%; /* 100% Full-height */
+    width: 0; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    top: 0;
+    right: 0;
+    background-color: #1b1e24; /* Black*/
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 60px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+    padding-top: 50px;
+    z-index: 1000;
+}
+
+    .sidenav .submenu {
+        background-color: #22262e; /* Black*/
+    }
+
+    /* The navigation menu links */
+    .sidenav a {
+        padding: 5px;
+        text-decoration: none;
+        color: #EEE;
+        display: block;
+        transition: 0.3s;
+        padding: 9px 15px !important;
+    }
+
+    .sidenav .nav > li > a:hover, .sidenav .nav > li > a:focus {
+        background-color: rgba(0, 0, 0, 0);
+    }
+
+    /* When you mouse over the navigation links, change their color */
+    .sidenav a:hover, .offcanvas a:focus {
+        color: #f1f1f1;
+    }
+
+    /* Position and style the close button (top right corner) */
+    .sidenav .closebtn {
+        position: absolute;
+        top: 0;
+        left: 7px;
+        font-size: 25px;
+        margin-right: 50px;
+    }
+
+
+    .sidenav .nav-sub-list {
+        border-bottom: solid 1px gray;
+    }
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+    transition: margin-right .5s;
+    padding: 20px;
+    background-color: white;
+    margin-top: 20px;
+    margin-right: 60px;
+}
+
+#btnShowNav {
+    float: right;
+    color: white;
+    font-size: 20px;
+    padding: 13px 5px 13px 0;
+    cursor: pointer;
+}
+
+.sidenav .user {
+    height: 90px;
+    overflow: hidden;
+    width: 100%;
+}
+
+    .sidenav .user img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: solid 2px silver;
+        margin: 15px 10px;
+    }
+
+    .sidenav .user h5 {
+        padding-top: 10px;
+        vertical-align: top;
+        line-height: 25px;
+    }
+
+.sidenav hr {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+/* Small Devices, Tablets */
+@media only screen and (min-width : 768px) {
+    .header-nav-bar {
+        float: left;
+    }
+}
+
+@media only screen and (max-width : 768px) {
+    #main {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+.v-nav-item {
+    padding-right: 5px;
+    padding-left: 10px;
+}
+
+.list-group-item-text {
+    margin-top: 12px;
+}
+
+.table-data {
+    margin-top: 15px;
+}
+
+.well {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+th.icon-col {
+    width: 50px;
+}
+
+.pagination > li > a, .pagination > li > span {
+    border-radius: 50% !important;
+    margin: 0 5px;
+}
+
+.file-icon {
+    cursor: pointer;
+    position: absolute;
+    color: #337ab7;
+}
+
+.file {
+    padding-left: 70px;
+}
+
+select.form-control {
+    padding: 4px 12px !important;
+}
+
+.leather-list, .stone-list {
+    margin-bottom: 10px;
+}
+
+.leather-title, .stone-title {
+    text-align: center;
+    display: block;
+    font-size: 12px;
+    margin: 5px 0;
+}
+
+.leather-item, .stone-item {
+    border: solid 2px silver;
+    padding: 0;
+    margin: 0 4px 0 4px;
+    background-color: #FFF;
+    margin-top: 10px;
+}
+
+    .leather-item.checked, .stone-item.checked {
+        border-color: #3f51b5;
+    }
+
+    .leather-item .leather-checkbox, .stone-item .stone-checkbox {
+        display: none;
+    }
+
+    .leather-item.checked .leather-checkbox, .stone-item.checked .stone-checkbox {
+        display: inline-block;
+    }
+
+.leather-checkbox, .stone-checkbox {
+    position: absolute;
+    top: 4px;
+    right: 3px;
+    color: #3f51b5;
+    font-size: 18px;
+}
+
+
+
+.product-item {
+    padding: 10px 0 10px 10px;
+}
+
+    .product-item .title {
+        font-weight: bold;
+        padding-bottom: 5px;
+    }
+
+.small-font {
+    font-size: 12px;
+}
+
+.product-item .small-font {
+    padding-bottom: 5px;
+}
+
+.ribbon-image {
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    height: 90px;
+}
+.photography-icon {
+    top: 2px;
+    right:2px;
+    position: absolute;
+    height: 90px;
+}
+
+/*
+    Ribbon
+*/
+
+.ribbon {
+    position: absolute;
+    left: -5px;
+    top: -5px;
+    z-index: 1;
+    overflow: hidden;
+    width: 75px;
+    height: 75px;
+    text-align: right;
+}
+
+    .ribbon span {
+        font-size: 10px;
+        font-weight: bold;
+        color: #FFF;
+        text-transform: uppercase;
+        text-align: center;
+        line-height: 20px;
+        transform: rotate(-45deg);
+        -webkit-transform: rotate(-45deg);
+        width: 100px;
+        display: block;
+        background: #79A70A;
+        background: linear-gradient(#F70505 0%, #8F0808 100%);
+        box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+        position: absolute;
+        top: 19px;
+        left: -21px;
+    }
+
+        .ribbon span::before {
+            content: "";
+            position: absolute;
+            left: 0px;
+            top: 100%;
+            z-index: -1;
+            border-left: 3px solid #8F0808;
+            border-right: 3px solid transparent;
+            border-bottom: 3px solid transparent;
+            border-top: 3px solid #8F0808;
+        }
+
+        .ribbon span::after {
+            content: "";
+            position: absolute;
+            right: 0px;
+            top: 100%;
+            z-index: -1;
+            border-left: 3px solid transparent;
+            border-right: 3px solid #8F0808;
+            border-bottom: 3px solid transparent;
+            border-top: 3px solid #8F0808;
+        }
+
+
+#product-content span, #product-content i {
+    color: #555;
+}
+
+.customize-item {
+    padding-left: 0;
+    padding-right: 10px;
+    margin-top: 10px;
+}
+
+.modal-full {
+    width: 98%;
+}
+
+@media only screen and (min-width : 1300px) {
+    .modal-full {
+        width: 90%;
+    }
+}
+
+.label-notice {
+    line-height: 21px;
+    white-space: pre-wrap;
+    padding: 10px 10px;
+    background-color: skyblue;
+    color: #333;
+    border-radius: 4px;
+}
+
+.cart-workshop, .cart-details, .cart-details-customer {
+    background-color: green;
+    border-radius: 4px;
+    color: white;
+    font-size: 10px;
+    padding: 2px 5px;
+    display: none;
+    position: absolute;
+    left: 35px;
+    top: 22px;
+}
+
+input.site-checkbox[type=checkbox] {
+    display: none;
+}
+
+    input.site-checkbox[type=checkbox] + label {
+        color: #999;
+        height: 16px;
+        width: 16px;
+        display: inline-block;
+        padding: 0 0 0 0px;
+    }
+
+    input.site-checkbox[type=checkbox]:checked + label {
+        color: #0080FF;
+        height: 16px;
+        width: 16px;
+        display: inline-block;
+        padding: 0 0 0 0px;
+    }
+
+.warning-site {
+    color: white;
+    background-color: #F0AD4E;
+}
+
+.primary-site {
+    color: white;
+    background-color: #337AB7;
+}
+
+.danger-site {
+    color: white;
+    background-color: #D9534F;
+}
+
+.success-site {
+    color: white;
+    background-color: #5CB85C;
+}
+
+
+.bg-vitrin {
+    background-color: #FDFAB8;
+}
+
+.bg-customer {
+    background-color: #DDEFF6;
+}
+
+.bg-new-order {
+    background-color: #e0f2f1;
+}
+
+.bg-open-order {
+    background-color: #ffe082;
+}
+
+.bg-open-shortage-order {
+    background-color: #ef9a9a;
+}
+
+.bg-done-order {
+    background-color: #c5e1a5;
+}
+
+
+.toman {
+    position: absolute;
+    top: 32px;
+    left: 10px;
+    color: #555;
+}
+
+.help-dropdown li {
+    padding: 7px;
+}
+
+#sidebar {
+    top: 0px;
+    right: 0px;
+    width: 60px;
+    height: 100vh;
+    margin-top: 50px;
+    background-color: #1B1E24;
+}
+
+    #sidebar a {
+        color: #CCC;
+        background-color: unset;
+    }
+
+        #sidebar a:hover {
+            background-color: #222;
+        }
+
+.nav-head {
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+}
+
+    .nav-head i {
+        position: absolute;
+        left: 10px;
+    }
+
+.fav {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+
+.login-container-main {
+    position: relative;
+    width: 400px;
+    margin: 0 auto;
+}
+
+.login-container-kia {
+    padding: 80px 100px;
+    text-align: center;
+    background: #fff;
+    color: #CBCBCB;
+    border-radius: 55px;
+}
+
+    .login-container-kia label {
+        margin: 0;
+    }
+
+    .login-container-kia input[type=text], .login-container-kia input[type=password] {
+        border: none;
+        border-bottom: solid 1px #C58E8E;
+        border-radius: unset;
+        box-shadow: unset;
+    }
+
+
+    .login-container-kia button {
+        padding: 10px;
+        font-size: 20px;
+        border-radius: 50px;
+        background-color: #3cb878;
+    }
+
+.clamp {
+    height: 110px;
+    border: solid 22px #EDF2FC;
+    z-index: 1000;
+    position: absolute;
+    width: 200px;
+    top: -15px;
+    left: 105px;
+    background-color: white;
+}
+
+.relatedItem {
+    width: 170px;
+    display: inline-block;
+    padding: 0 15px 10px 15px;
+    border-radius: 5px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.fab-filter {
+    width: 50px;
+    height: 50px;
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    background-color: #ffc107;
+    border-radius: 50%;
+    z-index: 100;
+    cursor: pointer;
+}
+
+.fab-filter-icon {
+    margin-top: 12px;
+    font-size: 24px;
+    margin-right: 16px;
+}
+
+#filter-list {
+    z-index: 100;
+    background-color: white;
+}
+
+@media only screen and (max-width : 500px) {
+    #productList {
+        padding: 20px 0 0 0;
+    }
+}
+
+.chosen-container {
+    display: block;
+}
+
+.showLog.pointer {
+    border: solid 1px silver;
+    display: inline-block;
+    padding: 0 5px 0 10px;
+    border-radius: 3px;
+    width: 160px;
+    text-align: center;
+}
+
+.hover-plus {
+    display: none;
+}
+
+.relatedItem:hover > .hover-plus {
+    display: block;
+}
+
+.special-type {
+    width: 90px;
+    position: absolute;
+    bottom: 0px;
+    right: 0;
+}
+
+.nowrap {
+    white-space: nowrap
+}
+
+.branch-status.text-danger i {
+    -webkit-animation-name: example; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 1s; /* Safari 4.0 - 8.0 */
+    animation-name: example;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    opacity: 0;
+    color: #ff0000;
+    margin-left: 5px;
+}
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes example {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Standard syntax */
+@keyframes example {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

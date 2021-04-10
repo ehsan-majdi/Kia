@@ -1,0 +1,321 @@
+﻿
+@{
+    ViewBag.Title = "موجودی شعب";
+}
+<style>
+    .file {
+        text-align: left;
+        direction: ltr;
+        padding: 4px;
+        margin: 4px 0;
+    }
+
+    .m-file-icon {
+        width: 25px;
+        display: inline-block;
+        text-align: center;
+        color: #00796b;
+        font-size: 15px;
+    }
+
+    .lastUpdateList {
+        font-size: 16px;
+        border: 1px solid silver;
+        text-align: center;
+    }
+</style>
+<div class="form-group  col-md-3">
+    <button id="btnShowUploadModal" class="btn btn-success">افزودن فایل</button>
+    <div style="" id="content1"></div>
+</div>
+<div class="container">
+    <input type="search" class="form-control" placeholder="جستجو" id="word" />
+    <br />
+    <div id="content" style="border-right:1px solid gold;border-left:1px solid gold">
+
+    </div>
+
+</div>
+<div id="fileModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">آپلود فایل</h4>
+                <input id="file" type="file" class="hidden" />
+            </div>
+            <div id="frmUpload" class="modal-body">
+                <div>
+                    @if (User.IsInRole("admin"))
+                    {
+                        <select id="cmbBranch" class="form-control cmbBranch" style="width: 200px; display: inline-block;" name="id">
+                            <option value="">شعبه</option>
+                            @foreach (var item in ViewBag.BranchList)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                    }
+                    <button id="openFile" class="btn btn-primary">انتخاب فایل</button>
+                    <div id="fileList">
+
+                    </div>
+                    @*<div class="progress hidden">
+                            <div id="progressBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                <span class="sr-only">45%</span>
+                            </div>
+                        </div>*@
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" type="button" class="btn btn-success  btn-control">ذخیره</button>
+                <button type="button" class="btn btn-danger btn-control" data-dismiss="modal">لغو</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        var loaderTemplate =
+            '<div id="dialog-loader" class="modal" style="overflow-y: hidden;">' +
+            '<div class="modal-dialog">' +
+            '<div id="dialog-loader-content">' +
+            '<p class="waitText" style="color: white;">لطفا چند لحظه صبر کنید سیستم در حال انتقال اطلاعات می باشد.</p>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+        $(document).ready(function () {
+            //upload()
+            $("#openFile").on("click", function () {
+                $("#file").click();
+            });
+            $("#fileList").empty();
+            $("#btnSave").click(function () {
+                @if (User.IsInRole("admin"))
+                {
+                    <text>
+                if ($("#cmbBranch").val() > 0) {
+                    notAutoUpload()
+                    $("#fileModal").modal("hide");
+
+                }
+                else {
+                    alert("انتخاب شعبه اجباری است.");
+                }
+                   </text>
+                }
+                else
+                {
+                    <text>
+                notAutoUpload();
+                $("#fileModal").modal("hide");
+                    </text>
+                }
+
+            })
+            $("#word").focus()
+            getList();
+            $(document).on("keyup", "#word", function () {
+                var value = $(this).val();
+                getList(value);
+            })
+            $("#btnShowUploadModal").on("click", function () {
+                $("#cmbBranch").val($("#cmbBranch option:first").val());
+                $("#txtDescription").val("");
+                $("#fileList").empty();
+                $("#fileModal").modal({ backdrop: 'static', keyboard: false });
+                $("#progressBar").closest(".progress").addClass("hidden");
+                $("#fileModal").modal("show");
+            });
+            $("#file").on("change", function () {
+                var files = $("#file").prop("files");
+                $("#fileList").empty();
+                for (var i = 0; i < files.length; i++) {
+                    console.log(files[i])
+                    if (files[i].name.substr(files[i].name.lastIndexOf('.') + 1) == "xlsx") {
+                        var template = $.templates("#templateFile");
+                        var htmlOutput = template.render(files[i]);
+                        $("#fileList").append(htmlOutput);
+                    }
+                    else {
+                        alert("فایل  به درستی انتخاب نشده است.");
+                        $("#fileList").empty();
+                        break;
+                    }
+                }
+            });
+        });
+        function getList(word) {
+            var entity = {
+                page: 0,
+                count: 500,
+                word: word
+            }
+            $.get("/branchInventory/search/", entity, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    //for (var i = 0; i < data.lastUpdateList.length; i++) {
+                    //    console.log(data.lastUpdateList[i].branchName)
+                    //    console.log(data.lastUpdateList[i].persianDate)
+                    //}
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                    var template1 = $.templates("#template1");
+                    var htmlOutput1 = template1.render(data.lastUpdateList);
+                    $("#content1").html(htmlOutput1);
+                    console.log(htmlOutput1)
+
+                }
+            })
+        }
+        function notAutoUpload() {
+            var params = { id: $("#cmbBranch").val() };
+            $("#openFile").on("click", function () {
+                $("#file").click();
+
+            });
+            var filesList = $("#file").prop("files");
+            $("#file").fileupload({
+                dataType: 'json',
+                url: "/branchInventory/import",
+                formData: params,
+                autoUpload: false,
+                start: function () {
+                    $("#progressBar").closest(".progress").removeClass("hidden");
+                },
+                success: function (response, textStatus, jqXHR) {
+                    pleaseWait(false)
+                    $("#file").fileupload("destroy");
+                    if (response.status === 403 || response.status === 401) {
+                        document.location.href = "/login?redirect=" + document.location.pathname;
+                    }
+                    else if (response.status === 200) {
+                        callbackAlert(response.message, function () {
+                            $("#fileModal").modal("hide");
+                            getList();
+                        });
+                    }
+                    else {
+                        var link = response.message + "لطفا فایل را بدون سطر و ستون اضافی  مانند نمونه فایل وارد کنید " + "</br>" + "<a style=\"color:red\" target=\"blank\" href=\"/content/image/ExcellExample.JPG\"> نمونه فایل</a>"
+                        alert(link);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $("#file").fileupload("destroy");
+                    $("#progressBar").closest(".progress").removeClass("hidden");
+                },
+                complete: function (result, textStatus, jqXHR) {
+                    pleaseWait(false)
+                    $("#file").fileupload("destroy");
+                    $("#progressBar").closest(".progress").addClass("hidden");
+                },
+                progressall: function (e, data) {
+                    pleaseWait(true)
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progressBar').css({ 'width': progress + "%" });
+                    $('#progressBar').find(".sr-only").html(progress + "%");
+                }
+            });
+
+            $("#file").fileupload('send', { files: filesList });
+        }
+        function upload(path) {
+            $("#deleteFile").on("click", function () {
+                $('#txtFileName').val("");
+                checkForm("#form");
+                $('.progress .progress-bar').css('width', '0%');
+            });
+
+
+
+            $('#file').fileupload({
+
+                dataType: 'json',
+                url: "/branchInventory/import",
+                autoUpload: true,
+                done: function (e, data) {
+                    var response = data.result;
+                    if (response.status == 200) {
+                        callbackAlert(response.message, function () {
+                            getList()
+                        });
+                    }
+                    else {
+                        alert(response.message)
+                    }
+                    loader(false);
+                }
+            }).on('fileuploadprogressall', function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                pleaseWait(true)
+                $('.progress .progress-bar').css('width', progress + '%');
+            });
+        }
+        function pleaseWait(status) {
+            var interval = setInterval(blinker, 1000);
+            function blinker() {
+
+                $(".waitText").fadeOut(1000);
+                $(".waitText").fadeIn(1000);
+            }
+            if (!$("#dialog-loader").length) {
+                $("body").append(loaderTemplate);
+            }
+
+            if (status) {
+                $("#dialog-loader").modal({ backdrop: 'static', keyboard: false });
+                loaderCount++;
+            }
+            else {
+                if (loaderCount <= 1)
+                    $("#dialog-loader").modal('hide');
+                if (loaderCount > 0)
+                    loaderCount--;
+            }
+        }
+
+    </script>
+    <script id="template" type="text/x-jsrender">
+        {{if list != null && list.length > 0}}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>شعبه</th>
+                    <th>نوع موجودی</th>
+                    <th>عنوان</th>
+                    <th>کد کالا</th>
+                    <th>وزن</th>
+                    <th class="txt-al-c">تاریخ</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td>{{:branchName}}</td>
+                    <td>{{:inventoryTypeTitle}}</td>
+                    <td>{{:title}}</td>
+                    <td>{{:productCode}}</td>
+                    <td>{{:weight}}</td>
+                    <td class="txt-al-c">{{:persianDate}}</td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        {{else}}
+        <h5>سوابقی برای این روز یافت نشد</h5>
+        {{/if}}
+
+    </script>
+    <script id="templateFile" type="text/x-jsrender">
+        <div class="file">
+            <span class="m-file-icon"><img style="width:30px" src="/Content/Image/microsoft-excel-2019--v1.png" /></span>
+            {{:name}}
+        </div>
+    </script>
+    <script id="template1" type="text/x-jsrender">
+        <div class="lastUpdateList">
+            <span><b>{{:branchName}} </b> </span>:<span> {{:persianDate}}</span>
+        </div>
+    </script>
+}

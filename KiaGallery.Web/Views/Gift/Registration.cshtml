@@ -1,0 +1,554 @@
+﻿@{
+    ViewBag.Title = "ثبت کارت هدیه";
+}
+<style type="text/css">
+    body {
+        background-color: #9ddfeb;
+    }
+
+    #main {
+        background-color: rgba(0, 0, 0, 0) !important;
+    }
+
+    .box {
+        position: sticky;
+        width: 300px;
+    }
+
+    .box1 {
+        z-index: 100;
+    }
+
+    .box3 {
+        z-index: 99;
+        top: 199px;
+        width: 292px;
+        margin-right: -1px;
+        margin-top: -68px;
+    }
+
+    #headSoldToTheCustomer {
+        position: absolute;
+        z-index: 111;
+        top: 200px;
+        right: 100px;
+        border-radius: 10px;
+    }
+
+    #headUsed {
+        position: absolute;
+        z-index: 111;
+        top: 200px;
+        left: 40px;
+        border-radius: 10px;
+    }
+
+    #headSoldToTheCustomer, #formSoldToTheCustomer {
+        background-color: #f0fef0;
+    }
+
+    #formSoldToTheCustomer {
+        border-left: 5px solid #9ddfeb
+    }
+
+    #formUsed {
+        border-right: 5px solid #9ddfeb
+    }
+
+    #headUsed, #formUsed {
+        background-color: #fff7f7;
+    }
+
+    .formSoldToTheCustomer {
+        border: 1px solid silver;
+        padding: 10px;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    .formUsed {
+        border: 1px solid silver;
+        padding: 10px;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    .close-gift {
+        background-color: #444;
+        color: #fff;
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: 3px;
+        border-radius: 5px;
+    }
+
+        .close-gift:hover {
+            background-color: #000;
+        }
+
+    .gift-row {
+        margin-top: -100px;
+    }
+
+    .circle3 {
+        border-radius: 100%;
+        width: 400px;
+        height: 400px;
+        padding: 50px;
+        background-color: #ddf5f7;
+    }
+
+    .circle2 {
+        border-radius: 100%;
+        width: 500px;
+        height: 500px;
+        padding: 50px;
+        background-color: #d1f0f5;
+    }
+
+    .circle1 {
+        border-radius: 100%;
+        width: 600px;
+        height: 600px;
+        padding: 50px;
+        background-color: #bae9f1;
+    }
+
+    .circle.gift {
+        margin-right: calc(50% - 300px);
+    }
+
+    .table-cell {
+        padding: 5px 0;
+        border-top: solid 1px silver;
+    }
+
+    .table-head {
+        padding-bottom: 5px;
+    }
+
+    #submitgift-margin {
+        margin-top: 90px;
+    }
+
+    .factornumber-padding {
+        padding-right: 0;
+    }
+
+    .factorprice-padding {
+        padding-left: 0;
+    }
+</style>
+<div id="logDetailModal" class="modal fade" role="dialog" style="overflow-y: auto;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">سوابق گیفت</h4>
+            </div>
+            <div id="log-content" class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 pull-left">
+        @*<a href="/gift/burn" class="btn btn-danger danger"><i class="fa fa-free-code-camp v-middle" aria-hidden="true"></i>&nbsp; سوزاندن بن</a>*@
+        <div class="col-md-3 pull-left" style="margin:0;padding:0">
+            <input id="txtCodeSearch" style="width:204px; display:inline-block" type="text" class="form-control" placeholder="کد گیفت را وارد کنید" />
+            <button id="btnCodeSearch" class="  btn btn-success" style="display:inline-block">جستجوی سوابق گیفت</button>
+        </div>
+    </div>
+    <div class="col-md-4" id="headSoldToTheCustomer">
+        <h2 class="success text-success">تحویل کارت و بن هدیه به مشتری</h2>
+        <div class="form-group">
+            <input type="hidden" name="status" value="4" />
+            <label for="txtCustomerName">نام، نام خانوادگی مشتری</label>
+            <input id="txtCustomerName" type="text" class="form-control" name="customerName" maxlength="50" data-validate="required, maxLength(50)">
+        </div>
+        <div class="form-group">
+            <label for="txtCustomerPhoneNumber">شماره تلفن مشتری</label>
+            <input id="txtCustomerPhoneNumber" type="text" class="form-control" name="customerPhoneNumber" maxlength="14" data-validate="required, maxLength(14), number">
+        </div>
+        <div id="submitgift-margin">
+            <div class="form-group col-md-6">
+                <button id="btnAddSoldToTheCustomer" type="submit" class="btn btn-primary btn-block" data-status="SoldToTheCustomer">
+                    <i class="fa fa-plus v-middle" aria-hidden="true"></i>&nbsp;
+                    اضافه کردن هدیه
+                </button>
+            </div>
+            <div class="form-group col-md-6">
+                <button id="btnSaveSoldToTheCustomer" type="submit" class="btn btn-success btn-block btnSave" data-status="SoldToTheCustomer">
+                    <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                    ذخیره
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="text-center circle gift">
+        <div class="circle1">
+            <div class="circle2">
+                <div class="circle3">
+                    <img class="box1 box" src="~/Content/Image/gift.png" />
+                </div>
+            </div>
+        </div>
+
+        @*<img class="box1 box" src="~/Content/Image/box1.png" />
+            <img class="box3 box" src="~/Content/Image/box3.png" />*@
+    </div>
+    <div class="col-md-4" id="headUsed">
+        <h2 class="danger text-danger">دریافت کارت و بن هدیه از مشتری</h2>
+        <div class="form-group">
+            <label for="txtCustomerName">نام، نام خانوادگی مشتری باطل کننده</label>
+            <input id="txtCustomerName" type="text" class="form-control" name="CustomerName" maxlength="50" data-validate="required, maxLength(50)">
+        </div>
+        <div class="form-group">
+            <input type="hidden" name="status" value="5" />
+            <label for="txtCustomerPhoneNumber">شماره تماس مشتری باطل کننده</label>
+            <input id="txtCustomerPhoneNumber" type="text" class="form-control" name="customerPhoneNumber" maxlength="14" data-validate="required, maxLength(14), number">
+        </div>
+        <div class="form-group col-md-6 factornumber-padding">
+            <label for="txtfactorNumber">شماره فاکتور</label>
+            <input id="txtfactorNumber" type="text" class="txtfactorNumber form-control" name="factorNumber" maxlength="12" data-validate="required, maxLength(12), number">
+        </div>
+        <div class="form-group col-md-6 factorprice-padding">
+            <label for="txtfactorPrice">مبلغ فاکتور به ریال</label>
+            <input id="txtfactorPrice" type="text" class="txtCode form-control money-separator" name="factorPrice" maxlength="12" data-validate="required, maxLength(12), number">
+        </div>
+        <div class="form-group col-md-6">
+            <button id="btnAddUsed" type="submit" class="btn btn-primary btn-block" data-status="Used">
+                <i class="fa fa-plus v-middle" aria-hidden="true"></i>&nbsp;
+                اضافه کردن هدیه
+            </button>
+        </div>
+        <div class="form-group col-md-6">
+            <button id="btnSaveUsed" type="submit" class="btn btn-danger btn-block btnSave" data-status="Used">
+                <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                ابطال
+            </button>
+        </div>
+    </div>
+</div>
+<div class="row gift-row">
+    <div class="col-md-6" id="formSoldToTheCustomer"></div>
+    <div class="col-md-6" id="formUsed"></div>
+</div>
+@section scripts {
+    <script type="text/javascript">
+        var conterSoldToTheCustomer = 0;
+        var conterUsed = 0;
+        var formSoldToTheCustomer =
+            '<div class="txt-al-r row formSoldToTheCustomer">' +
+            '<div class="fa fa-close close-gift"></div>' +
+            '<div class="form-group col-md-4">' +
+            '<label for="txtCode">کد کارت هدیه</label>' +
+            '<input id="txtCode" type="text" class="txtCode form-control" name="code" maxlength="12" data-validate="required, maxLength(12), number">' +
+            '</div>' +
+            '<div class="form-group col-md-4">' +
+            '<input type="hidden" name="status" value="4" />' +
+            '<label for="txtGiftTypeTitle">نوع هدیه </label>' +
+            '<input id="txtGiftTypeTitle" type="text" class="form-control" name="giftTypeTitle" readonly>' +
+            '</div>' +
+            '<div class="form-group col-md-4">' +
+            '<label for="txtValueToSeparator">ارزش کارت</label>' +
+            '<input id="txtValueToSeparator" type="text" class="form-control" name="valueToSeparator" readonly>' +
+            '</div>' +
+            '</div>';
+        var formUsed =
+            '<div class="txt-al-r row formUsed" >' +
+            '<div class="fa fa-close close-gift"></div>' +
+            '<div class="form-group col-md-3">' +
+            '<label for="txtCode">کد کارت هدیه</label>' +
+            '<input  id="txtCode" type="text" class="txtCode form-control" name="code" maxlength="12" data-validate="required, maxLength(12), number">' +
+            '</div>' +
+            '<div class="form-group col-md-2">' +
+            '<input type="hidden" name="status" value="5" />' +
+            '<label for="txtGiftTypeTitle">نوع هدیه </label>' +
+            '<input style="font-size:12px" id="txtGiftTypeTitle" type="text" class="form-control" name="giftTypeTitle" readonly>' +
+            '</div>' +
+            '<div class="form-group col-md-2">' +
+            '<label for="txtValueToSeparator">ارزش کارت</label>' +
+            '<input style="font-size:12px" id="txtValueToSeparator" type="text" class="form-control" name="valueToSeparator" readonly>' +
+            '<input  id="txtGiftType" type="hidden" class="form-control txtGiftType" name="giftType" >' +
+            '</div>' +
+            '<div class="form-group col-md-2">' +
+            '<label for="txtValueToSeparator">شرکت/شعبه</label>' +
+            '<input style="font-size:10px" id="txtOwner" type="text" class="form-control txtOwner" name="owner" readonly />' +
+            '</div>' +
+            '<div class="form-group col-md-3">' +
+            '<label for="txtValueToSeparator">انقضا</label>' +
+            '<input  style="border:none;background-color:#f0fef0" type="text" class="col-md-3 form-control" name="persianExpirationDate" readOnly />' +
+            '</div>' +
+            '</div>';
+        $(document).ready(function () {
+            addRoWGift();
+            $("#btnAddSoldToTheCustomer").on("click", function (event) {
+                event.preventDefault();
+                $("#formSoldToTheCustomer").append(formSoldToTheCustomer);
+                conterSoldToTheCustomer += 1;
+                $("#formSoldToTheCustomer .formSoldToTheCustomer:last-child").attr("id", "formSoldToTheCustomer" + conterSoldToTheCustomer);
+            });
+            $("#btnAddUsed").on("click", function (event) {
+                event.preventDefault();
+                $("#formUsed").append(formUsed);
+                conterUsed += 1;
+                $("#formUsed .formUsed:last-child").attr("id", "formUsed" + conterUsed);
+            });
+            $(document).on("click", ".close-gift", function (event) {
+                event.preventDefault();
+                $(this).parent().remove();
+            });
+            $(document).on("keyup", ".txtCode", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    if ($(this).val() == "" || $(this).val() == null)
+                        return;
+                    loader(true);
+                    var formParnt = "#" + $(this).parent().parent().attr("id");
+                    var status = $(formParnt + " [name=status]").val();
+                    $.get("/gift/check", { code: $(this).val() }, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            if ((status == response.data.giftStatus + 1 && response.data.giftType != 2 && response.data.giftType != 3) || (status == 5 && response.data.companyIdShopping != null) || (response.data.giftType == 4 && (response.data.giftStatus == 3 || response.data.giftStatus == 4))) {
+                                setEntity(response.data, formParnt);
+
+                                $(formParnt).addClass("check");
+                            }
+                            else if (status == 5 && response.data.giftType == 2) {
+                                setEntity(response.data, formParnt);
+                                $(formParnt).addClass("check");
+                            }
+                            else if (status != 5 && response.data.giftType == 2) {
+                                console.log(response.data.giftStatus)
+                                alert("این هدیه از نوع بن خرید بدون فروش می باشد قابلیت ثبت فروش را ندارد آن را فقط می توانید ابطال کنید");
+                            }
+                            else if (status != 5 && response.data.giftType == 3) {
+                                console.log(response.data.giftStatus)
+                                alert("این هدیه از نوع کارت هدیه بدون فروش می باشد قابلیت ثبت فروش را ندارد آن را فقط می توانید ابطال کنید");
+                            }
+                            else
+                                alert("وضعیت این هدیه " + '"' + response.data.giftStatusTitle + '"' + " شما نمی توانید از این هدیه در این وضعیت استفاده کنید. ");
+
+                        }
+                        else if (response.status == 201) {
+                            confirmMessage(response.message, function () {
+                                if ((status == response.data.giftStatus + 1 && response.data.giftType != 2 && response.data.giftType != 3) || (status == 5 && response.data.companyIdShopping != null) || (response.data.giftType == 4 && (response.data.giftStatus == 3 || response.data.giftStatus == 4))) {
+                                    setEntity(response.data, formParnt);
+                                    $(formParnt).addClass("check");
+                                }
+                                else if (status == 5 && response.data.giftType == 2) {
+                                    setEntity(response.data, formParnt);
+                                    $(formParnt).addClass("check");
+                                }
+                                else if (status != 5 && response.data.giftType == 2) {
+                                    console.log(response.data.giftStatus)
+                                    alert("این هدیه از نوع بن خرید بدون فروش می باشد قابلیت ثبت فروش را ندارد آن را فقط می توانید ابطال کنید");
+                                }
+                                else if (status != 5 && response.data.giftType == 3) {
+                                    console.log(response.data.giftStatus)
+                                    alert("این هدیه از نوع کارت هدیه بدون فروش می باشد قابلیت ثبت فروش را ندارد آن را فقط می توانید ابطال کنید");
+                                }
+                                else
+                                    alert("وضعیت این هدیه " + '"' + response.data.giftStatusTitle + '"' + " شما نمی توانید از این هدیه در این وضعیت استفاده کنید. ");
+                            })
+
+                        }
+                        else {
+
+                            alert(response.message);
+                        }
+                    });
+                }
+            });
+
+            $(document).on("keyup", "#txtCodeSearch", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    var value = $(this).val();
+                    if (value != "") {
+                        loader(true);
+                        $.get("/gift/GetLogByCode/", { code: value }, function (response) {
+                            loader(false);
+                            var data = response.data;
+                            var template = $.templates("#template-log");
+                            var htmlOutput = template.render(data);
+                            $("#log-content").html(htmlOutput);
+                            $("#logDetailModal").modal('show');
+                            $(".orderDetailItem").change();
+                        });
+                    }
+                }
+            });
+
+            $(document).on("click", "#btnCodeSearch", function (e) {
+                var value = $("#txtCodeSearch").val();
+                if (value != "") {
+                    loader(true);
+                    $.get("/gift/GetLogByCode/", { code: value }, function (response) {
+                        loader(false);
+                        var data = response.data;
+                        var template = $.templates("#template-log");
+                        var htmlOutput = template.render(data);
+                        $("#log-content").html(htmlOutput);
+                        $("#logDetailModal").modal('show');
+                        $(".orderDetailItem").change();
+                    });
+
+                }
+            });
+            $(".btnSave").on("click", function (event) {
+                event.preventDefault();
+                var status = $(this).attr("data-status");
+                if (checkForm("#head" + status)) {
+                    loader(true)
+                    var entity = getEntity("#head" + status);
+                    var codeList = new Array();
+                    $(".form" + status + ".check #txtCode").each(function (index) {
+                        if ($(this).val() != "" && $(this).val() != null && $(this).val().length == 12)
+                            codeList.push($(this).val());
+                    });
+
+                    var giftType = new Array();
+                    $(".txtGiftType").each(function (index) {
+                        if ($(this).val() != "" && $(this).val() != null)
+                            giftType.push($(this).val());
+                    });
+
+                    var owner = new Array();
+                    $(".txtOwner").each(function (index) {
+                        if ($(this).val() != "" && $(this).val() != null)
+                            owner.push($(this).val());
+                    });
+
+                    if (codeList.length > 0) {
+                        entity.codeList = codeList;
+                        var code = entity.codeList.join(",");
+
+                        entity.giftType = giftType;
+                        entity.owner = owner;
+
+
+                        $.post("/gift/saveRegistration", entity, function (response) {
+                            if (response.status == 200) {
+                                loader(false);
+                                callbackAlert(response.message, function () {
+                                    if (status == "SoldToTheCustomer") {
+                                        //window.open("/gift/print?code=" + code, '_blank');
+                                    }
+                                    addRoWGift();
+                                });
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                            $("#form" + status).html("");
+                            $("#head" + status + " #txtCustomerName").val("");
+                            $("#head" + status + " #txtCustomerPhoneNumber").val("");
+                            $("#head" + status + " #txtfactorNumber").val("");
+                            $("#head" + status + " #txtfactorPrice").val("");
+                        });
+                    }
+                }
+            });
+        });
+        function addRoWGift() {
+            $("#formSoldToTheCustomer").html(formSoldToTheCustomer);
+            conterSoldToTheCustomer = 1;
+            $("#formSoldToTheCustomer .formSoldToTheCustomer:last-child").attr("id", "formSoldToTheCustomer" + conterSoldToTheCustomer);
+            $("#formUsed").html(formUsed);
+            conterUsed = 1;
+            $("#formUsed .formUsed:last-child").attr("id", "formUsed" + conterUsed);
+        }
+    </script>
+
+    <script id="template-log" type="text/x-jsrender">
+        <div class="table row column no-padding w100">
+            <div class="table-heading text-center">
+                <div class="table-head">
+                    کاربر
+                </div>
+                <div class="table-head">
+                    شعبه
+                </div>
+                <div class="table-head">
+                    تاریخ
+                </div>
+                <div class="table-head">
+                    وضعیت
+                </div>
+            </div>
+
+            {{for list}}
+            <div class="table-row text-center">
+                <div class="table-cell ltr">
+                    {{:createUser}}
+                </div>
+                <div class="table-cell ltr">
+                    {{:branch}}
+                </div>
+                <div class="table-cell ltr">
+                    {{:createdDate}}
+                </div>
+                <div class="table-cell">
+                    {{:status}}
+                </div>
+            </div>
+
+            {{/for}}
+        </div>
+
+        <div class="table row column no-padding w100">
+            <div class="table-heading text-center">
+                <div class="table-cell ltr">
+                    نام مشتری استفاده کننده
+                </div>
+                <div class="table-cell ltr">
+                    شماره تلفن
+                </div>
+                <div class="table-cell ltr">
+                    شماره فاکتور
+                </div>
+                <div class="table-cell ltr">
+                    مبلغ فاکتور
+                </div>
+                <div class="table-cell ltr">
+                    شعبه دریافت کننده گیفت
+                </div>
+                {{for list}}
+                <div class="table-row column text-center">
+                    <div class="table-head ltr">
+                        {{if giftStatus == 5}}
+                        {{:customerName}}
+                        {{/if}}
+                    </div>
+                    <div class="table-head ltr">
+                        {{if giftStatus == 5}}
+                        {{:customerPhoneNumber}}
+                        {{/if}}
+                    </div>
+                    <div class="table-head ltr">
+                        {{if giftStatus == 5}}
+                        {{:factorNumber}}
+                        {{/if}}
+                    </div>
+                    <div class="table-head">
+                        {{if giftStatus == 5}}
+                        {{:factorPrice}}
+                        {{/if}}
+                    </div>
+                    <div class="table-head">
+                        {{if giftStatus == 5}}
+                        {{:branch}}
+                        {{/if}}
+                    </div>
+                </div>
+                {{/for}}
+            </div>
+        </div>
+    </script>
+}

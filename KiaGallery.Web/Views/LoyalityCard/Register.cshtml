@@ -1,0 +1,757 @@
+﻿
+@{
+    ViewBag.Title = "ثبت کارت";
+}
+
+<style>
+    .label {
+        color: #000;
+        background-color: #f2b423;
+        padding: 7px 10px;
+        position: relative;
+        margin: 0px 0px;
+        display: inline-block;
+        width: 100px;
+        height: 30px;
+        font-size: 14px;
+        border-radius: 0;
+    }
+
+        .label::before {
+            content: "";
+            position: absolute;
+            top: -20px;
+            border-top: 20px solid transparent;
+            border-left: 0px solid transparent;
+            border-right: 100px solid #f2b423;
+            border-bottom: 0px solid #f2b423;
+            right: 0
+        }
+
+    .right-side {
+        background: rgb(80,0,0);
+        background: linear-gradient(90deg, rgba(80,0,0,1) 0%, rgba(138,2,2,1) 50%, rgba(80,0,0,1) 100%);
+        height: 100vh;
+        width: 100vw;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        right: 0;
+    }
+
+    .left-side {
+        height: 100vh;
+        width: 30vw;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 9999;
+    }
+
+    .input-class {
+        margin: 2px;
+        width: 23vw;
+    }
+
+    .regCode {
+        position: relative;
+        display: inline-block;
+    }
+
+    .submit-form {
+        width: 30vw;
+        background-color: white;
+        position: absolute;
+        height: 70vh;
+        border-radius: 5px;
+        box-shadow: 0px -14px 23px -4px rgba(0,0,0,0.46);
+        border: 5px solid #f2b423;
+        right: 0;
+        margin: 125px auto;
+        left: 0;
+    }
+
+    .shape::before {
+        content: "";
+        position: absolute;
+        top: -14px;
+        border-top: 67px solid #e7ff3c00;
+        border-left: 0px solid #3d1f4a00;
+        border-right: 473px solid #f2b423;
+        border-bottom: 0 solid #f2b423;
+        height: 40vh;
+        transform: translateY(0) rotateX(190deg);
+        left: -16px;
+        z-index: 1;
+    }
+
+    .rowRegCode {
+        top: 100px;
+        position: relative;
+        text-align: center;
+    }
+
+    .form__label {
+        font-family: 'Roboto', sans-serif;
+        font-size: 1.2rem;
+        margin-left: 2rem;
+        margin-top: 0.7rem;
+        display: block;
+        transition: all 0.3s;
+        transform: translateY(0rem);
+    }
+
+    .group {
+        position: relative;
+        z-index: 9;
+        top: 15px;
+        margin-bottom: 40px;
+    }
+
+    input {
+        font-size: 14px;
+        padding: 7px 7px 7px 5px;
+        display: block;
+        width: 100%;
+        border: none;
+        border-bottom: 1px solid #757575;
+    }
+
+        input:focus {
+            outline: none;
+        }
+
+    /* LABEL  */
+    label {
+        color: #999;
+        font-size: 18px;
+        font-weight: normal;
+        position: absolute;
+        pointer-events: none;
+        top: 7px;
+        transition: 0.2s ease all;
+        -moz-transition: 0.2s ease all;
+        -webkit-transition: 0.2s ease all;
+    }
+
+    input:focus ~ label, input:valid ~ label {
+        top: -20px;
+        font-size: 14px;
+        color: #bf0d0d;
+    }
+
+    /* BOTTOM BARS */
+    .bar {
+        position: relative;
+        display: block;
+        width: 100%;
+    }
+
+        .bar:before, .bar:after {
+            content: '';
+            height: 4px;
+            width: 0;
+            bottom: 1px;
+            position: absolute;
+            background: rgb(80,0,0);
+            transition: 0.2s ease all;
+            -moz-transition: 0.2s ease all;
+            -webkit-transition: 0.2s ease all;
+        }
+
+        .bar:before {
+            left: 50%;
+        }
+
+        .bar:after {
+            right: 50%;
+        }
+
+    /* active state */
+    input:focus ~ .bar:before, input:focus ~ .bar:after {
+        width: 50%;
+    }
+
+    /* HIGHLIGHTER  */
+    .highlight {
+        position: absolute;
+        height: 60%;
+        width: 100px;
+        top: 25%;
+        right: 0;
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+    /* active state */
+    input:focus ~ .highlight {
+        -webkit-animation: inputHighlighter 0.3s ease;
+        -moz-animation: inputHighlighter 0.3s ease;
+        animation: inputHighlighter 0.3s ease;
+    }
+
+    /* ANIMATIONS */
+    @@-webkit-keyframes inputHighlighter {
+        from {
+            background: #bf0d0d;
+        }
+
+        to {
+            width: 0;
+            background: transparent;
+        }
+    }
+
+    @@-moz-keyframes inputHighlighter {
+        from {
+            background: #5264AE;
+        }
+
+        to {
+            width: 0;
+            background: transparent;
+        }
+    }
+
+    @@keyframes inputHighlighter {
+        from {
+            background: #5264AE;
+        }
+
+        to {
+            width: 0;
+            background: transparent;
+        }
+    }
+
+    .btn-submit {
+        position: absolute;
+        bottom: 0;
+        transform: translate(-50%,-50%);
+        right: 0;
+        left: 0;
+        width: 15vw;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    #btnSave {
+        color: #FFF;
+        transition: all 0.5s;
+    }
+
+        #btnSave::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background-color: rgba(125, 125, 125, 0.1);
+            transition: all 0.3s;
+        }
+
+        #btnSave:hover::before {
+            opacity: 0;
+            transform: scale(0.5,0.5);
+        }
+
+        #btnSave::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0;
+            transition: all 0.3s;
+            border: 1px solid rgba(244, 2, 2, 0.5);
+            transform: scale(1.2,1.2);
+        }
+
+        #btnSave:hover::after {
+            opacity: 1;
+            transform: scale(1,1);
+        }
+
+    #logo-img {
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+    }
+
+    #checking {
+        color: rgba(138,2,2,1);
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        cursor: pointer;
+        display: none;
+    }
+
+    #eraser {
+        position: absolute;
+        left: 2px;
+        top: 28px;
+        z-index: 99;
+        cursor: pointer;
+        opacity: 0.5;
+        transition: all 0.3s ease-in-out;
+        display: none;
+    }
+
+        #eraser:hover {
+            opacity: 1;
+            transition: all 0.3s ease-in-out;
+        }
+
+    #times {
+        color: red;
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        cursor: pointer;
+        display: none;
+    }
+
+    .approved {
+        position: absolute;
+        bottom: 15px;
+        left: 0;
+        display: none;
+    }
+</style>
+<div class="container">
+    <div id="content">
+        <div class="right-side">
+            <form id="form">
+                <div class="rowRegCode">
+                    <div class="regCode">
+                        <span class="label">شماره کارت</span>
+                    </div>
+                    <div class="regCode">
+                        <input class="input-class form-control" placeholder="شماره کارت را وارد کنید" name="code" onkeyup="checkTextValue()" />
+                        <span id="checking" class="fa fa-check"></span>
+                        <span id="times" class="fa fa-times"></span>
+                    </div>
+                </div>
+                <div class="submit-form col-md-3">
+                    <span id="eraser" class="fa fa-eraser"></span>
+                    <label class="shape"></label>
+
+                    <div class="col-md-12">
+                        <div>
+                            <div class="group">
+                                <input type="text" class="txtPhoneNumber eventRemoveAttr text-center" name="phoneNumber" disabled required>
+                                <span id="lblPhoneNumber" class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>شماره همراه</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="group">
+                                <input type="text" class="txtFirstName eventRemoveAttr text-center" name="firstName" disabled required>
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label class="lblName">نام </label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="group">
+                                <input type="text" class="txtLastName eventRemoveAttr text-center" name="lastName" disabled required>
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label class="lblName">نام و نام خانوادگی</label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="group">
+                                <input type="text" class="txtBirthDate date eventRemoveAttr text-center" name="birthDate" disabled autocomplete="off">
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label class="lblSpecification">تاریخ تولد</label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="group">
+                                <input type="text" class="txtMariageDate date eventRemoveAttr text-center" name="mariageDate" disabled autocomplete="off">
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label class="lblSpecification">تاریخ ازدواج</label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="group">
+                                <input type="text" class="txtAddressLocation eventRemoveAttr text-center" name="addressLocation" disabled required>
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label class="lblSpecification">محدوده آدرس</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="approved">
+                        <img src="~/Content/Image/approved-01.png" style="width:100px" />
+                    </div>
+                    <div class="btn-submit">
+                        <div id="btnSave">
+                            <span style="color:black">ثبت</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        @*<div class="left-side"></div>*@
+        @*<div class="logo text-center">
+                <div class="border-logo">
+                    <img src="~/Content/Image/Logo.png" />
+                </div>
+            </div>*@
+        <div class="left-side">
+            <div class="logo">
+                <img id="logo-img" src="~/Content/Image/membershipcard1.png" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".date").pDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true,
+            });
+
+            mobileAutoCompelete();
+            getCustomerInfo();
+            checkTextValue();
+            Addressbounds();
+
+            $(".date").removeAttr("required");
+            $(".date").val("");
+            $(".input-class").val("");
+            $(".txtFirstName").val("")
+            $(".txtLastName").val("");
+            $(".txtAddressLocation").val("");
+            $(".txtPhoneNumber").val("");
+
+
+            //عملیات پاک کن جهت اصلاح شماره همراه در قسمت شماره همراه مشتری
+            $("#eraser").on("click", function () {
+                $(".txtPhoneNumber").val("");
+                $(".txtFirstName").val("")
+                $(".txtLastName").val("");
+                $(".txtAddressLocation").val("");
+                $(".txtPhoneNumber").prop("disabled", false);
+                $(".txtFirstName").prop("disabled", true);
+                $(".txtLastName").prop("disabled", true);
+                $(".txtBirthDate").prop("disabled", true);
+                $(".txtMariageDate").prop("disabled", true);
+                $(".txtAddressLocation").prop("disabled", true);
+                $(this).hide();
+                $(".approved").hide();
+
+            });
+
+            //عملیات ریست کردن همه فیلد ها توسط آیکون ضربدر
+            $("#times").on("click", function () {
+                $(this).hide();
+                $(".txtPhoneNumber").val("");
+                $(".txtFirstName").val("")
+                $(".txtLastName").val("");
+                $(".input-class").val("");
+                $(".txtAddressLocation").val("");
+                $(".input-class").prop("disabled", false);
+                $("input[type=text]").prop("disabled", true);
+                $(".txtBirthDate").prop("disabled", false);
+                $(".txtMariageDate").prop("disabled", false);
+                $(".txtAddressLocation").prop("disabled", false);
+                $(".approved").hide();
+            })
+
+            //کلیک روی آیکون تیک ،صحیح بودن کارت مشخص می شود//
+            $("#checking").on("click", function () {
+                var entity = getEntity("#form");
+                loader(true);
+                $.ajax({
+                    method: "POST",
+                    url: "/loyalityCard/validateCard",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status == 200) {
+                            //callbackAlert(response.message, function () {
+                            //});
+                            $("input[type=text]").prop("disabled", true);
+                            $("#checking").hide();
+                            $("#times").show();
+                            $(".input-class").prop("disabled", true);
+                            $(".txtPhoneNumber").prop("disabled", false);
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                        loader(false);
+                    }
+                });
+            });
+
+            //با فشردن دکمه اینتر صحیح بودن کارت مشخص می شود//
+            $(".input-class").on("keypress", function (e) {
+                var code = e.which;
+                if (code == 13) {
+                    var entity = getEntity("#form");
+                    loader(true);
+                    $.ajax({
+                        method: "POST",
+                        url: "/loyalityCard/validateCard",
+                        data: entity,
+                        success: function (response) {
+                            if (response.status == 200) {
+                                //callbackAlert(response.message, function () {
+                                //});
+                                $("#checking").hide();
+                                $("#times").show();
+                                $(".input-class").prop("disabled", true);
+                                $(".txtPhoneNumber").prop("disabled", false);
+                                $(".txtPhoneNumber").focus();
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                            loader(false);
+                        }
+                    });
+                }
+            });
+
+            //ذخیره کردن تمام مقادیر و جلوگیری از ثبت فیلدهای خالی//
+            $("#btnSave").on("click", function (event) {
+                var entity = getEntity("#form");
+                if (!entity.code) {
+                    callbackAlert("شماره بارکد وارد نشده است.", function () {
+                        $(".input-class").focus();
+                    });
+                    return;
+                }
+                if (checkForm("#form")) {
+                    if (!entity.phoneNumber) {
+                        callbackAlert("شماره همراه مشتری وارد نشده است.", function () {
+                            $(".txtPhoneNumber").focus();
+                        });
+                        $(".txtPhoneNumber").prop("disabled", false);
+                        return;
+                    }
+                    if (!entity.firstName) {
+                        callbackAlert("نام مشتری وارد نشده است.", function () {
+                            $(".txtFirstname").focus();
+                        });
+                        $("#txtFirstname").prop("disabled", false);
+                        return;
+                    }
+                    if (!entity.lastName) {
+                        callbackAlert("نام خانوادگی مشتری وارد نشده است.", function () {
+                            $(".txtLastName").focus();
+
+                        });
+                        $(".txtLastName").prop("disabled", false);
+                        return;
+                    }
+                    if (!entity.addressLocation) {
+                        callbackAlert("محدوده آدرس مشتری وارد نشده است.", function () {
+                            $(".txtAddressLocation").focus();
+                        });
+                        $(".txtAddressLocation").prop("disabled", false);
+                        return;
+                    }
+                }
+                loader(true);
+                $.ajax({
+                    method: "POST",
+                    url: "/loyalityCard/reserveCard",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                            });
+                            $(".approved").show();
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                        loader(false);
+                    }
+                });
+            });
+        });
+
+        //با نمایش آیکون تیک از صحت اطلاعات واردشده مطلع می شویم//
+        function checkTextValue() {
+            if ($(".input-class").val()) {
+                $("#checking").show();
+            }
+            else {
+                $("#checking").hide();
+            }
+        }
+
+        //مشخصه غیرفعال کردن را فعال میکنیم//
+        function trueDisable() {
+            $(".txtPhoneNumber").prop("disabled", true);
+            $(".txtFirstName").prop("disabled", true);
+            $(".txtLastName").prop("disabled", true);
+            $(".txtBirthDate").prop("disabled", true);
+            $(".txtMariageDate").prop("disabled", true);
+            $(".txtAddressLocation").prop("disabled", true);
+        }
+
+        //مشخصه غیرفعال کردن را غیرفعال میکنیم//
+        function falseDisable() {
+            $(".txtPhoneNumber").prop("disabled", false);
+            $(".txtFirstName").prop("disabled", false);
+            $(".txtLastName").prop("disabled", false);
+            $(".txtBirthDate").prop("disabled", false);
+            $(".txtMariageDate").prop("disabled", false);
+            $(".txtAddressLocation").prop("disabled", false);
+        }
+        //تابع خالی کردن فیلدها بر اساس عملیات مورد نظر//
+        function emptyValue() {
+            $(".txtPhoneNumber").val("")
+            $(".txtFirstName").val("")
+            $(".txtLastName").val("");
+        }
+
+        //تابع autoComplete
+        function Addressbounds() {
+            $(".txtAddressLocation").on("focus", function () {
+                $(this).autocomplete({
+                    focus: function (event, ui) {
+                        return false;
+                    },
+                    select: function (event, ui) {
+                        $(this).val(ui.item.address);
+                        return false;
+                    },
+                    source: function (request, response) {
+
+                        $.ajax({
+                            url: "/customerLoyality/SearchLocationAutoCompelete",
+                            data:
+                            {
+                                term: request.term,
+                            },
+                            success: function (data) {
+                                response(data);
+                            }
+                        });
+                    },
+                    minLength: 3,
+                    open: function () {
+                        $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+                    },
+                    close: function () {
+                        $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+                    }
+                }).autocomplete("instance")._renderItem = function (ul, item) {
+                    if (item.address) {
+                        return $("<li>")
+                            .append("<div><span class=\"auto-complete-item\"> " + "نام محدوده: " + item.address + "</span ></div > ")
+                            .appendTo(ul);
+                    }
+                };
+            })
+        }
+        //تابع autoComplete
+        function mobileAutoCompelete() {
+            $(".txtPhoneNumber").on("focus", function () {
+                $(this).autocomplete({
+                    focus: function (event, ui) {
+                        return false;
+                    },
+                    select: function (event, ui) {
+                        $(this).val(ui.item.phoneNumber);
+                        $(".txtFirstName").val(ui.item.firstName)
+                        $(".txtLastName").val(ui.item.lastName)
+                        $(".txtPhoneNumber").prop("disabled", true);
+                        $(".lblName").hide();
+                        $(".lblPhoneNumber").hide();
+                        $(".lblSpecification").show();
+                        $("#eraser").show();
+                        $(".txtBirthDate").prop("disabled", false);
+                        $(".txtMariageDate").prop("disabled", false);
+                        $(".txtAddressLocation").prop("disabled", false);
+                        return false;
+                    },
+                    source: function (request, response) {
+
+                        $.ajax({
+                            url: "/customerLoyality/CustomerInfoAutoCompelete",
+                            data:
+                            {
+                                term: request.term,
+                            },
+                            success: function (data) {
+                                response(data);
+                            }
+                        });
+                    },
+                    minLength: 3,
+                    open: function () {
+                        $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+                    },
+                    close: function () {
+                        $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+                    }
+                }).autocomplete("instance")._renderItem = function (ul, item) {
+                    if (item.phoneNumber) {
+                        return $("<li>")
+                            .append("<div><span class=\"auto-complete-item\"> " + "نام: " + item.firstName + " <br/> " + "نام خانوادگی: " + (item.lastName ? item.lastName : '-') + "<br/>" + "شماره تلفن: " + (item.phoneNumber ? item.phoneNumber : '-') + "</span ></div > ")
+                            .appendTo(ul);
+                    }
+                };
+            })
+        }
+        //تابع برگرداندن مقادیر مورد نظر از سرور//
+        function getCustomerInfo() {
+            $(".txtPhoneNumber").keypress(function (e) {
+                if (e.which == 13 || e.which == 8 && $(this).val().length == 8 || $(this).val().length == 11) {
+                    $(".txtPhoneNumber").prop("disabled", true);
+                    $(".lblPhoneNumber").hide();
+                    e.preventDefault();
+                    var phoneNumber = $(this).val();
+                    loader(true);
+                    $.ajax({
+                        method: "POST",
+                        url: "/customerloyality/getcustomerinfo",
+                        data: { phoneNumber: phoneNumber },
+                        success: function (response) {
+                            if (response.status == 200) {
+                                $(".txtFirstName").val(response.data.firstName);
+                                $(".txtLastName").val(response.data.lastName);
+                                trueDisable();
+                                $("#eraser").show();
+                            }
+                            else {
+                                $(".txtFirstName").val("");
+                                $(".txtLastName").val("");
+                                $(".txtBirthDate").val("");
+                                $(".txtMariageDate").val("");
+                                falseDisable();
+                                $(".txtFirstName").focus();
+                                $("#eraser").show();
+                            }
+                            loader(false);
+                        }
+                    });
+                };
+            });
+        }
+    </script>
+}
+
+
+

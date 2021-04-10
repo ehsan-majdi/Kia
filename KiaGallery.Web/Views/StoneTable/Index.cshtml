@@ -1,0 +1,353 @@
+﻿@{
+    ViewBag.Title = "مدیریت میز سنگ";
+}
+
+<style type="text/css">
+    .form-group input[type="checkbox"] {
+        display: none;
+    }
+
+        .form-group input[type="checkbox"] + .btn-group > label span {
+            width: 20px;
+        }
+
+            .form-group input[type="checkbox"] + .btn-group > label span:first-child {
+                display: none;
+            }
+
+            .form-group input[type="checkbox"] + .btn-group > label span:last-child {
+                display: inline-block;
+            }
+
+        .form-group input[type="checkbox"]:checked + .btn-group > label span:first-child {
+            display: inline-block;
+        }
+
+        .form-group input[type="checkbox"]:checked + .btn-group > label span:last-child {
+            display: none;
+        }
+
+    .btn.btn-primary.active, .btn.btn-danger.active {
+        width: 90px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tabTransparent" data-toggle="tab">براق</a></li>
+            <li><a href="#tabSedimentary" data-toggle="tab">رسوبی</a></li>
+            <li><a href="#tabPearl" data-toggle="tab">مروارید</a></li>
+            @*<li><a href="#tabAtomic" data-toggle="tab">اتمی</a></li>*@
+            <li><a href="#tabLeatherBraceletStone" data-toggle="tab">سنگ دستبند چرمی</a></li>
+            <li><a href="#tabBraceletStone" data-toggle="tab">دستبند سنگی</a></li>
+        </ul>
+        <div class="tab-content clearfix">
+            <div class="tab-pane active" id="tabTransparent">
+                @foreach (var item in ViewBag.Transparent)
+                {
+                    <div class="itemStone col-xs-12 col-sm-6 col-md-4 col-lg-3 txt-al-c" data-id="@item.Id" data-title="@item.Name">
+                        @if (string.IsNullOrEmpty(item.FileName))
+                        {
+                            <img style="width: 100%;" src="/content/image/kia-gallery-logo-square.png" />
+                        }
+                        else
+                        {
+                            <img style="width: 50px" src="/image/stone/500x500/@item.FileName" />
+                        }
+                        <h5 class="txt-al-c">@item.Name</h5>
+                    </div>
+                }
+            </div>
+            <div class="tab-pane" id="tabSedimentary">
+                @foreach (var item in ViewBag.Sedimentary)
+                {
+                    <div class="itemStone col-xs-12 col-sm-6 col-md-4 col-lg-3 txt-al-c" data-id="@item.Id" data-title="@item.Name">
+                        @if (string.IsNullOrEmpty(item.FileName))
+                        {
+                            <img style="width: 100%;" src="/content/image/kia-gallery-logo-square.png" />
+                        }
+                        else
+                        {
+                            <img style="width: 50px" src="/image/stone/500x500/@item.FileName" />
+                        }
+                        <h5 class="txt-al-c">@item.Name</h5>
+                    </div>
+                }
+            </div>
+            <div class="tab-pane" id="tabPearl">
+                @foreach (var item in ViewBag.Pearl)
+                {
+                    <div class="itemStone col-xs-12 col-sm-6 col-md-4 col-lg-3 txt-al-c" data-id="@item.Id" data-title="@item.Name">
+                        @if (string.IsNullOrEmpty(item.FileName))
+                        {
+                            <img style="width: 100%;" src="/content/image/kia-gallery-logo-square.png" />
+                        }
+                        else
+                        {
+                            <img style="width: 50px" src="/image/stone/500x500/@item.FileName" />
+                        }
+                        <h5 class="txt-al-c">@item.Name</h5>
+                    </div>
+                }
+            </div>
+            @*<div class="tab-pane" id="tabAtomic">
+                @foreach (var item in ViewBag.Atomic)
+                {
+                    <div class="itemStone col-xs-12 col-sm-6 col-md-4 col-lg-3 txt-al-c" data-id="@item.Id" data-title="@item.Name">
+                        @if (string.IsNullOrEmpty(item.FileName))
+                        {
+                            <img style="width: 100%;" src="/content/image/kia-gallery-logo-square.png" />
+                        }
+                        else
+                        {
+                            <img src="/image/stone/500x500/@item.FileName" />
+                        }
+                        <h5 class="txt-al-c">@item.Name</h5>
+                    </div>
+                }
+            </div>*@
+            <div class="tab-pane" id="tabLeatherBraceletStone">
+                @foreach (var item in ViewBag.LeatherBraceletStone)
+                {
+                    <div class="itemStone col-xs-12 col-sm-6 col-md-4 col-lg-3 txt-al-c" data-id="@item.Id" data-title="@item.Name">
+                        @if (string.IsNullOrEmpty(item.FileName))
+                        {
+                            <img style="width: 100%;" src="/content/image/kia-gallery-logo-square.png" />
+                        }
+                        else
+                        {
+                            <img style="width: 50px" src="/image/stone/500x500/@item.FileName" />
+                        }
+                        <h5 class="txt-al-c">@item.Name</h5>
+                    </div>
+                }
+            </div>
+            <div class="tab-pane" id="tabBraceletStone">
+                @foreach (var item in ViewBag.BraceletStone)
+                {
+                    <div class="itemStone col-xs-12 col-sm-6 col-md-4 col-lg-3 txt-al-c" data-id="@item.Id" data-title="@item.Name">
+                        @if (string.IsNullOrEmpty(item.FileName))
+                        {
+                            <img style="width: 100%;" src="/content/image/kia-gallery-logo-square.png" />
+                        }
+                        else
+                        {
+                            <img style="width: 50px" src="/image/stone/500x500/@item.FileName" />
+                        }
+                        <h5 class="txt-al-c">@item.Name</h5>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="modalStone" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="Modal Stone">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <input type="hidden" id="hiddenStoneId" value="" />
+            <div class="modal-body">
+                <h4 id="headerStoneTitle" class="alert alert-success"></h4>
+                <h5>دایره</h5>
+                @foreach (var item in ViewBag.CircleSize)
+                {
+                    <div class="form-group form-checkbox inline-block">
+                        <input type="checkbox" name="fancy-checkbox-default" id="checkbox-@item.Id" class="chkShapeSize" value="@item.Id" autocomplete="off" checked />
+                        <div class="btn-group">
+                            <label for="checkbox-@item.Id" class="btn btn-primary">
+                                <span class="fa fa-check"></span>
+                                <span> </span>
+                            </label>
+                            <label for="checkbox-@item.Id" class="btn btn-primary active">
+                                @(item.SizeLength + "x" + item.SizeWidth)
+                            </label>
+                        </div>
+                    </div>
+                }
+                <h5>مارکیز</h5>
+                @foreach (var item in ViewBag.MarquiseSize)
+                {
+                    <div class="form-group form-checkbox inline-block">
+                        <input type="checkbox" name="fancy-checkbox-default" id="checkbox-@item.Id" class="chkShapeSize" value="@item.Id" autocomplete="off" checked />
+                        <div class="btn-group">
+                            <label for="checkbox-@item.Id" class="btn btn-primary">
+                                <span class="fa fa-check"></span>
+                                <span> </span>
+                            </label>
+                            <label for="checkbox-@item.Id" class="btn btn-primary active">
+                                @(item.SizeLength + "x" + item.SizeWidth)
+                            </label>
+                        </div>
+                    </div>
+                }
+                <h5>اشک</h5>
+                @foreach (var item in ViewBag.TearSize)
+                {
+                    <div class="form-group form-checkbox inline-block">
+                        <input type="checkbox" name="fancy-checkbox-default" id="checkbox-@item.Id" class="chkShapeSize" value="@item.Id" autocomplete="off" checked />
+                        <div class="btn-group">
+                            <label for="checkbox-@item.Id" class="btn btn-primary">
+                                <span class="fa fa-check"></span>
+                                <span> </span>
+                            </label>
+                            <label for="checkbox-@item.Id" class="btn btn-primary active">
+                                @(item.SizeLength + "x" + item.SizeWidth)
+                            </label>
+                        </div>
+                    </div>
+                }
+                <h5>مثلث</h5>
+                @foreach (var item in ViewBag.TriangleSize)
+                {
+                    <div class="form-group form-checkbox inline-block">
+                        <input type="checkbox" name="fancy-checkbox-default" id="checkbox-@item.Id" class="chkShapeSize" value="@item.Id" autocomplete="off" checked />
+                        <div class="btn-group">
+                            <label for="checkbox-@item.Id" class="btn btn-primary">
+                                <span class="fa fa-check"></span>
+                                <span> </span>
+                            </label>
+                            <label for="checkbox-@item.Id" class="btn btn-primary active">
+                                @(item.SizeLength + "x" + item.SizeWidth)
+                            </label>
+                        </div>
+                    </div>
+                }
+                <h5>مربع</h5>
+                @foreach (var item in ViewBag.SquareSize)
+                {
+                    <div class="form-group form-checkbox inline-block">
+                        <input type="checkbox" name="fancy-checkbox-default" id="checkbox-@item.Id" class="chkShapeSize" value="@item.Id" autocomplete="off" checked />
+                        <div class="btn-group">
+                            <label for="checkbox-@item.Id" class="btn btn-primary">
+                                <span class="fa fa-check"></span>
+                                <span> </span>
+                            </label>
+                            <label for="checkbox-@item.Id" class="btn btn-primary active">
+                                @(item.SizeLength + "x" + item.SizeWidth)
+                            </label>
+                        </div>
+                    </div>
+                }
+                <h5>مستطیل</h5>
+                @foreach (var item in ViewBag.RectangleSize)
+                {
+                    <div class="form-group form-checkbox inline-block">
+                        <input type="checkbox" name="fancy-checkbox-default" id="checkbox-@item.Id" class="chkShapeSize" value="@item.Id" autocomplete="off" checked />
+                        <div class="btn-group">
+                            <label for="checkbox-@item.Id" class="btn btn-primary">
+                                <span class="fa fa-check"></span>
+                                <span> </span>
+                            </label>
+                            <label for="checkbox-@item.Id" class="btn btn-primary active">
+                                @(item.SizeLength + "x" + item.SizeWidth)
+                            </label>
+                        </div>
+                    </div>
+                }
+                <h5>بیضی</h5>
+                @foreach (var item in ViewBag.OvalSize)
+                {
+                    <div class="form-group form-checkbox inline-block">
+                        <input type="checkbox" name="fancy-checkbox-default" id="checkbox-@item.Id" class="chkShapeSize" value="@item.Id" autocomplete="off" checked />
+                        <div class="btn-group">
+                            <label for="checkbox-@item.Id" class="btn btn-primary">
+                                <span class="fa fa-check"></span>
+                                <span> </span>
+                            </label>
+                            <label for="checkbox-@item.Id" class="btn btn-primary active">
+                                @(item.SizeLength + "x" + item.SizeWidth)
+                            </label>
+                        </div>
+                    </div>
+                }
+                <h5>سایر</h5>
+                @foreach (var item in ViewBag.OtherSize)
+                {
+                    <div class="form-group form-checkbox inline-block">
+                        <input type="checkbox" name="fancy-checkbox-default" id="checkbox-@item.Id" class="chkShapeSize" value="@item.Id" autocomplete="off" checked />
+                        <div class="btn-group">
+                            <label for="checkbox-@item.Id" class="btn btn-primary">
+                                <span class="fa fa-check"></span>
+                                <span> </span>
+                            </label>
+                            <label for="checkbox-@item.Id" class="btn btn-primary active">
+                                @(item.SizeLength + "x" + item.SizeWidth)
+                            </label>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" type="button" class="btn btn-success" >ذخیره</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(".chkShapeSize").on("change", function () {
+                if ($(this).prop("checked")) {
+                    $(this).closest(".form-checkbox").find(".btn-danger").removeClass("btn-danger").addClass("btn-primary");
+                }
+                else {
+                    $(this).closest(".form-checkbox").find(".btn-primary").removeClass("btn-primary").addClass("btn-danger");
+                }
+            });
+
+            $(".itemStone").on("click", function () {
+
+                $(".chkShapeSize").prop("checked", true).closest(".form-checkbox").find(".btn-danger").removeClass("btn-danger").addClass("btn-primary");
+
+                var id = $(this).attr("data-id");
+                $("#hiddenStoneId").val(id);
+                var title = $(this).attr("data-title");
+                $("#headerStoneTitle").html(title);
+
+
+                loader(true);
+                var params = { stoneId: id };
+                $.get("/stoneTable/getExcludeStone", params, function (response) {
+                    for (var i = 0; i < response.data.length; i++) {
+                        var item = response.data[i];
+                        $(".chkShapeSize[value=" + item.shapeSizeId + "]").prop("checked", false).change();
+                        $(".chkShapeSize[value=" + item.shapeSizeId + "]").closest(".form-checkbox").find(".btn-primary").removeClass("btn-primary").addClass("btn-danger");
+                    }
+                    loader(false);
+                    $("#modalStone").modal("show");
+                });
+            });
+
+            $("#btnSave").on("click", function (event) {
+                var params = {
+                    stoneId: $("#hiddenStoneId").val(),
+                    shapeSizeIdList: []
+                }
+
+                $(".chkShapeSize").not(":checked").each(function (index, element) {
+                    params.shapeSizeIdList.push($(this).val());
+                });
+
+                loader(true);
+                $.post("/stoneTable/setExcludeStone", params, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        callbackAlert(response.message, function () {
+                            $("#modalStone").modal("hide");
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+
+            });
+        });
+    </script>
+}

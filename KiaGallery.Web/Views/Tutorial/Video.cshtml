@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewBag.Title = "Video";
+}
+<link href="~/Content/uikit/css/uikit-rtl.css" rel="stylesheet" />
+<div id="content">
+
+</div>
+@section scripts{
+    <script src="~/Scripts/uikit/js/uikit.min.js"></script>
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 50
+        }
+        $(document).ready(function () {
+            getList()
+        })
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+
+            loader(true);
+            $.get("/tutorial/getVideoList", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+
+        <div class="uk-thumbnail" uk-grid>
+            {{for list}}
+            <div class="uk-width-1-3">
+                <video style="width:500px;height:500px" poster="{{:coverLink}}" class="video-file" src="{{:link}}" controls playsinline uk-video="autoplay:false"></video>
+                <div style="margin-top: 20px;" class="uk-thumbnail-caption">{{:title}} : {{:description}}</div>
+            </div>
+            {{/for}}
+        </div>
+
+    </script>
+}

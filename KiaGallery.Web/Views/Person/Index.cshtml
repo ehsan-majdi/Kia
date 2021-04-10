@@ -1,0 +1,568 @@
+﻿
+@{
+    ViewBag.Title = "مدیریت پرسنل";
+}
+<style>
+    #insurancefilter-title {
+        margin-right: 15px;
+        font-weight: 500
+    }
+
+    #insurancefilter {
+        display: inline-block;
+    }
+</style>
+<link href="~/Content/ios-switch-rtl.css" rel="stylesheet" />
+
+<div id="control-section" class="search form-inline">
+    <a href="/person/add" class="btn btn-primary" style="margin-left:20px">
+        <i class="fa fa-plus v-middle" aria-hidden="true"></i>&nbsp;
+        <span>جدید</span>
+    </a>
+    @*<a href="/person/insurancelist" class="btn btn-success">
+            <i class="fa fa-ban v-middle" aria-hidden="true"></i>&nbsp;
+            <span>لیست پرسنل بدون بیمه</span>
+        </a>
+        <a href="/person/insuranceReport/" class="btn btn-success">
+            <i class="fa fa-ban v-middle" aria-hidden="true"></i>&nbsp;
+            <span>چاپ لیست افراد فاقد بیمه</span>
+        </a>*@
+    <a href="/person/PersonReport/" class="btn btn-success">
+        <i class="fa fa-files-o v-middle" aria-hidden="true"></i>&nbsp;
+        <span>گزارش پرسنل</span>
+    </a>
+    <a href="/person/deactivePerson/" class="btn btn-danger">
+        <i class="fa fa-times v-middle" aria-hidden="true"></i>&nbsp;
+        <span>پرسنل غیر فعال</span>
+    </a>
+</div>
+<br />
+<div class="form-inline">
+    <input id="txtFirstName" type="text" name="firstName" placeholder="نام" class="form-control" />
+    <input id="txtLastName" type="text" name="lastName" placeholder="نام خانوادگی" class="form-control" />
+    <input id="txtPersonNumber" type="text" name="personNumber" placeholder="شماره پرسنلی" class="form-control" />
+    <select id="cmbBranch" name="branchId" class="form-control">
+        <option value="">انتخاب شعبه</option>
+    </select>
+    <input id="btnSearch" type="button" value="جستجو" class="btn btn-primary" />
+    <div id="insurancefilter" class="pull-left">
+        <h5>فاقد بیمه</h5>
+        <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkInsurance" type="checkbox" name="notInsurance" value="true" style="position:absolute"><span id="insurancefilter-title"></span></label></div></div>
+    </div>
+</div>
+
+<div id="content"></div>
+
+<div id="fileModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">فایل</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <input id="hiddenId" type="hidden" name="id" />
+                        <input id="personId" type="hidden" name="personId" value="" />
+                        <label for="txtTitle">عنوان</label>
+                        <input id="txtTitle" type="text" name="title" class="form-control" data-validate="required" />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="cmbCategory">دسته بندی</label>
+                        <select id="cmbCategory" class="form-control" data-validate="required" name="category">
+                            <option value="">...</option>
+                            <option value="0">عکس پرسنلی</option>
+                            <option value="1">فرم قرارداد</option>
+                            <option value="2">پزشکی</option>
+                            <option value="3">سایر</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="cmbFileType">نوع فایل</label>
+                        <select id="cmbFileType" class="form-control" data-validate="required" name="fileType">
+                            <option value="">...</option>
+                            <option value="0">تصویر</option>
+                            <option value="1">فایل</option>
+                        </select>
+                    </div>
+                    <div class="form-group relative col-md-12">
+                        <label for="txtFileName">تصویر</label>
+                        <input id="txtFileName" type="text" name="fileName" class="file form-control" disabled data-validate="required" />
+                        <input id="file" type="file" class="hidden" />
+                        <i id="openFile" class="fa fa-upload fa-20px file-icon" aria-hidden="true" style="left: 20px; top: 32px;"></i>
+                        <i id="deleteFile" class="fa fa-remove fa-20px file-icon" aria-hidden="true" style="left: 45px; top: 32px;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" type="button" class="btn btn-success btn-password btn-control">ثبت</button>
+                <button type="button" class="btn btn-danger btn-password btn-control" data-dismiss="modal">لغو</button>
+            </div>
+            <div class="modal-footer">
+                <div class="fileList"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="deactiveDetailModal" class="modal fade" role="dialog" style="overflow-y: auto;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <input type="hidden" class="hiddenPersonId" />
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div id="inactive-content" class="modal-body">
+                <div class="form-group">
+                    <label for="txtcontractEndDate">تاریخ پایان همکاری</label>
+                    <input id="txtcontractEndDate" type="text" class="form-control date" readonly name="contractEndDate" data-validate="required" autocomplete="off">
+                </div>
+                <button class="btn btn-danger deactive">تایید</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="personSetting" class="modal fade" role="dialog" style="overflow-y: auto;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <input type="hidden" class="hiddenPersonId" />
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div id="inactive-content" class="modal-body">
+                <div style="display:none" class="form-group supervisor">
+                    <label for="txtSupervisorSalary">پایه سرپرست</label>
+                    <input id="txtSupervisorSalary" type="text" class="form-control clearval" name="supervisorSalary" maxlength="25" data-validate="required, maxLength(25)">
+                </div>
+                <div class="form-group">
+                    <label for="txtReward">پاداش مدیریتی</label>
+                    <input id="txtReward" type="text" class="form-control clearval" name="reward" maxlength="25" data-validate="required, maxLength(25)">
+                </div>
+                <div class="form-group">
+                    <label for="txtActivityAmount">میزان کارکرد</label>
+                    <input id="txtActivityAmount" type="text" class="form-control clearval" name="activityAmount" maxlength="25" data-validate="required, maxLength(25)">
+                </div>
+                <button class="btn btn-success saveSetting">تایید</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 200,
+            firstName: null,
+            lastName: null,
+            personNumber: null,
+            branchId: null,
+            notInsurance: null,
+        }
+
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+
+        $('#fileModal').on('hidden.bs.modal', function () {
+            location.reload();
+        });
+
+        $(document).ready(function () {
+            $(".date").pDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true
+            });
+
+            loadRemoteSelect("#cmbBranch", "/branch/getbranch", null, "id", "name", "انتخاب شعبه ...", function () {
+                getList();
+            });
+
+            $(document).on("click", ".deactivePerson", function () {
+                var id = $(this).attr("data-id");
+                $(".hiddenPersonId").val(id);
+                $("#deactiveDetailModal").modal('show');
+                loader(false);
+            });
+
+            $(document).on("click", ".setting", function () {
+                var id = $(this).attr("data-id");
+                $(".hiddenPersonId").val(id);
+                $.post("/person/getPerson/" + id, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+
+                        var data = response.data;
+                        $(".clearval").val("")
+                        $("#txtReward").val(data.reward)
+                        $("#txtActivityAmount").val(data.activityAmount)
+                        if (data.supervisor) {
+                            $("#txtSupervisorSalary").val(data.supervisorSalary)
+                            $(".supervisor").show()
+                        }
+                        else {
+                            $(".supervisor").hide()
+                        }
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+                $("#personSetting").modal('show');
+                loader(false);
+            });
+
+            $(document).on("click", ".deactive", function () {
+                var id = $(".hiddenPersonId").val();
+                var date = $(".date").val();
+                loader(true);
+                $.post("/person/DeactivePersonal/", { id: id, date: date }, function (response) {
+                    loader(false);
+                    if ($(".date").val() != '') {
+                        if (response.status == 200) {
+
+                            callbackAlert(response.message, function () {
+                                getList();
+                                $("#deactiveDetailModal").modal('hide');
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    }
+                    else {
+                        alert("لطفا مقدار تاریخ مورد نظر را انتخاب کنید");
+                    }
+                })
+            });
+
+            $(document).on("click", ".saveSetting", function () {
+                var entity = {
+                    id: $(".hiddenPersonId").val(),
+                    supervisorSalary: $("#txtSupervisorSalary").val(),
+                    reward: $("#txtReward").val(),
+                    activityAmount: $("#txtActivityAmount").val()
+                }
+                loader(true);
+                $.post("/person/saveSetting/", entity, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        callbackAlert(response.message, function () {
+                            getList();
+                            $("#personSetting").modal('hide');
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+            setupUpload("person");
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف پرسنل اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/person/delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+
+            $(document).on("change", ".chkInsurance", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { notInsurance: true }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["notInsurance", "page"]);
+                }
+            });
+
+            $(document).on("click", ".filePerson", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                getFileList(id);
+            });
+
+            $("#btnSave").on("click", function (event) {
+                event.preventDefault();
+                if (checkForm("#form")) {
+                    var entity = getEntity("#fileModal");
+                    loader(true);
+                    $.ajax({
+                        method: "POST",
+                        url: "/person/saveFile",
+                        data: entity,
+                        success: function (response) {
+                            alert(response.message);
+                            if (response.status == 200) {
+                                getFileList(entity.personId);
+                            }
+                            loader(false);
+                        }
+                    });
+                }
+            });
+
+            $(document).on("click", ".editFile", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                loader(true);
+                $.get("/person/loadFile/" + id, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        setEntity(response.data, "#fileModal");
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                })
+            });
+
+            $(document).on("click", ".deleteFile", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                var personId = $(this).attr("data-personId");
+                confirmMessage("آیا از حذف فایل پرسنل اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/person/deleteFile/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getFileList(personId);
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+
+            $(document).on("click", "#btnSearch", function (event) {
+                event.preventDefault();
+                manipulateParam({ firstName: $("#txtFirstName").val(), lastName: $("#txtLastName").val(), personNumber: $("#txtPersonNumber").val(), branchId: $("#cmbBranch").val(), }, "page");
+            });
+            $("#txtFirstName").on("keyup", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    var param = { firstName: $("#txtFirstName").val() }
+                    manipulateParam(param, "page");
+                }
+            });
+            $("#txtLastName").on("keyup", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    var param = { lastName: $("#txtLastName").val() }
+                    manipulateParam(param, "page");
+                }
+            });
+            $("#txtPersonNumber").on("keyup", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    var param = { personNumber: $("#txtPersonNumber").val() }
+                    manipulateParam(param, "page");
+                }
+            });
+            $("#cmbBranch").on("change", function (e) {
+                e.preventDefault();
+                var param = { branchId: $("#cmbBranch").val() }
+                manipulateParam(param, "page");
+            });
+        });
+
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend({}, defaultEntity, newParams);
+            updateForm();
+            loader(true);
+            $.get("/person/search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+        function getFileList(personId) {
+            loader(true);
+            $.get("/person/searchFile", { personId: personId }, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#templateFile");
+                    var htmlOutput = template.render(data);
+                    $(".fileList").html(htmlOutput);
+                    clearEntity("#fileModal");
+                    $("#personId").val(personId);
+                    $("#fileModal").modal("show");
+                    $(".preventimgFile").each(function () {
+                        if ($(this).html().indexOf("عکس") >= 0) {
+                            $("#cmbCategory").children('option[value="0"]').hide();
+                        }
+                    })
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+        function updateForm() {
+            var params = getParam();
+            //is Insurance
+            if (params["notInsurance"]) {
+                $(".chkInsurance").prop("checked", true);
+            }
+            else {
+                $(".chkInsurance").prop("checked", false);
+            }
+            // firstName
+            if (params["firstName"]) {
+                $("#txtFirstName").val(params["firstName"]);
+            }
+            else {
+                $("#txtFirstName").val("");
+            }
+            // lastName
+            if (params["lastName"]) {
+                $("#txtLastName").val(params["lastName"]);
+            }
+            else {
+                $("#txtLastName").val("");
+            }
+            // personNumber
+            if (params["personNumber"]) {
+                $("#txtPersonNumber").val(params["personNumber"]);
+            }
+            else {
+                $("#txtPersonNumber").val("");
+            }
+            // branch
+            if (params["branchId"]) {
+                $("#cmbBranch").val(params["branchId"]);
+            }
+            else {
+                $("#cmbBranch").val("");
+            }
+        }
+    </script>
+
+    <script id="templateFile" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>نام</th>
+                    <th>نوع</th>
+                    <th>دسته بندی</th>
+                    <th class="icon-col text-center">دانلود</th>
+                    <th class="icon-col text-center">ویرایش</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td>{{:#index + 1}}</td>
+                    <td>{{:title}}</td>
+                    <td>{{:type}}</td>
+                    <td class="preventimgFile">{{:categoryTitle}}</td>
+                    <td class="txt-al-c">
+                        <a href="/upload/person/{{:fileName}}" class="btn btn-success btn-xs" data-title="دانلود" data-id="{{:id}}"><i class="fa fa-download" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <button class="editFile btn btn-primary btn-xs" data-title="ویرایش" data-id="{{:id}}"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                    </td>
+                    <td class="txt-al-c">
+                        <button class="deleteFile btn btn-danger btn-xs" data-title="حذف" data-personId="{{:personId}}" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>نام</th>
+                    <th>نام خانوادگی</th>
+                    <th>تصویر</th>
+                    <th>شماره پرسنلی</th>
+                    <th>شعبه</th>
+                    <th class="icon-col text-center">غیرفعال</th>
+                    <th class="icon-col text-center">تنظیمات</th>
+                    <th class="icon-col text-center">فرم قراردادکار</th>
+                    <th class="icon-col text-center">فایل</th>
+                    @*<th class="icon-col text-center">مشاهده</th>*@
+                    <th class="icon-col text-center">ویرایش</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td>{{:#index + 1}}</td>
+                    <td>{{:firstName}}</td>
+                    <td>{{:lastName}}</td>
+                    <td>
+                        <img src="/upload/person/{{:fileName}}" width="75px" />
+                    </td>
+                    <td>{{:personNumber}}</td>
+                    <td>{{:branchName}}</td>
+                    <td class="txt-al-c active-user-{{:id}}">
+                        {{if active}}
+                        <a class="deactivePerson fa fa-check btn btn-success btn-xs" aria-hidden="true" title="فعال" data-id="{{:id}}"></a>
+                        {{else}}
+                        <i class="active fa fa-close btn btn-danger btn-xs" aria-hidden="true" title="غیر فعال" data-id="{{:id}}"></i>
+                        {{/if}}
+                    </td>
+                    <td class="txt-al-c">
+                        <button class="setting btn btn-info btn-xs" data-title="تنظیمات" data-id="{{:id}}"><i class="fa fa-cogs" aria-hidden="true"></i></button>
+                    </td>
+                    <td class="txt-al-c">
+                        <a target="_blank" href="/person/workcontractform/{{:id}}" class="btn btn-primary btn-xs" data-title="فرم قراردادکار" data-id="{{:id}}"><i class="fa fa-file-word-o" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <a href="/person/file/{{:id}}" class="filePerson btn btn-primary btn-xs" data-title="فایل" data-id="{{:id}}"><i class="fa fa-file" aria-hidden="true"></i></a>
+                    </td>
+                    @*<td class="txt-al-c">
+                        <a href="/person/view/{{:id}}" class="btn btn-primary btn-xs" data-title="مشاهده"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                    </td>*@
+                    <td class="txt-al-c">
+                        <a href="/person/edit/{{:id}}" class="btn btn-primary btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+}

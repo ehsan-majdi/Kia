@@ -1,0 +1,230 @@
+﻿@{
+    ViewBag.Title = "دفترچه تلفن";
+
+}
+
+
+
+
+<style>
+    #main {
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    #main {
+        min-height: 85vh;
+    }
+
+    .product-item .small-font .fa {
+        width: 25px;
+        color: #555;
+        text-align: center;
+    }
+
+    #filter-list {
+        width: 15%;
+        padding-left: 0;
+        padding-right: 0px;
+        padding-top: 25px;
+    }
+
+    #menu-holder {
+        width: calc(100% - 130px);
+        transition: 0.5s;
+    }
+
+    td span {
+        line-height: 29px;
+    }
+
+    .border-left {
+        border-left: solid 1px silver;
+    }
+
+    .table-head {
+        padding-bottom: 5px;
+    }
+
+    .table-cell {
+        padding: 5px 0;
+        border-top: solid 1px silver;
+    }
+
+    td {
+        vertical-align: middle !important;
+    }
+
+    tr:nth-child(even) {
+        background: #eee;
+    }
+
+    #button-bar {
+        margin-top: 8px;
+        padding-bottom: 8px;
+        border-bottom: solid 1px silver;
+    }
+
+    .bg-gold {
+        background-color: #FFD700;
+    }
+
+        .bg-gold:nth-child(2n+1) {
+            background-color: #ffe44d;
+        }
+
+    .bg-crimson {
+        background-color: #800000;
+        color: #fff;
+    }
+
+        .bg-crimson:nth-child(2n+1) {
+            background-color: #cc0000;
+            color: #fff;
+        }
+
+    .bg-white:nth-child(2n+1) {
+        background-color: #eee;
+    }
+
+    .bg-green {
+        background-color: #677b5f;
+    }
+
+        .bg-green:nth-child(2n+1) {
+            background-color: #bcc8b7;
+        }
+
+    .bg-green2 {
+        background-color: #003300;
+        color: #fff;
+    }
+
+        .bg-green2:nth-child(2n+1) {
+            background-color: #001a00;
+            color: #fff;
+        }
+
+    #txtDelivery {
+        width: 200px;
+        display: inline-block;
+    }
+
+    .header-scroll {
+        top: 50px;
+    }
+
+    #cmbOrder, #cmbFilter, #txtTerm, #cmbGiftType, #cmbBranchIdShopping, #cmbBranchReceiverCustomer, #txtBuyerCustomerPhoneNumber, #txtBuyerCustomerName, #cmbCompanyIdShopping {
+        width: 160px;
+        display: inline-block;
+    }
+</style>
+@*<div class="">
+        <ul class="nav nav-tabs">
+            @foreach (KiaGallery.Model.Context.Branch item in ViewBag.branchList)
+            {
+                if (string.IsNullOrEmpty(item.Color))
+                {
+                    <li><a href="#!" class="workshop-item ltr" data-id="@item.Id">@item.Name</a></li>
+                }
+                else
+                {
+                    <li><a href="#!" class="workshop-item ltr" data-id="@item.Id" style="color: #@(item.Color);">@item.Name</a></li>
+                }
+            }
+        </ul>
+    </div>*@
+
+<div class="col-md-2">
+    <div class="form-group">
+        <label for="cmbBranch">شعبه</label>
+        <select id="cmbBranch" class="form-control" name="branchId">
+            <option value="">شعبه</option>
+            @foreach (KiaGallery.Model.Context.Branch item in ViewBag.branchList)
+            {
+                <option value="@item.Id">@item.Name </option>
+
+            }
+        </select>
+    </div>
+</div>
+<div class="col-lg-2">
+    <label>شماره تلفن شعبه </label>
+    <input id="txtBranchPhone" type="text" class=" text-center form-control" readonly />
+</div>
+
+<div id="content">
+
+</div>
+@section scripts {
+
+    <script type="text/javascript">
+
+
+
+     
+        $(document).ready(function () {
+             getList();
+            $(document).on("change", "#cmbBranch", function (event) {
+                var value = $(this).val();
+                getList(value);
+                load(value);
+            });
+        });
+        function load(id) {
+            
+            $.get("/home/getBranchTelephone/" + id, function (response) {
+                if (response.status == 200) {
+                    $("#txtBranchPhone").val(response.data.phone);
+                    if (!response.data.phone) {
+                        $("#txtBranchPhone").val("--------");
+                    }
+                }
+                else {
+                    response.status = 500;
+                }
+              
+            });
+        }
+
+        function getList(id) {
+            $.get("/home/phonebookjson/" + id, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        }
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th>نام</th>
+                    <th>نام خانوادگی</th>
+                    <th>شماره همراه</th>
+                    <th>شعبه</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td>{{:firstName}}</td>
+                    <td>{{:lastName}}</td>
+                    <td>{{:personPhone}} </td>
+                    <td>{{:branchName}} </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}
+
+

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="69fe4ac46f624ad09e1360a982db4937" Name="Diagram1">
+        <EntityTypeShape EntityType="KiaGalleryMainContextModel.Branches" Width="1.5" PointX="0.75" PointY="11.375" />
+        <EntityTypeShape EntityType="KiaGalleryMainContextModel.BranchGolds" Width="1.5" PointX="3" PointY="12.625" />
+        <AssociationConnector Association="KiaGalleryMainContextModel.FK_dbo_BranchGolds_dbo_Branches_BranchId" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

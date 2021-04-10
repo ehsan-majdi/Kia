@@ -1,0 +1,384 @@
+﻿
+@{
+    ViewBag.Title = "کارت هدیه";
+}
+<style>
+    .form-item {
+        margin: 10px auto;
+        width: 30%;
+    }
+
+    .hide-form, .debit-price {
+        display: none
+    }
+
+    .bg-debit {
+        background-color: #d9534f !important;
+    }
+
+    .bg-credit {
+        background-color: #5cb85c !important;
+    }
+
+    .bg-balance {
+        background-color: deepskyblue !important;
+    }
+
+    .bg-orange {
+        background-color: #f0ad4e
+    }
+
+    .bg-silver {
+        background-color: silver;
+        color: white;
+    }
+
+    .bg-black {
+        background-color: black;
+        color: white
+    }
+
+    .btnOperation {
+        display: block;
+        margin: 5px auto;
+        width: 200px
+    }
+
+    .passWordMobile {
+        display: none
+    }
+
+    .newCariorCard {
+        display: none
+    }
+
+    .detail {
+        padding: 10px;
+        width: 320px;
+        margin: 7px;
+    }
+
+    .fullName {
+        padding: 10px;
+        width: 200px;
+    }
+
+    tr > td {
+        border: none !important
+    }
+
+    #changeCardAlert {
+        color: red
+    }
+
+    .refresh {
+        top: -30px;
+        right: -65px;
+        color: deepskyblue;
+        transform: rotate(-90deg);
+        transition: 500ms ease;
+    }
+
+        .refresh:hover {
+            transform: rotate(90deg);
+            transition: 500ms ease;
+            cursor: pointer;
+            color: #5cb85c
+        }
+
+        .refresh:active {
+            color: #d9534f;
+            transition: 100ms
+        }
+
+    #form {
+        margin: 10px 0 0 0;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border-style: solid;
+        border-color: #eeeeee
+    }
+
+
+
+    #img {
+        /*background-image: url("/Content/Image/gift.png");*/
+        background-size: cover;
+        text-align: center;
+        width: 500px;
+        margin: auto;
+        height: auto
+    }
+</style>
+<div class="text-center"><h2><span style="color:deepskyblue">کارت هدیه</span></h2></div>
+<div id="img">
+    <img style="width:50%" src="~/Content/Image/gift.png" />
+</div>
+
+<div class="" id="form" style="margin:auto;width:50%">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group col-md-6">
+                <label>کد مشتری/شماره کارت/موبایل: <span style="color: red" id="replica"></span></label>
+                <input id="txtCariorcard" type="text" class="form-control " name="cariorcard" />
+            </div>
+            <div class="form-group col-md-6 hide-form">
+                <label>کارت:</label>
+                <input id="txtCardNumber" type="text" class="form-control" name="cardNo" data-validate="required" readonly />
+            </div>
+            <div class="form-group col-md-6 hide-form">
+                <label>نام کامل:</label>
+                <input id="txtFirstName" type="text" class="form-control" name="fullName" data-validate="required" />
+            </div>
+            <div class="form-group col-md-6 hide-form">
+                <label>شماره موبایل:</label>
+                <input id="txtMobile" type="text" class="form-control" name="mobileNumber" data-validate="required" maxlength="11"  />
+            </div>
+            <div class="form-group col-md-12 hide-form">
+                <label>مبلغ گیفت:</label>
+                <input id="txtAmount" type="text" class="form-control money-separator" name="amount" data-validate="required" />
+                <input id="txtGift" type="text" class="form-control hidden" name="gift" value="true" />
+                <input id="hiddenUserId" type="text" class="form-control hidden" name="userInfoId" />
+            </div>
+        </div>
+    </div>
+    <div id="detail-content" class="text-center">
+    </div>
+    <button id="btnSave" class="btn btn-success">
+        ذخیره
+    </button>
+    <button id="btnReport" class="btn btn-info  hide-form">مشاهده تراکنش</button>
+
+</div>
+<div class="modal fade" id="modal-report" tabindex="-1" role="dialog" aria-hidden="true" style="        overflow: auto">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title">تراکنش ها</h5>
+            </div>
+            <div class="modal-body">
+                <div id="content">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            
+            $("#btnReport").on("click", function () {
+                $("#modal-report").modal("show");
+            });
+            $(".refresh").click(function () {
+                $("input,textarea").val(null);
+                $(".hide-form").hide();
+                $("#detail-content").empty();
+
+            });
+            $("#txtCariorcard").focus();
+            $(".date").pDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true
+            });
+            $(".date").val("");
+
+            $("#btnSave").on("click", function () {
+                save()
+            })
+
+            $("#txtJbirthDate").on("change", function () {
+                if ($(this).val()) {
+                    $("#hidden-birthDate").val($(this).val())
+                }
+            })
+
+
+
+            $("#txtCariorcard").on("keyup", function (e) {
+                $("#hidden-carrior-card").val($(this).val())
+                var code = e.which
+                if ($(this).val()) {
+                    if (code == 13) {
+                        $(".hide-form").hide()
+                        var id = $(this).val();
+                        loadUserInfo(id);
+                    }
+                }
+                else {
+                    $(".hide-form").hide()
+                }
+            })
+        })
+        function loadUserInfo(id) {
+            loader(true);
+            $.get("/customerCard/loadUserInfoGift/"+ id, function (response) {
+                if (response.status == 200) {
+                        setEntity(response.data, "#form");
+                    $("#hiddenUserId").val(response.data.id);
+                    //if (response.data.pointPercent == 0) {
+                    //    setEntity(response.data, "#form");
+                    //}
+                    //else {
+
+                    //    alert("این کارت از نوع کارت گیفت نمی باشد.");
+                    //    loader(false);
+                    //    return;
+                    //}
+                    report(id)
+                }
+                else {
+                    alert(response.message)
+                }
+                loader(false);
+            });
+        }
+        function save() {
+            var entity = getEntity("#form");
+
+            if (checkForm("#form")) {
+                loader(true);
+                $.get("/customerCard/updateUserInfoGift", entity, function (response) {
+                    if (response.status == 200) {
+
+                        saveCharge()
+                    }
+                    else {
+                        alert(response.message)
+                    }
+                    loader(false);
+                });
+            }
+        }
+      function report(data) {
+            loader(true);
+            $.get("/customerCard/Report/"+ data, function (response) {
+                if (response.status == 200) {
+                    if (response.data) {
+                        var data = response.data.list;
+                        var template = $.templates("#template");
+                        var htmlOutput = template.render(data);
+                        $("#content").html(htmlOutput);
+                        $("#hiddenDebitAmount").val(data.localBalance);
+                        var detailTemplate = $("#detail-template").html();
+                        $(".fullName").html(response.data.list.fullName);
+                        $("#hiddenLocalBalance").val(response.data.list.localBalance)
+                        detailTemplate = detailTemplate.replace("{{fullName}}", response.data.list.fullName);
+                        detailTemplate = detailTemplate.replace("{{level}}", response.data.list.level);
+                        detailTemplate = detailTemplate.replace("{{kiaPoint}}", response.data.list.kiaPoint);
+                        //detailTemplate = detailTemplate.replace("{{kiaLevel}}", response.data.list.kiaLevel);
+
+                        if (response.data.list.kiaPoint > 500 && response.data.list.kiaPoint < 1500) {
+                            detailTemplate = detailTemplate.replace("{{changeCardAlert}}", "تعویض کارت به سطح نقره ای");
+
+                        }
+                        else if (response.data.list.kiaPoint > 1500) {
+                            detailTemplate = detailTemplate.replace("{{changeCardAlert}}", "تعویض کارت به سطح VIP");
+                        }
+                        else {
+                            detailTemplate = detailTemplate.replace("{{changeCardAlert}}", "");
+                        }
+
+
+                        detailTemplate = detailTemplate.replace("{{localBalanceSeparator}}", response.data.list.localBalanceSeparator);
+                        detailTemplate = detailTemplate.replace("{{pointPercent}}", response.data.list.pointPercent);
+                        detailTemplate = detailTemplate.replace("{{creditSumSeparator}}", response.data.list.creditSumSeparator);
+                        detailTemplate = detailTemplate.replace("{{creditCountSeparator}}", response.data.list.creditCountSeparator);
+                        detailTemplate = detailTemplate.replace("{{debitSumSeparator}}", response.data.list.debitSumSeparator);
+                        detailTemplate = detailTemplate.replace("{{debitCountSeparator}}", response.data.list.debitCountSeparator);
+                        detailTemplate = detailTemplate.replace("{{totalTrnCount}}", response.data.list.totalTrnCount);
+                        $("#detail-content").html(detailTemplate);
+                        $("#hidden-kiaPoint").val(response.data.list.creditCount);
+                        $("#hidden-credit-sum").val(response.data.list.creditSum);
+                        $("#hidden-debit-sum").val(response.data.list.debitSum);
+                        $(".hide-form").show();
+                    }
+                    else {
+                        $("#content").html("<h3 class=\"text-center\" >تراکنشی یافت نشد</h3>");
+                        $("#detail-content").html("<h3 class=\"text-center\" >تراکنشی یافت نشد</h3>");
+                        $(".hide-form").show();
+                    }
+                }
+                else {
+                    alert(response.message)
+                    clearEntity("#form");
+                    $(".hide-form").hide();
+                    $("#content").html("<h3 class=\"text-center\" >تراکنشی یافت نشد</h3>");
+                    $("#detail-content").html("<h3 class=\"text-center\" >تراکنشی یافت نشد</h3>");
+                }
+                loader(false);
+            });
+        }
+        function saveCharge()
+        {
+            var entity = getEntity("#form");
+            loader(true);
+            $.get("/customerCard/cardChargeTransaction", entity, function (response) {
+                if (response.status == 200) {
+                    alert(response.message)
+                    clearEntity("#form");
+                    $(".hide-form").hide();
+                    $("#detail-content").empty();
+                }
+                else {
+                    alert(response.message)
+                }
+                loader(false);
+            });
+        }
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <div class="table table-data table-responsive">
+            <span class="badge bg-balance">کیاپوینت: {{:kiaPoint}} امتیاز</span>
+            <span class="badge bg-balance">موجودی: {{:localBalanceSeparator}} ریال</span>
+            <span class="badge bg-credit">مجموع خرید: {{:creditSumSeparator}} ریال</span>
+            <span class="badge bg-credit"> تعداد خرید : {{:creditCountSeparator}} </span>
+            <span class="badge bg-debit">مجموع کسر: {{:debitSumSeparator}} ریال</span>
+            <span class="badge bg-debit"> تعداد کسر: {{:debitCountSeparator}} </span>
+            <span class="badge "> تراکنش ها: {{:totalTrnCount}} </span>
+        </div>
+        <div style="        height: 500px;
+        overflow-y: scroll;
+        overflow-x: hidden">
+            <table class="table table-data table-responsive">
+                <thead>
+                    <tr>
+                        <th class="txt-al-c">ردیف</th>
+                        <th class="txt-al-c">تاریخ</th>
+                        <th class="txt-al-c">افزایش موجودی</th>
+                        <th class="txt-al-c">کسر موجودی</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{for lstTransaction}}
+                    <tr>
+                        <td class="txt-al-c">{{:#index + 1}}</td>
+                        <td class="txt-al-c">{{:jDate}}</td>
+                        <td class="txt-al-c">{{:creditAmountSeparator}}</td>
+                        <td class="txt-al-c">{{:debitAmountSeparator}}</td>
+                    </tr>
+                    {{/for}}
+                </tbody>
+            </table>
+        </div>
+    </script>
+    <script type="text/html" id="detail-template">
+        <div style="text-align: center">
+            <span class="badge detail bg-orange"> نام: {{fullName}} </span>
+            <span class="badge detail bg-credit"> اعتبار کسب شده: {{creditSumSeparator}} ریال </span>
+            <span class="badge detail bg-debit"> اعتبار استفاده شده: {{debitSumSeparator}} ریال </span>
+            <span class="badge detail bg-balance"> اعتبار قابل استفاده: {{localBalanceSeparator}} ریال </span>
+        </div>
+
+    </script>
+}

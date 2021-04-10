@@ -1,0 +1,1480 @@
+﻿@{
+    ViewBag.Title = "سفارش";
+    Layout = null;
+    var customerData = ViewBag.Data;
+    var perosn = ViewBag.createPersonId;
+}
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/content/fonts/fontawsome/font-awesome.css" rel="stylesheet" />
+    <link href="~/content/fonts/sans/fontiran.css" rel="stylesheet" />
+    <link href="~/content/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="~/content/chosen/chosen.css" rel="stylesheet" />
+    <link href="~/content/chosen/imageSelect.css" rel="stylesheet" />
+    <link href="~/Content/persian-datepicker.css" rel="stylesheet" />
+    <link href="~/content/general.css" rel="stylesheet" />
+    <link href="~/Content/froala/css/froala_style.css" rel="stylesheet" />
+    <link href="~/Content/froala/css/froala_editor.css" rel="stylesheet" />
+    <link href="~/content/site.css" rel="stylesheet" type="text/css" />
+    <script src="~/scripts/modernizr-2.8.3.js"></script>
+    <link href="~/Content/jqueryui/jquery-ui.css" rel="stylesheet" />
+
+    <style>
+        .z-index {
+            z-index: 99 !important
+        }
+
+        .close-product {
+            margin: 10px auto;
+            color: red;
+            cursor: pointer;
+        }
+
+        .eraser {
+            color: #86868a;
+            cursor: pointer;
+        }
+
+        .no-padding {
+            margin-left: 5px !important;
+            padding-right: 0;
+        }
+
+        #radUserType1, .lblUserType, .lblGender, .lblProductType {
+            display: inline-block !important;
+        }
+
+        .lblUserType {
+            width: 70px;
+            vertical-align: top;
+            margin-top: 10px;
+        }
+
+        .lblProductType {
+            width: 70px;
+            vertical-align: top;
+            margin-top: 10px;
+        }
+
+        .lblGender {
+            width: 70px;
+            vertical-align: top;
+            margin-top: 10px;
+        }
+
+        .auto-complete-item {
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 25px;
+            margin-right: 10px;
+        }
+
+        #radOrderType1 {
+            margin-right: 60px;
+        }
+
+
+        .button-new {
+            margin-bottom: 20px
+        }
+
+        .image-gold {
+            position: absolute;
+            top: -44px;
+            right: -42px;
+        }
+
+            .image-gold img {
+                width: 82px;
+                z-index: 1;
+            }
+
+
+        .linex {
+            width: 650px;
+            background-color: white;
+            height: 19px;
+            margin: 0 auto 11px;
+            border-bottom-left-radius: 17px;
+            border-bottom-right-radius: 17px;
+        }
+
+        .leatherTemplateOutput {
+            position: absolute;
+            top: 208px;
+            padding: 0;
+            margin: 0 15px;
+        }
+
+        @@media screen and (min-width:360px) and (max-width:740px) {
+            .catalog {
+                display: none
+            }
+
+            .product-img {
+                top: 20px !important;
+            }
+
+            .img-width {
+                width: 130px !important
+            }
+
+            .not-margin {
+                margin-top: 0 !important;
+            }
+
+            #burst-12 {
+                display: none;
+            }
+        }
+
+
+
+        @@media screen and (min-width:768px) and (max-width:1024px) {
+            .catalog {
+                display: none
+            }
+
+            .container {
+                width: 730px;
+            }
+            /* .product-img {
+                        right: 300px !important;
+                    }
+
+                    .img-width {
+                        width: 140px !important
+                    }
+        */
+            /* .productImage {
+                        width: 170px !important;
+                        height: 87px !important;
+                    }*/
+            .not-margin {
+                margin-top: 0 !important;
+            }
+
+            #burst-12 {
+                display: none;
+            }
+
+            .leatherTemplateOutput {
+                position: relative;
+                top: 356px;
+                padding: 0;
+                margin: 0 15px;
+            }
+        }
+
+        @@media screen and (min-width:768px) and (max-width:1024px) and (orientation:landscape) {
+            .catalog {
+                display: none
+            }
+            /*.product-img {
+                        right: 772px !important;
+                    }
+        */
+            /*.img-width {
+                        width: 150px !important
+                    }*/
+            /* .productImage {
+                        width: 170px !important;
+                        height: 140px !important;
+                    }*/
+        }
+
+        .btnStyle {
+            color: #fff;
+            border: none;
+            position: relative;
+            font-size: 1.6em;
+            padding: 0 2em;
+            cursor: pointer;
+            transition: 800ms ease all;
+            outline: none;
+        }
+
+            .btnStyle:hover {
+                background: #fff;
+                color: deepskyblue;
+            }
+
+            .btnStyle:before, .btnStyle:after {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                height: 2px;
+                width: 0;
+                background: deepskyblue;
+                transition: 400ms ease all;
+            }
+
+            .btnStyle:after {
+                right: inherit;
+                top: inherit;
+                left: 0;
+                bottom: 0;
+            }
+
+            .btnStyle:hover:before, .btnStyle:hover:after {
+                width: 100%;
+                transition: 800ms ease all;
+            }
+
+        .rectangle {
+            margin-bottom: 4px;
+            /* -webkit-box-shadow: 10px 10px 22px -11px rgba(0,0,0,0.72);
+                    -moz-box-shadow: 10px 10px 22px -11px rgba(0,0,0,0.72);
+                    box-shadow: 10px 10px 22px -11px rgba(0,0,0,0.72);
+                    border: 1px solid green;
+                    border-radius: 3px*/
+        }
+
+            .rectangle:before {
+                display: none;
+            }
+
+        .img-width {
+            border: 1px solid green;
+            width: 155px
+        }
+
+        .confirm-mobile {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    @*<div id="modalUploadFile" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">تصویر جدید</h4>
+                    </div>
+                    <div class="modal-body">
+
+
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+    <div class="container">
+        <form>
+            <div id="form">
+                <input id="hiddenOrderId" type="hidden" name="id" value="@ViewBag.Id" />
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group z-index col-lg-3 col-sm-4">
+                            <label for="txtPhoneNumber">
+                                تلفن همراه
+                            </label>
+                            @*<label class="pull-left" style="color:gray">sms</label>*@
+                            <input type="text" class="form-control number-only" id="txtPhoneNumber" name="phoneNumber" maxlength="11" value="@customerData.phoneNumber" />
+                            <div class="text-left" style="margin:5px 0" ;>
+                                <span class="confirm-mobile"><i class="fa fa-check hidden-lg hidden-sm"></i></span>
+                            </div>
+
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-4 col-lg-offset-3">
+                            <label for="txtTrackCode">کد پیگیری</label>
+                            <input type="text" class="form-control" id="txtTrackCode" name="trackCode" readonly />
+                        </div>
+                        <div class="col-md-3 col-sm-4">
+                            <label for="txtDate">تاریخ</label>
+                            <input type="text" class="form-control date" id="txtDate" name="date" readonly style="cursor:default;" autocomplete="off" />
+                            <input type="text" class="form-control dateOrder hidden" id="txtDateOrder" readonly style="cursor:default;" autocomplete="off" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="internalOrder hidden">
+                    <div class="row">
+                        <div class="col-lg-12 text-center">
+                            <div>
+                                <h4>اطلاعات مشتری </h4>
+                            </div>
+                            <hr />
+                        </div>
+                        <div class="form-group z-index col-lg-3 col-sm-3">
+                            <label for="txtName">نام مشتری</label>
+                            <input type="text" class="form-control" id="txtName" name="name" value="@customerData.name" data-validate="required"/>
+                        </div>
+
+                        <div class="form-group z-index col-lg-3 col-sm-3">
+                            <label for="radGender0">جنسیت</label>
+                            <div>
+                                <select id="radGender0" class="form-control" data-validate="required" name="gender">
+                                    <option value="">...</option>
+                                    <option value="0" @(customerData?.gender?.ToString() == "1" ? "selected" : "")>مرد</option>
+                                    <option value="1" @(customerData?.gender?.ToString() == "2" ? "selected" : "")>زن</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group z-index col-lg-3 col-sm-3">
+                            <label for="txtTelephone">تلفن ثابت</label>
+                            <input type="text" class="form-control number-only" id="txtTelephone" name="telephone" maxlength="8" value="@customerData.telephone" />
+                        </div>
+
+                        @*<div class="form-group z-index col-lg-3 col-sm-6">
+                                <label for="userType">نوع مشتری</label>
+                                <div>
+                                    <select id="userType" class="form-control" data-validate="required" name="userType">
+                                        <option value="4">مشتری</option>
+                                        <option value="5">پرسنل کیا</option>
+                                    </select>
+                                </div>
+                            </div>*@
+                        @*<div class="form-group z-index col-lg-3 col-sm-6">
+                                <label for="txtDetailCount">تعداد پیش فاکتور ها</label>
+                                <input type="text" class="form-control number-only" id="txtDetailCount" name="detailCount" value="1" />
+                            </div>*@
+                        @*<div class="form-group z-index col-lg-3 col-sm-6">
+                                <label for="txtCount">تعداد </label>
+                                <input type="text" class="form-control number-only" id="txtCount" name="count" value="1" />
+                            </div>*@
+                        <div class="form-group z-index col-lg-3 col-sm-3">
+                            <label for="txtDeposit">بیعانه (تومان)</label>
+                            <div>
+                                <datalist id="price">
+                                    <option value="30,000" />
+                                    <option value="50,000" />
+                                    <option value="100,000" />
+                                    <option value="150,000" />
+                                    <option value="200,000" />
+                                </datalist>
+                                <input type="text" class="money-separator form-control" id="txtDeposit" name="deposit" list="price" autocomplete="off" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div class="form-group col-lg-4" style="margin:0;padding:0">
+                                <label for="txtProductOrderType">نوع محصول سفارشی </label>
+                                <div>
+                                    <select id="txtProductOrderType" class="form-control" data-validate="required" name="orderTypeForm">
+                                        <option value="">...</option>
+                                        <option value="0">سفارش ساخت برای محصولات تعریف شده</option>
+                                        <option value="1">سفارش ساخت برای محصولات تعریف نشده </option>
+                                        <option value="2"> سفارش ساخت برای طراحی اسم</option>
+                                        <option value="3">تعمیری</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*<div class="col-lg-12 text-center">
+                                <div>
+                                    <h4>اطلاعات سفارش </h4>
+                                </div>
+                                <hr />
+                            </div>*@
+
+                        <div class="col-lg-12" style="margin:0;padding:0;">
+                            <!--detailEntity class-->
+                            <div class="col-lg-12  text-center">
+                                <div>
+                                    <h4>اطلاعات محصول </h4>
+                                </div>
+                                @*<span class="pull-left" id="clearField" style="cursor:pointer;color:red;font-size:12px">پاک کردن اطلاعات محصول&nbsp;<i class="fa fa-close"></i></span>*@
+                                <hr />
+                            </div>
+                            <div id="addProduct" class="col-lg-12" style="margin:0;padding:0">
+                            </div>
+                        </div>
+                        <div class="detailEntity">
+                            <input id="detailId" type="hidden" value="" name="detailId" />
+                            <div class="row product hidden">
+                                <div class="col-lg-12 col-md-12 col-xs-12 rectangle">
+                                    @*<div class="linex"></div>*@
+                                    <div class=" text-left">
+                                        @*<span><i class="fa fa-eraser fa-2x eraser clearText" data-toggle="tooltip" title="پاک کردن اطلاعات سفارش"></i></span>
+                                            <span><i class="fa fa-trash fa-2x close-product" data-toggle="tooltip" title="حذف"></i></span>*@
+                                        <br />
+                                    </div>
+                                    <div class="col-lg-12" style="margin:0;padding:0">
+                                        @*<div class="form-group col-lg-3">
+                                                <label for="txtorderType">نوع سفارش </label>
+                                                <div>
+                                                    <select id="txtorderType" class="form-control" data-validate="required" name="orderType">
+                                                        <option value="2">سفارش</option>
+                                                        <option value="3">تعمیری</option>
+                                                    </select>
+                                                </div>
+                                            </div>*@
+
+                                    </div>
+                                    <div class="col-lg-9" style="margin:0;padding:0">
+
+                                        <div class="form-group col-lg-3 col-sm-3">
+                                            <label for="txtProductName">عنوان</label>
+                                            <input class="hiddenId" type="hidden" value="" name="productId" />
+                                            <input id="" type="text" class="form-control clearProductField txtProductName remove-validate0" placeholder=" نام کالا،کد سایت یا کد کارگاه" name="productTitle" data-validate="required" />
+                                        </div>
+                                        <div class="form-group col-lg-2 col-sm-3 text-center">
+                                            <label for="txtSite">کدسایت</label>
+                                            <input type="text" class="form-control text-center clearField txtSite" id="" name="siteCode" readonly />
+                                        </div>
+                                        <div class="form-group col-lg-2 col-sm-3 text-center">
+                                            <label for="txtWorkShop">کدکارگاه</label>
+                                            <input type="text" class="form-control text-center clearField txtWorkShop" id="" name="bookCode" readonly />
+                                        </div>
+                                        <div class="form-group col-lg-3 col-sm-3 hidden">
+                                            <label for="txtProductType">نوع محصول</label>
+                                            <div>
+                                                <select id="" class="form-control productType" name="productType">
+                                                    <option class="productTypeItem" value="">...</option>
+                                                    <option class="productTypeItem" value="0">دستبند زنجير طلا</option>
+                                                    <option class="productTypeItem" value="1">گردنبند</option>
+                                                    <option class="productTypeItem" value="2">گوشواره</option>
+                                                    <option class="productTypeItem" value="3">انگشتر</option>
+                                                    <option class="productTypeItem" value="4">آویز ساعت</option>
+                                                    <option class="productTypeItem" value="5">سنجاق بچگانه</option>
+                                                    <option class="productTypeItem" value="6">ست</option>
+                                                    <option class="productTypeItem" value="7">پابند</option>
+                                                    <option class="productTypeItem" value="8">آویز</option>
+                                                    <option class="productTypeItem" value="9">النگو</option>
+                                                    <option class="productTypeItem" value="11">دستبند چرم</option>
+                                                    <option class="productTypeItem" value="12">دستبند ریلی</option>
+                                                    <option class="productTypeItem" value="13">دستبند سنگی</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-3 col-sm-3 goldType">
+                                            <label for="radProductType0">نوع طلا</label>
+                                            <div>
+                                                <select id="radProductType0" class="form-control clearField remove-validate0" data-validate="required" name="goldType">
+                                                    <option value="">...</option>
+                                                    <option value="1">مات</option>
+                                                    <option value="2">براق</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group z-index col-lg-3 col-sm-3">
+                                            <label for="txtCount">تعداد ساخت محصول </label>
+                                            <input type="text" class="form-control number-only" id="txtCount" name="count" value="1" />
+                                        </div>
+                                        <div class="form-group col-lg-2 col-sm-3">
+                                            <label for="prodcutColor0">رنگ طلا</label>
+                                            <div>
+                                                <select id="prodcutColor0" class="form-control clearField remove-validate0" data-validate="required" name="productColor">
+                                                    <option value="">...</option>
+                                                    <option value="0">زرد</option>
+                                                    <option value="1">رزگلد</option>
+                                                    <option value="2">سفید</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2 col-sm-3 size">
+                                            <label class="middle">
+                                                <span>سایز</span>
+                                            </label>
+                                            <select id="size" name="size" class="form-control combo-chosen chosen-rtl clearField">
+                                                @if (ViewBag.SizeValueList != null)
+                                                {
+                                                    <text>
+                                                        <option value=""></option>
+                                                    </text>
+                                                    foreach (var item in ViewBag.SizeValueList)
+                                                    {
+                                                        <text>
+                                                            <option value="@item.Value">@item.Value</option>
+                                                        </text>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+
+                                        <div style="display:none" class="form-group col-lg-3 col-sm-3 leatherLoop">
+                                            <label for="txtLeatherLoop">تعداد دور چرم</label>
+                                            <div>
+                                                <select id="" class="form-control clearField txtLeatherLoop" name="leatherLoop">
+                                                    <option value="">...</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-12 col-sm-12 stoneTemplateOutput"></div>
+                                        <div class="form-group col-lg-12 col-sm-12 leatherTemplateOutput"></div>
+                                    </div>
+
+                                    <div class="form-group col-lg-3 col-sm-12 col-xs-12 product-img">
+                                        <div class="text-center productImage" id="" @*style="width:241px;height:241px;"*@></div>
+                                    </div>
+
+                                    <div class="col-lg-9 col-md-8 col-xs-12 not-margin distance" style="margin:0;padding:0;">
+
+                                    </div>
+
+                                    <div class="form-group col-lg-12 col-sm-12" style="margin:18px 0">
+                                        <label for="txtDescription">توضیحات</label>
+                                        <textarea class="form-control" id="txtDescription" name="description" maxlength="60" style="resize: vertical"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row newProductOrder hidden">
+                                <div class="col-lg-12 col-md-12 col-xs-12 rectangle">
+                                    <div class=" text-left">
+                                        <br />
+                                    </div>
+                                    <div class="form-group col-lg-3 col-sm-3">
+                                        <label for="txtNewProductName">عنوان</label>
+                                        @*<input class="" type="hidden" value="" name="detailId" />*@
+                                        <input id="" type="text" class="form-control txtNewProductName remove-validate3" placeholder="نام کالا" name="title" data-validate="required" maxlength="25" />
+                                    </div>
+                                    <div class="form-group z-index col-lg-3 col-sm-3">
+                                        <label for="txtNewCount">تعداد ساخت محصول </label>
+                                        <input type="text" class="form-control number-only" id="txtNewCount" name="newCount" value="1" />
+                                    </div>
+                                    <div class="form-group col-lg-3 col-sm-3 goldOwnership hidden">
+                                        <label for="cmbGoldOwnership">مالکیت طلا</label>
+                                        <div>
+
+                                            <select id="cmbGoldOwnership" class="form-control" name="goldOwnership">
+                                                <option value="">...</option>
+                                                <option value="false">طلای ویترین</option>
+                                                <option value="true">طلای مشتری</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-sm-3">
+                                        <label for="txtNewProductType">نوع محصول</label>
+                                        <div>
+                                            <select id="" class="form-control newproductType" name="newProductType">
+                                                <option class="productTypeItem" value="">...</option>
+                                                <option class="productTypeItem" value="0">دستبند زنجير طلا</option>
+                                                <option class="productTypeItem" value="1">گردنبند</option>
+                                                <option class="productTypeItem" value="2">گوشواره</option>
+                                                <option class="productTypeItem" value="3">انگشتر</option>
+                                                <option class="productTypeItem" value="4">آویز ساعت</option>
+                                                <option class="productTypeItem" value="5">سنجاق بچگانه</option>
+                                                <option class="productTypeItem" value="6">ست</option>
+                                                <option class="productTypeItem" value="7">پابند</option>
+                                                <option class="productTypeItem" value="8">آویز</option>
+                                                <option class="productTypeItem" value="9">النگو</option>
+                                                <option class="productTypeItem" value="11">دستبند چرم</option>
+                                                <option class="productTypeItem" value="12">دستبند ریلی</option>
+                                                <option class="productTypeItem" value="13">دستبند سنگی</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12" style="padding:0;margin:0">
+
+                                        <div class="form-group col-lg-3 col-sm-2 goldType">
+                                            <label for="txtNewProductType0">نوع طلا</label>
+                                            <div>
+                                                <select id="txtNewProductType0" class="form-control clearField remove-validate3" data-validate="required" name="newGoldType">
+                                                    <option value="">...</option>
+                                                    <option value="1">مات</option>
+                                                    <option value="2">براق</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-3 col-sm-3">
+                                            <label for="newProdcutColor">رنگ طلا</label>
+                                            <div>
+                                                <select id="newProdcutColor" class="form-control remove-validate3" name="newProductColor" data-validate="required">
+                                                    <option value="">...</option>
+                                                    <option value="0">زرد</option>
+                                                    <option value="1">رزگلد</option>
+                                                    <option value="2">سفید</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-3 col-sm-2 ">
+                                            <label for="txtNewleatherLoop">تعداد چرم دور </label>
+                                            <input type="text" class="form-control remove-validate3" id="txtNewleatherLoop" name="newLeatherLoop" maxlength="10" data-validate="required" />
+                                        </div>
+                                        <div class="form-group col-lg-3 col-sm-2 ">
+                                            <label for="txtNewSize">سایز</label>
+                                            <input type="text" class="form-control remove-validate3" id="txtNewSize" name="newSize" maxlength="10" data-validate="required" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12 col-sm-12 ">
+                                        <label for="txtNewStone">عنوان سنگ</label>
+                                        <input type="text" class="form-control remove-validate3" id="txtNewStone" name="newStone" maxlength="40" data-validate="required" />
+                                    </div>
+                                    <div class="form-group col-lg-12 col-sm-12 col-xs-12">
+                                        <label for="txtNewLeather">عنوان چرم</label>
+                                        <input type="text" class="form-control remove-validate3" id="txtNewLeather" name="newLeather" maxlength="40" data-validate="required" />
+                                    </div>
+
+                                    <div class="form-group col-lg-12 col-sm-12 col-xs-12">
+                                        <label for="txtNewDescription">توضیحات</label>
+                                        <textarea class="form-control" id="txtNewDescription" name="newDescription" maxlength="60" style="resize: vertical"></textarea>
+                                    </div>
+
+                                    <div id="screenshot" class="form-group txt-al-c">
+                                        <div class="form-group txt-al-c circle" id="clear">
+                                            <div class="form-inline">
+                                                <div style="margin-bottom:5px;">
+                                                    <img id="screenshot-img" src="~/content/image/kia-gallery-logo-square.png" style="width:248px;height:249px;object-fit:cover;border-color:#8e4e4e;padding:7px;border-radius:5px;">
+                                                </div>
+                                                <div>
+                                                    <video class="videostream" autoplay style="display:none;max-width: 248px; height: 249px; object-fit: cover;"></video>
+                                                </div>
+                                            </div>
+                                            <canvas style="display:none;"></canvas>
+                                            <!--<div class="col-md-12">-->
+                                                @*<img id="imgInternalImage" src="~/content/image/kia-gallery-logo-square.png" style="height:250px;max-width: 250px;object-fit:cover;margin:0 0 10px;" />*@
+                                            <!--</div>-->
+                                            <div class="col-md-12">
+                                                <div class="progress hidden">
+                                                    <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <input id="file" type="file" class="hidden" />
+                                            <input id="txtFileName" type="text" class="form-control hidden" name="fileName" readonly>
+                                            <input id="hiddenTypeTitle" type="hidden" />
+
+                                            <select id="cmbFileType" class="form-control">
+                                                <option value="">...</option>
+                                                @*<option value="1">دوربین</option>*@
+                                                <option value="2">اپلود تصویر</option>
+                                            </select>
+                                        </div>
+                                        <div id="contentFileDetail"> </div>
+
+                                        <div class="form-group txt-al-c">
+                                            <i id="openFile" class="fa fa-upload btn btn-success btn-icon" aria-hidden="true" style="display:none;"></i>
+                                            <i class="capture-button btn btn-info fa fa-camera" style="display: none;"></i>
+                                            <i id="screenshot-button" class="btn btn-default" style="display:none;">Take screenshot</i>
+                                            @*<i id="btnSubmitImage" class="btn btn-success fa fa-check" style="display:none;"></i>*@
+                                        </div>
+                                        <input type="hidden" id="camreImageName" />
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group z-index col-lg-4 col-lg-offset-8 col-sm-12">
+                                <label for="createPersonId">پرسنل ثبت کننده</label>
+                                <div style="display:flex">
+                                    <select id="createPersonId" class="form-control" data-validate="required" name="createPersonId">
+                                        @foreach (var entity in perosn)
+                                        {
+                                            <option value="@entity.id">@entity.firstName @entity.lastName</option>
+                                        }
+                                    </select>
+                                    <div style="flex:1;margin:0 10px">
+                                        <button type="submit" id="btnSubmit" class="btnStyle btn btn-success">ثبت</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--<div class="form-group z-index col-xs-3 text-left">-->
+                            @*<a id="btnAddProduct" class="btn btn-info btnStyle"><i class="fa fa-plus"></i></a>*@
+                            <!--</div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+
+<!-- #region SampleRegion -->
+<script src="~/scripts/jquery-1.12.4.min.js"></script>
+<script src="~/scripts/bootstrap.min.js"></script>
+<script src="~/scripts/jsrender.js"></script>
+<script src="~/Scripts/fileupload/jquery.ui.widget.js"></script>
+<script src="~/Scripts/fileupload/jquery.fileupload.js"></script>
+<script src="~/scripts/chosen/chosen.jquery.js"></script>
+<script src="~/scripts/chosen/imageSelect.jquery.js"></script>
+<script src="~/Scripts/persianDate/persian-date.js"></script>
+<script src="~/Scripts/persianDate/persian-datepicker-0.4.5.js"></script>
+<script src="~/scripts/general.js"></script>
+<script src="~/scripts/validate.js"></script>
+<script src="~/scripts/numberOnly.js"></script>
+<script src="~/scripts/entity.js"></script>
+<script src="~/Scripts/froala/js/froala_editor.min.js"></script>
+<script src="~/Scripts/jqueryui/jquery-ui.js"></script>
+<!--#endregion -->
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+        setupUpload("internalOrderDetail", function (fileName) {
+            $("#screenshot-img").attr("src", "/upload/internalOrderDetail/" + fileName);
+            $("#txtFileName").val(fileName);
+        });
+        $("#cmbFileType").val("")
+        $("#txtProductOrderType").val("")
+        $("#cmbFileType").on("change", function () {
+            var fileTypeTitle;
+            switch ($(this).val()) {
+                case "1":
+                    fileTypeTitle = "Camera";
+                    break;
+                case "2":
+                    fileTypeTitle = "Order";
+                    break;
+            }
+            $("#hiddenTypeTitle").val(fileTypeTitle)
+            if ($(this).val() == 2) {
+
+                $("#screenshot-button").hide();
+                //$("#screenshot-img").hide();
+                $("#imgInternalImage").show();
+                $(".capture-button").hide();
+                $(".videostream").hide();
+                $("#openFile").show();
+                $(".progress").removeClass("hidden");
+                //$("video").on("click", function () {
+                //    $(".capture-button").show()
+                //})
+            }
+            else {
+                $(".capture-button").show()
+                $("#screenshot-button").show();
+                $("#imgInternalImage").show();
+                $(".camera").show()
+                //$("#screenshot-img").hide()
+                $(".camera").hide();
+                $("#openFile").hide();
+                $(".progress").addClass("hidden");
+            }
+        });
+        $("#openFile").on("click", function () {
+            if ($("#cmbFileType").val() != "") {
+                //if ($("#cmbFileType").val() == 5) {
+
+                //}
+                $("#file").click();
+            }
+            else {
+                alert("ابتدا نوع فایل را مشخص کنید.");
+            }
+        });
+        $("#btnUploadNewImage").on("click", function () {
+            $("#openFile").show();
+            //$("#screenshot-img").hide();
+            $("#imgInternalImage").show();
+            $(".capture-button").hide();
+            $(".camera").show()
+        });
+
+        $("#screenshot-button").on("click", function () {
+            $("#screenshot-img").show()
+        });
+        $(".capture-button").on("click", function () {
+            $(".videostream").show();
+            $("#imgInternalImage").hide();
+        });
+
+        $("video").on("click", function () {
+            $(".videostream").hide();
+            $("#imgInternalImage").hide();
+            $("#screenshot-img").show();
+        });
+
+        $("#btnSubmitImage").on("click", function () {
+            $("#modalUploadFile").modal('show');
+        });
+        $("#btnSubmitImage").on("click", function () {
+            var entity = getEntity("#form");
+            $("#btnSubmitImage").hide();
+            $("#modalUploadFile").modal('hide');
+            alert("بارگذاری فایل با موفقیت انجام شد.")
+        })
+
+        //$("#createPersonId").val("");
+        $("#userType").val("");
+        $(document).on("click", ".confirm-mobile", function (e) {
+            var phoneNumber = $("#txtPhoneNumber").val();
+            if (phoneNumber) {
+                loader(true);
+                $.get("/internalOrder/getCustomerInfo/" + phoneNumber, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        setEntity(response.data, "#form");
+                        $(".internalOrder").removeClass("hidden");
+                        $("select[name=userType]").removeClass("element-error");
+                        $("select[name=gender]").removeClass("element-error");
+                        $("#txtName").removeClass("element-error");
+                        $("#txtName").removeAttr("data-validate", "required");
+                        $(".remove-validate3").removeClass("element-error");
+                        $(".remove-validate3").removeAttr("data-validate", "required");
+                        $(".remove-validate0").removeClass("element-error");
+                        $(".remove-validate0").attr("data-validate", "required");
+                        $("#txtProductOrderType").removeClass("element-error");
+                        $("#txtDate").addClass("hidden");
+                        $("#txtDateOrder").removeClass("hidden");
+                        $("#txtProductOrderType").val("");
+                        //$("#txtCount").val(1);
+                    }
+                    else {
+                        $(".internalOrder").removeClass("hidden");
+                        $("select[name=userType]").removeClass("element-error");
+                        $("select[name=gender]").val("");
+                        $("input[name=telephone]").val("");
+                        $("input[name=name]").val("");
+                        $("#txtProductOrderType").removeClass("element-error");
+                        $(".remove-validate3").removeClass("element-error");
+                        $(".remove-validate3").removeAttr("data-validate", "required");
+
+                    }
+                });
+            }
+        });
+
+
+        $(document).on("keyup", "#txtPhoneNumber", function (e) {
+            var phoneNumber = $(this).val();
+            var code = e.which;
+            if (code == 13) e.preventDefault();
+            if (code == 13) {
+                if (phoneNumber) {
+                    loader(true);
+                    $.get("/internalOrder/getCustomerInfo/" + phoneNumber, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            setEntity(response.data, "#form");
+                            $(".internalOrder").removeClass("hidden");
+                            $("select[name=userType]").removeClass("element-error");
+                            $("select[name=gender]").removeClass("element-error");
+                            $("select[name=gender]").removeAttr("data-validate", "required");
+                            $("#txtName").removeClass("element-error");
+                            $("#txtName").attr("data-validate", "required");
+                            $(".remove-validate3").removeClass("element-error");
+                            $(".remove-validate3").removeAttr("data-validate", "required");
+                            $(".remove-validate0").removeClass("element-error");
+                            $(".remove-validate0").attr("data-validate", "required");
+                            $("#txtProductOrderType").removeClass("element-error");
+                            $("#txtDate").addClass("hidden");
+                            $("#txtDateOrder").removeClass("hidden");
+                            $("#txtProductOrderType").val("");
+                            //$("#txtCount").val(1);
+
+                        }
+                        else {
+                            $(".internalOrder").removeClass("hidden");
+                            $("select[name=gender]").removeClass("element-error");
+                            //$("select[name=gender]").removeAttr("data-validate", "required");
+                            $("select[name=userType]").removeClass("element-error");
+                            $("select[name=gender]").val("");
+                            $("#createPersonId").val("");
+                            $("#createPersonId").removeClass("element-error");;
+                            $("input[name=telephone]").val("");
+                            $("input[name=name]").val("");
+                            $("#txtProductOrderType").removeClass("element-error");
+                            $(".remove-validate3").removeClass("element-error");
+                            $(".remove-validate3").removeAttr("data-validate", "required");
+                            $("#txtName").removeClass("element-error");
+                        }
+                    });
+                }
+            }
+        });
+        productAutoCompelete();
+
+        $(document).on("change", "#txtProductOrderType", function () {
+            if ($(this).val() == 0) {
+                $(".product").removeClass("hidden");
+                $(".newProductOrder").addClass("hidden");
+                $(".remove-validate3").removeClass("element-error");
+                $(".remove-validate3").removeAttr("data-validate");
+                $(".remove-validate0").removeClass("element-error");
+                $(".remove-validate0").attr("data-validate", "required");
+                $(".goldOwnership").addClass("hidden");
+                $("[name=newProductType]").val("");
+                $("#txtCount").val(1);
+
+            }
+            else {
+                $(".product").addClass("hidden");
+                $(".newProductOrder").removeClass("hidden");
+                $(".remove-validate3").attr("data-validate", "required");
+                $(".remove-validate0").removeClass("element-error");
+                $(".remove-validate0").removeAttr("data-validate", "required");
+                //$("#txtProductOrderType").removeClass("element-error");
+                $(".goldOwnership").addClass("hidden");
+                $("[name=productType]").val("");
+                $("#txtNewCount").val(1);
+                if ($(this).val() == 3) {
+                    $(".goldOwnership").removeClass("hidden");
+                }
+            }
+        })
+
+        $(document).on("keyup", ".txtProductName", function (e) {
+            var code = e.which;
+            if (code == 8) e.preventDefault();
+            if (code == 8) {
+                if (!this.value) {
+                    $(this).parents(".detailEntity").find(".hiddenId").val("");
+                    $(this).parents(".detailEntity").find(".productImage").empty();
+                    $(this).parents(".detailEntity").find(".leatherLoop").hide();
+                    $(this).parents(".detailEntity").find(".stoneTemplateOutput").empty();
+                    $(this).parents(".detailEntity").find(".leatherTemplateOutput").empty();
+                    $(this).parents(".detailEntity").find(".productType").val("")
+                    $(this).parents(".detailEntity").find(".clearField").val("");
+                    $(".clearField").prop("disabled", false);
+                    $(".combo-chosen").trigger("chosen:updated");
+                }
+            }
+        });
+        $(document).on("click", ".close-product", function (event) {
+            event.preventDefault();
+            $(this).parents(".detailEntity").remove();
+        });
+
+        $(document).on("click", ".clearText", function () {
+            $(this).parents(".detailEntity").find("input[name='txtProductName']").val("");
+            //$(".productType").val("");
+            //$(".hiddenId").val("");
+            //$(".clearField").val("");
+            //$(".clearProductField").val("");
+            //$(".productImage").empty();
+        });
+        $(".productType").on("change", function () {
+            $(".hiddenId").val("");
+            $(".clearField").val("");
+            $(".clearField").prop("disabled", false);
+            $(".txtProductName").val("")
+            $(".combo-chosen").trigger("chosen:updated");
+        });
+        if (id > 0) {
+            loader(true);
+            $.get("/internalOrder/load/" + id , function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    $(".internalOrder").removeClass("hidden");
+                    $("#txtDateOrder").removeClass("hidden");
+                    $("#txtDate").addClass("hidden");
+                    $("#txtPhoneNumber").attr("disabled", true);
+                    $("#txtProductOrderType").prop("disabled", true);
+                    var list = response.data.addProductViewModelList;
+                    setEntity(response.data, "#form");
+                    if (list.length > 0) {
+                        for (var i = 0; i < list.length; i++) {
+                            //var element = $($("#productItemTemplate").html()).clone();
+                            var element = $(document).find(".product");
+                            var newElement = $(document).find(".newProductOrder");
+                            if (list[i].productId > 0) {
+                                //element.find(".size").hide()
+                                //element.find(".stoneTemplateOutput").hide();
+                                //element.find(".leatherTemplateOutput").hide();
+                                //element.find(".goldType").hide();
+                                //element.find(".product-img").empty();
+                                $(".product").removeClass("hidden");
+                                $(".newProductOrder").addClass("hidden");
+                                //$(".leatherLoop").addClass("hidden");
+                                //element.find(".leatherLoop").hide();
+                                var item = list[i];
+                                $("input[name=trackCode]").val(item.trackCode);
+                                $(".productType").prop("disabled", true);
+                                $("#createPersonId").prop("disabled", true);
+                                $("#detailId").val(item.detailId);
+                                //if (item.orderType == 0) {
+                                //    $(".remove-validate3").removeClass("element-error");
+                                //    $(".remove-validate3").removeAttr("data-validate", "required");
+                                //    $(".remove-validate0").removeClass("element-error");
+                                //    $(".remove-validate0").removeAttr("data-validate", "required");
+                                //    if (item.internalOrderDetailLeatherViewModelList.length == 0) {
+                                //        $(".txtLeatherLoop").removeClass("element-error");
+                                //        $(".txtLeatherLoop").removeAttr("data-validate", "required");
+                                //    }
+                                //}
+                                //else {
+                                //    $(".txtNewProductName ").removeAttr("data-validate");
+                                //    $(".txtProductName").removeClass("element-error");
+                                //    $(".txtProductName").removeAttr("data-validate");
+                                //    $(".productType").removeClass("element-error");
+                                //    $(".productType").removeAttr("data-validate");
+                                //}
+                                $(".remove-validate3").removeClass("element-error");
+                                $(".remove-validate3").removeAttr("data-validate", "required");
+                                element.find("[name=productType]").val(item.productType);
+                                element.find("[name=productId]").val(item.productId);
+                                element.find("[name=productTitle]").val(item.productTitle);
+                                element.find("[name=deposit]").val(item.deposit);
+                                element.find("[name=count]").val(item.count);
+                                element.find("[name=siteCode]").val(item.siteCode);
+                                element.find("[name=bookCode]").val(item.bookCode);
+                                element.find("[name=size]").val(item.size);
+                                element.find("[name=leatherLoop]").val(item.leatherLoop);
+                                element.find("[name=goldType]").val(item.goldType);
+                                element.find("[name=productColor]").val(item.productColor);
+                                element.find("[name=description]").val(item.description);
+                                element.find("[name=productTitle]").prop("disabled", true);
+                                if (item.fileName) {
+                                    element.find(".productImage").append("<img style=\"width: 252px;\" src=\"/image/product/500x500/" + item.fileName + "\" />");
+                                }
+                                var stone = item.internalOrderDetailStoneViewModelList;
+
+                                if (stone) {
+                                    for (var j = 0; j < stone.length; j++) {
+                                        stone[j].stoneId;
+                                        var stoneTemplate = $("#stoneTemplate").text();
+                                        stoneTemplate = stoneTemplate.replace("{{stoneNum}}", j + 1,);
+                                        stoneTemplate = stoneTemplate.replace("{{stoneOrder}}", j + 1,);
+                                        $(element).find(".stoneTemplateOutput").append(stoneTemplate);
+                                        //element.find("[name=stoneId]").val(stone[j].stoneId);
+                                        //$(".combo-chosen").chosen({ width: "100%", placeholder_text_single: 'یک مورد را انتخاب کنید.', search_contains: true });
+                                    }
+                                }
+
+                                if (stone) {
+                                    $(element).find(".stone-list").each(function (index, e) {
+                                        $(e).val(stone[index].stoneId);
+                                    });
+                                }
+
+                                var leather = item.internalOrderDetailLeatherViewModelList;
+                                if (leather) {
+                                    for (var j = 0; j < leather.length; j++) {
+                                        leather[j].leatherId;
+                                        var leatherTemplate = $("#leatherTemplate").text();
+                                        leatherTemplate = leatherTemplate.replace("{{leatherNum}}", j + 1,)
+                                        leatherTemplate = leatherTemplate.replace("{{leatherOrder}}", j + 1,)
+                                        $(element).find(".leatherTemplateOutput").append(leatherTemplate)
+                                        //$(element).find("select[name='leatherId']").val(leather[j].leatherId);
+                                        ////$(".combo-chosen").chosen({ width: "100%", placeholder_text_single: 'یک مورد را انتخاب کنید.', search_contains: true });
+                                        $(element).closest(".detailEntity").find(".leatherLoop").show();
+                                    }
+                                }
+                                else {
+                                    $(element).closest(".detailEntity").find(".leatherLoop").hide();
+                                    //$(element).closest(".detailEntity").find(".leatherLoop").hide();
+                                }
+
+                                if (leather) {
+                                    $(element).find(".leather-list").each(function (index, e) {
+                                        $(e).val(leather[index].leatherId);
+                                    });
+                                }
+                            }
+                            else {
+                                $("#createPersonId").prop("disabled", true);
+                                $(".remove-validate0").removeClass("element-error");
+                                $(".remove-validate0").removeAttr("data-validate", "required");
+                                $("input[name=trackCode]").val(list[i].trackCode);
+                                $(".newProductOrder").removeClass("hidden");
+                                $("input[name=trackCode]").val(list[i].trackCode);
+                                $("#detailId").val(list[i].detailId);
+                                newElement.find("[name=title]").val(list[i].newProductTitle);
+                                newElement.find("[name=newProductType]").val(list[i].newProductType);
+                                newElement.find("[name=newStone]").val(list[i].newStone);
+                                newElement.find("[name=newLeather]").val(list[i].newLeather);
+                                newElement.find("[name=newLeatherLoop]").val(list[i].newLeatherLoop);
+                                newElement.find("[name=newSize]").val(list[i].newSize);
+                                newElement.find("[name=newGoldType]").val(list[i].newGoldType);
+                                newElement.find("[name=newProductColor]").val(list[i].newProductColor);
+                                newElement.find("[name=newDescription]").val(list[i].newDescription);
+                                newElement.find("[name=newCount]").val(list[i].newCount);
+                                newElement.find("[name=fileName]").val(list[i].image);
+                                var srcImage = "/upload/internalOrderDetail" + "/" + list[i].image;
+                                var image = list[i].image
+                                if (image != null) {
+                                    if (image.indexOf('image') >= 0) {
+                                        $("#cmbFileType").val(1)
+                                        $("#screenshot-img").show();
+                                        $("#screenshot-img").attr("src", srcImage);
+                                        $("#imgInternalImage").hide();
+                                        $(".capture-button").show()
+                                        $("#screenshot-button").show();
+                                    }
+                                    else {
+                                        $("#cmbFileType").val(2)
+                                        $("#imgInternalImage").hide();
+                                        $("#screenshot-img").show();
+                                        $("#screenshot-img").attr("src", srcImage);
+                                        $("#openFile").show();
+                                    }
+                                }
+                                if ($("#txtProductOrderType").val() == 3) {
+                                    $(".goldOwnership").removeClass("hidden");
+                                    if (list[i].goldOwnership == true) {
+                                        $("#cmbGoldOwnership").val("true");
+                                    }
+                                    if (list[i].goldOwnership != true) {
+                                        $("#cmbGoldOwnership").val("false");
+                                    }
+                                }
+                            }
+                            //$("#addProduct").append(element);
+                        }
+                        productAutoCompelete();
+                    }
+                    $(".combo-chosen").trigger("chosen:updated");
+
+                    $("#product").val(response.data.title);
+
+                    $(".combo-chosen").trigger("chosen:updated");
+
+                    if (response.data.addProductViewModelList == null) {
+                        $("#stoneList").prop("disabled", true);
+                        $("#stoneDescription").prop("disabled", false);
+                    }
+                    else {
+                        $("#stoneList").prop("disabled", false);
+                        $("#stoneDescription").prop("disabled", true);
+                    $(".combo-chosen").trigger("chosen:updated");
+                    }
+
+                    if (response.data.leatherId == null) {
+                        $("#leatherList").prop("disabled", true);
+                        $("#leatherDescription").prop("disabled", false);
+                    }
+                    else {
+                        $("#leatherList").prop("disabled", false);
+                        $("#leatherDescription").prop("disabled", true);
+                    }
+                    $(".combo-chosen").trigger("chosen:updated");
+
+                    $(".txtProductName").on("keyup", function (e) {
+                        var code = e.which;
+                        if (code ==8  && code==13) e.preventDefault();
+                        if (code == 8 && code == 13) {
+                            if (!this.value) {
+                                $(this).parents(".detailEntity").find(".hiddenId").val("");
+                                $(this).parents(".detailEntity").find(".productImage").empty();
+                                $(this).parents(".detailEntity").find(".stoneTemplateOutput").empty();
+                                $(this).parents(".detailEntity").find(".leatherTemplateOutput").empty();
+                                $(this).parents(".detailEntity").find(".productType").val("");
+                                //$(this).parents(".detailEntity").find(".clearField").val("");
+                                $(".clearField").prop("disabled", false);
+                                $(".combo-chosen").trigger("chosen:updated");
+                            }
+                        }
+                    });
+                    $(".combo-chosen").chosen({ width: "100%", placeholder_text_single: 'یک مورد را انتخاب کنید.', search_contains: true });
+
+                }
+                else {
+                    callbackAlert(response.message, function () {
+                        document.location = "/home";
+                    });
+                }
+            });
+        }
+
+        $(".date").pDatepicker({
+            format: 'YYYY/MM/DD',
+            autoClose: true,
+        });
+
+        $(".dateOrder").pDatepicker({
+            format: 'YYYY/MM/DD',
+            autoClose: true,
+        });
+
+
+        $("#btnSubmit").on("click", function (event) {
+            event.preventDefault();
+            var entity = getEntity("#form");
+
+            //if (!entity.date) {
+            //    alert("تاریخ به درستی وارد نشده است.");
+            //    return;
+            //}
+
+            //if (!entity.name) {
+            //    alert("نام مشتری به درستی وارد نشده است.");
+            //    return;
+            //}
+
+            //if (!entity.phoneNumber) {
+            //    alert("تلفن مشتری به درستی وارد نشده است.");
+            //    return;
+            //}
+
+            //if (!entity.title) {
+            //    alert("نام محصول به درستی وارد نشده است.");
+            //    return;
+            //}
+
+            //if (!entity.productType) {
+            //    alert("نوع محصول به درستی وارد نشده است.");
+            //    return;
+            //}
+
+            //if (!entity.deposit) {
+            //    alert("بیعانه به درستی وارد نشده است.");
+            //    return;
+            //}
+
+
+
+            entity.addProductViewModelList = [];
+            var flag = true;
+            $(".detailEntity").each(function (index, element) {
+                var detailEntity = getEntity(element);
+
+                var leather = new Array();
+                var stone = new Array();
+                $(element).find('.stone-Item').each(function (stoneIndex, stoneElement) {
+                    var internalOrderDetailStoneViewModelList =
+                    {
+                        stoneId: $(stoneElement).find("select[name=stoneId]").val(),
+                        order: $(stoneElement).find(".stoneOrder").attr("data-orderStone"),
+                    }
+
+                    if (internalOrderDetailStoneViewModelList.stoneId)
+                        stone.push(internalOrderDetailStoneViewModelList);
+
+                });
+                $(element).find('.leather-Item').each(function (leatherIndex, leatherElement) {
+                    var internalOrderDetailLeatherViewModelList =
+                    {
+                        leatherId: $(leatherElement).find("select[name=leatherId]").val(),
+                        order: $(leatherElement).find(".leatherOrder").attr("data-orderLeather"),
+                    }
+
+                    if (internalOrderDetailLeatherViewModelList.leatherId)
+                        leather.push(internalOrderDetailLeatherViewModelList);
+
+                });
+                if (stone.length != $(element).find('.stone-Item').length) {
+                    alert(" انتخاب تمامی سنگ ها برای ثبت سفارش الزامی است");
+                    flag = false;
+                    return;
+                }
+                if (leather.length != $(element).find('.leather-Item').length) {
+                    alert("انتخاب تمامی چرم ها برای ثبت سفارش الزامی است.");
+                    flag = false;
+                    return;
+                }
+
+                detailEntity.internalOrderDetailStoneViewModelList = stone;
+                detailEntity.internalOrderDetailLeatherViewModelList = leather;
+                entity.addProductViewModelList.push(detailEntity);
+            });
+
+            if (!flag) return;
+
+            if (checkForm("#form")) {
+                loader(true);
+                //entity = {
+                //    trackCode: $("input[name=trackCode]").val(),
+                //    id:$("input[name=detailId").val(),
+                //}
+                $.post("/internalOrder/save", entity, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        callbackAlert(response.message, function () {
+                            document.location = "/internalOrder"
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            }
+        });
+    });
+    const constraints = {
+        video: { width: { min: 800 }, height: { min: 600 } }
+
+    };
+
+    const captureVideoButton = document.querySelector('#screenshot .capture-button');
+    const screenshotButton = document.querySelector('#screenshot-button');
+    const img = document.querySelector('#screenshot img');
+    const video = document.querySelector('#screenshot video');
+    const canvas = document.createElement('canvas');
+    function handleError(error) {
+    }
+    captureVideoButton.onclick = function () {
+        navigator.mediaDevices.getUserMedia(constraints).
+            then(handleSuccess).catch(handleError);
+    };
+
+    screenshotButton.onclick = video.onclick = function () {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        img.src = canvas.toDataURL('image/webp');
+
+        $.post("/internalOrder/UploadCameraImage?path=internalOrdeDetail", { base64: img.src, fileName: "image.png" }, function (response) {
+            if (response.status == 200) {
+                $("#txtFileName").val(response.data.name);
+                $("#btnSubmitImage").show();
+
+            }
+        });
+    };
+    function handleSuccess(stream) {
+        screenshotButton.disabled = false;
+        video.srcObject = stream;
+    }
+
+    function getDetail(element) {
+        var id = $(element).closest(".detailEntity").find(".hiddenId").val();
+        $.post("/internalOrder/getProductDetail/" + id, function (response) {
+            loader(false);
+            if (response.status == 200) {
+
+                $(element).closest(".detailEntity").find(".productType").val(response.data.productType);
+                if (response.data.size.length > 0) {
+                    $("#size").empty();
+                    $("#size").prop("disabled", false);
+                    for (var i = 0; i < response.data.size.length; i++) {
+                        $("#size").append('<option value="' + response.data.size[i].value + '">' + response.data.size[i].value + ' </option>')
+                    }
+                    $(".combo-chosen").trigger("chosen:updated");
+                }
+
+                if (response.data.fileName != null) {
+                    $(element).closest(".detailEntity").find(".productImage").empty();
+                    $(element).closest(".detailEntity").find(".productImage").append("<img class=\" img-width \" style=\"width: 252px;\" src=\"/image/product/500x500/" + response.data.fileName + "\" />");
+                }
+                $(element).closest(".detailEntity").find(".txtLeatherLoop").removeAttr("data-validate", "required");
+
+                if (response.data.stoneCount) {
+                    for (var i = 0; i < response.data.stoneCount; i++) {
+                        var stoneTemplate = $("#stoneTemplate").text();
+                        stoneTemplate = stoneTemplate.replace("{{stoneOrder}}", i + 1);
+                        stoneTemplate = stoneTemplate.replace("{{stoneNum}}", i + 1);
+                        $(element).closest(".detailEntity").find(".stoneTemplateOutput").append(stoneTemplate);
+                        //$(element).closest(".detailEntity").find("[name=stoneId]").attr("data-validate", "required");
+                        //$(element).closest(".detailEntity").find("[name=stoneId]").addClass("element-error");
+                        //console.log($(element).closest(".detailEntity").find("[name=stoneId]"))
+                    }
+                    $(".combo-chosen").chosen({ width: "100%", placeholder_text_single: 'یک مورد را انتخاب کنید.', search_contains: true });
+                }
+                if (response.data.leatherCount) {
+                    for (var i = 0; i < response.data.leatherCount; i++) {
+                        var leatherTemplate = $("#leatherTemplate").text();
+                        leatherTemplate = leatherTemplate.replace("{{leatherNum}}", i + 1)
+                        leatherTemplate = leatherTemplate.replace("{{leatherOrder}}", i + 1)
+                        $(element).closest(".detailEntity").find(".leatherTemplateOutput").append(leatherTemplate)
+                        $(element).closest(".detailEntity").find(".leatherLoop").show();
+                        //$(element).closest(".detailEntity").find(".leatherLoop").addClass("element-error");
+                        $(element).closest(".detailEntity").find(".txtLeatherLoop").attr("data-validate","required");
+                    }
+                    $(".combo-chosen").chosen({ width: "100%", placeholder_text_single: 'یک مورد را انتخاب کنید.', search_contains: true });
+                }
+                else {
+                    $(element).closest(".detailEntity").find(".leatherLoop").hide();
+
+                }
+            }
+            else {
+                alert(response.message);
+            }
+        });
+    }
+
+    function productAutoCompelete() {
+
+        $(".txtProductName").on("focus", function () {
+            $(this).autocomplete({
+                focus: function (event, ui) {
+                    $("#project").val(ui.item.label);
+                    return false;
+                },
+                select: function (event, ui) {
+                    $(this).val(ui.item.title);
+                    $(this).closest(".detailEntity").find(".txtWorkShop").val(ui.item.bookCode);
+                    $(this).closest(".detailEntity").find(".txtSite").val(ui.item.code);
+                    $(this).closest(".detailEntity").find(".hiddenId").val(ui.item.id);
+                    //$(this).closest(".detailEntity").find(".stoneTemplateOutput").remove();
+                    getDetail(this);
+                    return false;
+                },
+                source: function (request, response) {
+
+                    var element = this;
+                    $.ajax({
+                        url: "/internalOrder/GetProductAutoComplete",
+                        data:
+                        {
+                            term: request.term,
+                            productType: $(element).parents(".detailEntity").find(".productType").val()
+                        },
+                        success: function (data) {
+                            response(data);
+                        }
+                    });
+                },
+                minLength: 2,
+                open: function () {
+                    $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+                },
+                close: function () {
+                    $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+                }
+            }).autocomplete("instance")._renderItem = function (ul, item) {
+                if (item.fileName) {
+                    return $("<li>")
+                        .append("<div><img style=\"width: 50px;\" src=\"/image/product/500x500/" + item.fileName + "\" /><span class=\"auto-complete-item\"> " + "نام کالا: " + item.title + " <br/> " + "کد سایت: " + (item.code ? item.code : '-') + "<br/>" + "کد کارگاه: " + (item.bookCode ? item.bookCode : '-') + "</span ></div > ")
+                        .appendTo(ul);
+                }
+                else {
+                    return $("<li>")
+                        .append("<div><img style=\"width: 60px;\" src=\"/content/image/kia-gallery-logo-square.png\" /><span class=\"auto-complete-item\">" + item.title + "<br/>" + item.bookCode + "</span></div>")
+                        .appendTo(ul);
+                }
+            };
+        })
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+
+    function blinker() {
+        $('.Reminder').fadeOut(500);
+        $('.Reminder').fadeIn(500);
+    }
+    setInterval(blinker, 1000);
+    $(".combo-chosen").chosen({ width: "100%", placeholder_text_single: 'یک مورد را انتخاب کنید.', search_contains: true });
+
+</script>
+
+<!--فرم سنگ-->
+<script type="text/html" id="stoneTemplate">
+    <div class="no-padding col-xs-12 col-sm-2 col-xs-3 col-lg-2 pull-right stone-Item">
+        <input type=hidden class="stoneOrder" data-orderStone="{{stoneOrder}}" />
+        <label>
+            سنگ {{stoneNum}} <a class="catalog" style="text-decoration:none;color:grey;font-size:10px;position: absolute;margin-right: 60px;" target="_blank" href="/stone/catalog">کاتالوگ</a>
+        </label>
+        <select id="" name="stoneId" class="col-md-6 stone-list form-control combo-chosen chosen-rtl" data-validate="required">
+            <option value="">...</option>
+            @*<option value="">ندارد</option>*@
+
+            @foreach (var item in ViewBag.StoneList)
+            {
+                <option data-title="@item.Name" class="stoneValues" data-img-src="/image/stone/100x100/@item.FileName" value="@item.Id">@item.Name</option>
+            }
+        </select>
+    </div>
+</script>
+<!--فرم چرم-->
+<script type="text/html" id="leatherTemplate">
+    <div class="no-padding col-xs-12 col-sm-4 col-md-4 col-xs-3 col-lg-2 pull-right leather-Item">
+        <input type=hidden class="leatherOrder" data-orderLeather="{{leatherOrder}}" />
+        <label>کد چرم {{leatherNum}}</label>
+        <select class="leather-list form-control clearField combo-chosen chosen-rtl" name="leatherId">
+            <option value=""></option>
+            <option value="">ندارد</option>
+            <option style="display:none;" class="leatherInDescription" value="">در توضیحات</option>
+
+            @foreach (var item in ViewBag.LeatherList)
+            {
+                <option class="leatherValues" data-img-src="/image/leather/100x100/@item.FileName" value="@item.Id">@item.Name</option>
+            }
+        </select>
+    </div>
+</script>
+<!--فرم محصولات-->
+<script id="productItemTemplate" type="text/html">
+
+</script>
+

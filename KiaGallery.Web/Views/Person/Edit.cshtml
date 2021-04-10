@@ -1,0 +1,308 @@
+﻿<div id="form" class="container">
+    <div class="row form-group">
+
+        <div class="row">
+            <div class="col-md-4 col-md-offset-2">
+                <div id="parent-section" class="form-group relative">
+                    <label for="cmbPersonType">نوع پرسنل</label>
+                    <select id="cmbPersonType" class="form-control" name="personType">
+                        <option value="">...</option>
+                        <option value="0">دفتر مرکزی</option>
+                        <option value="1">شعبه</option>
+                        <option value="2">کارگاه</option>
+                    </select>
+                </div>
+                <div id="parent-section" class="form-group relative">
+                    <label for="cmbBranch">شعبه</label>
+                    <select id="cmbBranch" class="form-control" name="branchId">
+                        <option value="">...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input id="hiddenId" type="hidden" value="" name="id" />
+                    <label for="txtShortName">نام کوتاه</label>
+                    <input id="txtShortName" type="text" class="form-control" name="shortName" maxlength="50" data-validate="maxLength(50), persianText">
+                </div>
+                <div class="form-group">
+                    <label for="txtNikName">نام مستعار</label>
+                    <input id="txtNikName" type="text" class="form-control" name="nikName" maxlength="50" data-validate="maxLength(50), persianText">
+                </div>
+                <div class="form-group">
+
+                    <label for="txtFirstName">نام</label>
+                    <input id="txtFirstName" type="text" class="form-control" name="firstName" maxlength="50" data-validate="maxLength(50), persianText">
+                </div>
+                <div class="form-group">
+                    <label for="txtLastName">نام خانوادگی</label>
+                    <input id="txtLastName" type="text" class="form-control" name="lastName" maxlength="50" data-validate="maxLength(50), persianText">
+                </div>
+                <div class="form-group">
+                    <label for="txtPersonNumber">شماره پرسنلی</label>
+                    <input id="txtPersonNumber" type="text" class="form-control" name="personNumber" maxlength="8" data-validate="required ,maxLength(8), number">
+                </div>
+                <div class="form-group">
+                    <label for="cmbSupervisor">سرپرست</label>
+                    <select id="cmbSupervisor" class="form-control" data-validate="required" name="supervisor">
+                        <option value="">...</option>
+                        <option value="true">بله</option>
+                        <option value="false">خیر</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cmbPersonPost">سمت</label>
+                    <select id="cmbPersonPost" class="form-control" data-validate="" name="personPost">
+                        <option value="">...</option>
+                        <option value="0">تدارکات</option>
+                        <option value="1">نگهبان</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtAccountNumber">شماره حساب</label>
+                    <input id="txtAccountNumber" type="text" class="form-control" name="accountNumber" maxlength="25" data-validate="maxLength(25)">
+                </div>
+
+                <div class="form-group">
+                    <label for="txtContractStartDate">تاریخ شروع همکاری</label>
+                    <input id="txtContractStartDate" type="text" class="form-control date" name="contractStartDate" data-validate="required">
+                </div>
+                <div class="form-group">
+                    <label for="cmbInsurance">بیمه</label>
+                    <select id="cmbInsurance" class="form-control" data-validate="required" name="insurance">
+                        <option value="">...</option>
+                        <option value="true">دارد</option>
+                        <option value="false">ندارد</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtInsuranceNumber">شماره بیمه</label>
+                    <input id="txtInsuranceNumber" type="text" class="form-control" name="insuranceNumber" maxlength="20" data-validate="maxLength(20), persianText">
+                </div>
+                <div class="form-group">
+                    <label for="txtPromissoryNoteNumber">شماره سفته</label>
+                    <input id="txtPromissoryNoteNumber" type="text" class="form-control" name="promissoryNoteNumber" maxlength="20" data-validate="maxLength(20), persianText">
+                </div>
+
+                <div class="form-group">
+                    <label for="txtInsuranceBeginDate">تاریخ شروع بیمه</label>
+                    <input id="txtInsuranceBeginDate" type="text" class="form-control date" name="insuranceBeginDate" data-validate="">
+                </div>
+                <div class="form-group">
+                    <label for="txtInsuranceExpireDate">تاریخ انقضا بیمه</label>
+                    <input id="txtInsuranceExpireDate" type="text" class="form-control date" name="insuranceExpireDate" data-validate="">
+                </div>
+                <div class="form-group">
+                    <label for="txtFatherName">نام پدر</label>
+                    <input id="txtFatherName" type="text" class="form-control" name="fatherName" maxlength="50" data-validate="required,maxLength(50), persianText">
+                </div>
+                <div class="form-group">
+                    <label for="txtExportFrom">صادره از</label>
+                    <input id="txtExportFrom" type="text" class="form-control" name="exportFrom" maxlength="50" data-validate="maxLength(50), persianText">
+                </div>
+                <div class="form-group">
+                    <label for="txtCity">محل تولد</label>
+                    <input id="txtExCity" type="text" class="form-control" name="city" maxlength="50" data-validate="maxLength(50), persianText">
+                </div>
+
+                <div class="form-group">
+                    <label for="cmbContractSubject">موضوع قرارداد</label>
+                    <select id="cmbContractSubject" class="form-control" data-validate="required" name="contractSubject">
+                        <option value="">...</option>
+                        <option value="0">قراردادکار دائم</option>
+                        <option value="1">قراردادکار موقت</option>
+                        <option value="2">قراردادکار معین</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cmbGender">جنسیت</label>
+                    <select id="cmbGender" class="form-control" data-validate="required" name="gender">
+                        <option value="">...</option>
+                        <option value="true">مرد</option>
+                        <option value="false">زن</option>
+                    </select>
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="txtNationalCode">کد ملی</label>
+                    <input id="txtNationalCode" type="text" class="form-control" name="nationalCode" maxlength="10" data-validate="maxLength(10), number">
+                </div>
+                <div class="form-group">
+                    <label for="txtBirthCertificateNumbere">شماره شناسنامه</label>
+                    <input id="txtBirthCertificateNumber" type="text" class="form-control" name="birthCertificateNumber" maxlength="12" data-validate="maxLength(12), number">
+                </div>
+                <div class="form-group">
+                    <label for="txtBirthDate">تاریخ تولد</label>
+                    <input id="txtBirthDate" type="text" class="form-control date" data-validate="required" name="birthDate" maxlength="14">
+                </div>
+
+                <div class="form-group">
+                    <label for="cmbMarried">وضعیت تاهل</label>
+                    <select id="cmbMarried" class="form-control" data-validate="required" name="married">
+                        <option value="">...</option>
+                        <option value="true">متاهل</option>
+                        <option value="false">مجرد</option>
+                    </select>
+                </div>
+                <div class="form-group children" style="display:none">
+                    <label for="txtChildren">تعداد فرزند</label>
+                    <input id="txtChildren" type="text" class="form-control" name="children" maxlength="14" data-validate="maxLength(14), number">
+                </div>
+                <div class="form-group">
+                    <label for="txtNecessaryNumber">شماره تلفن ضروری</label>
+                    <input id="txtNecessaryNumber" type="text" class="form-control" name="necessaryNumber" maxlength="14" data-validate="maxLength(14), number">
+                </div>
+                <div class="form-group">
+                    <label for="txtPhoneNumber">شماره تلفن</label>
+                    <input id="txtPhoneNumber" type="text" class="form-control" name="phoneNumber" maxlength="14" data-validate="maxLength(14), number">
+                </div>
+                <div class="form-group">
+                    <label for="txtMobileNumber">شماره همراه</label>
+                    <input id="txtMobileNumber" type="text" class="form-control" name="mobileNumber" maxlength="14" data-validate="maxLength(14), number">
+                </div>
+                <div class="form-group">
+                    <label for="txtAddress">آدرس</label>
+                    <textarea id="txtAddress" style="resize:none" class="form-control" name="address" maxlength="255" data-validate="maxLength(255)" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="cmbEducation">آخرین مدرک تحصیلی</label>
+                    <select id="cmbEducation" class="form-control" data-validate="required" name="education">
+                        <option value="">...</option>
+                        <option value="0">سیگل</option>
+                        <option value="2">دیپلم</option>
+                        <option value="3">کاردانی</option>
+                        <option value="4">کارشناسی</option>
+                        <option value="5">کارشناسی ارشد</option>
+                        <option value="6">دکترا</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtMajor">رشته تحصیلی</label>
+                    <input id="txtMajor" type="text" class="form-control" data-validate="" name="major" maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label for="cmbActive">وضعیت تحصیلی</label>
+                    <select id="cmbActive" class="form-control" data-validate="required" name="educationalStatus">
+                        <option value="">...</option>
+                        <option value="true">فارغ‌التحصیل</option>
+                        <option value="false">دانشجو</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtMajorCurrent">رشته تحصیلی فعلی</label>
+                    <input id="txtMajorCurrent" type="text" class="form-control" data-validate="" name="majorCurrent" maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label for="cmbJob">شرح وظایف</label>
+                    <select id="cmbJob" class="form-control" data-validate="" name="jobId">
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cmbActive">وضعیت</label>
+                    <select id="cmbActive" class="form-control" data-validate="required" name="active">
+                        <option value="">...</option>
+                        <option value="true">فعال</option>
+                        <option value="false">غیر فعال</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button id="btnSave" type="submit" class="btn btn-success">
+                        <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                        ذخیره
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+    var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+    $('.editor').froalaEditor();
+
+    $(document).ready(function () {
+        loadRemoteSelect("#cmbJob", "/personJobDescriptionTemplate/getList", null, "id", "title", "...", function () {
+            loadRemoteSelect("#cmbBranch", "/branch/getAll", null, "id", "name", "...", function () {
+                load();
+            });
+        });
+
+        $(".date").pDatepicker({
+            format: 'YYYY/MM/DD',
+            autoClose: true
+        });
+
+        $(".date").val("");
+        var date = new persianDate();
+        date.formatPersian = false;
+        $(".date").val(date.format("YYYY/MM/DD"));
+
+        $("#cmbPersonType").on("change", function () {
+            if ($("#cmbPersonType").val() == 0) {
+                $("#cmbSupervisor").val("false");
+                $("#cmbSupervisor").prop("disabled", true);
+            }
+            else {
+                $("#cmbSupervisor").prop("disabled", false);
+            }
+        });
+
+        $("#cmbMarried").on("change", function () {
+            if ($(this).val() == "true") {
+                $(".children").show()
+            }
+            else {
+                $(".children").hide()
+            }
+        });
+
+        $("#btnSave").on("click", function (event) {
+            event.preventDefault();
+            if (checkForm("#form")) {
+                var entity = getEntity("#form");
+                loader(true);
+                $.ajax({
+                    method: "POST",
+                    url: "/person/save",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                document.location = "/person";
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                        loader(false);
+                    }
+                });
+            }
+        });
+    });
+
+    function load() {
+        if (id > 0) {
+            loader(true);
+            $.get("/person/load/" + id, function (response) {
+                if (response.status == 200) {
+                    setEntity(response.data, "#form");
+                    if (response.data.married == true) {
+                        $(".children").show()
+                    }
+                    else {
+                        $(".children").hide()
+                    }
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    }
+
+    </script>
+}

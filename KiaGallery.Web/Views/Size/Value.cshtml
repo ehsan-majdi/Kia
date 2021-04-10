@@ -1,0 +1,181 @@
+﻿<div id="control-section">
+    <h4 class="inline-block">@ViewBag.Title</h4>&nbsp;&nbsp;
+    <button id="btnAdd" class="btn btn-primary">
+        <i class="fa fa-plus v-middle" aria-hidden="true"></i>&nbsp;
+        <span>جدید</span>
+    </button>
+</div>
+
+<div id="content" class="table-data table-responsive">
+
+</div>
+
+<div id="addValueModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">مقدار جدید</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input id="hiddenId" type="hidden" />
+                    <input id="hiddenSizeId" type="hidden" value="@ViewBag.Id" />
+                    <label for="txtOrder">ترتیب</label>
+                    <input id="txtOrder" type="tel" class="form-control number-only" data-validate="required, number" />
+                </div>
+                <div class="form-group">
+                    <label for="txtValue">عنوان</label>
+                    <input id="txtValue" type="text" class="form-control" data-validate="required" />
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" type="button" class="btn btn-success btn-password btn-control">ثبت</button>
+                <button type="button" class="btn btn-danger btn-password btn-control" data-dismiss="modal">لغو</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            id: '@ViewBag.Id'
+        }
+
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(document).ready(function () {
+            getList();
+
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف مقدار اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/size/deleteSizeValue/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+
+            $(document).on("click", ".edit-value", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+
+                $.get("/size/getSizeValue/" + id, null, function (response) {
+                    if (response.status == 200) {
+                        $("#hiddenId").val(response.data.id);
+                        $("#txtOrder").val(response.data.order);
+                        $("#txtValue").val(response.data.value);
+
+                        $("#addValueModal").modal('show');
+                    }
+                });
+            });
+
+            $("#btnAdd").on("click", function (event) {
+                event.preventDefault();
+
+                $("#hiddenId").val("");
+                $("#txtOrder").val("");
+                $("#txtValue").val("");
+
+                $("#addValueModal").modal('show');
+            });
+
+            $("#btnSave").on("click", function (event) {
+                event.preventDefault();
+                var entity = {
+                    id: $("#hiddenId").val(),
+                    sizeId: $("#hiddenSizeId").val(),
+                    order: $("#txtOrder").val(),
+                    value: $("#txtValue").val()
+                }
+
+                if (!entity.order) {
+                    alert("لطفا ترتیب را مشخص نمایید..")
+                    return;
+                }
+
+                if (!entity.value) {
+                    alert("لطفا مقدار را وارد نمایید.")
+                    return;
+                }
+
+                loader(true);
+                $.post("/size/saveSizeValue", entity, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        callbackAlert(response.message, function () {
+                            $("#addValueModal").modal('hide');
+                            getList();
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+        });
+
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+
+            loader(true);
+            $.get("/size/getSizeValueList", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>مقدار</th>
+                    <th class="hidden-xs">ترتیب</th>
+                    <th class="icon-col text-center">ویرایش</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td>{{:value}}</td>
+                    <td class="hidden-xs">{{:order}}</td>
+                    <td class="txt-al-c">
+                        <button class="edit-value btn btn-primary btn-xs" data-title="بازنشانی گذرواژه" data-id="{{:id}}"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                    </td>
+                    <td class="txt-al-c">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}

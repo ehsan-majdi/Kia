@@ -1,0 +1,213 @@
+﻿<div id="form" class="container">
+    <div class="row form-group">
+
+        <div class="row">
+            <div id="step1" class="col-md-4 col-md-offset-4">
+                <div class="form-group">
+                    <label for="txtOwnerName">ساعت کاری</label>
+                    <input id="txtWorkingHour" type="text" class="form-control" name="workingHour" maxlength="50" data-validate="required, maxLength(50), persianText">
+                </div>
+                <div class="form-group">
+                    <label for="txtOwnerName">نام کامل مالک</label>
+                    <input id="txtOwnerName" type="text" class="form-control" name="ownerName" maxlength="50" data-validate="required, maxLength(50), persianText">
+                </div>
+                <div class="form-group">
+                    <label for="txtOwnerFatherName">نام پدر</label>
+                    <input id="txtOwnerFatherName" type="text" class="form-control" name="ownerFatherName" maxlength="50" data-validate="required, maxLength(50), persianText">
+                </div>
+                <div class="form-group">
+                    <label for="txtNationalityNo">شماره شناسنامه</label>
+                    <input id="txtNationalityNo" type="text" class="form-control" name="ownerNationalityNo" maxlength="50" data-validate="required, maxLength(50)">
+                </div>
+                <div class="form-group">
+                    <label for="txtNationalityCode">کد ملی</label>
+                    <input id="txtNationalityCode" type="text" class="form-control" name="ownerNationalityCode" maxlength="50" data-validate="required, maxLength(50)">
+                </div>
+                <div id="parent-section" class="form-group relative">
+                    <label for="cmbProvince">استان</label>
+                    <select id="cmbProvince" class="form-control" name="provinceId">
+                        <option value="">...</option>
+                    </select>
+                </div>
+                <div class="form-group relative">
+                    <label for="cmbCity">شهر</label>
+                    <select id="cmbCity" class="form-control" data-validate="required" name="cityId">
+                        <option value="">...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtOrder">ترتیب</label>
+                    <input id="txtOrder" type="tel" class="form-control number-only" name="order" maxlength="10" data-validate="required, maxLength(10), number">
+                </div>
+                <div class="form-group">
+                    <label for="txtAlias">شناسه (حروف انگلیسی و بزرگ)</label>
+                    <input id="txtAlias" type="text" class="form-control" name="alias" maxlength="5" data-validate="required, maxLength(5), englishText">
+                    <input id="hiddenId" type="hidden" value="" name="id" />
+                </div>
+                <div class="form-group">
+                    <label for="txtName">نام فارسی</label>
+                    <input id="txtName" type="text" class="form-control" name="name" maxlength="50" data-validate="required, maxLength(50), persianText">
+                </div>
+                <div class="form-group">
+                    <label for="txtEnglishName">نام انگلیسی</label>
+                    <input id="txtEnglishName" type="text" class="form-control" name="englishName" maxlength="50" data-validate="maxLength(50), englishText">
+                </div>
+                <div class="form-group">
+                    <label for="txtColor">رنگ</label>
+                    <input id="txtColor" type="text" class="form-control" name="color" maxlength="6" data-validate="englishText">
+                </div>
+                @*<div class="form-group">
+            <label for="txtGoldDebt">حساب طلا</label>
+            <input id="txtGoldDebt" type="text" class="form-control money-separator" name="goldDebt" data-validate="required, number">
+        </div>
+        <div class="form-group">
+            <label for="txtRialDebt">حساب ریالی</label>
+            <input id="txtRialDebt" type="text" class="form-control money-separator" name="rialDebt" data-validate="required, number">
+        </div>
+        <div class="form-group">
+            <label for="txtGoldCredit">سقف طلا</label>
+            <input id="txtGoldCredit" type="text" class="form-control money-separator" name="goldCredit" data-validate="required, number">
+        </div>*@
+                <div class="form-group">
+                    <label for="txtPhone">شماره تماس</label>
+                    <input id="txtPhone" type="text" class="form-control" name="phone">
+                </div>
+                <div class="form-group">
+                    <label for="txtMobileNumber">شماره همراه</label>
+                    <input id="txtMobileNumber" type="text" class="form-control" name="mobileNumber">
+                </div>
+                <div class="form-group">
+                    <label for="txtAddress">آدرس فارسی</label>
+                    <textarea id="txtAddress" class="form-control" name="address" maxlength="1000" data-validate="maxLength(1000)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="txtEnglishAddress">آدرس انگلیسی</label>
+                    <textarea id="txtEnglishAddress" class="form-control" name="englishAddress" maxlength="1000" data-validate="maxLength(1000)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="cmbActive">وضعیت</label>
+                    <select id="cmbActive" class="form-control" data-validate="required" name="active">
+                        <option value="">...</option>
+                        <option value="true">فعال</option>
+                        <option value="false">غیرفعال</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cmbBranchType">نوع</label>
+                    <select id="cmbBranchType" class="form-control" data-validate="required" name="branchType">
+                        <option value="">...</option>
+                        <option value="0">شعب</option>
+                        <option value="1">نمایندگی</option>
+                        <option value="3">همکار</option>
+                        <option value="2">سایر</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtLatitude">عرض جغرافیایی</label>
+                    <input id="txtLatitude" type="tel" class="form-control" name="latitude" maxlength="38" data-validate="maxLength(38), float">
+                </div>
+                <div class="form-group">
+                    <label for="txtLongitude">طول جغرافیایی</label>
+                    <input id="txtLongitude" type="tel" class="form-control" name="longitude" maxlength="38" data-validate="maxLength(38), float">
+                </div>
+                <div class="form-group">
+                    <div id="googleMap" class="googleMap" style="width: 100%;height: 400px;"></div>
+                </div>
+                <div class="form-group">
+                    <button id="btnSave" type="submit" class="btn btn-success">
+                        <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                        ذخیره
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="http://maps.googleapis.com/maps/api/js"></script>
+    <script type="text/javascript">
+    var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+
+    $(document).ready(function () {
+        var myCenter = new google.maps.LatLng("35.696733", "51.378667");
+
+        function initialize() {
+            var mapProp = {
+                center: myCenter,
+                zoom: 16,
+                zoomControl: false,
+                scaleControl: false,
+                scrollwheel: false,
+                disableDoubleClickZoom: true,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+            google.maps.event.addListener(map, 'click', function (event) {
+                document.getElementById('txtLatitude').value = event.latLng.lat();
+                document.getElementById('txtLongitude').value = event.latLng.lng();
+            });
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+        loadRemoteSelect("#cmbProvince", "/location/getAllProvince", null, "id", "name", "...", function () {
+            load();
+        });
+
+        $("#cmbProvince").on("change", function () {
+            if ($("#cmbProvince").val()) {
+                loadRemoteSelect("#cmbCity", "/location/getAllCity/" + $("#cmbProvince").val(), null, "id", "name", "...");
+            }
+            else {
+                $("#cmbProvince").empty();
+                $("#cmbProvince").append("<option value=\"\">...</option>");
+            }
+        });
+
+        $("#btnSave").on("click", function (event) {
+            event.preventDefault();
+            if (checkForm("#form")) {
+                var entity = getEntity("#form");
+                loader(true);
+                $.ajax({
+                    method: "POST",
+                    url: "/branch/save",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                document.location = "/branch";
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                        loader(false);
+                    }
+                });
+            }
+        });
+    });
+
+    function load() {
+        if (id > 0) {
+            loader(true);
+            $.get("/branch/load/" + id, function (response) {
+                if (response.status == 200) {
+                    loadRemoteSelect("#cmbCity", "/location/getAllCity/" + response.data.provinceId, null, "id", "name", "...", function () {
+                        setEntity(response.data, "#form");
+                    });
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    }
+
+    </script>
+}

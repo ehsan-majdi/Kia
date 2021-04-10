@@ -1,0 +1,177 @@
+﻿@{
+    ViewBag.Title = "EditMessage";
+}
+
+<style>
+    textarea {
+        resize: none;
+        width: 100%;
+    }
+</style>
+<div class="container">
+    <form id="form">
+        <div class="row">
+            <div class="form-group col-md-1">
+                <label for="txtOrder">ترتیب:</label>
+                <input id="txtOrder" class="form-control" name="order" />
+            </div>
+            <div class="form-group col-md-3">
+                <label for="txtTitle">عنوان پیام:</label>
+                <input id="txtTitle" class="form-control" name="title" />
+            </div>
+            <div class="form-group col-md-3">
+                <input id="hiddenId" type="hidden" name="id" />
+                <label for="cmbCategory">انتخاب دسته دسته بندی</label>
+                <select id="cmbCategory" class="form-control" data-validate="required" name="smsCategoryId">
+                    <option value="">...</option>
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="cmbActive">وضعیت</label>
+                <select id="cmbActive" class="form-control" data-validate="required" name="active">
+                    <option value="">...</option>
+                    <option value="true">ارسال لینک به مشتری</option>
+                    <option value="false">ارسال پیامک به مشتری</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2 urlKey">
+                <label for="txtUrlKey">کدپیام</label>
+                <input id="txtUrlKey" class="form-control" name="urlKey" placeholder="5 حرف انگلیسی وارد کنید" disabled/>
+            </div>
+            <div class="fomr-group col-md-12">
+                <div id="divDroppedFields">
+                    <textarea id="textArea" name="text" rows="10" class="form-control editor" onclick="getCaretPosition()" onkeyup="getCaretPosition()" required></textarea>
+                </div>
+                <br />
+                <br />
+            </div>
+
+        </div>
+    </form>
+    @*<div  class="form-group">
+            <button class="btn btn-info select-value" data-id="{مبلغ}">مبلغ</button>
+            <button class="btn btn-info select-value" data-id="{نام}">نام</button>
+            <button class="btn btn-info select-value" data-id="{شماره کارت}">شماره کارت</button>
+            <button class="btn btn-info select-value" data-id="{شماره تماس}">شماره تماس</button>
+        </div>*@
+    <div class="text-center">
+        <button class="btn btn-success" type="submit" id="btnSave">ثبت پیام جدید</button>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        var id = @(ViewBag.Id != null? ViewBag.Id:0);
+        $('.editor').froalaEditor();
+
+        $(document).ready(function () {
+            $("#txtUrlKey").prop('disabled', true);
+            $("#cmbActive").change(function () {
+                var Active = $(this).val();
+                if (Active == "false") {
+                    $("#txtUrlKey").prop('disabled', true);
+                    $("#txtUrlKey").val("");
+                }
+                else {
+                    $("#txtUrlKey").prop('disabled', false);
+                }
+            });
+            Save();
+            load();
+            jQuery.fn.extend({
+                insertAtCaret: function (myValue) {
+                    return this.each(function (i) {
+                        if (document.selection) {
+                            this.focus();
+                            sel = document.selection.createRange();
+                            sel.text = myValue;
+                            this.focus();
+                        }
+                        else if (this.selectionStart || this.selectionStart == '0') {
+                            var startPos = this.selectionStart;
+                            var endPos = this.selectionEnd;
+                            var scrollTop = this.scrollTop;
+                            this.value = this.value.substring(0, startPos) + myValue + this.value.substring(endPos, this.value.length);
+                            this.focus();
+                            this.selectionStart = startPos + myValue.length;
+                            this.selectionEnd = startPos + myValue.length;
+                            this.scrollTop = scrollTop;
+                        } else {
+                            this.value += myValue;
+                            this.focus();
+                        }
+                    })
+                }
+            });
+
+            $('.select-value').click(function () {
+                var value = $(this).attr("data-id")
+                $("#textArea").insertAtCaret(value);
+            });
+            loadRemoteSelect("#cmbCategory", "/SmsCategory/CategoryList", null, "id", "title", "...", function () {
+                load();
+            });
+
+
+        });
+        function Save() {
+            $("#btnSave").on("click", function (event) {
+                event.preventDefault();
+                if (checkForm("#form")) {
+                    var entity = getEntity("#form");
+                    var englishTextRegex = new RegExp("^[A-Za-z]+$", 'i');
+                    if (entity.active == false && (!entity.urlKey.match(englishTextRegex) || entity.urlKey.length != 5)) {
+                        alert("وارد کردن کد پیام به شکل صحیح الزامیست (5 حرف انگلیسی وارد کنید)");
+                        return;
+                    }
+                    if (!entity.text) {
+                        alert("لطفا فیلد متن پر شود");
+                        return;
+                    }
+                    loader(true);
+                    $.ajax({
+                        method: "POST",
+                        url: "/smsText/save",
+                        data: entity,
+                        success: function (response) {
+                            if (response.status == 200) {
+                                    callbackAlert(response.message, function () {
+                                    document.location = "/SmsText/index/";
+                                });
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                            loader(false);
+                        }
+                    });
+                }
+            });
+        }
+
+        var position;
+        function getCaretPosition() {
+            var ctlTextArea = document.getElementById('textArea');
+            position = ctlTextArea.selectionStart;
+            return position;
+        }
+        function load() {
+            if (id > 0) {
+                loader(true);
+                $.get("/SmsText/load/" + id, function (response) {
+                    if (response.status == 200) {
+                        console.log(id);
+                        $("#hiddenId").val(response.data.id)
+                        $('#textArea').froalaEditor('html.set', response.data.text);
+                        setEntity(response.data, "#form");
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            }
+        }
+    </script>
+}

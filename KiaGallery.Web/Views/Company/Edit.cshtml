@@ -1,0 +1,96 @@
+﻿<div id="form" class="container">
+    <div class="row form-group">
+        <div class="row">
+            <div id="step1" class="col-md-4 col-md-offset-4">
+                <div class="form-group">
+                    <label for="txtOrder">ترتیب</label>
+                    <input id="txtOrder" type="tel" class="form-control number-only" name="order" maxlength="10" data-validate="required, maxLength(10), number">
+                </div>
+                <div class="form-group">
+                    <label for="txtAlias">شناسه (حروف انگلیسی و بزرگ)</label>
+                    <input id="txtAlias" type="text" class="form-control" name="alias" maxlength="5" data-validate="required, maxLength(5), englishText">
+                    <input id="hiddenId" type="hidden" value="" name="id" />
+                </div>
+                <div class="form-group">
+                    <label for="txtName">نام</label>
+                    <input id="txtName" type="text" class="form-control" name="name" maxlength="50" data-validate="required, maxLength(50), persianText">
+                </div>
+                <div class="form-group">
+                    <label for="txtEnglishName">نام انگلیسی</label>
+                    <input id="txtEnglishName" type="text" class="form-control" name="englishName" maxlength="50" data-validate="maxLength(50), englishText">
+                </div>
+                <div class="form-group">
+                    <label for="txtAddress">آدرس</label>
+                    <textarea id="txtAddress" class="form-control" name="address" maxlength="1000" data-validate="maxLength(1000)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="txtEnglishAddress">آدرس انگلیسی</label>
+                    <textarea id="txtEnglishAddress" class="form-control" name="englishAddress" maxlength="1000" data-validate="maxLength(1000)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="cmbActive">وضعیت</label>
+                    <select id="cmbActive" class="form-control" data-validate="required" name="active">
+                        <option value="">...</option>
+                        <option value="true">فعال</option>
+                        <option value="false">غیرفعال</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button id="btnSave" type="submit" class="btn btn-success">
+                        <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                        ذخیره
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+    var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+
+    $(document).ready(function () {
+        load();
+        $("#btnSave").on("click", function (event) {
+            event.preventDefault();
+            if (checkForm("#form")) {
+                var entity = getEntity("#form");
+                loader(true);
+                $.ajax({
+                    method: "POST",
+                    url: "/company/save",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                document.location = "/company";
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                        loader(false);
+                    }
+                });
+            }
+        });
+    });
+
+    function load() {
+        if (id > 0) {
+            loader(true);
+            $.get("/company/load/" + id, function (response) {
+                if (response.status == 200) {
+                    setEntity(response.data, "#form");
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    }
+    </script>
+}

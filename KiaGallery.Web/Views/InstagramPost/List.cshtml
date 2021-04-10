@@ -1,0 +1,141 @@
+﻿
+@{
+    ViewBag.Title = "List";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-3" style="display:flex;">
+            <a href="/InstagramPost/Add" class="button-new btn btn-success">
+                <span class="fa fa-plus"></span>
+                جدید
+            </a>
+            <select id="cmbPostType" class="form-control" style="margin-right:10px">
+                <option value="">...</option>
+                <option value="0">محصول</option>
+                <option value="1">اینستاگرام</option>
+            </select>
+        </div>
+    </div>
+</div>
+<br />
+<div id="content">
+
+</div>
+@section scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 200,
+            instagramPostType: null,
+        }
+
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(document).ready(function () {
+            getList();
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف این مورداطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/instagrampost/Delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+
+            $(document).on("change", "#cmbPostType", function (event) {
+                var value = $(this).val();
+                console.log(value);
+                if (value != null && value != "") {
+                    var param = { instagramPostType: value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["instagramPostType", "page"]);
+                    defaultEntity.instagramPostType = null;
+                }
+            });
+        });
+
+        function getList() {
+            updateForm();
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+            loader(true);
+            $.get("/instagramPost/search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+        function updateForm() {
+            var params = getParam();
+            if (params["instagramPostType"]) {
+                $("#cmbPostType").val(params["instagramPostType"]);
+            }
+            else {
+                $("#cmbPostType").val("");
+            }
+        }
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ترتیب</th>
+                    <th>عنوان </th>
+                    <th>تاریخ </th>
+                    <th>تاریخ نهایی برای انتشار</th>
+                    <th>تصویر</th>
+                    <th class="icon-col text-center">وضعیت</th>
+                    <th class="icon-col text-center">ویرایش</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td class="v-middle">{{:#index + 1}}</td>
+                    <td class="v-middle">{{:title}}</td>
+                    <td class="v-middle">{{:persianPublishDate}}</td>
+                    <td class="v-middle">{{:finalPersianPublishDate}}</td>
+                    <td class="hidden-xs hidden-sm v-middle">
+                        {{if fileName}}
+                        <img style="width: 55px;" src="/image/instagram/500x500/{{:fileName}}" />
+                        {{else}}
+                        <img style="width: 55px;" src="/content/image/kia-gallery-logo-square.png" />
+                        {{/if}}
+                    </td>
+                    <td class="v-middle">{{:instagramPostTypeTitle}}</td>
+                    <td class="txt-al-c v-middle">
+                        <a href="/instagrampost/Edit/{{:id}}" class="btn btn-info btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c v-middle">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}

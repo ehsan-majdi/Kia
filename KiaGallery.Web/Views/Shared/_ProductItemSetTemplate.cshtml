@@ -1,0 +1,433 @@
+﻿@{
+    var productMain = (Product)Model.product;
+    var stoneList = (List<Stone>)Model.stoneList;
+    var leatherList = (List<Leather>)Model.leatherList;
+    var branchList = (List<Branch>)Model.branchList;
+    var setProduct = (List<SetProduct>)Model.setProduct;
+    int counter = 1;
+}
+
+<div class="cart-product-set relative w100 inline-block" style="border: 1px solid #808080; border-radius:10px;margin-bottom:20px;padding-bottom:-20px">
+    <div class="col-lg-12 share-data">
+        <span class="del-set fa fa-close pointer" style="position: absolute; left: -10px; top: -10px; padding:5px 6px; background:#000; color:#fff; border-radius:100%; "></span>
+        <div class="customize-item col-xs-6 col-sm-4 col-lg-2 pull-right">
+            <div class="show-for-medium" style="height: 30px;"></div>
+            <label class="middle">
+                <i class="fa fa-cogs" aria-hidden="true" style="font-size:24px; color:#1d8619"></i> &nbsp;
+                نیم ست
+            </label>
+        </div>
+
+        @if (productMain.GoldType == KiaGallery.Model.GoldType.Both)
+        {
+            <div class="customize-item col-xs-6 col-sm-4 col-lg-2 pull-right">
+                <label for="txtCustomer" class="middle">
+                    <i class="fa fa-certificate" aria-hidden="true"></i> &nbsp;
+                    <span class="v-top">براقیت</span>
+                </label>
+                <select name="goldType" class="form-control combo-chosen chosen-rtl">
+                    <option value="-1">...</option>
+                    <option value="">سلیقه ای</option>
+                    <option value="1">مات</option>
+                    <option value="2">براق</option>
+                </select>
+            </div>
+        }
+        else
+        {
+            <div class="customize-item col-xs-6 col-sm-4 col-lg-2 pull-right">
+                <label class="middle">
+                    <i class="fa fa-certificate" aria-hidden="true"></i> &nbsp;
+                    <span class="v-top">براقیت</span>
+                </label>
+                <select name="goldType" class="form-control combo-chosen chosen-rtl" disabled>
+                    <option value="-1">...</option>
+                    <option value="">سلیقه ای</option>
+                    <option value="1" @((int)productMain.GoldType == 1 ? "selected" : "")>مات</option>
+                    <option value="2" @((int)productMain.GoldType == 2 ? "selected" : "")>براق</option>
+                </select>
+            </div>
+        }
+
+        @for (int i = 1; i <= productMain.StoneCount; i++)
+        {
+            int j = i - 1;
+            <div class="customize-item col-xs-12 col-sm-4 col-md-4 col-lg-3 pull-right">
+                <label>
+                    <i class="fa fa-diamond v-middle" aria-hidden="true"></i> &nbsp;
+                    <span>سنگ @i</span>
+                </label>
+                <select class="stone-list form-control combo-chosen chosen-rtl" data-stone-order="@i">
+                    <option value="">...</option>
+                    @if (productMain.ProductStoneList[j].DefaultStoneId != null)
+                    {
+                        <option value="@productMain.ProductStoneList[j].DefaultStoneId">سنگ مشابه تصویر</option>
+                    }
+                    @foreach (var item in stoneList)
+                    {
+                        if (productMain.ProductStoneList.Count(x => x.Order == i && x.StoneId == item.Id && !item.StoneOutOfStockList.Any(y => y.ShapeSizeId == x.ShapeSizeId)) > 0)
+                        {
+                            <option data-img-src="/image/stone/100x100/@item.FileName" value="@item.Id">@item.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+        }
+
+        <div class="customize-item col-xs-12 col-sm-4 col-lg-3 pull-right">
+            <label>
+                <i class="fa fa-user v-middle" aria-hidden="true"></i> &nbsp;
+                <span>مشخصات خریدار</span>
+            </label>
+            <input type="text" name="customer" class="customer form-control" />
+        </div>
+
+        <div class="customize-item col-xs-12 col-sm-4 col-lg-2 pull-right">
+            <label>
+                <i class="fa fa-phone v-middle" aria-hidden="true"></i> &nbsp;
+                <span>تلفن خریدار</span>
+            </label>
+            <input type="text" name="phoneNumber" class="phoneNumber form-control" />
+        </div>
+
+        <div class="customize-item col-xs-6 col-sm-2 col-lg-1 pull-right">
+            <label>
+                <i class="fa fa-sort-numeric-asc v-middle" aria-hidden="true"></i> &nbsp;
+                <span>تعداد</span>
+            </label>
+            <select name="count" class="count form-control combo-chosen chosen-rtl">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+        </div>
+
+        <div class="customize-item col-xs-6 col-sm-4 col-lg-2 pull-right">
+            <div class="show-for-medium" style="height: 30px;"></div>
+            <label class="middle">
+                <input class="forceOrder" type="checkbox" name="forceOrder" disabled />
+                عجله ای
+            </label>
+        </div>
+
+        <div class="col-xs-12">
+            <hr style="border-color: #000" />
+        </div>
+    </div>
+    <div class="cart-product-item relative w100 inline-block">
+        <div class="col-lg-3">
+            <div class="col-xs-12 txt-al-c">
+                @if (string.IsNullOrEmpty(productMain.ProductFileList.FirstOrDefault(x => x.FileType == KiaGallery.Model.FileType.Order)?.FileName))
+                {
+                    <img src="~/content/image/kia-gallery-logo-square.png" style="height: 220px" data-title="@Html.Partial("_ProductDetail")" data-html="true" data-toggle="tooltip" data-placement="left" />
+                }
+                else
+                {
+                    <img src="~/image/product/500x500/@(productMain.ProductFileList.FirstOrDefault(x => x.FileType == KiaGallery.Model.FileType.Order)?.FileName)" style="width: 250px" data-title="@Html.Partial("_ProductDetail")" data-html="true" data-toggle="tooltip" data-placement="left" />
+                }
+
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <span class="del-item fa fa-close pointer" style="position: absolute; left: 5px; top: 5px;"></span>
+            <input type="hidden" value="@productMain.Id" name="productId" />
+            <input type="hidden" value="" name="id" />
+            <input type="hidden" value="1" name="setNumber" class="setNumber" />
+            @if (productMain.Size != null)
+            {
+                <div class="customize-item col-xs-6 col-sm-4 col-lg-2 pull-right">
+                    <label class="middle">
+                        <i class="fa fa-expand v-middle" aria-hidden="true"></i> &nbsp;
+                        <span>سایز</span>
+                    </label>
+                    <select name="size" class="form-control combo-chosen chosen-rtl">
+                        @if (productMain.NormalSizeValueId != null)
+                        {
+                            <option value="نرمال (@productMain.NormalSizeValue.Value)">نرمال (@productMain.NormalSizeValue.Value)</option>
+                        }
+                        else
+                        {
+                            <option value="@productMain.Size.DefaultValue">@productMain.Size.DefaultValue</option>
+                        }
+                        @foreach (var item in productMain.Size.SizeValueList.OrderBy(x => x.Order))
+                        {
+                            <option value="@(item.Value)">@(item.Value)</option>
+                        }
+                    </select>
+                </div>
+            }
+
+
+            @for (int i = 1; i <= productMain.LeatherCount; i++)
+            {
+                <div class="customize-item col-xs-12 col-md-3 pull-right">
+                    <label>
+                        <i class="fa fa-road v-middle" aria-hidden="true"></i> &nbsp;
+                        <span>چرم @i</span>
+                    </label>
+                    <select class="leather-list form-control combo-chosen chosen-rtl" data-leather-order="@i">
+                        <option value="">...</option>
+                        @foreach (var item in leatherList)
+                        {
+                            if (productMain.ProductLeatherList.Count(x => x.Order == i && x.LeatherId == item.Id) > 0)
+                            {
+                                <option data-img-src="/image/leather/100x100/@item.FileName" value="@item.Id">@item.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+            }
+
+            @if (productMain.CanLoop == true)
+            {
+                <div class="customize-item col-md-3 pull-right">
+                    <label>
+                        <i class="fa fa-refresh v-middle" aria-hidden="true"></i> &nbsp;
+                        تعداد دور:
+                    </label>
+                    <select name="leatherLoop" class="combo-chosen chosen-rtl">
+                        <option value="">سلیقه ای</option>
+                        <option value="1">یک دور</option>
+                        <option value="2">دو دور</option>
+                        <option value="3">سه دور</option>
+                    </select>
+                </div>
+            }
+
+            @if (User.IsInRole("admin") || User.IsInRole("branch-label"))
+            {
+                <div class="customize-item col-xs-12 col-md-3 pull-right">
+                    <label>
+                        <i class="fa fa-building v-middle" aria-hidden="true"></i> &nbsp;
+                        <span>شعبه</span>
+                    </label>
+                    <select class="form-control combo-chosen chosen-rtl" name="branchLabel">
+                        <option value="">...</option>
+                        @foreach (var item in branchList)
+                        {
+                            <option value="@item.Name">@item.Name</option>
+                        }
+                    </select>
+                </div>
+            }
+            @if (productMain.ProductType == KiaGallery.Model.ProductType.OuterWerk && productMain.ProductOuterWerkList.Count() > 0)
+            {
+                var twoLittleRings = productMain.ProductOuterWerkList.FirstOrDefault(x => x.OuterWerkType == KiaGallery.Model.OuterWerkType.TwoLittleRings);
+                var twoBigRings = productMain.ProductOuterWerkList.FirstOrDefault(x => x.OuterWerkType == KiaGallery.Model.OuterWerkType.TwoBigRings);
+                var twoSidesRing = productMain.ProductOuterWerkList.FirstOrDefault(x => x.OuterWerkType == KiaGallery.Model.OuterWerkType.TwoSidesRing);
+                var size4 = productMain.ProductOuterWerkList.FirstOrDefault(x => x.OuterWerkType == KiaGallery.Model.OuterWerkType.Size4);
+                var size6 = productMain.ProductOuterWerkList.FirstOrDefault(x => x.OuterWerkType == KiaGallery.Model.OuterWerkType.Size6);
+                var size8 = productMain.ProductOuterWerkList.FirstOrDefault(x => x.OuterWerkType == KiaGallery.Model.OuterWerkType.Size8);
+                var tiny = productMain.ProductOuterWerkList.FirstOrDefault(x => x.OuterWerkType == KiaGallery.Model.OuterWerkType.Tiny);
+                var medium = productMain.ProductOuterWerkList.FirstOrDefault(x => x.OuterWerkType == KiaGallery.Model.OuterWerkType.Medium);
+                var big = productMain.ProductOuterWerkList.FirstOrDefault(x => x.OuterWerkType == KiaGallery.Model.OuterWerkType.Big);
+                <div class="customize-item col-xs-12 col-md-3 pull-right">
+                    <label>
+                        <i class="fa fa-building v-middle" aria-hidden="true"></i> &nbsp;
+                        <span>نوع خرج کار</span>
+                    </label>
+                    <select class="form-control combo-chosen chosen-rtl" name="outerWerkType">
+                        <option value="">...</option>
+                        @if (twoLittleRings != null)
+                        {
+                            <option value="0">دوحلقه چه کوچک (زنجیر ساعت) </option>
+                        }
+                        @if (twoBigRings != null)
+                        {
+                            <option value="1">دوحلقه چه بزرگ (دستبند) </option>
+                        }
+                        @if (twoSidesRing != null)
+                        {
+                            <option value="2">دو طرف حلقه چه (دستبند) </option>
+                        }
+                        @if (size4 != null)
+                        {
+                            <option value="3">سایز 4 </option>
+                        }
+                        @if (size6 != null)
+                        {
+                            <option value="4">سایز 6</option>
+                        }
+                        @if (size8 != null)
+                        {
+                            <option value="5">سایز 8 </option>
+                        }
+                        @if (tiny != null)
+                        {
+                            <option value="6">کوچک</option>
+                        }
+                        @if (medium != null)
+                        {
+                            <option value="7">متوسط</option>
+                        }
+                        @if (big != null)
+                        {
+                            <option value="8">بزرگ</option>
+                        }
+                    </select>
+                </div>
+            }
+            <div class="customize-item col-xs-12">
+                <label>
+                    <i class="fa fa-comment-o v-middle" aria-hidden="true"></i> &nbsp;
+                    <span>توضیحات:</span>
+                </label>
+                <input type="text" name="description" class="form-control" placeholder="توضیحات خود را در این قسمت وارد کنید." />
+            </div>
+
+        </div>
+        <div class="col-xs-12">
+            <hr style="border-color: #000" />
+        </div>
+    </div>
+
+    @foreach (SetProduct productRelated in ViewBag.SetProduct)
+    {
+        var product = productRelated.SetTo;
+        <div class="cart-product-item relative w100 inline-block">
+            <div class="col-lg-3">
+                <div class="col-xs-12 txt-al-c">
+                    @if (string.IsNullOrEmpty(product.ProductFileList.FirstOrDefault(x => x.FileType == KiaGallery.Model.FileType.Order)?.FileName))
+                    {
+                        <img src="~/content/image/kia-gallery-logo-square.png" style="height: 220px" data-title="@Html.Partial("_ProductDetail")" data-html="true" data-toggle="tooltip" data-placement="left" />
+                    }
+                    else
+                    {
+                        <img src="~/image/product/500x500/@(product.ProductFileList.FirstOrDefault(x => x.FileType == KiaGallery.Model.FileType.Order)?.FileName)" style="width: 250px" data-title="@Html.Partial("_ProductDetail")" data-html="true" data-toggle="tooltip" data-placement="left" />
+                    }
+
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <span class="del-item fa fa-close pointer" style="position: absolute; left: 5px; top: 5px;"></span>
+                <input type="hidden" value="@product.Id" name="productId" />
+                <input type="hidden" value="" name="id" />
+                <input type="hidden" value="1" name="setNumber" class="setNumber" />
+                @if (product.Size != null)
+                {
+                    <div class="customize-item col-xs-6 col-sm-4 col-lg-2 pull-right">
+                        <label class="middle">
+                            <i class="fa fa-expand v-middle" aria-hidden="true"></i> &nbsp;
+                            <span>سایز</span>
+                        </label>
+                        <select name="size" class="form-control combo-chosen chosen-rtl">
+                            @if (product.NormalSizeValueId != null)
+                            {
+                                <option value="نرمال (@product.NormalSizeValue.Value)">نرمال (@product.NormalSizeValue.Value)</option>
+                            }
+                            else
+                            {
+                                <option value="@product.Size.DefaultValue">@product.Size.DefaultValue</option>
+                            }
+                            @foreach (var item in product.Size.SizeValueList.OrderBy(x => x.Order))
+                            {
+                                <option value="@(item.Value)">@(item.Value)</option>
+                            }
+                        </select>
+                    </div>
+                }
+
+                @for (int i = 1; i <= product.LeatherCount; i++)
+                {
+                    <div class="customize-item col-xs-12 col-md-3 pull-right">
+                        <label>
+                            <i class="fa fa-road v-middle" aria-hidden="true"></i> &nbsp;
+                            <span>چرم @i</span>
+                        </label>
+                        <select class="leather-list form-control combo-chosen chosen-rtl" data-leather-order="@i">
+                            <option value="">...</option>
+                            @foreach (var item in leatherList)
+                            {
+                                if (product.ProductLeatherList.Count(x => x.Order == i && x.LeatherId == item.Id) > 0)
+                                {
+                                    <option data-img-src="/image/leather/100x100/@item.FileName" value="@item.Id">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                }
+
+                @if (product.CanLoop == true)
+                {
+                    <div class="customize-item col-md-3 pull-right">
+                        <label>
+                            <i class="fa fa-refresh v-middle" aria-hidden="true"></i> &nbsp;
+                            تعداد دور:
+                        </label>
+                        <select name="leatherLoop" class="combo-chosen chosen-rtl">
+                            <option value="">سلیقه ای</option>
+                            <option value="1">یک دور</option>
+                            <option value="2">دو دور</option>
+                            <option value="3">سه دور</option>
+                        </select>
+                    </div>
+                }
+
+                @if (User.IsInRole("admin") || User.IsInRole("branch-label"))
+                {
+                    <div class="customize-item col-xs-12 col-md-3 pull-right">
+                        <label>
+                            <i class="fa fa-building v-middle" aria-hidden="true"></i> &nbsp;
+                            <span>شعبه</span>
+                        </label>
+                        <select class="form-control combo-chosen chosen-rtl" name="branchLabel">
+                            <option value="">...</option>
+                            @foreach (var item in branchList)
+                            {
+                                <option value="@item.Name">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+                }
+                @if (product.ProductType == KiaGallery.Model.ProductType.OuterWerk && product.ProductOuterWerkList.Count() > 0)
+                {
+                    var twoLittleRings = product.ProductOuterWerkList.FirstOrDefault(x => x.OuterWerkType == KiaGallery.Model.OuterWerkType.TwoLittleRings);
+                    var twoBigRings = product.ProductOuterWerkList.FirstOrDefault(x => x.OuterWerkType == KiaGallery.Model.OuterWerkType.TwoBigRings);
+                    var twoSidesRing = product.ProductOuterWerkList.FirstOrDefault(x => x.OuterWerkType == KiaGallery.Model.OuterWerkType.TwoSidesRing);
+                    <div class="customize-item col-xs-12 col-md-3 pull-right">
+                        <label>
+                            <i class="fa fa-building v-middle" aria-hidden="true"></i> &nbsp;
+                            <span>نوع خرج کار</span>
+                        </label>
+                        <select class="form-control combo-chosen chosen-rtl" name="outerWerkType">
+                            <option value="">...</option>
+                            @if (twoLittleRings != null)
+                            {
+                                <option value="0">دوحلقه چه کوچک (زنجیر ساعت) </option>
+                            }
+                            @if (twoBigRings != null)
+                            {
+                                <option value="1">دوحلقه چه بزرگ (دستبند) </option>
+                            }
+                            @if (twoSidesRing != null)
+                            {
+                                <option value="2">دو طرف حلقه چه (دستبند) </option>
+                            }
+                        </select>
+                    </div>
+                }
+                <div class="customize-item col-xs-12">
+                    <label>
+                        <i class="fa fa-comment-o v-middle" aria-hidden="true"></i> &nbsp;
+                        <span>توضیحات:</span>
+                    </label>
+                    <input type="text" name="description" class="form-control" placeholder="توضیحات خود را در این قسمت وارد کنید." />
+                </div>
+            </div>
+            @if (setProduct.Count > counter)
+            {
+                counter += 1;
+                <div class="col-xs-12">
+                    <hr style="border-color: #000" />
+                </div>
+            }
+        </div>
+    }
+</div>

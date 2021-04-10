@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="283a34c99e3343f2ad1266c444f4ff81" Name="Diagram1">
+        <EntityTypeShape EntityType="KiaGalleryMainModel.BotGoldReportUserData" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KiaGalleryMainModel.BranchGolds" Width="1.5" PointX="3.375" PointY="0.75" />
+        <EntityTypeShape EntityType="KiaGalleryMainModel.Branches" Width="1.5" PointX="1.125" PointY="9.625" />
+        <AssociationConnector Association="KiaGalleryMainModel.FK_dbo_BranchGolds_dbo_Branches_BranchId" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,183 @@
+﻿
+@{
+    ViewBag.Title = "وضعیت مالی شعب";
+}
+<style>
+    #modalOrder input[type="checkbox"] {
+        margin: 0;
+        margin-left: 0px;
+        vertical-align: middle;
+        margin-left: 5px;
+    }
+</style>
+<div id="control-section">
+    <a class="btn btn-primary save">
+        <i class="fa fa-save v-middle" aria-hidden="true"></i>&nbsp;
+        <span>ذخیره</span>
+    </a>
+</div>
+<div id="content">
+
+</div>
+
+<div id="modalOrder" class="modal fade" role="dialog" style="overflow-y: auto;">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">تنظیمات ارسال سفارش</h4>
+            </div>
+            <div id="product-content" class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div>
+                            <label>
+                                نحوه سفارشات
+                                <select id="cmbCartType" name="cartType" class="form-control">
+                                    <option value="0">سفارشات ویترین و مشتری</option>
+                                    <option value="1">فقط سفارشات ویترین</option>
+                                    <option value="2">فقط سفارشات مشتری</option>
+                                </select>
+                            </label>
+                            <input id="hiddenId" name="branchId" type="hidden" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div><label><input id="allWorkshop" type="checkbox" checked />همه</label></div>
+                        @foreach (var item in ViewBag.Workshop)
+                        {
+                            <div class="workshop-wrapper"><label><input class="workshop" type="checkbox" name="workshop" value="@item.Id" checked />@item.Name <sub class="workshop-weight" data-workshop-id="@item.Id"></sub></label></div>
+                        }
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-12">
+                        <a id="btn-modal-make-order" href="#" class="btn btn-success" style="width: 250px">ثبت سفارش و ارسال به دفتر مرکزی</a>
+                        &nbsp;&nbsp;
+                        <button class="btn btn-default">وزن سفارش داده شده: <strong id="total-order"></strong> گرم</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(document).on("click", ".confirmation", function (event) {
+                event.preventDefault();
+                $("#hiddenId").val($(this).attr("data-id"));
+                $("#total-order").html($(this).attr("data-goldWeightCart"));
+                $("#modalOrder").modal("show");
+            });
+            $(document).on("click", "#btn-modal-make-order", function (event) {
+                event.preventDefault();
+                confirmMessage("آیا از ارسال اطلاعات اطمینان دارید؟", function () {
+                    loader(true);
+                    var params = getEntity("#modalOrder");
+                    if (params.workshop.length > 0) {
+                        $.post("/financialBranch/makeOrder", params, function (response) {
+                            loader(false);
+                            if (response.status == 200) {
+                                alert(response.message);
+                                $("#modalOrder").modal("hide");
+                                getList();
+                            }
+                            else if (response.status == 501) {
+                                $("#warningModal").modal('show');
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                        });
+                    }
+                    else {
+                        alert("یک کارگاه حتما باید انتخاب کنید.");
+                    }
+                });
+            });
+            $(document).on("click", ".save", function (event) {
+                event.preventDefault();
+                var listFinancialBranch = [];
+                $("#content table tbody tr").each(function (index, element) {
+                    listFinancialBranch.push({
+                        id: $(this).attr("data-id"),
+                        name: "",
+                        goldDebt: $(this).find(".goldDebt").val() * 1,
+                        rialDebt: removeSeparator($(this).find(".rialDebt").val()) * 1,
+                        goldCredit: $(this).find(".goldCredit").val() * 1,
+                        goldWeightCart: 0
+                    });
+                });
+                loader(true);
+                $.post("/financialBranch/save", { listFinancialBranch: listFinancialBranch }, function (response) {
+                    alert(response.message);
+                    loader(false);
+                });
+            });
+            getList()
+        });
+        function getList() {
+            loader(true);
+            $.get("/financialBranch/search", function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                    $(".money-separator").each(function (index, element) {
+                        moneySeparator(element);
+                    });
+                    $('[data-toggle="tooltip"]').tooltip();
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>نام</th>
+                    <th>بدهی حساب طلا</th>
+                    <th>بدهی حساب ریالی</th>
+                    @*<th>سقف حساب طلا</th>*@
+                    @*<th>وزن طلا سبد خرید</th>*@
+                    @*@if (User.IsInRole("admin") || User.IsInRole("financialBranchgoldcartFactor"))
+                    {
+                        <th>سبد خرید</th>
+                        <th>تایید فاکتور</th>
+                    }*@
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr class="financial" data-id="{{:id}}">
+                    <td>{{:#index + 1}}</td>
+                    <td>{{:name}}</td>
+                    <td><input class="form-control goldDebt" name="goldDebt" value="{{:goldDebt}}" /></td>
+                    <td><input class="form-control rialDebt money-separator" name="rialDebt" value="{{:rialDebt}}" /></td>
+                    <td><input type="hidden" class="form-control goldCredit hidden" name="goldCredit" value="{{:goldCredit}}" /></td>
+                    @*<td>{{:goldWeightCart}} گرم</td>*@
+                    @*@if (User.IsInRole("admin") || User.IsInRole("financialBranchgoldcartFactor"))
+                    {
+                        <td>{{if goldWeightCart != null}}<a data-toggle="tooltip" title="مشاهد جزئیات سبد خرید" class="btn btn-primary" href="/FinancialBranch/cart/{{:id}}"><i class="fa fa-shopping-cart"></i></a>{{/if}}</td>
+                        <td>
+                            {{if goldWeightCart != null}}
+                            <button data-toggle="tooltip" title="تایید فاکتور" class="btn btn-primary fa fa-check confirmation" data-id="{{:id}}" data-goldWeightCart="{{:goldWeightCart}}"></button>
+                            {{/if}}
+                        </td>
+                    }*@
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}

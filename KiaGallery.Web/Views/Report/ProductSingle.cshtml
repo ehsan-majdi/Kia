@@ -1,0 +1,321 @@
+﻿
+@{
+    ViewBag.Title = "گزارش انتخابی";
+}
+<style>
+     table {
+        border-left: 2px solid deepskyblue;
+        border-right: 2px solid deepskyblue;
+        border-collapse: unset
+    }
+    #mainparent {
+        position: relative;
+        margin-top: -72px;
+    }
+
+    .change-status {
+        width: 165px;
+        margin-top: 26px;
+    }
+
+
+    /* Hide the browser's default checkbox */
+    .data input[type=checkbox] {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+        display: none;
+    }
+
+    /* Create a custom checkbox */
+    .data .checkmark {
+        position: absolute;
+        top: 5px;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .data input:checked ~ .checkmark {
+        background-color: #38A548;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .data .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+    /* Show the checkmark when checked */
+    .data input:checked ~ .checkmark:after {
+        display: block;
+    }
+    /* Style the checkmark/indicator */
+    .data .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+    #image {
+        width: 965px;
+        position: absolute;
+        top: 0;
+        left: calc(50% - 513px);
+    }
+
+    h4 {
+        font-size: 20px;
+        margin-top: 50px;
+    }
+
+    tr:nth-child(even) {
+        background: #eee;
+    }
+
+    #content {
+        margin-top: 55px;
+    }
+</style>
+
+<div class="main-page">
+    <div class="form-inline" style="display: block;position: absolute;margin-top: 39px;z-index: 1">
+        <select id="cmbType" class="form-control">
+            <option value="0">پرینت با جزئیات</option>
+            <option value="1">پرینت</option>
+        </select>
+
+    </div>
+    <div class="img">
+        <img id="image" src="~/Content/Image/site123.png" />
+    </div>
+
+    <div id="mainparent" class="text-center">
+        <h4>چاپ انتخابی</h4>
+
+
+
+        <div class="form-inline text-center">
+            <div class="form-group text-center"><input id="Searching" class="form-control deleteVal text-center" type="text" placeholder="[------- کد یا نام محصول -------]" name="code" style="margin-top:103px;" /></div>
+        </div>
+        <div id="selectedCount" class="btn btn-danger" style="margin-top: 10px;width: 208px;height: 34px;">تعداد انتخاب شده:</div>
+        <br />
+        <input type="button" class="change-status btn btn-success" value="چاپ" data-status="2" data-confirm="آیا از چاپ محصولات انتخابی اطمینان دارید؟" />
+    </div>
+
+</div>
+
+<div class="container">
+    <div id="content"> </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        var data = {
+            list: []
+        }
+
+        $(document).ready(function () {
+            getProduct()
+            $("#Searching").on("focus", function () {
+                $(this).autocomplete({
+                    focus: function (event, ui) {
+                        $("#project").val(ui.item.label);
+                        return false;
+                    },
+                    select: function (event, ui) {
+                        $(this).val(ui.item.id);
+                        getProduct($(this).val())
+                        return false;
+                    },
+                    source: function (request, response) {
+
+                        var element = this;
+                        $.ajax({
+                            url: "/report/getProductAutoComplete",
+                            data:
+                            {
+                                term: request.term,
+
+                            },
+                            success: function (data) {
+                                response(data);
+                            }
+                        });
+                    },
+                    minLength: 2,
+                    open: function () {
+                        $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+                    },
+                    close: function () {
+                        $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+                    }
+                }).autocomplete("instance")._renderItem = function (ul, item) {
+                    if (item.fileName) {
+                        return $("<li>")
+                            .append("<div><img style=\"width: 30px;\" src=\"/image/product/500x500/" + item.fileName + "\" /><span class=\"auto-complete-item\"> " + "نام کالا: " + item.title + " <br/> " + "کد سایت: " + (item.code ? item.code : '-') + "<br/>" + "کد کارگاه: " + (item.bookCode ? item.bookCode : '-') + "</span ></div > ")
+                            .appendTo(ul);
+                    }
+                    else {
+                        return $("<li>")
+                            .append("<div><img style=\"width: 30px;\" src=\"/content/image/kia-gallery-logo-square.png\" /><span class=\"auto-complete-item\">" + item.title + "<br/>" + item.bookCode + "</span></div>")
+                            .appendTo(ul);
+                    }
+                };
+            })
+            $(".delete").on("click", function () {
+                $(".orderItem").prop("checked", true);
+                $(".orderItem").change();
+
+            });
+            $(document).on("change", ".orderItem", function () {
+                if ($(".orderItem:checked").length > 0) {
+                    $("#selectedCount").show();
+                    var count = 0;
+                    $(".orderItem:checked").each(function (index, element) {
+                        count += 1;
+                    });
+                    $("#selectedCount").html("تعداد انتخاب شده: " + count);
+                }
+                else {
+                    $("#selectedCount").hide();
+                }
+            });
+            $("#Searching").focus();
+
+
+         
+            $("#btnChangeStatus").on("click", function (event) {
+                event.preventDefault();
+                var idList = new Array();
+                $('.orderItem').each(function () {
+                    idList.push(this.value);
+                });
+                $("#changeStatusModal").modal('hide');
+                print(idList);
+
+            });
+
+            $(document).on("click", ".change-status", function (event) {
+                event.preventDefault();
+                var idList = new Array();
+                $('.orderItem').each(function () {
+                    idList.push(this.value);
+                });
+                if (idList.length > 0) {
+                    var confirm = $(this).attr("data-confirm");
+                    var status = $(this).attr("data-status");
+                    confirmMessage(confirm, function () {
+                        var idList = new Array();
+                        $('.orderItem').each(function () {
+                            idList.push(this.value);
+                        });
+                        print(idList);
+                    });
+                }
+                else {
+                    alert("حداقل یک مورد را باید انتخاب کنید.");
+                }
+            });
+            $("#Searching").focus();
+             $(document).on("keyup", "#Searching", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    var id = $(this).val();
+                    getProduct(id)
+                }
+            });
+
+        });
+        function getProduct(id) {
+            if (id != null && id != "") {
+                $.get("/report/getProduct/" + id, function (response) {
+                    if (response.status == 200) {
+                        var flag = false;
+                        for (var i = 0; i < data.list.length; i++) {
+                            if (data.list[i].id == response.data.id)
+                                flag = true
+                        }
+                        $("#Searching").val("");
+                        if (flag) return;
+                        $("#selectedCount").show();
+                        data.list.push(response.data);
+                        $("#selectedCount").html("تعداد انتخاب شده: " + data.list.length);
+                        var template = $.templates("#template");
+                        var htmlOutput = template.render(data);
+                        $("#content").html(htmlOutput);
+                        $(document).on("click", ".delete", function (e) {
+                            var id = $(this).attr("data-id");
+                            $(this).parents("tr").remove();
+                            for (var i = 0; i < data.list.length; i++) {
+                                if (data.list[i].id == id) {
+                                    data.list.splice(i, 1)
+                                    $("#selectedCount").html("تعداد انتخاب شده: " + data.list.length);
+                                }
+                            };
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+
+            }
+
+        }
+        function print(input) {
+            var entity = { id: input, type: $("#cmbType").val() }
+            document.location = "/report/MakeSingleProductReport/" + "?model=" + JSON.stringify(entity);
+        }
+
+    </script>
+    <script id="template" type="text/x-jsrender">
+        {{if list.length > 0}}
+        <table class="table">
+            <thead>
+                <tr class="text-center">
+                    <th>نام</th>
+                    <th>کد کارگاه</th>
+                    <th>کد سایت</th>
+                    <th>نوع</th>
+                    <th class="txt-al-l">حذف</th>
+                </tr>
+            </thead>
+            <tbody class="data" id="TableSearch">
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td class="v-middle relative  hidden">
+                        <input disabled style="" id="chkOrder{{:id}}" class="orderItem" name="orderItem" type="checkbox" value="{{:id}}" data-code="{{:trackCode}}" />
+                    </td>
+                    <td>{{:title}}</td>
+                    <td>{{:bookCode}}</td>
+                    <td>{{:siteCode}}</td>
+                    <td>{{:typeTitle}}</td>
+                    <td class="txt-al-l">
+                        <button class="delete btn btn-default btn-xs" data-toggle="tooltip" title="حذف" data-title="حذف" data-id="{{:id}}"><span class="fa fa-close"></span></button>
+                    </td>
+                    {{/for}}
+            </tbody>
+        </table>
+        {{else}}
+        <h4 class="txt-al-c">موردی یافت نشد</h4>
+        {{/if}}
+        <div class="clearfix"></div>
+
+        @*@Html.Partial("_Pagination")*@
+    </script>
+}
+
+
+

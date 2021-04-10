@@ -1,0 +1,156 @@
+﻿
+@{
+    ViewBag.Title = "فاکتور مشتری ها";
+}
+<div class="">
+    <div class="col-lg-12">
+        <a href="/customerLoyality/Add" class="button-new btn btn-success">
+            <span class="fa fa-plus"></span>
+            جدید
+        </a>
+        @if (User.IsInRole("admin"))
+        {
+            <div class="btn btn-success">
+                مبلغ کل
+                <span id="factorSum"></span>
+            </div>
+        }
+        @if (User.IsInRole("admin"))
+        {
+            <div class="btn btn-success">
+                تعداد
+                <span id="countSum"></span>
+            </div>
+        }
+        <div class="btn btn-success">
+            وزن
+            <span id="weightSum"></span>
+            گرم
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="form-inline col-md-12 col-lg-12 ">
+        <div class="form-inline pull-right" style="margin-right:10px">
+            <input placeholder="جستجو" class="form-control" id="term" name="term" />
+
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<div id="content"></div>
+@section Scripts {
+
+    <script type="text/javascript">
+        var customerId = @(ViewBag.Id != null ? ViewBag.Id : 0);
+
+        var defaultEntity = {
+            page: 0,
+            count: 50,
+            id: customerId,
+            term: null
+        }
+        $(document).ready(function () {
+            getList();
+            $(window).on("hashchange", function () {
+                getList();
+            });
+            $("#term").on("keypress", function (e) {
+                var code = e.which;
+                if (code == 13) {
+                    var value = $(this).val();
+                    setParam("term", value)
+                    removeParam(["page"]);
+                }
+            });
+            $(document).on("click", ".page-number", function (event) {
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+            });
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف مشتری اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/customerLoyality/Delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+        });
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+            console.log(newParams)
+            loader(true);
+            $.get("/customerLoyality/searchDetail", params, function (response) {
+                if (response.status == 200) {
+                    $("#factorSum").html(response.data.priceSum);
+                    $("#countSum").html(response.data.countSum);
+                    $("#weightSum").html(response.data.branchWeightSum);
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>نام و نام خانوادگی </th>
+                    <th>شماره همراه</th>
+                    <th>شعبه</th>
+                    <th>مبلغ فاکتور</th>
+                    <th>شماره فاکتور</th>
+                    <th>وزن</th>
+                    <th>تاریخ</th>
+                    <th>تاریخ مرجوع</th>
+                    <th>نوع خرید</th>
+                    <th class="txt-al-l">ویرایش</th>
+                    <th class="txt-al-l">حذف</th>
+                </tr>
+            </thead>
+            <tbody id="TableSearch">
+                {{for list ~row=#data}}
+                <tr style="border-top: solid 1px silver">
+                    <td>{{:(#index + 1) + ((~row.page - 1) * 50)}}</td>
+                    <td>{{:fullName}}</td>
+                    <td>{{:phoneNumber}}</td>
+                    <td>{{:branchName}}</td>
+                    <td>{{:separateFactorPrice}}</td>
+                    <td>{{:factorNumber}}</td>
+                    <td>{{:factorWeight}}</td>
+                    <td>{{:persianDate}}</td>
+                    <td>{{:persianReturnDate}}</td>
+                    <td>{{:purchaseTypeTitle}}</td>
+                    <td class="txt-al-l">
+                        <a href="/customerLoyality/edit/{{:id}}" class="btn btn-info btn-xs " data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-l">
+                        <button class="delete btn btn-danger btn-xs " data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+}
+

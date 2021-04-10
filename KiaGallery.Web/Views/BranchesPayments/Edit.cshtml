@@ -1,0 +1,857 @@
+﻿<style>
+    .negativeNumber {
+        direction: ltr;
+    }
+
+    #tlbFirstDetails {
+        border: 2px black solid;
+    }
+
+        #tlbFirstDetails thead tr th {
+            border: 1px black solid;
+            border-top: 2px black solid;
+        }
+
+        #tlbFirstDetails tbody tr th {
+            border: 1px black solid;
+        }
+
+    .tlbSum {
+        border: 2px black solid;
+    }
+
+        .tlbSum thead tr th {
+            border: 1px black solid;
+        }
+
+    .tlbSecondDetails {
+        border: 2px black solid;
+    }
+
+        .tlbSecondDetails thead tr th {
+            border: 1px black solid;
+        }
+
+        .tlbSecondDetails tbody tr th {
+            border: 1px black solid;
+            border-top: 2px black solid;
+            border-bottom: 2px black solid;
+        }
+
+    .container *:not(i) {
+        font-family: 'IRANSans(FaNum)';
+    }
+
+    table th, table td {
+        border: solid 1px silver;
+        padding: 5px;
+    }
+
+    table input[type=text] {
+        display: inline-block;
+        height: 30px;
+    }
+
+        table input[type=text].little {
+            width: 66px;
+            display: inline-block;
+            text-align: center;
+            height: 30px;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+    #logListBody {
+        padding: 13px;
+        margin-top: 15px;
+        border-radius: 5px;
+    }
+
+        #logListBody td, #logListBody th {
+            padding: 5px 15px !important;
+            text-align: right !important;
+        }
+</style>
+<div id="form" class="container">
+    <div class="row form-group">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-2 formPayments">
+                <div id="parent-section" class="form-group relative">
+                    <input id="txtHiddenId" type="hidden" class="form-control" name="id" value="@ViewBag.Id">
+                    <label for="cmbTypePayments">نوع پرداخت</label>
+                    <select id="cmbTypePayments" class="form-control" name="typePayments">
+                        <option value="">...</option>
+                        <option value="0">واریزی</option>
+                        <option value="1">مرجوعی</option>
+                        <option value="2">فروش</option>
+                        <option value="3">مرجوعی متفرقه</option>
+                        <option value="4">فروش متفرقه</option>
+                        <option value="5">مرجوعی طلا متفرقه</option>
+                    </select>
+                </div>
+                <div id="parent-section" class="form-group relative">
+                    <label for="txtGoldDebt">مانده بدهی طلایی</label>
+                    <input id="txtGoldDebt" type="text" class="form-control" name="goldDebt" data-validate="required" dir="ltr" style="text-align:right" placeholder="گرم">
+                </div>
+                <div id="parent-section" class="form-group relative">
+                    <label for="txtFactorNumber">شماره فاکتور</label>
+                    <input id="txtFactorNumber" type="text" class="form-control" name="factorNumber" disabled data-validate="required" dir="ltr" style="text-align:right">
+                </div>
+            </div>
+
+            <div class="col-md-4 formPayments">
+                <div id="parent-section" class="form-group relative">
+                    <label for="cmbBranch">شعبه</label>
+                    <select id="cmbBranch" class="form-control" name="branchId">
+                        <option value="">...</option>
+                    </select>
+                </div>
+                <div id="parent-section" class="form-group relative">
+                    <label for="txtRialDebt">مانده بدهی ریالی</label>
+                    <input id="txtRialDebt" type="text" class="form-control money-separator" name="rialDebt" data-validate="required" dir="ltr" style="text-align:right" placeholder="ریال">
+                </div>
+                <div id="parent-section" class="form-group relative">
+                    <label for="txtDate">تاریخ</label>
+                    <input id="txtDate" type="text" class="form-control date" name="date" data-validate="required" dir="ltr" autocomplete="off" style="text-align:right">
+                </div>
+            </div>
+
+            <div id="details" class="details typePayments typePayments1 typePayments2 col-md-8 col-md-offset-2">
+                <table id="tlbFirstDetails" class="table table-data table-responsive">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="width:20px">ردیف</th>
+                            <th class="text-center">شرح کالا</th>
+                            <th class="text-center" style="width:100px">وزن / تعداد</th>
+                            <th class="text-center" style="width:100px">فی</th>
+                            <th class="text-center" style="width:200px">مبلغ کل (ریال)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th class="v-middle txt-al-c">1</th>
+                            <th class="v-middle">
+                                <div>
+                                    <datalist id="price">
+                                        <option value="40,000" />
+                                        <option value="45,000" />
+                                    </datalist>
+                                    <input type="text" class="form-control" name="descriptionSelected8" list="price" autocomplete="off" />
+                                </div>
+
+                            </th>
+                            <th><input class="weight allWeight sumAllWeight form-control text-center v-middle" type="text" name="selectedWeight8" style="width:100%;padding:0" /></th>
+                            <th><input class="unit form-control text-center v-middle money-separator" type="text" name="selectedUnit8" style="width:100%;padding:0" /></th>
+                            <th class="sum text-center"><input class="form-control text-center money-separator priceSum price-3 sumAllPrice" name="priceSelected8" type="text" style="width:100%;padding:0;vertical-align:middle" /></th>
+                        </tr>
+                        <tr>
+                            <th class="v-middle txt-al-c">2</th>
+                            <th class="v-middle">
+                                <div>
+                                    <datalist id="price">
+                                        <option value="40,000" />
+                                        <option value="45,000" />
+                                    </datalist>
+                                    <input type="text" class="form-control" name="descriptionSelected9" list="price" autocomplete="off" />
+                                </div>
+                            </th>
+                            <th><input class="weight allWeight sumAllWeight form-control text-center v-middle" type="text" name="selectedWeight9" style="width:100%;padding:0" /></th>
+                            <th><input class="unit form-control text-center v-middle money-separator" type="text" name="selectedUnit9" style="width:100%;padding:0" /></th>
+                            <th class="sum text-center"><input class="form-control money-separator text-center priceSum price-3 sumAllPrice" name="priceSelected9" type="text" style="width:100%;padding:0;vertical-align:middle" /></th>
+                        </tr>
+                        <tr>
+                            <th class="v-middle txt-al-c">3</th>
+                            <th class="v-middle">
+                                <div>
+                                    <datalist id="price">
+                                        <option value="40,000" />
+                                        <option value="45,000" />
+                                    </datalist>
+                                    <input type="text" class="form-control" name="descriptionSelected10" list="price" autocomplete="off" />
+                                </div>
+                            </th>
+                            <th><input class="weight allWeight sumAllWeight form-control text-center v-middle" type="text" name="selectedWeight10" style="width:100%;padding:0" /></th>
+                            <th><input class="unit form-control text-center v-middle money-separator" type="text" name="selectedUnit10" style="width:100%;padding:0" /></th>
+                            <th class="sum text-center"><input class="form-control money-separator text-center priceSum price-3 sumAllPrice" name="priceSelected10" type="text" style="width:100%;padding:0;vertical-align:middle" /></th>
+                        </tr>
+                        <tr>
+                            <th class="v-middle txt-al-c">4</th>
+                            <th class="v-middle">
+                                <div>
+                                    <datalist id="price">
+                                        <option value="40,000" />
+                                        <option value="45,000" />
+                                    </datalist>
+                                    <input type="text" class="money-separator form-control" id="txtWage" name="wage" list="price" placeholder="طلای اجرت" autocomplete="off" />
+                                </div>
+
+                            </th>
+                            <th><input class="weight allWeight sumAllWeight form-control text-center v-middle" type="text" name="goldWage" style="width:100%;padding:0" /></th>
+                            <th><input class="unit form-control text-center v-middle money-separator" type="text" name="goldWageUnit" style="width:100%;padding:0" /></th>
+                            <th class="sum text-center"><input class="form-control money-separator text-center priceSum price-3 sumAllPrice" name="priceGoldWage" type="text" style="width:100%;padding:0;vertical-align:middle" /></th>
+
+                        </tr>
+                        <tr>
+                            <th class="v-middle txt-al-c">5</th>
+                            <th class="v-middle">
+                                <div>
+                                    <datalist id="price">
+                                        <option value="40,000" />
+                                        <option value="45,000" />
+                                    </datalist>
+                                    <input type="text" class="form-control" name="descriptionSelected11" list="price" autocomplete="off" />
+                                </div>
+                            </th>
+                            <th><input class="weight allWeight sumAllWeight form-control text-center v-middle" type="text" name="selectedWeight11" style="width:100%;padding:0" /></th>
+                            <th><input class="unit form-control text-center v-middle money-separator" type="text" name="selectedUnit11" style="width:100%;padding:0" /></th>
+                            <th class="sum text-center"><input class="form-control text-center money-separator priceSum price-3 sumAllPrice" name="priceSelected11" type="text" style="width:100%;padding:0;vertical-align:middle" /></th>
+                        </tr>
+                        <tr>
+                            <th class="v-middle txt-al-c">6</th>
+                            <th class="v-middle">
+                                <div>
+                                    <datalist id="price">
+                                        <option value="40,000" />
+                                        <option value="45,000" />
+                                    </datalist>
+                                    <input type="text" class="form-control" name="descriptionSelected12" list="price" autocomplete="off" />
+                                </div>
+                            </th>
+                            <th><input class="weight allWeight sumAllWeight form-control text-center v-middle" type="text" name="selectedWeight12" style="width:100%;padding:0" /></th>
+                            <th><input class="unit form-control text-center v-middle money-separator" type="text" name="selectedUnit12" style="width:100%;padding:0" /></th>
+                            <th class="sum text-center"><input class="form-control text-center money-separator priceSum price-3 sumAllPrice" name="priceSelected12" type="text" style="width:100%;padding:0;vertical-align:middle" /></th>
+
+                        </tr>
+                        <tr>
+                            <th class="v-middle txt-al-c">7</th>
+                            <th class="v-middle">
+                                <div>
+                                    <datalist id="price">
+                                        <option value="40,000" />
+                                        <option value="45,000" />
+                                    </datalist>
+                                    <input type="text" class="form-control" name="descriptionSelected1" list="price" autocomplete="off" />
+                                </div>
+                            </th>
+                            <th><input class="weight allWeight sumAllWeight form-control text-center v-middle" type="text" name="selectedWeight1" style="width:100%;padding:0" /></th>
+                            <th><input class="unit form-control text-center v-middle money-separator" type="text" name="selectedUnit1" style="width:100%;padding:0" /></th>
+                            <th class="sum text-center"><input class="form-control text-center priceSum money-separator price-3 sumAllPrice" name="priceSelected1" type="text" style="width:100%;padding:0;vertical-align:middle" /></th>
+                        </tr>
+                        <tr>
+                            <th class="v-middle txt-al-c">8</th>
+                            <th class="v-middle">
+                                <div>
+                                    <datalist id="price">
+                                        <option value="40,000" />
+                                        <option value="45,000" />
+                                    </datalist>
+                                    <input type="text" class="form-control" id="txtWage" name="descriptionSelected2" list="price" autocomplete="off" />
+                                </div>
+                            </th>
+                            <th><input class="weight allWeight sumAllWeight form-control text-center v-middle sw" type="text" name="selectedWeight2" style="width:100%;padding:0" /></th>
+                            <th><input class="unit form-control text-center v-middle money-separator" type="text" name="selectedUnit2" style="width:100%;padding:0" /></th>
+                            <th class="sum text-center"><input class="form-control text-center priceSum money-separator price-3 sumAllPrice" name="priceSelected2" type="text" style="width:100%;padding:0;vertical-align:middle" /></th>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-data table-responsive tlbSum">
+                    <thead>
+                        <tr>
+                            <th class="text-center no-padding v-middle" style="color:red">جمع فاکتور</th>
+                            <th class="text-center" style="width:100px"><input class="form-control text-center v-middle resultWeight sumWeight sw" /></th>
+                            <th class="text-center" style="width:100px"><input class="form-control text-center v-middle resultUnit sumUnit" disabled /></th>
+                            <th class="text-center" style="width:200px"><input class="form-control money-separator text-center v-middle result sumPriceAll" /></th>
+                        </tr>
+                    </thead>
+                </table>
+                <table id="tlbSecondDetails" class="tlbSecondDetails table table-data table-responsive">
+                    <thead>
+                        <tr>
+                            <th class="v-middle txt-al-c" style="width:46px">9</th>
+                            <th class="text-center no-padding v-middle">کسرشده</th>
+                            <th class="text-center" style="width:100px"><input class="lastWeight allWeight sumAllWeight negativeNumber form-control text-center v-middle " name="weightDeducted" /></th>
+                            <th class="text-center" style="width:100px"><input class="lastUnit form-control money-separator text-center v-middle" name="deductedUnit" /></th>
+                            <th class="text-center" style="width:200px"><input class="sum form-control money-separator text-center v-middle price-3 sumAllPrice lastPriceSum" name="priceDeducted" /></th>
+                        </tr>
+                        <tr>
+                            <th class="v-middle txt-al-c" style="width:46px">10</th>
+                            <th class="text-center no-padding v-middle">هزینه سنگ</th>
+                            <th class="text-center" style="width:100px"><input class="lastWeight allWeight sumAllWeight form-control text-center v-middle " name="stoneWeight" /></th>
+                            <th class="text-center" style="width:100px"><input class="lastUnit form-control money-separator text-center v-middle" name="stoneUnit" /></th>
+                            <th class="text-center" style="width:200px"><input class="lastSum form-control money-separator text-center v-middle price-3 sumAllPrice lastPriceSum" name="priceStone" /></th>
+                        </tr>
+                        <tr>
+                            <th class="v-middle txt-al-c" style="width:46px">11</th>
+                            <th class="text-center no-padding v-middle">هزینه چرم</th>
+                            <th class="text-center" style="width:100px"><input class="lastWeight allWeight sumAllWeight form-control text-center v-middle" name="leatherWeight" /></th>
+                            <th class="text-center" style="width:100px"><input class="lastUnit form-control money-separator text-center v-middle" name="leatherUnit" /></th>
+                            <th class="text-center" style="width:200px"><input class="lastSum form-control money-separator text-center v-middle price-3 sumAllPrice lastPriceSum" name="priceLeather" /></th>
+                        </tr>
+                        <tr>
+                            <th class="v-middle txt-al-c" style="width:46px">12</th>
+                            <th class="text-center no-padding v-middle">چرم یک دور</th>
+                            <th class="text-center" style="width:100px"><input class="lastWeight allWeight sumAllWeight form-control text-center v-middle" name="oneRoundLeatherWeight" /></th>
+                            <th class="text-center" style="width:100px"><input class="lastUnit form-control money-separator text-center v-middle" name="oneRoundLeatherUnit" /></th>
+                            <th class="text-center" style="width:200px"><input class="lastSum form-control money-separator text-center v-middle price-3 sumAllPrice lastPriceSum" name="priceOneRoundLeather" /></th>
+                        </tr>
+                        <tr>
+                            <th class="v-middle txt-al-c" style="width:46px">13</th>
+                            <th class="text-center no-padding v-middle">چرم دو دور</th>
+                            <th class="text-center" style="width:100px"><input class="lastWeight allWeight sumAllWeight form-control text-center v-middle" name="twoRoundLeatherWeight" /></th>
+                            <th class="text-center" style="width:100px"><input class="lastUnit form-control money-separator text-center v-middle" name="twoRoundLeatherUnit" /></th>
+                            <th class="text-center" style="width:200px"><input class="lastSum form-control money-separator text-center v-middle price-3 sumAllPrice lastPriceSum" name="priceTwoRoundLeather" /></th>
+                        </tr>
+                        <tr>
+                            <th class="v-middle txt-al-c">14</th>
+                            <th class="v-middle">
+                                <div>
+                                    <datalist id="price">
+                                        <option value="40,000" />
+                                        <option value="45,000" />
+                                    </datalist>
+                                    <input type="text" class="form-control" name="descriptionSelected3" list="price" autocomplete="off" />
+                                </div>
+                            </th>
+                            <th><input class="lastWeight allWeight sumAllWeight form-control text-center v-middle" type="text" name="selectedWeight3" style="width:100%;padding:0" /></th>
+                            <th><input class="lastUnit form-control money-separator text-center v-middle" type="text" name="selectedUnit3" style="width:100%;padding:0" /></th>
+                            <th class="lastSum text-center"><input class="form-control money-separator text-center lastPriceSum price-3 sumAllPrice" name="priceSelected3" type="text" style="width:100%;padding:0;vertical-align:middle" /></th>
+                        </tr>
+                        <tr>
+                            <th class="v-middle txt-al-c">15</th>
+                            <th class="v-middle">
+                                <div>
+                                    <datalist id="price">
+                                        <option value="40,000" />
+                                        <option value="45,000" />
+                                    </datalist>
+                                    <input type="text" class="form-control" name="descriptionSelected4" list="price" autocomplete="off" />
+                                </div>
+                            </th>
+                            <th><input class="lastWeight allWeight sumAllWeight form-control text-center v-middle" type="text" name="selectedWeight4" style="width:100%;padding:0" /></th>
+                            <th><input class="lastUnit form-control text-center v-middle money-separator" type="text" name="selectedUnit4" style="width:100%;padding:0" /></th>
+                            <th class="lastSum text-center"><input class="form-control money-separator text-center lastPriceSum price-3 sumAllPrice" name="priceSelected4" type="text" style="width:100%;padding:0;vertical-align:middle" /></th>
+                        </tr>
+                        <tr>
+                            <th class="v-middle txt-al-c">16</th>
+                            <th class="v-middle">
+                                <div>
+                                    <datalist id="price">
+                                        <option value="40,000" />
+                                        <option value="45,000" />
+                                    </datalist>
+                                    <input type="text" class="form-control" name="descriptionSelected5" list="price" autocomplete="off" />
+                                </div>
+                            </th>
+                            <th><input class="lastWeight allWeight sumAllWeight form-control text-center v-middle" type="text" name="selectedWeight5" style="width:100%;padding:0" /></th>
+                            <th><input class="lastUnit form-control text-center v-middle money-separator" type="text" name="selectedUnit5" style="width:100%;padding:0" /></th>
+                            <th class="lastSum text-center"><input class="form-control money-separator text-center lastPriceSum price-3 sumAllPrice" name="priceSelected5" type="text" style="width:100%;padding:0;vertical-align:middle" /></th>
+                        </tr>
+                        <tr>
+                            <th class="v-middle txt-al-c">17</th>
+                            <th class="v-middle">
+                                <div>
+                                    <datalist id="price">
+                                        <option value="40,000" />
+                                        <option value="45,000" />
+                                    </datalist>
+                                    <input type="text" class="form-control" name="descriptionSelected6" list="price" autocomplete="off" />
+                                </div>
+                            </th>
+                            <th><input class="lastWeight allWeight sumAllWeight form-control text-center v-middle" type="text" name="selectedWeight6" style="width:100%;padding:0" /></th>
+                            <th><input class="lastUnit form-control text-center v-middle money-separator" type="text" name="selectedUnit6" style="width:100%;padding:0" /></th>
+                            <th class="lastSum text-center"><input class="form-control money-separator text-center lastPriceSum price-3 sumAllPrice" name="priceSelected6" type="text" style="width:100%;padding:0;vertical-align:middle" /></th>
+                        </tr>
+                    </thead>
+                </table>
+                <table class="table table-data table-responsive tlbSum">
+                    <thead>
+                        <tr>
+                            <th class="text-center no-padding v-middle" style="color:red">جمع </th>
+                            <th class="text-center" style="width:100px"><input class="form-control text-center v-middle lastResultWeight sumLastWeight sw" /></th>
+                            <th class="text-center" style="width:100px"><input class="form-control text-center v-middle sumLastUnit" disabled /></th>
+                            <th class="text-center" style="width:200px"><input class="form-control money-separator text-center v-middle sumLastResult sumPriceAll" /></th>
+                        </tr>
+                    </thead>
+                </table>
+                <table class="tlbSecondDetails table table-data table-responsive">
+                    <thead>
+                        <tr>
+                            <th class="text-center no-padding v-middle">حساب آخرین دوره</th>
+                            <th class="text-center" style="width:100px"><input class="form-control text-center v-middle lastPeriodWeight allWeight sw" name="lastPeriodAccountWeight" /></th>
+                            <th class="text-center" style="width:100px"><input class="form-control text-center v-middle" disabled /></th>
+                            <th class="text-center" style="width:200px"><input class="form-control text-center money-separator v-middle sumPriceAll lastPeriod price-3 sumAllPrice" name="lastPeriodAccount" /></th>
+                        </tr>
+                        <tr>
+                            <th class="text-center no-padding v-middle">حساب مانده نهایی</th>
+                            <th class="text-center" style="width:100px"><input class="form-control text-center v-middle finalBalanceWeight weightAll" /></th>
+                            <th class="text-center" style="width:100px"><input class="form-control text-center v-middle finalBalanceUnit lastResultUnit" disabled /></th>
+                            <th class="text-center" style="width:200px"><input class="form-control text-center money-separator v-middle finalBalanceResult " /></th>
+                        </tr>
+
+
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th colspan="9">توضیحات:<textarea class="form-control" name="description"></textarea></th>
+                        </tr>
+                        <tr>
+                            <th colspan="9">مهر و امضا فروشنده:<textarea class="form-control" name="dealerSignature"></textarea></th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="form-group text-center ">
+    <button type="submit" class="btn btn-success btnSave" data-type="typePayments5">
+        <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+        ذخیره و چاپ
+    </button>
+
+</div>
+<div id="logListBody" class="hidden alert-info">
+
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+
+        $(document).ready(function () {
+            loadRemoteSelect("#cmbBranch", "/branchesPayments/getAllBranch", null, "id", "name", "...", function () {
+                load();
+            });
+            //$(".negativeNumber").keyup(function () {
+            //    var check = 0 - Math.abs($(this).val())
+            //    $(this).val(check);
+            //})
+
+            $(".date").pDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true,
+            });
+            var randomNumber = getRandomInt(10000000, 99999999);
+            $("#txtFactorNumber").val(randomNumber);
+            var unit;
+            var weight;
+            var unit2;
+
+            //حساب  وزن بخش اول
+            $(".weight").keyup(function () {
+                unit = $(this).parents("tr").find(".unit").val().replaceAll(",", "");
+                var multiFirst = unit * $(this).val();
+                $(this).parents("th").nextAll().find(".priceSum").val(multiFirst).change();
+                var sum = 0;
+                var final = 0;
+                $('.weight').each(function () {
+                    sum += Number($(this).val());
+                });
+                final = Math.round(sum * 100) / 100;
+                $(".resultWeight").val(final);
+                 var sumLastWeight = Number($(".sumLastWeight").val().replaceAll(",", ""));
+                sumLastWeight = Math.round(sumLastWeight * 100) / 100;
+                $(".finalBalanceWeight").val(final + sumLastWeight).change();
+            });
+
+            $(".weight").change(function () {
+                var sum = 0;
+                var final = 0;
+                $('.weight').each(function () {
+                     sum += Number($(this).val());
+                });
+                final = Math.round(sum * 100) / 100;
+                $(".resultWeight").val(final);
+                var sumLastWeight = Number($(".sumLastWeight").val().replaceAll(",", ""));
+                sumLastWeight = Math.round(sumLastWeight * 100) / 100;
+                $(".finalBalanceWeight").val(final + sumLastWeight).change();
+            });
+
+            //حساب وزن بخش دوم
+            $(".lastWeight").keyup(function () {
+                unit2 = $(this).parents("th").next().find(".lastUnit").val().replaceAll(",", "")
+                $(this).parents("th").nextAll().find(".lastPriceSum").val(Math.round(transformTypedChar(unit2) * transformTypedChar($(this).val() * 100) / 100)).change();
+                var sum = 0;
+                var final = 0;
+                $('.lastWeight').each(function () {
+                    sum += Number($(this).val());
+                });
+                final = Math.round(sum * 100) / 100;
+                $(".sumLastWeight").val(final);
+                //var sumWeight = Number($(".sumWeight").val().replaceAll(",", ""));
+                //sumWeight = Math.round(sumWeight * 100) / 100;
+                //var result = final + sumWeight;
+                //result = parseFloat(Math.round(result * 1000) / 1000);
+                //$(".finalBalanceWeight").val(result).change();
+            });
+
+            $(".lastWeight").change(function () {
+                var sum = 0;
+                var final = 0;
+                $('.lastWeight').each(function () {
+                    sum += Number($(this).val());
+                });
+                final = Math.round(sum * 100) / 100;
+                $(".sumLastWeight").val(final);
+                //var sumWeight = Number($(".sumWeight").val().replaceAll(",", ""));
+                //sumWeight = Math.round(sumWeight * 100) / 100;
+                //var result = final + sumWeight;
+                //result = Math.round(result * 100) / 100;
+                //$(".finalBalanceWeight").val(result).change();
+            });
+
+            //حساب فی بخش اول
+            $(".unit").keyup(function () {
+                weight = $(this).parents("th").prev().find(".weight").val().replaceAll(",", "");
+                var unit = transformTypedChar($(this).val().replaceAll(",", ""));
+                var multiFirst = weight * unit;
+                multiFirst = Math.round(multiFirst * 100) / 100;
+                $(this).parents("th").next().find(".priceSum").val(multiFirst).change();
+                 var sum = 0;
+                //$('.unit').each(function () {
+                //    sum += Number($(this).val().replaceAll(",", ""));
+                //});
+                //$(".resultUnit").val(sum).change();
+            });
+            $(".unit").change(function () {
+                 var sum = 0;
+                //$('.unit').each(function () {
+                //    sum += Number($(this).val().replaceAll(",", ""));
+                //});
+                //$(".resultUnit").val(sum).change();
+            });
+
+            //حساب فی بخش دوم
+            $(".lastUnit").keyup(function () {
+                weight = $(this).parents("th").prev().find(".lastWeight").val().replaceAll(",", "");
+                var unit = transformTypedChar($(this).val().replaceAll(",", ""));
+                var multiFirst = weight * unit;
+                multiFirst = Math.round(multiFirst * 100) / 100;
+                $(this).parents("th").next().find(".lastPriceSum").val(multiFirst).change();
+                var sum = 0;
+                $('.lastUnit').each(function () {
+                    sum += Number($(this).val().replaceAll(",", ""));
+                });
+
+                //$(".lastResultUnit").val(sum + Number($(".sumUnit").val().replaceAll(",", ""))).change();
+            });
+            $(".lastUnit").change(function () {
+                 var sum = 0;
+                $('.lastUnit').each(function () {
+                    sum += Number($(this).val().replaceAll(",", ""));
+                });
+                //$(".lastResultUnit").val(sum + Number($(".sumUnit").val().replaceAll(",", ""))).change();
+            });
+
+            //حساب کل مبلغ بخش اول
+            $(".priceSum").change(function () {
+                var sum = 0;
+                $('.priceSum').each(function () {
+                    sum += Number($(this).val().replaceAll(",", ""));
+                });
+                $(".result").val(sum).change();
+                //var sumLastResult = Number($(".sumLastResult").val().replaceAll(",", ""))
+                $(".finalBalanceResult ").val(sum + Number($(".sumLastResult").val().replaceAll(",", ""))).change();
+
+            });
+            $(".priceSum").keyup(function () {
+                var sum = 0;
+                $('.priceSum').each(function () {
+                    sum += Number($(this).val().replaceAll(",", ""));
+                });
+                $(".result").val(sum).change();
+                $(".finalBalanceResult ").val(sum + Number($(".sumLastResult").val().replaceAll(",", ""))).change();
+            });
+            //حساب کل مبلغ بخش دوم
+            $(".lastPriceSum").change(function () {
+                var sum = 0;
+                $('.lastPriceSum').each(function () {
+                    sum += Number($(this).val().replaceAll(",", ""));
+                });
+                $(".sumLastResult").val(sum).change();
+                $(".finalBalanceResult ").val(sum + Number($(".result").val().replaceAll(",", ""))).change();
+
+            });
+
+            $(".lastPriceSum").keyup(function () {
+                var sum = 0;
+                $('.lastPriceSum').each(function () {
+                    sum += Number($(this).val().replaceAll(",", ""));
+                });
+                $(".sumLastResult").val(sum).change();
+                $(".finalBalanceResult ").val(sum + Number($(".result").val().replaceAll(",", ""))).change();
+
+            });
+
+            //$(".result").change(function () {
+            //    var sum = 0;
+            //    $('.sumPriceAll').each(function () {
+            //        sum += Number($(this).val());
+            //    });
+            //    $(".finalBalanceResult").val(sum).change();
+            //});
+
+            //$(".lastResult").change(function () {
+            //    var sum = 0;
+            //    $('.sumPriceAll').each(function () {
+            //        sum += Number($(this).val());
+            //    });
+            //    $(".finalBalanceResult").val(sum).change();
+            //});
+
+            $(".sumAllPrice").change(function () {
+                var sum = 0;
+                $('.sumAllPrice').each(function () {
+                    sum += Number($(this).val().replaceAll(",", ""));
+                });
+                //var lastPeriod = Number($(".lastPeriod").val().replaceAll(",", ""));
+                //var result = sum + lastPeriod;
+                //result = Math.round(result * 100) / 100;
+                $(".finalBalanceResult").val(sum).change();
+            });
+            $(".sumAllPrice").keyup(function () {
+                var sum = 0;
+                $('.sumAllPrice').each(function () {
+                    sum += Number($(this).val().replaceAll(",", ""));
+                });
+                //var lastPeriod = Number($(".lastPeriod").val().replaceAll(",", ""));
+                //var result = sum + lastPeriod;
+                //result = Math.round(result * 100) / 100;
+                $(".finalBalanceResult").val(sum).change();
+            });
+
+             $(".lastPeriod").change(function () {
+                 var sum = 0;
+                $('.sumPriceAll').each(function () {
+                    sum += Number($(this).val().replaceAll(",", ""));
+                });
+                $(".finalBalanceResult").val(sum).change();
+            });
+
+            $(".lastPeriod").keyup(function () {
+                 var sum = 0;
+                $('.sumPriceAll').each(function () {
+                    sum += Number($(this).val().replaceAll(",", ""));
+                });
+                $(".finalBalanceResult").val(sum).change();
+            });
+
+            $(".lastPeriodWeight").change(function () {
+                 var sum = 0;
+                $('.sw').each(function () {
+                    sum += Number($(this).val().replaceAll(",", ""));
+                });
+                sum = Math.round(sum * 100) / 100;
+                $(".weightAll").val(sum);
+            });
+            $(".lastPeriodWeight").keyup(function () {
+                var sum = 0;
+                $('.sw').each(function () {
+                    sum += Number($(this).val().replaceAll(",", ""));
+                });
+                sum = Math.round(sum * 100) / 100;
+                $(".weightAll").val(sum);
+            });
+            //جمع کلیه وزن با وزن آخری وارد شده 
+            $(".sumAllWeight").change(function () {
+                var sum = 0;
+                $(".sumAllWeight").each(function () {
+                    sum += Number($(this).val().replaceAll(",", ""));
+                });
+                sum = Math.round(sum * 100) / 100;
+                var lastPeriodWeight = Number($(".lastPeriodWeight").val());
+                lastPeriodWeight = Math.round(lastPeriodWeight * 100) / 100;
+                var result = lastPeriodWeight + sum;
+                result = Math.round(result * 100) / 100;
+                $(".weightAll").val(result);
+
+            });
+            $(".sumAllWeight").keyup(function () {
+                var sum = 0;
+                $(".sumAllWeight").each(function () {
+                    sum += Number($(this).val().replaceAll(",", ""));
+                });
+                sum = Math.round(sum * 100) / 100;
+                var lastPeriodWeight = Number($(".lastPeriodWeight").val());
+                lastPeriodWeight = Math.round(lastPeriodWeight * 100) / 100;
+                var result = lastPeriodWeight + sum;
+                result = Math.round(result * 100) / 100;
+                $(".weightAll").val(result);
+
+            });
+
+            $(".btnSave").on("click", function (event) {
+                event.preventDefault();
+                if (checkForm("#form")) {
+                    var entity = getEntity("#form");
+                    loader(true);
+                    $.ajax({
+                        method: "POST",
+                        url: "/branchesPayments/save",
+                        data: entity,
+                        success: function (response) {
+                            if (response.status == 200) {
+                                callbackAlert(response.message, function () {
+                                    //document.location = "/branchesPayments";
+                                    if (response.data > 0 && response.data != null) {
+                                        window.open("/branchesPayments/reportPdf/" + response.data, '_blank');
+                                    }
+                                    else {
+                                        window.open("/branchesPayments/reportPdf/" + id , '_blank');
+                                    }
+                                });
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                            loader(false);
+                        }
+                    });
+                }
+            });
+
+        });
+        function priceSum() {
+            var sum = 0;
+            $('.priceSum').each(function () {
+                sum += Number($(this).val().replaceAll(",", ""));
+            });
+            $(".result").val(sum).change();
+        }
+        function lastPriceSum() {
+            var sum = 0;
+            $('.lastPriceSum').each(function () {
+                sum += Number($(this).val().replaceAll(",", ""));
+            });
+            $(".sumLastResult").val(sum).change();
+            $(".finalBalanceResult ").val(sum + Number($(".result").val().replaceAll(",", ""))).change();
+        }
+        function weight() {
+            var sum = 0;
+            var final = 0;
+            $('.weight').each(function () {
+                sum += Number($(this).val());
+            });
+            final = Math.round(sum * 100) / 100;
+            $(".resultWeight").val(final);
+            //var sumLastWeight = Number($(".sumLastWeight").val().replaceAll(",", ""));
+            //sumLastWeight = Math.round(sumLastWeight * 100) / 100;
+            //var finalResultWeight = final + sumLastWeight;
+            //finalResultWeight = Math.round(finalResultWeight * 100) / 100;
+            //$(".finalBalanceWeight").val(finalResultWeight).change();
+        }
+        function lastWeight() {
+            var sum = 0;
+            var final = 0;
+            $('.lastWeight').each(function () {
+                sum += Number($(this).val());
+            });
+            final = Math.round(sum * 100) / 100;
+            $(".sumLastWeight").val(final);
+            //var sumWeight = Number($(".sumWeight").val().replaceAll(",", ""));
+            //sumWeight = Math.round(sumWeight * 100) / 100;
+            //var result = final + sumWeight;
+            //result = Math.round(result * 100) / 100;
+            //var c = $(".finalBalanceWeight").val(result).change();
+        }
+
+        function lastPeriod() {
+            var sum = 0;
+            $('.price-3').each(function () {
+                sum += Number($(this).val().replaceAll(",", ""));
+            });
+            console.log(sum);
+            $(".finalBalanceResult").val(sum).change();
+        }
+
+        function sumAllWeight() {
+            var sum = 0;
+            $('.allWeight').each(function () {
+                sum += Number($(this).val().replaceAll(",", ""));
+            });
+            sum = Math.round(sum * 100) / 100;
+            $(".finalBalanceWeight").val(sum).change();
+        }
+        function sumAllPrice() {
+            var sum = 0;
+            $('.sumAllPrice').each(function () {
+                sum += Number($(this).val().replaceAll(",", ""));
+            });
+            //var lastPeriod = Number($(".lastPeriod").val().replaceAll(",", ""));
+            //var result = sum + lastPeriod;
+            //result = Math.round(result * 100) / 100;
+            $(".finalBalanceResult").val(sum).change();
+        }
+
+        function unit() {
+            var sum = 0;
+            $('.unit').each(function () {
+                sum += Number($(this).val().replaceAll(",", ""));
+            });
+            $(".resultunit").val(sum).change();
+        }
+
+        //function lastResultUnit() {
+        //    var sum = 0;
+        //    $('.lastUnit').each(function () {
+        //        sum += Number($(this).val().replaceAll(",", ""));
+        //    });
+        //    $(".lastResultUnit").val(sum).change();
+        //}
+
+        function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+        } //The maximum is exclusive and the minimum is inclusive
+
+        function load() {
+            if (id > 0) {
+                loader(true);
+                $.get("/branchesPayments/load/" + id, function (response) {
+                    if (response.status == 200) {
+                        $("#cmbBranch").change();
+                        setEntity(response.data, "#form");
+                        priceSum();
+                        lastPriceSum();
+                        lastPeriod();
+                        weight();
+                        lastWeight();
+                        unit();
+                        sumAllWeight();
+                        sumAllPrice();
+                        //lastResultUnit();
+                        if (response.data.branchesPaymentsLogList.length > 0) {
+                            var template = $.templates("#template");
+                            var htmlOutput = template.render(response.data);
+                            $("#logListBody").html(htmlOutput);
+                            $("#logListBody").removeClass("hidden")
+                        }
+
+                    }
+                    else {
+                        alert(response.message);
+
+                    }
+                    loader(false);
+                });
+            }
+        }
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <h5>سوابق ویرایش</h5>
+        <table>
+            <tr>
+                <th>تاریخ</th>
+                <th>کاربر</th>
+            </tr>
+            {{for branchesPaymentsLogList}}
+            <tr>
+                <td>{{:persianDate}}</td>
+                <td>{{:userFullName}}</td>
+            </tr>
+            {{/for}}
+        </table>
+    </script>
+}

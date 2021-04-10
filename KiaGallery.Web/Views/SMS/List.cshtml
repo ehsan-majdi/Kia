@@ -1,0 +1,99 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<a href="/sms/createSms" class="btn btn-success">
+    <i class="fa fa-plus v-middle" aria-hidden="true"></i>&nbsp;
+    <span>پیام جدید</span>
+</a>
+<div class="container">
+    <div id="content">
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            getList()
+            $(document).on("click", ".deleteSms", function () {
+                var id = $(this).attr("data-id")
+                confirmMessage("آیا از حذف اطلاعات اطمینان دارید؟", function () {
+                    $.post("/sms/delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            getList();
+                        }
+                        else {
+                            alert(response.message)
+                        }
+                    });
+                })
+            })
+        })
+        function getList() {
+            var entity = {
+                page: 0,
+                count: 50
+            }
+            $.get("/sms/search", entity, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        {{if list.length > 0}}
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th class="hidden-xs">متن</th>
+                    <th class="hidden-xs">تاریخ</th>
+                    <th class="hidden-xs">زمان ارسال</th>
+                    <th class="hidden-xs text-center">نوع</th>
+                    <th class="icon-col text-center">ویرایش</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td class="hidden-xs">{{:text}}</td>
+                    <td class="hidden-xs">{{:persianDate}}</td>
+                    <td class="hidden-xs">{{:time}}</td>
+                    <td class="hidden-xs text-center hidden-sm">
+                       {{if type == 0}}
+                        روزانه
+                        {{else type == 1}}
+                        هفتگی
+                        {{else type == 2}}
+                        ماهانه
+                        {{else type == 3}}
+                        تاریخ
+                        {{/if}}
+                    </td>
+                    <td class="txt-al-c">
+                        <a href="/sms/edit/{{:id}}" class="btn btn-primary btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <button class="deleteSms btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+        {{else}}
+        <div class="text-center">موردی یافت نشد</div>
+        {{/if}}
+    </script>
+
+}

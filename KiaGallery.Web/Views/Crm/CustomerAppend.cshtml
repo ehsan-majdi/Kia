@@ -1,0 +1,886 @@
+﻿
+@{
+    ViewBag.Title = "افزودن مشتری جدید";
+    var user = BaseController.GetAuthenticatedUser();
+
+
+}
+<style>
+    /*استایل مربوط به دکمه ثبت*/
+    * {
+        -webkit-transition-property: all;
+        -webkit-transition-duration: .2s;
+        -moz-transition-timing-function: cubic-bezier(100,50,21,6);
+        -moz-transition-property: all;
+        -moz-transition-duration: .2s;
+        -moz-transition-timing-function: cubic-bezier(100,50,21,6);
+    }
+
+    .test {
+        position: relative;
+        display: inline-block;
+        width: 166px;
+        height: 45px;
+        font-size: 15px;
+        line-height: 45px;
+        text-align: center;
+        text-transform: uppercase;
+        color: #000000;
+        cursor: pointer;
+        overflow: hidden;
+    }
+
+        .test svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+            .test svg rect {
+                fill: none;
+                stroke: #130c0c;
+                stroke-width: 5;
+                stroke-dasharray: 422, 0;
+                transition: all 1300ms ease-in-out;
+            }
+
+        .test:hover svg rect {
+            stroke-width: 5;
+            stroke-dasharray: 10, 310;
+            stroke-dashoffset: 33;
+        }
+
+        .test:hover {
+            color: #fff;
+            font-size: 18px;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+    #btnSave {
+        padding: 0 30px !important;
+    }
+
+    .border-title {
+        background-color: #1565c0;
+        border-radius: 5px;
+        opacity: 0.8;
+        color: white;
+        padding: 0;
+        height: 50px;
+        margin: 23px 0;
+    }
+
+        .border-title p {
+            margin: 13px 48px;
+        }
+
+    .active {
+        background-color: #bdbdbd !important;
+    }
+
+    .width {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        font-size: 16px;
+    }
+
+        .width:hover {
+            background-color: #fdd835;
+            transition: all 800ms ease;
+        }
+    /*استایل مربوط به چک باکس*/
+    .checkbox {
+        margin: auto;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+        .checkbox span {
+            display: inline-block;
+            vertical-align: middle;
+            transform: translate3d(0, 0, 0);
+            -webkit-transform: translate3d(0, 0, 0);
+            -moz-transform: translate3d(0, 0, 0);
+            -ms-transform: translate3d(0, 0, 0);
+            -o-transform: translate3d(0, 0, 0);
+        }
+
+            .checkbox span:first-child {
+                position: relative;
+                width: 18px;
+                height: 18px;
+                border-radius: 3px;
+                transform: scale(1);
+                vertical-align: middle;
+                border: 1px solid #9098A9;
+                transition: all 0.2s ease;
+                -webkit-transform: scale(1);
+                -moz-transform: scale(1);
+                -ms-transform: scale(1);
+                -o-transform: scale(1);
+            }
+
+                .checkbox span:first-child svg {
+                    position: absolute;
+                    top: 3px;
+                    left: 2px;
+                    fill: none;
+                    stroke: #FFFFFF;
+                    stroke-width: 2;
+                    stroke-linecap: round;
+                    stroke-linejoin: round;
+                    stroke-dasharray: 16px;
+                    stroke-dashoffset: 16px;
+                    transition: all 0.3s ease;
+                    transition-delay: 0.1s;
+                    transform: translate3d(0, 0, 0);
+                    -webkit-transform: translate3d(0, 0, 0);
+                    -moz-transform: translate3d(0, 0, 0);
+                    -ms-transform: translate3d(0, 0, 0);
+                    -o-transform: translate3d(0, 0, 0);
+                }
+
+                .checkbox span:first-child:before {
+                    content: "";
+                    width: 100%;
+                    height: 100%;
+                    background: #506EEC;
+                    display: block;
+                    transform: scale(0);
+                    opacity: 1;
+                    border-radius: 50%;
+                    -webkit-transform: scale(0);
+                    -moz-transform: scale(0);
+                    -ms-transform: scale(0);
+                    -o-transform: scale(0);
+                }
+
+            .checkbox span:last-child {
+                padding-left: 8px;
+            }
+
+        .checkbox:hover span:first-child {
+            border-color: #506EEC;
+        }
+
+    .inputcheck:checked + .checkbox span:first-child {
+        background: #506EEC;
+        border-color: #506EEC;
+        animation: wave 0.4s ease;
+    }
+
+        .inputcheck:checked + .checkbox span:first-child svg {
+            stroke-dashoffset: 0;
+        }
+
+        .inputcheck:checked + .checkbox span:first-child:before {
+            transform: scale(3.5);
+            opacity: 0;
+            transition: all 0.6s ease;
+        }
+
+    @@keyframes wave {
+        50% {
+            transform: scale(0.9);
+        }
+    }
+
+    .circle-1 {
+        border-radius: 50%;
+        background-color: white;
+        width: 35px;
+        height: 35px;
+        position: absolute;
+        margin: -17px 0 0 0;
+    }
+
+    .circle-2 {
+        border-radius: 50%;
+        background-color: white;
+        width: 35px;
+        height: 35px;
+        position: absolute;
+        margin: 30px 1105px 0 0;
+    }
+
+    .circle-3 {
+        border-radius: 50%;
+        background-color: white;
+        width: 35px;
+        height: 35px;
+        position: absolute;
+        margin: -15px 1105px 0 79px;
+    }
+
+    .circle-4 {
+        border-radius: 50%;
+        background-color: white;
+        width: 35px;
+        height: 35px;
+        position: absolute;
+        margin: 30px 0px 0 0;
+    }
+
+    /*استایل مربوط به دکمه ردیو*/
+
+    /*استایل مربوط به دکمه های نوع سفارش*/
+    .hovicon {
+        display: inline-block;
+        line-height: 90px;
+        cursor: pointer;
+        margin: 20px;
+        border-radius: 50%;
+        text-align: center;
+        position: relative;
+        text-decoration: none;
+        z-index: 1;
+    }
+
+        .hovicon.small {
+            font-size: 20px;
+            line-height: 45px;
+            width: 45px;
+            height: 45px;
+            margin: 7px;
+        }
+
+        .hovicon.mini {
+            font-size: 15px;
+            line-height: 32px;
+            width: 30px;
+            height: 30px;
+            margin: 7px;
+        }
+
+        .hovicon.auto-width {
+            width: auto;
+            height: auto;
+            padding: 15px;
+        }
+
+        .hovicon:after {
+            pointer-events: none;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            content: '';
+            -webkit-box-sizing: content-box;
+            -moz-box-sizing: content-box;
+            box-sizing: content-box;
+        }
+
+        .hovicon:before {
+            speak: none;
+            font-size: 48px;
+            line-height: 90px;
+            font-style: normal;
+            font-weight: normal;
+            font-variant: normal;
+            text-transform: none;
+            display: block;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .hovicon.effect-8 {
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-transition: -webkit-transform ease-out 0.1s, background 0.2s;
+            -moz-transition: -moz-transform ease-out 0.1s, background 0.2s;
+            transition: transform ease-out 0.1s, background 0.2s;
+        }
+
+            .hovicon.effect-8:after {
+                top: 0;
+                left: 0;
+                padding: 0;
+                z-index: -1;
+                box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+                opacity: 0;
+                -webkit-transform: scale(0.9);
+                -moz-transform: scale(0.9);
+                -ms-transform: scale(0.9);
+                transform: scale(0.9);
+            }
+
+            .hovicon.effect-8:hover {
+                /*background: #d5c57c;*/
+                -webkit-transform: scale(0.93);
+                -moz-transform: scale(0.93);
+                -ms-transform: scale(0.93);
+                transform: scale(0.93);
+            }
+
+                .hovicon.effect-8:hover i {
+                    color: #fff;
+                }
+
+                .hovicon.effect-8:hover:after {
+                    -webkit-animation: sonarEffect 1.3s ease-out 75ms;
+                    -moz-animation: sonarEffect 1.3s ease-out 75ms;
+                    animation: sonarEffect 1.3s ease-out 75ms;
+                }
+
+    @@-webkit-keyframes sonarEffect {
+        0% {
+            opacity: 0.3;
+        }
+
+        40% {
+            opacity: 0.5;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), 0 0 10px 10px #3851bc, 0 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        100% {
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), 0 0 10px 10px #3851bc, 0 0 0 10px rgba(255, 255, 255, 0.5);
+            -webkit-transform: scale(1.5);
+            opacity: 0;
+        }
+    }
+
+    @@-moz-keyframes sonarEffect {
+        0% {
+            opacity: 0.3;
+        }
+
+        40% {
+            opacity: 0.5;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), 0 0 10px 10px #3851bc, 0 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        100% {
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), 0 0 10px 10px #3851bc, 0 0 0 10px rgba(255, 255, 255, 0.5);
+            -moz-transform: scale(1.5);
+            opacity: 0;
+        }
+    }
+
+    @@keyframes sonarEffect {
+        0% {
+            opacity: 0.3;
+        }
+
+        40% {
+            opacity: 0.5;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), 0 0 10px 10px #808080, 0 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        100% {
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), 0 0 10px 10px #fdd835, 0 0 0 10px rgba(255, 255, 255, 0.5);
+            transform: scale(1.5);
+            opacity: 0;
+        }
+    }
+    /*استایل مربوط به دایره های بزرگتر*/
+    .ch-grid {
+        margin: 20px;
+        padding: 0;
+        list-style: none;
+        display: block;
+        text-align: center;
+        width: 100%;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+        .ch-grid:after,
+        .ch-item:before {
+            content: '';
+            display: table;
+        }
+
+        .ch-grid:after {
+            clear: both;
+        }
+
+        .ch-grid li {
+            width: 220px;
+            height: 220px;
+            display: inline-block;
+            margin: 20px;
+        }
+
+    .ch-item {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        position: relative;
+        /*box-shadow: 0 1px 2px rgba(0,0,0,0.1);*/
+        box-shadow: 14px 2px 10px rgba(0,0,0,0.1);
+        cursor: default;
+    }
+
+    .ch-info-wrap {
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        perspective: 800px;
+        transition: all 0.4s ease-in-out;
+        top: 20px;
+        left: 20px;
+        background: #f9f9f9 url(../images/bg.jpg);
+        box-shadow: 0 0 0 20px rgba(255,255,255,0.2), inset 0 0 3px rgba(115,114, 23, 0.8);
+    }
+
+    .ch-item:hover .ch-info-wrap {
+        box-shadow: 0 0 0 0 rgba(255,255,255,0.8), inset 0 0 3px rgba(115,114, 23, 0.8);
+    }
+
+    .ch-item:hover .ch-info {
+        transform: rotate3d(0,1,0,-180deg);
+    }
+
+    .ch-info h3 {
+        color: #fff;
+        text-transform: uppercase;
+        font-size: 20px;
+        margin: 12px 15px;
+        /*padding: 40px 0 0 0;*/
+        height: 90px;
+        text-shadow: 0 0 1px #fff, 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .ch-info p {
+        color: #fff;
+        padding: 10px 5px;
+        font-style: normal;
+        margin: 10px 30px;
+        font-size: 14px;
+        /*border-top: 1px solid rgba(255,255,255,0.5);*/
+    }
+
+        .ch-info p a {
+            display: block;
+            color: rgba(255,255,255,0.7);
+            font-style: normal;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 9px;
+            letter-spacing: 1px;
+            padding-top: 4px;
+        }
+
+            .ch-info p a:hover {
+                color: rgba(255,242,34, 0.8);
+            }
+
+    .ch-info {
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        transition: all 0.4s ease-in-out;
+        transform-style: preserve-3d;
+    }
+
+        .ch-info > div {
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-position: center center;
+            backface-visibility: hidden;
+        }
+
+        .ch-info .ch-info-back {
+            transform: rotate3d(0,1,0,180deg);
+            /*background: #000;*/
+            background: #991c1c;
+        }
+
+    .ch-info-front h3 {
+        color: #000;
+        font-size: 20px;
+    }
+
+    .ch-img-1 {
+        background-image: url('/Content/Image/Crm-icon/shobe 280.png');
+        background-size: 220px;
+    }
+
+    .ch-img-1-1 {
+        background-image: url('/Content/Image/Crm-icon/shobe 180.png');
+    }
+
+    .ch-img-2 {
+        background-image: url('/Content/Image/Crm-icon/shop 280.png');
+        background-size: 220px;
+    }
+
+    .ch-img-2-1 {
+        background-image: url(/Content/Image/Crm-icon/shop180.png);
+    }
+</style>
+<div class="text-center">
+    <ul class="ch-grid text-center">
+        @if (User.IsInRole("branchCrm") || User.IsInRole("admin"))
+        {
+            <li>
+                <div class="ch-item ch-img-1">
+                    <div class="ch-info-wrap text-center">
+
+                        <div class="ch-info">
+                            <div class="ch-info-front ch-img-1-1">
+                                <h3>شعب</h3>
+                            </div>
+                            <div class="ch-info-back">
+                                <p>نظر سنجی از مشتری،طبق سفارش مشتری شامل تعمیری،سفارشی و تلفنی است@*<a href="/crm/add" class="btnBuyType" data-subset-id="0">شعب</a>*@</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </li>
+        }
+        @if (User.IsInRole("officeCrm") || User.IsInRole("admin"))
+        {
+            <li>
+                <div class="ch-item ch-img-2">
+                    <div class="ch-info-wrap">
+                        <div class="ch-info">
+                            <div class="ch-info-front ch-img-2-1">
+                                <h3>آنلاین</h3>
+                            </div>
+                            <div class="ch-info-back">
+                                <p>نظر سنجی از مشتری،طبق سفارش مشتری شامل تعمیری،سفارشی و تلفنی است@*<a href="/crm/add" class="btnBuyType" data-subset-id="0">شعب</a>*@</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+</div>
+<div class="container">
+    <div class="col-md-12 text-center">
+        @if (User.IsInRole("branchCrm") || User.IsInRole("admin"))
+        {
+
+            <button class="btn btn-default primaryButton btnBuyTypeSubset width hovicon effect-8" type="submit" data-subset-id="0">
+                سفارشی
+            </button>
+            <button class="btn btn-default primaryButton btnBuyTypeSubset width hovicon effect-8" type="submit" data-subset-id="1">
+                تعمیری
+            </button>
+            <button class="btn btn-default secondaryButton btnBuyTypeOnline width hovicon effect-8" type="submit" data-online-id="0">
+                تلفنی
+            </button>
+            <button class="btn btn-default secondaryButton btnBuyTypeOnline width hovicon effect-8" type="submit" data-online-id="2">
+                <div class="text-center">
+                    خرید حضوری
+                </div>
+            </button>
+        }
+    </div>
+    <div class="col-md-12 text-center">
+        @if (User.IsInRole("officeCrm") || User.IsInRole("admin"))
+        {
+            <br />
+            <button class="btn btn-default primaryButton btnBuyTypeSubset width hovicon effect-8" type="submit" data-subset-id="0">
+                سفارشی
+            </button>
+            <button class="btn btn-default primaryButton btnBuyTypeSubset width hovicon effect-8" type="submit" data-subset-id="1">
+                تعمیری
+            </button>
+            <button class="btn btn-default secondaryButton btnBuyTypeOnline width hovicon effect-8" type="submit" data-online-id="0">
+                تلفنی
+            </button>
+            <button class="btn btn-default secondaryButton btnBuyTypeOnline width hovicon effect-8" type="submit" data-online-id="1">
+                سایت
+            </button>
+        }
+    </div>
+</div>
+
+
+<div class="container">
+    <form>
+        <div id="form">
+            <input type="hidden" name="id" />
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="txtName">نام کامل مشتری</label>
+                    <input id="txtName" class="form-control" placeholder="نام و نام خانوادگی" maxlength="50" name="fullName" data-validate="required" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="txtDate">تاریخ</label>
+                    <input id=txtDate class="form-control date" placeholder="تاریخ" name="date" autocomplete="off" data-validate="required" />
+                </div>
+            </div>
+            <div class="form-group col-lg-3">
+                <label for="txtPhoneNumber">شماره همراه</label>
+                <input id="txtPhoneNumber" class="form-control" placeholder="شماره همراه" name="phoneNumber" data-validate="required" />
+            </div>
+            <div class="form-group col-lg-2">
+                <label for="txtFactor">شماره فاکتور</label>
+                <input id="txtFactor" class="form-control" placeholder="شماره همراه" name="factorNumber" data-validate="required" />
+            </div>
+            @*<div class="form-group col-md-3">
+                    <label for="cmbBuyType">نوع خرید</label>
+                    <select id="cmbBuyType" class="form-control" name="buyType">
+                        <option value="true">آنلاین</option>
+                        <option value="false">تلفنی</option>
+                    </select>
+                </div>*@
+            <div class="form-group col-md-1">
+                <label for="cmbScore">امتیاز</label>
+                <select id="cmbScore" class="form-control" name="score">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="col-md-12">
+            <div id="btnSave" class="test">
+                <svg>
+                    <rect x="0" y="0" fill="none" width="166" height="45" />
+                </svg>
+                <span><i class="fa fa-check"></i></span>
+                ثبت
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="content">
+
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+
+        $(document).ready(function () {
+            $(".date").pDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true,
+            });
+
+            $('.primaryButton').click(function () {
+                $('.primaryButton').removeClass("active");
+                $(this).addClass("active");
+
+            });
+
+            $(".secondaryButton").click(function () {
+                $('.secondaryButton').removeClass("active");
+                $(this).addClass("active");
+            });
+
+
+            $(".btnBuyTypeSubset").click(function () {
+                var buyTypeSubset = $(this).attr("data-subset-id");
+                setParam("buyTypeSubset", buyTypeSubset);
+                getQuestionList();
+
+            });
+            $(".btnBuyTypeOnline").click(function () {
+                var buyTypeOnline = $(this).attr("data-online-id");
+                setParam("buyTypeOnline", buyTypeOnline);
+                getQuestionList();
+
+            });
+            $("#btnSave").on("click", function (event) {
+                event.preventDefault();
+                var entity = getEntity("#form");
+                entity.answerList = [];
+                $(".detail-entity").each(function (index, element) {
+                    var detailEntity = getEntity(element);
+                    if (detailEntity.crmQuestionType == 1) {
+                        detailEntity.crmQuestionValueId = detailEntity.crmQuestionValueId.join("-");
+                    }
+                    entity.answerList.push(detailEntity);
+                });
+                $(".single-entity").each(function (index, element) {
+                    var crmQuestionId = $(element).find(".crmQuestionId").val();
+                    var crmQuestionValueId=$(element).find("input[type=radio]:checked").val();
+                    var detailEntity = { crmQuestionId: crmQuestionId, crmQuestionValueId: crmQuestionValueId};
+                    entity.answerList.push(detailEntity);
+                })
+                
+                var newParams = getParam();
+                var params = $.extend(entity, newParams);
+                if (checkForm("#form")) {
+                    loader(true);
+                    $.post("/crm/SaveCustomer", params, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                document.location = "/crm/index/";
+                                location.reload();
+                            })
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    });
+                }
+            });
+            //getQuestionList();
+        });
+        function getQuestionList() {
+            loader(true);
+            var params = getParam();
+            $.get("/crm/getQuestionList", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+        function load() {
+            if (id > 0) {
+                loader(true);
+                $.get("/crm/loadCustomer/" + id, function (response) {
+                    if (response.status == 200) {
+                        var list = response.data.answerList;
+                        if (list.length > 0) {
+                            for (var i = 0; i < list.length; i++) {
+                                var item = list[i];
+                                var element = $(".detail-entity[data-question-id=" + item.crmQuestionId + "]");
+                                if (item.crmQuestionType == 1 && item.crmQuestionValueId != null) {
+                                    item.crmQuestionValueId = item.crmQuestionValueId.split("-");
+                                }
+                                setEntity(item, element);
+                            }
+                        }
+                        var data = response.data;
+                        setEntity(data, "#form");
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            }
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <div class="container">
+            {{for list}}
+            {{if crmQuestionType != 2}}
+            <div class="detail-entity" data-question-id="{{:id}}">
+                <input type="hidden" name="crmQuestionId" value="{{:id}}" />
+                <input type="hidden" name="crmQuestionType" value="{{:crmQuestionType}}" />
+                <input type="hidden" name="buyType" value="{{:buyType}}" />
+                <div class="col-md-12 border-title">
+                    <div class="circle-1"></div>
+                    <div class="circle-2"></div>
+                    <div class="circle-3"></div>
+                    <div class="circle-4"></div>
+                    <p class="">{{:title}}</p>
+                </div>
+                {{if crmQuestionType == 0}}
+                <div class="default-YesNo" data-question-id="{{:id}}">
+                    <form>
+                        <label>
+                            
+                            <input type="radio" name="yesNoAnswer" value="true" style="margin:20px 0" />
+                            بله
+                        </label>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <label>
+                            <input type="radio" name="yesNoAnswer" value="false" />
+                            خیر
+                        </label>
+                    </form>
+                </div>
+                {{/if}}
+
+                {{if crmQuestionType==1}}
+                {{if crmQuestionValueViewModelList.length <= 4}}
+                {{for crmQuestionValueViewModelList}}
+                <form>
+                    <div class="col-md-3" style="margin:17px 0">
+                        <input id="checkBox1{{:id}}" type="checkbox" class="inputcheck v-middle " value="{{:id}}" {{if defaultSelected}} checked{{/if}} name="crmQuestionValueId" style="display:none;" />
+                        <label class="checkbox inputcheck v-middle form-element" for="checkBox1{{:id}}">
+                            <span>
+                                <svg width="12px" height="10px" viewBox="0 0 12 10">
+                                    <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                </svg>
+                            </span>
+                            <span>{{:value}}</span>
+                        </label>
+                    </div>
+                </form>
+
+                {{/for}}
+                {{/if}}
+                {{if crmQuestionValueViewModelList.length > 4}}
+                {{for crmQuestionValueViewModelList}}
+                <br />
+                <div class="col-md-12" style="margin:5px 0">
+                    <input id="checkBox{{:id}}" type="checkbox" class="form-element inputcheck v-middle" value="{{:id}}" {{if defaultSelected}} checked{{/if}} name="crmQuestionValueId" style="display:none;" />
+                    <label class="checkbox inputcheck form-element v-middle" for="checkBox{{:id}}">
+                        <span>
+                            <svg width="12px" height="10px" viewBox="0 0 12 10">
+                                <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                            </svg>
+                        </span>
+                        <span>{{:value}}</span>
+                    </label>
+                </div>
+
+                {{/for}}
+                {{/if}}
+                {{/if}}
+
+                {{if crmQuestionType==3}}
+                <div>
+                    <br />
+                    <p class="questionDescriptive">شرح سوال</p>
+                    <span style="font-size:20px">:</span>
+                    <label>{{:defaultDescriptive}}</label>
+                    <br />
+                    <br />
+                </div>
+                <textarea type="text" class="form-control empty-val v-middle " placeholder="توضیحات" cols="10" rows="3" name="descriptiveAnswer" style="resize:none;">{{:description}}</textarea>
+                {{/if}}
+            </div>
+            {{/if}}
+            {{if crmQuestionType == 2}}
+            <div class="single-entity">
+                <div class="col-md-12 border-title">
+                    <div class="circle-1"></div>
+                    <div class="circle-2"></div>
+                    <div class="circle-3"></div>
+                    <div class="circle-4"></div>
+                    <p class="">{{:title}}</p>
+                </div>
+                <input type="hidden" class="crmQuestionId" value="{{:id}}" />
+                {{for crmQuestionValueViewModelList}}
+                <div class="value-margin ">
+                    <input type="radio" class="form-element v-middle" value="{{:id}}" {{if defaultSelected}} checked{{/if}} name="crmQuestionValueId{{:crmQuestionId}}" data-value-id="{{:id}}" />
+                    
+                    <label>{{:value}}</label>
+                </div>
+                {{/for}}
+            </div>
+            {{/if}}
+            {{/for}}
+        </div>
+    </script>
+}

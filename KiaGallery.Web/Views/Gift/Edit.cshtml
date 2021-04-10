@@ -1,0 +1,200 @@
+﻿@{
+    List<KiaGallery.Web.Models.BranchListViewModel> branchList = ViewBag.BranchList;
+    List<KiaGallery.Web.Models.CompanyListViewModel> companyList = ViewBag.CompanyList;
+}
+<div id="form" class="container">
+    <div class="row form-group">
+        <div class="row">
+            <div id="step1" class="col-md-4 col-md-offset-4">
+                <input id="txtHidden" type="hidden" name="id" value="@ViewBag.Id">
+                <div class="form-group">
+                    <label for="txtCode">کد</label>
+                    <input id="txtCode" type="text" class="form-control number-only" name="code" readonly="readonly">
+                </div>
+                <div class="form-group">
+                    <label for="txtExpirationTime">مدت زمان انقضا</label>
+                    <input id="txtExpirationTime" type="text" class="form-control number-only" data-validate="number" name="expirationTime" placeholder="روز">
+                </div>
+                <div class="form-group">
+                    <label for="txtExpiryDateToSolar">تاریخ انقضا به شمسی</label>
+                    <input id="txtExpiryDateToSolar" type="text" class="form-control date" autocomplete="off" name="expiryDateToSolar" placeholder="روز">
+                </div>
+                <div class="form-group">
+                    <label for="cmbGiftType">نوع هدیه</label>
+                    <select id="cmbGiftType" class="form-control" data-validate="required" name="giftType">
+                        <option value="">...</option>
+                        <option value="0">کارت هدیه</option>
+                        <option value="3">کارت هدیه بدون ثبت</option>
+                        <option value="5">کارت تخفیف </option>
+                        <option value="4">کارت تخفیف بدون ثبت</option>
+                        <option value="1">بن خرید</option>
+                        <option value="2">بن خرید بدون ثبت</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cmbValue">اعتبار</label>
+                    <datalist id="price">
+                        <option class="hidevalue" value="">...</option>
+                        <option class="hidetargetvalue" value="5">5 درصد</option>
+                        <option class="hidevalue" value="500000">ریال 500,000</option>
+                        <option class="hidevalue" value="2500000">ریال 2,500,000</option>
+                        <option class="hidevalue" value="1000000">ریال 1,000,000</option>
+                        <option class="hidevalue" value="2000000">ریال 2,000,000</option>
+                        <option class="hidevalue" value="3000000">ریال 3,000,000</option>
+                        <option class="hidevalue" value="5000000">ریال 5,000,000</option>
+                        <option class="hidevalue" value="10000000">ریال 10,000,000</option>
+                        <option class="hidevalue" value="20000000">ریال 20,000,000</option>
+                        <option class="hidevalue" value="50000000">ریال 50,000,000</option>
+                    </datalist>
+                    <input type="text" class="money-separator form-control" id="txtValue" name="value" list="price" autocomplete="off" />
+                    @*<select id="cmbValue" class="form-control" data-validate="required" name="value">
+                        <option class="hidevalue" value="">...</option>
+                        <option class="hidetargetvalue" value="5">5 درصد</option>
+                        <option class="hidevalue" value="500000">ریال 500,000</option>
+                        <option class="hidevalue" value="2500000">ریال 2,500,000</option>
+                        <option class="hidevalue" value="1000000">ریال 1,000,000</option>
+                        <option class="hidevalue" value="2000000">ریال 2,000,000</option>
+                        <option class="hidevalue" value="3000000">ریال 3,000,000</option>
+                        <option class="hidevalue" value="5000000">ریال 5,000,000</option>
+                        <option class="hidevalue" value="10000000">ریال 10,000,000</option>
+                        <option class="hidevalue" value="20000000">ریال 20,000,000</option>
+                        <option class="hidevalue" value="50000000">ریال 50,000,000</option>
+                    </select>*@
+                </div>
+                @if (ViewBag.Id != null)
+                {
+                    <div class="form-group">
+                        <label for="txtCount">تعداد</label>
+                        <input id="txtCount" type="text" class="form-control number-only" name="count" data-validate="required,number" value="1" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="txtBuyerCustomerName">نام، نام خانوادگی مشتری خریدار</label>
+                        <input id="txtBuyerCustomerName" type="text" class="form-control" name="buyerCustomerName">
+                    </div>
+                    <div class="form-group">
+                        <label for="txtBuyerCustomerPhoneNumber">شماره تلفن مشتری خریدار</label>
+                        <input id="txtBuyerCustomerPhoneNumber" type="text" class="form-control" name="buyerCustomerPhoneNumber">
+                    </div>
+                    <div class="form-group">
+                        <label for="txtRevocationCustomerName">نام، نام خانوادگی مشتری باطل کننده</label>
+                        <input id="txtRevocationCustomerName" type="text" class="form-control" name="revocationCustomerName">
+                    </div>
+                    <div class="form-group">
+                        <label for="txtRevocationCustomerPhoneNumber">شماره تلفن مشتری باطل کننده</label>
+                        <input id="txtRevocationCustomerPhoneNumber" type="text" class="form-control" name="revocationCustomerPhoneNumber">
+                    </div>
+                    <div class="form-group">
+                        <label for="txtDescription">توضیحات</label>
+                        <input id="txtDescription" type="text" class="form-control" name="description">
+                    </div>
+                    <div class="form-group">
+                        <label for="cmbValue">وضعیت</label>
+                        <select id="cmbValue" class="form-control" name="giftStatus" data-validate="required">
+                            <option value="">...</option>
+                            <option value="0">ثبت شده</option>
+                            <option value="1">ارسال شده به چاپخانه</option>
+                            <option value="2">تحویل از چاپخانه</option>
+                            <option value="3">فروخته شده به شعبه</option>
+                            <option value="4">فروخته شده به مشتری</option>
+                            <option value="5">استفاده شده</option>
+                            <option value="6">لغو شده</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cmbBranchId">شعبه</label>
+                        <select id="cmbBranchId" class="form-control" name="branchIdShopping">
+                            <option value="">...</option>
+                            @foreach (KiaGallery.Web.Models.BranchListViewModel branch in branchList)
+                            {
+                                <option value="@branch.id">@branch.name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cmbCompanyId">شرکت</label>
+                        <select id="cmbCompanyId" class="form-control" name="companyIdShopping">
+                            <option value="">...</option>
+                            @foreach (KiaGallery.Web.Models.CompanyListViewModel company in companyList)
+                            {
+                                <option value="@company.id">@company.name</option>
+                            }
+                        </select>
+                    </div>
+                }
+                else
+                {
+                    <input id="txtGiftStatus" type="hidden" name="giftStatus" value="0">
+                    <div class="form-group">
+                        <label for="txtCount">تعداد</label>
+                        <input id="txtCount" type="text" class="form-control number-only" name="count" value="1" data-validate="required,number">
+                    </div>
+                }
+
+                <div class="form-group">
+                    <button id="btnSave" type="submit" class="btn btn-success">
+                        <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                        ذخیره
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+
+        $(document).ready(function () {
+
+            $("#txtExpiryDateToSolar").change(function () {
+                $("#txtExpirationTime").val(0);
+            });
+
+            $(".date").pDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true,
+            });
+            load();
+
+            $("#btnSave").on("click", function (event) {
+                event.preventDefault();
+                if (checkForm("#form")) {
+                    var entity = getEntity("#form");
+                    loader(true);
+                    $.ajax({
+                        method: "POST",
+                        url: "/gift/save",
+                        data: entity,
+                        success: function (response) {
+                            if (response.status == 200) {
+                                callbackAlert(response.message, function () {
+                                    document.location = "/gift";
+                                });
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                            loader(false);
+                        }
+                    });
+                }
+            });
+        });
+        function load() {
+            if (id > 0) {
+                loader(true);
+                $.get("/gift/load/" + id, function (response) {
+                    if (response.status == 200) {
+                        setEntity(response.data, "#form");
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            }
+        }
+    </script>
+}

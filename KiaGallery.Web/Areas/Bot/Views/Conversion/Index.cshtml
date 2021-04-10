@@ -1,0 +1,252 @@
+﻿
+@{
+    ViewBag.Title = "User List";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<style type="text/css">
+    #filterContent .btn {
+        background-color: #b0bec5;
+        border-radius: 5px;
+        padding: 6px 15px;
+        text-decoration: none;
+        color: black;
+        cursor: pointer;
+    }
+
+    table {
+        border: solid 1px silver;
+        width: 100%;
+    }
+
+    td, th {
+        border-bottom: 1px solid silver;
+        padding: 4px 10px 4px 15px;
+        text-align: center;
+    }
+
+    #filterContent {
+        background-color: ghostwhite;
+        border: 2px solid silver;
+        border-radius: 5px;
+        display: inline-block;
+        padding: 20px;
+    }
+
+        #filterContent div {
+            padding: 3px;
+        }
+
+        #filterContent label span:first-child {
+            width: 90px;
+            display: inline-block;
+        }
+</style>
+
+<div id="filter" class="gone absolute">
+    <div id="filterContent">
+        <div>
+            <label>
+                <span>Chat Id:</span>
+                <input id="txtChatId" type="text" />
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <span>First Name:</span>
+                <input id="txtFirstName" type="text" />
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <span>Last Name:</span>
+                <input id="txtLastName" type="text" />
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <span>Username:</span>
+                <input id="txtUsername" type="text" />
+            </label>
+        </div>
+
+        <div style="margin-top: 5px;">
+            <label>
+                <span>Page Count:</span>
+            </label>
+            <span class="linkIcon" onclick="setPageCount(10)">10</span>
+            <span class="linkIcon" onclick="setPageCount(20)">20</span>
+            <span class="linkIcon" onclick="setPageCount(50)">50</span>
+            <span class="linkIcon" onclick="setPageCount(100)">100</span>
+
+            <span id="pageCount" style="margin-left: 20px;">10</span>
+        </div>
+
+        <div style="margin-top: 15px;">
+            <label>
+                <span></span>
+                <span class="btn" onclick="_page = 0;closeFilter();getList()">
+                    <i class="fa fa-search" style="padding-right: 5px;" aria-hidden="true"></i>
+                    Search
+                </span>
+                &nbsp;&nbsp;
+                <span class="btn" onclick="closeFilter()">
+                    <i class="fa fa-remove" style="padding-right: 5px;" aria-hidden="true"></i>
+                    Close
+                </span>
+            </label>
+        </div>
+    </div>
+</div>
+<div style="width: 90%; margin: auto;">
+    <div id="grid">
+
+    </div>
+    <div>
+        <i id="previewsPage" class="fa fa-angle-double-left linkIcon" aria-hidden="true" onclick="previewsPage()"></i>
+        <span id="pageNo"></span>
+        <i id="nextPage" class="fa fa-angle-double-right linkIcon" aria-hidden="true" onclick="nextPage()"></i>
+        <div class="relative inline-block">
+            <i class="fa fa-exchange linkIcon" aria-hidden="true" onclick="openGoto()" style="padding: 6px;"></i>
+            <div id="goto" class="absolute gone" style="background-color: gainsboro; border: 1px solid gray; border-radius: 5px; left: 0; padding: 6px; top: 25px; width: 85px;">
+                <input id="txtPageNo" type="text" style="width: 30px;" />
+                <i class="fa fa-chevron-circle-right linkIcon" aria-hidden="true" onclick="setPageNo()" style="font-size: 1.25em; margin: 7px 0px 0 7px;"></i>
+            </div>
+        </div>
+        <i class="fa fa-refresh linkIcon" aria-hidden="true" onclick="getList()" style="padding: 6px;"></i>
+    </div>
+</div>
+<script id="userTmpl" type="text/x-jsrender">
+    <h3>
+        <i class="fa fa-gear linkIcon" aria-hidden="true" onclick="openFilter()"></i>&nbsp;&nbsp;
+        User Count: {{:userCount}}
+    </h3>
+    <table>
+        <tr>
+            <th>
+                Chat ID
+            </th>
+            <th>
+                First Name
+            </th>
+            <th>
+                Last Name
+            </th>
+            <th>
+                Username
+            </th>
+            <th>
+            </th>
+        </tr>
+        {{for list}}
+        <tr>
+            <td>{{:ChatId}}</td>
+            <td>{{:FirstName}}</td>
+            <td>{{:LastName}}</td>
+            <td>{{:Username}}</td>
+            <td><a href="/bot/Conversion/View/{{:ChatId}}"><i class="fa fa-paper-plane linkIcon" aria-hidden="true"></i></a></td>
+        </tr>
+        {{/for}}
+    </table>
+</script>
+@section Scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            getList();
+        });
+        var _totalPage = 0;
+        var _page = 0;
+        var _count = 10;
+
+        function getList() {
+            loader(true);
+
+            var _data = {
+                chatId: $("#txtChatId").val(),
+                firstName: $("#txtFirstName").val(),
+                lastName: $("#txtLastName").val(),
+                username: $("#txtUsername").val(),
+                page: _page,
+                count: _count
+            };
+
+            $.ajax({
+                type: "GET",
+                url: "/bot/Conversion/GetUserList",
+                data: _data,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    var tmpl = $.templates("#userTmpl");
+                    var html = tmpl.render(result.data);
+                    $("#grid").html(html);
+
+                    $("#pageNo").html((_page + 1) + "/" + result.data.pageCount);
+                    if (_page == 0)
+                        $("#previewsPage").css({ 'visibility': 'hidden' });
+                    else
+                        $("#previewsPage").css({ 'visibility': 'visible' });
+
+                    if (_page + 1 == result.data.pageCount)
+                        $("#nextPage").css({ 'visibility': 'hidden' });
+                    else
+                        $("#nextPage").css({ 'visibility': 'visible' });
+
+                    _totalPage = result.data.pageCount;
+                    loader(false);
+                },
+                error: function (response) {
+                    alert('error');
+                    loader(false);
+                }
+            });
+        }
+
+
+        function setPageCount(pageCount) {
+            _count = pageCount;
+            $("#pageCount").html(_count);
+        }
+
+        function setPageNo() {
+            var pageNo = $("#txtPageNo").val();
+            if (pageNo <= 0 || pageNo > _totalPage) {
+                alert("Your selected page is invalid.");
+                return;
+            }
+
+            _page = pageNo - 1;
+            getList();
+        }
+
+        function previewsPage() {
+            _page--;
+            getList();
+        }
+
+        function nextPage() {
+            _page++;
+            getList();
+        }
+
+        function openGoto() {
+            $("#goto").slideToggle();
+        }
+
+        function openFilter() {
+            $("#pageCount").html(_count);
+            showModal($('#filter'));
+        }
+
+        function closeFilter() {
+            closeModal($('#filter'));
+        }
+
+
+    </script>
+}

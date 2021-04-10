@@ -1,0 +1,412 @@
+﻿@{
+    ViewBag.Title = "مشاهده جزئیات سفارش";
+}
+<link href="~/content/order-page.css" rel="stylesheet" />
+<style>
+    #menu-holder {
+        width: calc(100% - 130px);
+        transition: 0.5s;
+    }
+
+    .pad-top {
+        padding-top: 60px;
+    }
+
+    #button-bar {
+        margin-top: 8px;
+        padding-bottom: 8px;
+        border-bottom: solid 1px silver;
+    }
+
+    .footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        height: 130px;
+        line-height: 60px;
+        left: 0;
+    }
+
+    #btnSubmit {
+        background-color: #3e8047;
+        color: white;
+        font-weight: 700;
+        width: 200px;
+        position: absolute;
+        left: 100px;
+        border: none;
+        -webkit-box-shadow: 0px 0px 6px -1px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 0px 6px -1px rgba(0,0,0,0.75);
+        box-shadow: 0px 0px 6px -1px rgba(0,0,0,0.75);
+        transition: all 0.2s ease-in-out;
+    }
+
+        #btnSubmit:hover {
+            background-color: #11bf5f;
+        }
+
+    .content-footer {
+        padding: 33px;
+    }
+
+    .specification {
+        font-style: normal;
+        position: absolute;
+        bottom: 14px;
+        right: 212px;
+        word-break: break-all;
+        font-weight: 700
+    }
+
+        .specification span {
+            color: red;
+        }
+
+    .border-red {
+        border: 1px solid red;
+    }
+</style>
+<div class="col-md-12">
+    @*<div id="menu-holder" class="affix hidden-xs hidden-sm">
+
+            <div id="menu">
+                    <ul>
+                        <li><a href="#" class="status" data-id="0">ثبت شده</a></li>
+                        <li><a href="#" class="status" data-id="1">آماده تحویل</a></li>
+                        <li><a href="#" class="status" data-id="2">ارسال شده</a></li>
+                        <li><a href="#" class="status" data-id="6">لغو شده</a></li>
+                        <li><a id="all" href="#">همه</a></li>
+                    </ul>
+                </div>
+
+            <div id="button-bar">
+                <input type="button" class="select-all btn btn-default" value="انتخاب همه" />
+                <input type="button" class="change-status deliveryFromPrintingHouse btn btn-primary" value="تغییر وضعیت به ارسال شده" data-status="1" data-confirm="آیا از تغییر وضعیت به ارسال شده اطمینان دارید؟" />
+                <input type="button" class="change-status printingHouse btn btn-primary" value="تغییر وضعیت به آماده تحویل" data-status="2" data-confirm="آیا از تغییر وضعیت به آماده تحویل اطمینان دارید؟" />
+                <a class="print btn btn-success"><i class="fa fa-print v-middle" aria-hidden="true"></i>&nbsp;<span>چاپ</span></a>
+                <input type="button" class="change-status cancel btn btn-danger" value="لغو" data-status="6" data-confirm="آیا از تغییر وضعیت به لغو اطمینان دارید؟" />
+                <input type="button" class="change-status deleteSelected btn btn-danger" value="حذف" data-status="7" data-confirm="آیا از تغییر وضعیت به حذف اطمینان دارید؟" />
+                <div id="selctedCount" class="btn btn-default" style="display:none"></div>
+            </div>
+        </div>*@
+    <div class="pad-top">
+        <input id="hiddenId" type="hidden" value="@ViewBag.Id" />
+        <form id="form">
+            <div id="content">
+            </div>
+        </form>
+       
+    </div>
+
+</div>
+<div class="footer hidden">
+    <div class="content-footer">
+        <button id="btnSubmit">ارسال به چاپخانه جهت پردازش</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 350,
+            status: null,
+            term: null,
+            order: null,
+            filter: null
+        }
+        $(window).on('hashchange', function () {
+            getList();
+        });
+        $(window).scroll(function () {
+            var scrollTop = $(window).scrollTop();
+            if (scrollTop > 0) {
+                $("#menu-holder").addClass("header-scroll");
+            }
+            else {
+                $("#menu-holder").removeClass("header-scroll");
+            }
+        });
+        var orderId =@(ViewBag.Id != null ? ViewBag.Id : 0);
+        $(document).ready(function () {
+            getList();
+            $("#btnSubmit").click(function (event) {
+                event.preventDefault();
+                var myTableData = {orderId:orderId};
+                var officeInventoryList = new Array();
+                var idListOrder = new Array();
+                var remainOrderList = new Array();
+                $('.tblSavingColl tbody tr').each(function (index, element) {
+                    var officeInventory = $(element).find(".officeInventory").val();
+                    var remain = $(element).find(".remainVal").val();
+                    var idList = $(this).attr("data-id");
+                    officeInventoryList.push(officeInventory);
+                    remainOrderList.push(remain);
+                    idListOrder.push(idList);
+                    myTableData.officeInventory = officeInventoryList;
+                    myTableData.remain = remainOrderList;
+                    myTableData.idList = idListOrder;
+                });
+                sendToPrintingHouse(myTableData);
+            });
+
+            $(document).on("keyup", "input[name='officeInventory']", function () {
+                var orderBranch = Number($(this).parents("tr").find(".order").text());
+                var inventory = Number($(this).val());
+
+                if (inventory >orderBranch ) {
+                    result = orderBranch - inventory;
+                    if (result <= 0) {
+                        var remain = $(this).parents("tr").find(".remainVal").val(0);
+                    }
+                }
+                else {
+                    result = orderBranch - inventory ;
+                    var remain = $(this).parents("tr").find(".remainVal").val(result);
+                }
+            });
+            $(document).on("click", ".change-status", function (event) {
+                event.preventDefault();
+                var idList = new Array();
+                $('.giftItem:checked').each(function () {
+                    idList.push(this.value);
+                });
+                if (idList.length > 0) {
+                    var confirm = $(this).attr("data-confirm");
+                    var status = $(this).attr("data-status");
+                    confirmMessage(confirm, function () {
+                        var idList = new Array();
+                        $('.giftItem:checked').each(function () {
+                            idList.push(this.value);
+                        });
+                        //changeStatus(idList, status, null, null, null, null);
+                        //sendToPrintingHouse(idList);
+                    });
+                }
+                else {
+                    alert("حداقل یک مورد را باید انتخاب کنید.");
+                }
+            });
+            //$(document).on("click", ".status", function (event) {
+            //    event.preventDefault();
+            //    var entity = {
+            //        status: $(this).attr("data-id")
+            //    };
+            //    manipulateParam(entity, "page");
+            //});
+            $("#all").on("click", function (event) {
+                event.preventDefault();
+                removeParam(["status", "page"]);
+            })
+            $(".select-all").on("click", function (event) {
+                if ($(".giftItem").not(":checked").length > 0) {
+                    $(".giftItem").prop("checked", true);
+                }
+                else {
+                    $(".giftItem").prop("checked", false);
+                }
+                $(".giftItem").change();
+            });
+            $(document).on("change", ".giftItem", function () {
+                if ($(".giftItem:checked").length > 0) {
+                    $("#selctedCount").show();
+                    var count = 0;
+                    $(".giftItem:checked").each(function (index, element) {
+                        count += 1;
+                    });
+                    $("#selctedCount").html("تعداد انتخاب شده: " + count);
+                }
+                else {
+                    $("#selctedCount").hide();
+                }
+            });
+        });
+
+        function changeStatus(input, status, branchIdShopping, companyIdShopping, customerName, customerPhoneNumber) {
+
+            var params = {
+                id: input,
+                status: status,
+            };
+
+            loader(true);
+            $.post("/fax/changeStatus", params, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    getList();
+                    if (status == 1) {
+                        idList = input.join();
+                        //window.open("/gift/printingHouse?id=" + idList, "_blank");
+                    }
+                }
+                getList();
+            });
+        }
+
+        function sendToPrintingHouse(myTableData) {
+            if (checkForm("#form")) {
+                loader(true);
+                $.post("/fax/sendToPrintingHouse", myTableData, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        console.log(123)
+                        callbackAlert("سفارش برای چاپخانه ارسال گردید.", function () {
+                            //document.location.href  = "/printingHouse/finalOrderPrintinHouse";
+                            $(".footer").addClass("hidden");
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            }
+        }
+
+        function getList() {
+            updateForm();
+            var entity = {
+                page: 0,
+                count: 24,
+                productCount: null,
+                orderUsableProductId: orderId,
+            };
+            var urlParams = getParam();
+            var params = $.extend(entity, urlParams);
+            loader(true);
+            $.post("/fax/ManipulateAll", params, function (response) {
+                if (response.status == 200) {
+                    if (response.data.list.length > 0) {
+                        var data = response.data;
+                        var template = $.templates("#template");
+                        var htmlOutput = template.render(data);
+                        $("#content").html(htmlOutput);
+                        $('[data-toggle="tooltip"]').tooltip();
+                        $(".footer").removeClass("hidden");
+                    }
+                    else {
+                        $("#content").html("<br /><h5 class='txt-al-c'>سفارشی موجود نیست.</h5>");
+                    }
+                }
+                else {
+                    callbackAlert(response.message, function () {
+                        document.location.href = "/fax/manage";
+                    });
+                }
+                loader(false);
+            });
+        }
+
+        function updateForm() {
+            var params = getParam();
+            $("#menu li").removeClass("active");
+            if (params["status"] && params["status"] >= 0)
+                $("#menu li a[data-id=" + params["status"] + "]").closest("li").addClass("active");
+            else {
+                $("#menu li:last").addClass("active");
+                defaultEntity.status = null;
+            }
+        }
+
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive tblSavingColl">
+            <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th class="text-center">تصویر</th>
+                    <th class="hidden-xs hidden-sm text-center">تاریخ ثبت</th>
+                    <th class="text-center">دسته بندی</th>
+                    <th class="hidden-xs hidden-sm text-center">نام محصول</th>
+                    <th class="hidden-xs hidden-sm text-center">تعداد سفارش شعبه</th>
+                    <th class="hidden-xs hidden-sm text-center" style=" width: 150px;">تعداد موجودی دفتر مرکزی</th>
+                    <th class="hidden-xs hidden-sm text-center" style="width:150px;">باقی مانده</th>
+                    <th class="hidden-xs hidden-sm text-center">شعبه</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr data-id="{{:id}}" class="relative">
+                    <td class="rowId" name="{{:id}}" data-id="{{:id}}">
+                        {{:#index +1}}
+                    </td>
+                    @*<td class="v-middle">
+                            <input id="chkOrder{{:id}}" class="giftItem" name="giftItem" type="checkbox" value="{{:id}}" data-code="{{:code}}" data-status="{{:giftStatus}}" />
+                        </td>*@
+                    <td class="txt-al-c" style="width: 120px;">
+                        <span class="v-middle">
+                            {{if image}}
+                            <img class="product-image" style="width: 110px;" src="/image/usableProduct/500x500/{{:image}}" />
+                            {{else}}
+                            <img class="product-image" style="width: 110px;" src="/content/image/kia-gallery-logo-square.png" />
+                            {{/if}}
+                        </span>
+                        {{if specification}}
+                        <i class="specification">مشخصات:<span>{{:specification}}</span></i>
+                        {{/if}}
+                    </td>
+                    <td class="txt-al-c">
+                        <i class="fa fa-calendar v-middle" aria-hidden="true" data-toggle="tooltip" title="تاریخ ثبت"></i>
+                        <span>
+                            {{:persianDate}}
+                        </span>
+                    </td>
+                    <td class="txt-al-c">
+                        <i class="fa fa-bars v-middle" aria-hidden="true" data-toggle="tooltip" title="دسته بندی"></i>
+                        <span>
+                            {{:category}}
+                        </span>
+                    </td>
+                    <td class="txt-al-c">
+                        <i class="fa fa-file-text-o v-middle" aria-hidden="true" data-toggle="tooltip" title="عنوان"></i>
+                        <span>
+                            {{if name}}
+                            {{:name}}
+                            {{else}}
+                            -
+                            {{/if}}
+                        </span>
+                        <br />
+                    </td>
+                    <td class="txt-al-c hidden-xs hidden-sm">
+                        <div class="order-count">
+                            <i class="fa fa-sort-numeric-asc v-middle" aria-hidden="true" data-toggle="tooltip" title="تعداد"></i>
+                            <span class="order">{{:productCount}}</span>
+                        </div>
+
+                        {{if description}}
+                        <div>
+                            <i class="fa fa-comment-o v-middle" aria-hidden="true" data-toggle="tooltip" title="توضیحات"></i>
+                            <span>{{:description}}</span>
+                        </div>
+                        {{/if}}
+
+                        @*<div>
+                                <i class="fa fa-user-o v-middle" aria-hidden="true" data-toggle="tooltip" title="کاربر ثبت کننده"></i>
+                                <span data-title='@Html.Partial("_UserList")' data-placement="bottom" data-html="true" data-toggle="tooltip">کاربران ثبت کننده</span>
+                            </div>*@
+                    </td>
+                    <td class="txt-al-c">
+                        <input class="form-control officeInventory" name="officeInventory" data-id="{{:id}}" data-validate="required" placeholder="موجودی" style="width:150px;text-align:center" />
+                    </td>
+                    <td>
+                        <div>
+                            <input class="form-control remainVal" placeholder="0" name="remain" disabled style="width:150px;text-align:center" />
+                        </div>
+                    </td>
+                    <td class="txt-al-c">
+                        {{if createBranch}}
+                        <div>
+                            <i class="fa fa-building v-middle" aria-hidden="true" data-toggle="tooltip" title="شعبه"></i>
+                            <span>{{:createBranch}}</span>
+                        </div>
+                        {{/if}}
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+    </script>
+}
+

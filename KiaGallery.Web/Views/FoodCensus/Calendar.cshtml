@@ -1,0 +1,801 @@
+﻿
+@{
+    ViewBag.Title = "تقویم";
+}
+
+<style type="text/css">
+    table * {
+        font-family: 'IRANSans(FaNum)';
+    }
+
+    thead th {
+        width: 14%;
+    }
+
+        thead th div {
+            padding: 6px 10px;
+            margin: 7px 3px 0px 3px;
+            border-radius: 4px;
+            text-align: center;
+            color: white;
+        }
+
+    .spring {
+        background-color: #66BB6A;
+    }
+
+    .summer {
+        background-color: #ef5350;
+    }
+
+    .autumn {
+        background-color: #FF9800;
+    }
+
+    .winter {
+        background-color: #00ACC1;
+    }
+
+    tbody td {
+        height: 80px;
+        vertical-align: top;
+    }
+
+    .day .day-card {
+        margin: 7px 3px 0px 3px;
+        background-color: #CFD8DC !important;
+        height: 100%;
+        overflow: hidden;
+    }
+
+        .day .day-card .header {
+            display: block;
+            background-color: #78909C;
+            padding: 3px 7px;
+        }
+
+        .day .day-card .count {
+            padding: 3px 7px;
+            line-height: 22px;
+        }
+
+    tbody td:last-child .day-card .header {
+        background-color: #e57373;
+    }
+
+        tbody td:last-child .day-card .header .plusIcon {
+            display: none !important;
+        }
+
+        tbody td:last-child .day-card .header .plusNull {
+            display: none !important;
+        }
+
+    #modal-branch input[type=checkbox] {
+        vertical-align: middle;
+        margin: 0 0 0 10px;
+    }
+
+    .gap-day .day-card {
+        margin: 7px 3px 0px 3px;
+        background-color: #CFD8DC !important;
+        height: 100%;
+        overflow: hidden;
+        opacity: 0.5;
+    }
+
+        .gap-day .day-card .header {
+            display: block;
+            background-color: #78909C !important;
+            padding: 3px 7px;
+        }
+
+        .gap-day .day-card .count {
+            padding: 3px 7px;
+        }
+
+    .holiday {
+        color: white;
+        font-size: 15px;
+    }
+
+    .today .day-card .header {
+        background-color: #9CCC65;
+    }
+
+    .header .edit {
+        float: left;
+        font-size: 17px;
+        vertical-align: middle;
+        cursor: pointer;
+        display: none;
+    }
+
+    .fa-edit {
+        color: white;
+        font-size: 18px;
+    }
+
+    .fa-download {
+        color: black;
+        font-size: 18px;
+    }
+
+    .foodName {
+        background-color: #9ccc65;
+        text-align: center;
+        font-size: 14px;
+        color: white
+    }
+
+    .holiday {
+        color: white;
+        font-size: 10px;
+    }
+
+    .header .plusIcon {
+        float: left;
+        font-size: 17px;
+        cursor: pointer;
+    }
+
+    .header .plusNull {
+        float: left;
+        font-size: 17px;
+        cursor: pointer;
+        display: none;
+    }
+
+    .header .pdf {
+        font-size: 17px;
+        cursor: pointer;
+        float: left;
+        color: white;
+        margin: 0 10px;
+    }
+
+    .edit-number-people {
+        cursor: pointer;
+        text-align: center;
+        display: block;
+        margin: 10px 0;
+        color: brown;
+    }
+
+    #content table td {
+        height: 0;
+    }
+
+    .theme-DIV {
+        background-color: #e8e8e8;
+        color: black;
+        padding: 5px 10px;
+        border-radius: 2px;
+        font-weight: 700;
+        margin: 4px;
+        text-align: center;
+        width: 100%;
+    }
+
+    .form-count {
+        width: 100%;
+        display: flex;
+    }
+
+    #form-checking td:nth-child(3) {
+        border-left: 2px solid #78909C;
+    }
+</style>
+
+<div class="container">
+    <h3 class="no-margin">تقویم</h3>
+    <br />
+    <div>
+        <label>
+            سال:
+            <select id="cmbYear" class="form-control" style="width: 120px;">
+                @foreach (int item in ViewBag.YearList)
+                {
+                    if (item == ViewBag.Year)
+                    {
+                        <option value="@item" selected>@item</option>
+                    }
+                    else
+                    {
+                        <option value="@item">@item</option>
+                    }
+                }
+            </select>
+        </label>
+
+        <label>
+            ماه:
+            <select id="cmbMonth" class="form-control" style="width: 120px;">
+                <option value="1">فروردین</option>
+                <option value="2">اردیبهشت</option>
+                <option value="3">خرداد</option>
+                <option value="4">تیر</option>
+                <option value="5">مرداد</option>
+                <option value="6">شهریور</option>
+                <option value="7">مهر</option>
+                <option value="8">آبان</option>
+                <option value="9">آذر</option>
+                <option value="10">دی</option>
+                <option value="11">بهمن</option>
+                <option value="12">اسفند</option>
+            </select>
+        </label>
+        <button id="btnSetting" class="btn btn-primary">تنظیمات</button>
+    </div>
+
+    <table style="width: 100%">
+        <thead>
+            <tr>
+                <th><div>شنـبـه</div></th>
+                <th><div>یک شنـبـه</div></th>
+                <th><div>دو شنـبـه</div></th>
+                <th><div>سه شنـبـه</div></th>
+                <th><div>چهار شنـبـه</div></th>
+                <th><div>پنج شنـبـه</div></th>
+                <th><div>جمـعـه</div></th>
+            </tr>
+        </thead>
+        <tbody id="days" class="table-body"></tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="modal-foodSetting" tabindex="-1" role="dialog">
+    <form id="formSetting">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="txtKeyFoodCount">تعداد غذا</label>
+                                <input id="txtKeyFoodCount" class="form-control text-center" name="foodCount" data-validate="required,maxLength(4),number" value="@ViewBag.foodCount" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="txtKeyAppetizerCount">تعداد سالاد</label>
+                                <input id="txtKeyAppetizerCount" class="form-control text-center" name="appetizerCount" data-validate="required,maxLength(4),number" value="@ViewBag.appetizerCount" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtKeyDescription">توضیحات</label>
+                        <textarea id="txtKeyDescription" class="form-control" name="description">@ViewBag.description</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnSaveSetting" type="button" class="btn btn-success btn-block" data-dismiss="modal">ذخیره</button>
+                    <button type="button" class="btn btn-default btn-block" data-dismiss="modal" style="margin-right: 0;">بستن</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="modal-food" tabindex="-1" role="dialog">
+    <form id="form">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div>
+                        <input type="hidden" id="hiddenDate" name="date" />
+                        <input type="hidden" id="hiddenId" name="id" />
+                        <input id="foodName" class="form-control " type="text" name="foodName" placeholder="نام غذا" data-validate="required" />
+                        <br />
+                        <label>انتخاب نوع غذا</label>
+                        <select id="typeFood" class="form-control" name="typeFood" data-validate="required">
+                            <option value="true">با برنج</option>
+                            <option value="false">بدون برنج</option>
+                        </select>
+                        <br />
+                        <label>تعیین روزهای تعطیل</label>
+                        <select id="holiday" class="form-control" name="holiday" data-validate="required">
+                            <option value="false">غیرتعطیل</option>
+                            <option value="true">تعطیل</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnSave" type="button" class="btn btn-success btn-block" data-dismiss="modal">ذخیره</button>
+                    <button type="button" class="btn btn-default btn-block" data-dismiss="modal" style="margin-right: 0;">بستن</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="modal-checking" tabindex="-1" role="dialog" style="overflow:auto">
+    <form id="form-checking">
+        <div class="modal-dialog" role="document" style="width: 745px;">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-count">
+                        <div class="theme-DIV">
+                            <lable>تعداد غذا تعریف شده:<span>@ViewBag.foodCount</span></lable>
+                        </div>
+                        <div class="theme-DIV">
+                            <lable>تعداد پیش غذا تعریف شده:<span>@ViewBag.appetizerCount</span></lable>
+                        </div>
+                    </div>
+                    <div class="form-count">
+                        <div class="theme-DIV">
+                            <label>تعداد غذا ثبت شده:</label>
+                            <span id="foodCount" name="foodCount"></span>
+                        </div>
+                        <div class="theme-DIV">
+                            <label>تعداد پیش غذا ثبت شده:</label>
+                            <span id="appertizerCount" name="appetizerCount"></span>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-count">
+                        <div class="theme-DIV">
+                            <label>جمع تعداد غذای ثبت شده:</label>
+                            <span id="sumFoodCount" name="foodCount"></span>
+                        </div>
+                        <div class="theme-DIV">
+                            <label>جمع تعداد پیش غذای ثبت شده:</label>
+                            <span id="sumAppertizerCount" name="appetizerCount"></span>
+                        </div>
+                    </div>
+                    <input type="hidden" id="hiddenDateChecking" />
+                    <div id="content">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnSaveChecking" type="button" class="btn btn-success btn-block" data-dismiss="modal">تایید و ارسال پیامک</button>
+                    <button type="button" class="btn btn-default btn-block" data-dismiss="modal" style="margin-right: 0;">بستن</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        var weekdaysGap = [6, 0, 1, 2, 3, 4, 5];
+
+        $(document).ready(function () {
+            var date = new persianDate();
+            var params = getParam();
+
+            $("#cmbMonth").on("change", function () {
+                returnDataValue();
+                setParam("month", $(this).val());
+                switch (parseInt($(this).val())) {
+                    case 1:
+                    case 2:
+                    case 3:
+                        $("thead th div").removeClass("summer").removeClass("autumn").removeClass("winter");
+                        $("thead th div").addClass("spring");
+                        break;
+                    case 4:
+                    case 5:
+                    case 6:
+                        $("thead th div").removeClass("spring").removeClass("autumn").removeClass("winter");
+                        $("thead th div").addClass("summer");
+                        break;
+                    case 7:
+                    case 8:
+                    case 9:
+                        $("thead th div").removeClass("spring").removeClass("summer").removeClass("winter");
+                        $("thead th div").addClass("autumn");
+                        break;
+                    case 10:
+                    case 11:
+                    case 12:
+                        $("thead th div").removeClass("spring").removeClass("summer").removeClass("autumn");
+                        $("thead th div").addClass("winter");
+                        break;
+                }
+                draw();
+            });
+
+            $("#cmbYear").on("change", function () {
+                setParam("year", $(this).val());
+                draw();
+                returnDataValue();
+            });
+
+            if (params.year)
+                $("#cmbYear").val(params.year);
+            else
+                $("#cmbYear").val(date.pDate.year);
+
+            if (params.month)
+                $("#cmbMonth").val(params.month).change();
+            else
+                $("#cmbMonth").val(date.pDate.month).change();
+
+            draw();
+
+            $(document).on("click", ".edit,.plusNull", function () {
+                var date = $(this).attr("data-date");
+                var params = { date: date };
+                loader(true);
+                $.get('/foodcensus/load', params, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        setEntity(response.data, "#form");
+                        $("#hiddenDate").val(date);
+                        $("#hiddenId").val(response.data.id);
+                        $("#modal-food").modal("show");
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+            $(document).on("click", ".edit-number-people", function () {
+                var date = $(this).attr("data-date");
+                $("#hiddenDateChecking").val(date);
+                var params = {
+                    date: date,
+                };
+                loader(true);
+                $.get('/foodcensus/getAllRegistration', params, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        var data = response.data;
+                        var template = $.templates("#template");
+                        var htmlOutput = template.render(data);
+                        $("#content").html(htmlOutput);
+                        for (var i = 0; i < data.listRegistration.length; i++) {
+                            $("input[data-userId=" + response.data.listRegistration[i].userId + "][name=appertizer]").prop("checked", data.listRegistration[i].appertizer)
+                            $("input[data-userId=" + response.data.listRegistration[i].userId + "][name=food]").prop("checked", data.listRegistration[i].food)
+                        }
+                        $("#foodCount").html(data.foodCount);
+                        $("#hiddenFoodId").val(data.foodCensusId);
+                        $("#appertizerCount").html(data.appertizerCount)
+                        $("#sumFoodCount").html(data.sumFoodCount)
+                        $("#sumAppertizerCount").html(data.sumAppertizerCount)
+                        $("#modal-checking").modal("show");
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+            $(document).on("change", ".checking-food", function () {
+                var entity = {
+                    date: $("#hiddenDateChecking").val(),
+                    userId: $(this).attr("data-userId"),
+                    id: $("#hiddenFoodId").val(),
+                    food: $(this).prop("checked"),
+                }
+                loader(true);
+                $.post('/foodcensus/setFood/', entity, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            })
+
+            $(document).on("change", ".checking-appertizer", function () {
+                var entity = {
+                    date: $("#hiddenDateChecking").val(),
+                    userId: $(this).attr("data-userId"),
+                    id: $("#hiddenFoodId").val(),
+                    appertizer: $(this).prop("checked"),
+                }
+                loader(true);
+                $.post('/foodcensus/setAppertizer/', entity, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            })
+
+            $(document).on("click", "#btnSaveChecking", function (event) {
+                event.preventDefault();
+                var date = $("#hiddenDateChecking").val()
+                var entity = { date: date };
+                loader(true);
+                $.post("/foodcensus/sendingSms", entity, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        callbackAlert("ارسال پیامک با موفقیت انجام شد.", function () {
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+            $("#btnSave").on("click", function () {
+                save();
+            });
+
+            $("#btnSaveSetting").on("click", function (event) {
+                saveSetting();
+            });
+
+            $(document).on("click", ".plusNull", function () {
+                $("#hiddenDate").val($(this).attr("data-date"))
+                $("#modal-food").modal("show");
+                $("#holiday").val("");
+                $("#foodName").val("");
+                $("#typeFood").val("");
+                $(".foodName").css({ 'background-color': '#9ccc65' });
+            });
+
+            $(document).on("click", ".plusIcon", function () {
+                $("#hiddenDate").val($(this).attr("data-date"))
+                $("#modal-food").modal("show");
+                $("#holiday").val(null);
+                $("#foodName").val(null);
+                $("#typeFood").val(null);
+                $("#hiddenId").val(null);
+
+            });
+
+
+            $("#btnSetting").on("click", function () {
+                $("#modal-foodSetting").modal("show");
+            });
+
+            $(document).on("click", ".pdf", function () {
+                var date = $(this).attr("data-date");
+                var params = { date: date };
+                document.location = "/foodCensus/PrintReport/" + "?model=" + JSON.stringify(params);
+            })
+
+        });
+
+        function saveSetting() {
+            event.preventDefault();
+            if (checkForm("#formSetting")) {
+                var entity = getEntity("#formSetting")
+                $.post("/foodCensus/SettingSave", entity, function (response) {
+                    alert(response.message);
+                });
+            }
+        }
+
+        function save() {
+            var entity = getEntity("#form");
+            loader(true);
+            $.post('/foodcensus/save/', entity, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    console.log(response);
+                    $("#modal-food").modal("hide");
+                    returnDataValue();
+                    callbackAlert(response.message, function () {
+                    });
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        }
+
+        function draw() {
+            var year = parseInt($("#cmbYear").val());
+            var month = parseInt($("#cmbMonth").val());
+            var holiday = $("#holiday").val();
+            var typeFood = $("#typeFood").val();
+            var date = new persianDate([year, month, 1]);
+
+            var days = [];
+
+            for (var i = 0; i < weekdaysGap[date.pDate.weekDayNumber]; i++) {
+                days.push("<td class=\"gap-day\"><div class='day-card'> <span class='header'>&nbsp;</span></div ></td>");
+            }
+
+            month = month < 10 ? "0" + month : month;
+            for (var i = 1; i <= getMonthDay(year, month); i++) {
+                var day = i < 10 ? "0" + i : i;
+                if (isToday(year, month, i)) {
+                    days.push("<td class=\"day today\" data-date=\"" + year + "/" + month + "/" + day + "\" data-day=\"" + i + "\"><div class='day-card'><span class='header'>" + day + "<span><a class='edit' data-date=\"" + year + "/" + month + "/" + day + "\"><i class='fa fa-edit' data-toggle='tooltip' data-placement='top' title='ویرایش'></i></a></span><span><a class='plusIcon' data-date=\"" + year + "/" + month + "/" + day + "\"><i class='fa fa-plus' data-toggle='tooltip' data-placement='top' title='اضافه کردن'></i></a></span><span><a class='plusNull' data-date=\"" + year + "/" + month + "/" + day + "\"><i class='fa fa-plus' data-toggle='tooltip' data-placement='top' title='اضافه کردن'></i></a></span><span><a class='pdf hide' data-date=\"" + year + "/" + month + "/" + day + "\"><i class='fa fa-file-pdf-o' data-toggle='tooltip' data-placement='top' title='چاپ مقادیر ثبت شده'></i></a></span></span><span class='count block small-font' data-date=\"" + year + "/" + month + "/" + day + "\"></span><span class='foodName block' data-holiday=\"" + holiday + "\"  data-date=\"" + year + "/" + month + "/" + day + "\"></span></div></td>");
+                }
+                else {
+                    days.push("<td class=\"day empty\" data-date=\"" + year + "/" + month + "/" + day + "\" data-day=\"" + i + "\"><div class='day-card'><span class='header'>" + day + "<span><a class='edit' data-date=\"" + year + "/" + month + "/" + day + "\"><i class='fa fa-edit' data-toggle='tooltip' data-placement='top' title='ویرایش'></a></i></span><span><a class='plusIcon'  data-date=\"" + year + "/" + month + "/" + day + "\"><i class='fa fa-plus' data-toggle='tooltip' data-placement='top' title='اضافه کردن'></i></a></span><span><a class='plusNull' data-date=\"" + year + "/" + month + "/" + day + "\"><i class='fa fa-plus' data-toggle='tooltip' data-placement='top' title='اضافه کردن'></i></a></span><span><a class='pdf hide' data-date=\"" + year + "/" + month + "/" + day + "\"><i class='fa fa-file-pdf-o' data-toggle='tooltip' data-placement='top' title='چاپ مقادیر ثبت شده'></i></a></span></span><span class='count block small-font' data-date=\"" + year + "/" + month + "/" + day + "\"></span><span class='foodName block' data-holiday=\"" + holiday + "\"  data-date=\"" + year + "/" + month + "/" + day + "\"></span><span><a class='edit-number-people hide' data-toggle='tooltip' data-placement='top' title = 'تایید تعداد نفرات' data-date=\"" + year + "/" + month + "/" + day + "\" ><i class='fa fa-refresh'></i></a></span></div> </td>");
+                }
+            }
+
+            var str = "<tr>";
+            var len = days.length;
+            if (days.length % 7 != 0) // ساخت مقدار های اضافه برای وقتی که ستون های جدول کمتر از تعداد رند باشد
+                len += 7 - days.length % 7;
+
+            for (var i = 0; i < len; i++) {
+                if (days[i])
+                    str += days[i];
+                else
+                    str += "<td class=\"gap-day\"><div class='day-card'> <span class='header'>&nbsp;</span></div ></td>";
+
+                if ((i + 1) % 7 == 0) {
+                    str += "</tr>";
+                    if (i < days.length) {
+                        str += "<tr>";
+                    }
+                }
+            }
+
+            $("#days").html(str);
+            $('[data-toggle="tooltip"]').tooltip();
+        }
+
+        function getMonthDay(year, month) {
+            if (month <= 6) {
+                return 31;
+            }
+            else if (month < 12) {
+                return 30;
+            }
+            else {
+                if (isLeapYear(parseInt(year)))
+                    return 30;
+                else
+                    return 29;
+            }
+        }
+
+        function isLeapYear(year) {
+            var a = 0, b = 1309, c = parseInt(year);
+            for (var i = 1309; i <= c - 4; i += 4) {
+                b += 4;
+                a += 1;
+                if (a % 8 === 0)
+                    b++;
+            }
+
+            if (c === b) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        function isToday(year, month, day) {
+            var date = new persianDate().pDate;
+            return date.year == year && date.month == month && date.date == day;
+        }
+
+        function returnDataValue() {
+            var month = $("#cmbMonth option:selected").val();
+            var year = parseInt($("#cmbYear").val());
+            var lastDay = ""
+            var date = new persianDate().pDate;
+
+            var persianFirstDayOfMonth = year + "/" + month + "/" + "01";
+            if (month <= 6) {
+                lastDay = "31"
+            }
+            if (month > 6) {
+                lastDay = "30"
+                if (month == 12) {
+                    lastDay = "29"
+                }
+            }
+            var persianLastDayOfMonth = year + "/" + month + "/" + lastDay;
+            $.get('/foodcensus/returnDataValue/', { persianFirstDayOfMonth: persianFirstDayOfMonth, persianLastDayOfMonth: persianLastDayOfMonth }, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    for (var i = 0; i < response.data.list.length; i++) {
+                        var item = response.data.list[i];
+                        $(".foodName").each(function (index, element) {
+                            if ($(element).attr("data-date") == item.persianDate) {
+                                $("td[data-date='" + item.persianDate + "']").find("a.plusIcon").hide();
+                                $("td[data-date='" + item.persianDate + "']").find("a.plusNull").hide();
+                                $("td[data-date='" + item.persianDate + "']").find(".edit").show();
+                                $("td[data-date='" + item.persianDate + "']").find("a.pdf").addClass("hide");
+                                $("td[data-date='" + item.persianDate + "']").find("span.foodName").html("<span>" + item.foodName + "</span>");
+                                console.log(112);
+
+                                if (item.holiday == true) {
+                                    $("td[data-date='" + item.persianDate + "']").find("span.foodName").css({ 'background-color': '#e57373' });
+                                    $("td[data-date='" + item.persianDate + "']").find("span.foodName").html("<span>" + item.foodName + "</span>" + "<br/>" + "<p class='holiday'>" + "(تعطیل رسمی)" + "</p>");
+                                }
+                                if (item.foodName == "") {
+                                    $("td[data-date='" + item.persianDate + "']").find(".plusNull").show();
+                                    $("td[data-date='" + item.persianDate + "']").find(".edit").hide();
+                                    $("td[data-date='" + item.persianDate + "']").find("span.foodName").css({ 'background-color': '#CFD8DC' });
+                                    //$("td[data-date='" + item.persianDate + "']").find("span.foodName").html("<span>" + item.foodName + "</span>" + "<br/>");
+                                }
+                                if (item.foodRegisterList > 0) {
+                                    $("td[data-date='" + item.persianDate + "']").find("a.pdf").removeClass("hide");
+                                    $("td[data-date='" + item.persianDate + "']").find("a.edit-number-people").removeClass("hide");
+                                }
+                                if (item.foodRegisterList == 0) {
+                                    $("td[data-date='" + item.persianDate + "']").find("a.pdf").addClass("hide");
+                                    $("td[data-date='" + item.persianDate + "']").find("a.edit-number-people").addClass("hide");
+                                }
+                                if (item.boolCheckingDate == false) {
+                                    $("td[data-date='" + item.persianDate + "']").find("a.edit-number-people").addClass("hide");
+                                }
+                            }
+                            if ($("td[data-date].today").length > 0) {
+                                var today = $("td[data-date].today").attr("data-day");
+                                for (var i = today; i > today - 30; i--) {
+                                    $("td[data-day=" + i + "]").find("a.edit-number-people").addClass("hide");
+                                }
+                            }
+                            else {
+                                var date = new persianDate().pDate;
+                                var year = parseInt($("#cmbYear").val());
+                                var month = parseInt($("#cmbMonth").val());
+                                if (month == 12) {
+                                    if (date.month == 1 && date.year - 1 == year && date.day < 7) {
+                                        for (var i = getMonthDay(year, month); i > getMonthDay(year, month) - 30 + date.day; i--) {
+                                            $("td[data-day=" + i + "]").find("a.edit-number-people").addClass("hide");
+                                        }
+                                    }
+                                }
+                                else {
+                                    if (month == date.month - 1 && date.day < 7) {
+                                        for (var i = getMonthDay(year, month); i > getMonthDay(year, month) - 30 + date.day; i--) {
+                                            $("td[data-day=" + i + "]").find("a.edit-number-people").addClass("hide");
+                                        }
+                                    }
+                                }
+                            }
+                        });
+
+
+                    }
+                }
+            });
+        }
+
+
+
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <input type="hidden" id="hiddenFoodId" value="" />
+        <table class="table tblSavingColl">
+            <thead>
+                <tr>
+                    <th class="text-center w15">نام </th>
+                    <th class="text-center">وضعیت انتخاب غذا </th>
+                    <th class="text-center">وضعیت انتخاب سالاد </th>
+                    <th class="text-center w15">نام </th>
+                    <th class="text-center">وضعیت انتخاب غذا </th>
+                    <th class="text-center">وضعیت انتخاب سالاد </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {{for list }}
+                {{if #getIndex() % 2 == 0}}
+                <tr class="userList">
+                    <td class="text-center fullName">{{:fullName}}</td>
+                    <td class="text-center">
+                        <input type="checkbox" class="checking-food" data-userId="{{:id}}" value="" name="food" />
+                    </td>
+                    <td class="text-center">
+                        <input type="checkbox" class="checking-appertizer" data-userId="{{:id}}" vlaue="" name="appertizer" />
+                    </td>
+                    {{else}}
+                    <td class="text-center fullName">{{:fullName}}</td>
+                    <td class="text-center">
+                        <input type="checkbox" class="checking-food" data-userId="{{:id}}" value="" name="food" />
+                    </td>
+                    <td class="text-center">
+                        <input type="checkbox" class="checking-appertizer" data-userId="{{:id}}" vlaue="" name="appertizer" />
+                    </td>
+                </tr>
+                {{/if}}
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}

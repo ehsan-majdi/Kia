@@ -1,0 +1,796 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="KiaGalleryMainModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Branches">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CityId" Type="int" Nullable="false" />
+          <Property Name="BranchType" Type="int" Nullable="false" />
+          <Property Name="OrderNo" Type="int" Nullable="false" />
+          <Property Name="WorkingHour" Type="int" Nullable="false" />
+          <Property Name="OwnerName" Type="nvarchar(max)" />
+          <Property Name="OwnerNationalityCode" Type="nvarchar(max)" />
+          <Property Name="OwnerNationalityNo" Type="nvarchar(max)" />
+          <Property Name="OwnerFatherName" Type="nvarchar(max)" />
+          <Property Name="Alias" Type="nvarchar" MaxLength="5" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="EnglishName" Type="nvarchar" MaxLength="100" />
+          <Property Name="Address" Type="nvarchar" MaxLength="1000" />
+          <Property Name="EnglishAddress" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Color" Type="nvarchar" MaxLength="7" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="100" />
+          <Property Name="CreditCard" Type="int" />
+          <Property Name="Latitude" Type="nvarchar" MaxLength="38" />
+          <Property Name="Longitude" Type="nvarchar" MaxLength="38" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="GoldDebt" Type="real" Nullable="false" />
+          <Property Name="RialDebt" Type="bigint" Nullable="false" />
+          <Property Name="GoldCredit" Type="real" Nullable="false" />
+          <Property Name="CreateUserId" Type="int" Nullable="false" />
+          <Property Name="ModifyUserId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifyDate" Type="datetime" Nullable="false" />
+          <Property Name="Ip" Type="nvarchar" MaxLength="45" />
+        </EntityType>
+        <EntityType Name="People">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PersonNumber" Type="int" Nullable="false" />
+          <Property Name="BranchId" Type="int" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="ShortName" Type="nvarchar" MaxLength="50" />
+          <Property Name="NikName" Type="nvarchar" MaxLength="50" />
+          <Property Name="FatherName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Gender" Type="bit" Nullable="false" />
+          <Property Name="NationalCode" Type="nvarchar" MaxLength="10" />
+          <Property Name="BirthCertificateNumber" Type="nvarchar" MaxLength="12" />
+          <Property Name="BirthDate" Type="datetime" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="14" />
+          <Property Name="MobileNumber" Type="nvarchar" MaxLength="14" />
+          <Property Name="NecessaryNumber" Type="nvarchar(max)" />
+          <Property Name="ExportFrom" Type="nvarchar(max)" />
+          <Property Name="City" Type="nvarchar(max)" />
+          <Property Name="Address" Type="nvarchar" MaxLength="255" />
+          <Property Name="Supervisor" Type="bit" Nullable="false" />
+          <Property Name="ContractSubject" Type="int" Nullable="false" />
+          <Property Name="PromissoryNoteNumber" Type="nvarchar(max)" />
+          <Property Name="JobId" Type="int" />
+          <Property Name="Married" Type="bit" Nullable="false" />
+          <Property Name="Children" Type="int" />
+          <Property Name="Contract" Type="bit" Nullable="false" />
+          <Property Name="ContractInMonth" Type="int" Nullable="false" />
+          <Property Name="AccountNumber" Type="nvarchar" MaxLength="25" />
+          <Property Name="ContractStartDate" Type="datetime" Nullable="false" />
+          <Property Name="ContractEndDate" Type="datetime" />
+          <Property Name="Insurance" Type="bit" Nullable="false" />
+          <Property Name="InsuranceNumber" Type="nvarchar" MaxLength="20" />
+          <Property Name="InsuranceExpireDate" Type="datetime" />
+          <Property Name="InsuranceBeginDate" Type="datetime" />
+          <Property Name="Education" Type="int" Nullable="false" />
+          <Property Name="Reward" Type="bigint" />
+          <Property Name="ActivityAmount" Type="bigint" />
+          <Property Name="SupervisorSalary" Type="bigint" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="Major" Type="nvarchar" MaxLength="100" />
+          <Property Name="MajorCurrent" Type="nvarchar" MaxLength="100" />
+          <Property Name="EducationalStatus" Type="bit" Nullable="false" />
+          <Property Name="PersonType" Type="int" Nullable="false" />
+          <Property Name="ShiftActivity" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="CreateUserId" Type="int" Nullable="false" />
+          <Property Name="ModifyUserId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifyDate" Type="datetime" Nullable="false" />
+          <Property Name="Ip" Type="nvarchar" MaxLength="45" />
+        </EntityType>
+        <EntityType Name="Sms">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Text" Type="nvarchar(max)" />
+          <Property Name="DestinationNumber" Type="nvarchar(max)" />
+          <Property Name="DayOfMonth" Type="nvarchar(max)" />
+          <Property Name="DayOfWeek" Type="nvarchar(max)" />
+          <Property Name="SendingTimeMethod" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar(max)" />
+          <Property Name="BranchId" Type="nvarchar(max)" />
+          <Property Name="CreateUserId" Type="int" Nullable="false" />
+          <Property Name="ModifyUserId" Type="int" Nullable="false" />
+          <Property Name="SendingDate" Type="datetime" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifyDate" Type="datetime" Nullable="false" />
+          <Property Name="Time" Type="nvarchar(max)" />
+          <Property Name="TimeTotalMinutes" Type="int" Nullable="false" />
+          <Property Name="Sent" Type="bit" Nullable="false" />
+          <Property Name="Ip" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="UserProfile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BranchId" Type="int" />
+          <Property Name="WorkshopId" Type="int" />
+          <Property Name="PrintingHouseId" Type="int" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Color" Type="nvarchar(max)" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="255" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="14" />
+          <Property Name="Username" Type="nvarchar" MaxLength="50" />
+          <Property Name="Salt" Type="nvarchar" MaxLength="255" />
+          <Property Name="Password" Type="nvarchar" MaxLength="1000" />
+          <Property Name="UserType" Type="int" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="ConfirmationCode" Type="nvarchar(max)" />
+          <Property Name="CreateUserId" Type="int" />
+          <Property Name="ModifyUserId" Type="int" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifyDate" Type="datetime" Nullable="false" />
+          <Property Name="Ip" Type="nvarchar" MaxLength="45" />
+        </EntityType>
+        <Association Name="FK_dbo_Branches_dbo_UserProfile_CreateUserId">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="Branches" Type="Self.Branches" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Branches">
+              <PropertyRef Name="CreateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Branches_dbo_UserProfile_ModifyUserId">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="Branches" Type="Self.Branches" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Branches">
+              <PropertyRef Name="ModifyUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_People_dbo_Branches_BranchId">
+          <End Role="Branches" Type="Self.Branches" Multiplicity="0..1" />
+          <End Role="People" Type="Self.People" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branches">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="People">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_People_dbo_UserProfile_CreateUserId">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="People" Type="Self.People" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="People">
+              <PropertyRef Name="CreateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_People_dbo_UserProfile_ModifyUserId">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="People" Type="Self.People" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="People">
+              <PropertyRef Name="ModifyUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Sms_dbo_UserProfile_CreateUserId">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="Sms" Type="Self.Sms" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Sms">
+              <PropertyRef Name="CreateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Sms_dbo_UserProfile_ModifyUserId">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="Sms" Type="Self.Sms" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Sms">
+              <PropertyRef Name="ModifyUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserProfile_dbo_Branches_BranchId">
+          <End Role="Branches" Type="Self.Branches" Multiplicity="0..1" />
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branches">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserProfile">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserProfile_dbo_UserProfile_CreateUserId">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="0..1" />
+          <End Role="UserProfile1" Type="Self.UserProfile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserProfile1">
+              <PropertyRef Name="CreateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserProfile_dbo_UserProfile_ModifyUserId">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="0..1" />
+          <End Role="UserProfile1" Type="Self.UserProfile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserProfile1">
+              <PropertyRef Name="ModifyUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="KiaGalleryMainModelStoreContainer">
+          <EntitySet Name="Branches" EntityType="Self.Branches" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="People" EntityType="Self.People" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sms" EntityType="Self.Sms" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserProfile" EntityType="Self.UserProfile" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_dbo_Branches_dbo_UserProfile_CreateUserId" Association="Self.FK_dbo_Branches_dbo_UserProfile_CreateUserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Branches" EntitySet="Branches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Branches_dbo_UserProfile_ModifyUserId" Association="Self.FK_dbo_Branches_dbo_UserProfile_ModifyUserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Branches" EntitySet="Branches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_People_dbo_Branches_BranchId" Association="Self.FK_dbo_People_dbo_Branches_BranchId">
+            <End Role="Branches" EntitySet="Branches" />
+            <End Role="People" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_People_dbo_UserProfile_CreateUserId" Association="Self.FK_dbo_People_dbo_UserProfile_CreateUserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="People" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_People_dbo_UserProfile_ModifyUserId" Association="Self.FK_dbo_People_dbo_UserProfile_ModifyUserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="People" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Sms_dbo_UserProfile_CreateUserId" Association="Self.FK_dbo_Sms_dbo_UserProfile_CreateUserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Sms" EntitySet="Sms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Sms_dbo_UserProfile_ModifyUserId" Association="Self.FK_dbo_Sms_dbo_UserProfile_ModifyUserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Sms" EntitySet="Sms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserProfile_dbo_Branches_BranchId" Association="Self.FK_dbo_UserProfile_dbo_Branches_BranchId">
+            <End Role="Branches" EntitySet="Branches" />
+            <End Role="UserProfile" EntitySet="UserProfile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserProfile_dbo_UserProfile_CreateUserId" Association="Self.FK_dbo_UserProfile_dbo_UserProfile_CreateUserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="UserProfile1" EntitySet="UserProfile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserProfile_dbo_UserProfile_ModifyUserId" Association="Self.FK_dbo_UserProfile_dbo_UserProfile_ModifyUserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="UserProfile1" EntitySet="UserProfile" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="KiaGalleryMainModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="KiaGalleryMainEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Branches" EntityType="KiaGalleryMainModel.Branches" />
+          <EntitySet Name="UserProfile" EntityType="KiaGalleryMainModel.UserProfile" />
+          <AssociationSet Name="FK_dbo_Branches_dbo_UserProfile_CreateUserId" Association="KiaGalleryMainModel.FK_dbo_Branches_dbo_UserProfile_CreateUserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Branches" EntitySet="Branches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Branches_dbo_UserProfile_ModifyUserId" Association="KiaGalleryMainModel.FK_dbo_Branches_dbo_UserProfile_ModifyUserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Branches" EntitySet="Branches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserProfile_dbo_Branches_BranchId" Association="KiaGalleryMainModel.FK_dbo_UserProfile_dbo_Branches_BranchId">
+            <End Role="Branches" EntitySet="Branches" />
+            <End Role="UserProfile" EntitySet="UserProfile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserProfile_dbo_UserProfile_CreateUserId" Association="KiaGalleryMainModel.FK_dbo_UserProfile_dbo_UserProfile_CreateUserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="UserProfile1" EntitySet="UserProfile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserProfile_dbo_UserProfile_ModifyUserId" Association="KiaGalleryMainModel.FK_dbo_UserProfile_dbo_UserProfile_ModifyUserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="UserProfile1" EntitySet="UserProfile" />
+          </AssociationSet>
+          <EntitySet Name="People" EntityType="KiaGalleryMainModel.People" />
+          <AssociationSet Name="FK_dbo_People_dbo_Branches_BranchId" Association="KiaGalleryMainModel.FK_dbo_People_dbo_Branches_BranchId">
+            <End Role="Branches" EntitySet="Branches" />
+            <End Role="People" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_People_dbo_UserProfile_CreateUserId" Association="KiaGalleryMainModel.FK_dbo_People_dbo_UserProfile_CreateUserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="People" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_People_dbo_UserProfile_ModifyUserId" Association="KiaGalleryMainModel.FK_dbo_People_dbo_UserProfile_ModifyUserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="People" EntitySet="People" />
+          </AssociationSet>
+          <EntitySet Name="Sms" EntityType="KiaGalleryMainModel.Sms" />
+          <AssociationSet Name="FK_dbo_Sms_dbo_UserProfile_CreateUserId" Association="KiaGalleryMainModel.FK_dbo_Sms_dbo_UserProfile_CreateUserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Sms" EntitySet="Sms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Sms_dbo_UserProfile_ModifyUserId" Association="KiaGalleryMainModel.FK_dbo_Sms_dbo_UserProfile_ModifyUserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Sms" EntitySet="Sms" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Branches">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CityId" Type="Int32" Nullable="false" />
+          <Property Name="BranchType" Type="Int32" Nullable="false" />
+          <Property Name="OrderNo" Type="Int32" Nullable="false" />
+          <Property Name="WorkingHour" Type="Int32" Nullable="false" />
+          <Property Name="OwnerName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OwnerNationalityCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OwnerNationalityNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OwnerFatherName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Alias" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EnglishName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="EnglishAddress" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Color" Type="String" MaxLength="7" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CreditCard" Type="Int32" />
+          <Property Name="Latitude" Type="String" MaxLength="38" FixedLength="false" Unicode="true" />
+          <Property Name="Longitude" Type="String" MaxLength="38" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="GoldDebt" Type="Single" Nullable="false" />
+          <Property Name="RialDebt" Type="Int64" Nullable="false" />
+          <Property Name="GoldCredit" Type="Single" Nullable="false" />
+          <Property Name="CreateUserId" Type="Int32" Nullable="false" />
+          <Property Name="ModifyUserId" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifyDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Ip" Type="String" MaxLength="45" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserProfile" Relationship="KiaGalleryMainModel.FK_dbo_Branches_dbo_UserProfile_CreateUserId" FromRole="Branches" ToRole="UserProfile" />
+          <NavigationProperty Name="UserProfile1" Relationship="KiaGalleryMainModel.FK_dbo_Branches_dbo_UserProfile_ModifyUserId" FromRole="Branches" ToRole="UserProfile" />
+          <NavigationProperty Name="UserProfile2" Relationship="KiaGalleryMainModel.FK_dbo_UserProfile_dbo_Branches_BranchId" FromRole="Branches" ToRole="UserProfile" />
+          <NavigationProperty Name="People" Relationship="KiaGalleryMainModel.FK_dbo_People_dbo_Branches_BranchId" FromRole="Branches" ToRole="People" />
+        </EntityType>
+        <EntityType Name="UserProfile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BranchId" Type="Int32" />
+          <Property Name="WorkshopId" Type="Int32" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Color" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FileName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="14" FixedLength="false" Unicode="true" />
+          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Salt" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="UserType" Type="Int32" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="CreateUserId" Type="Int32" />
+          <Property Name="ModifyUserId" Type="Int32" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifyDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Ip" Type="String" MaxLength="45" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Branches" Relationship="KiaGalleryMainModel.FK_dbo_Branches_dbo_UserProfile_CreateUserId" FromRole="UserProfile" ToRole="Branches" />
+          <NavigationProperty Name="Branches1" Relationship="KiaGalleryMainModel.FK_dbo_Branches_dbo_UserProfile_ModifyUserId" FromRole="UserProfile" ToRole="Branches" />
+          <NavigationProperty Name="Branches2" Relationship="KiaGalleryMainModel.FK_dbo_UserProfile_dbo_Branches_BranchId" FromRole="UserProfile" ToRole="Branches" />
+          <NavigationProperty Name="UserProfile1" Relationship="KiaGalleryMainModel.FK_dbo_UserProfile_dbo_UserProfile_CreateUserId" FromRole="UserProfile" ToRole="UserProfile1" />
+          <NavigationProperty Name="UserProfile2" Relationship="KiaGalleryMainModel.FK_dbo_UserProfile_dbo_UserProfile_CreateUserId" FromRole="UserProfile1" ToRole="UserProfile" />
+          <NavigationProperty Name="UserProfile11" Relationship="KiaGalleryMainModel.FK_dbo_UserProfile_dbo_UserProfile_ModifyUserId" FromRole="UserProfile" ToRole="UserProfile1" />
+          <NavigationProperty Name="UserProfile3" Relationship="KiaGalleryMainModel.FK_dbo_UserProfile_dbo_UserProfile_ModifyUserId" FromRole="UserProfile1" ToRole="UserProfile" />
+          <NavigationProperty Name="People" Relationship="KiaGalleryMainModel.FK_dbo_People_dbo_UserProfile_CreateUserId" FromRole="UserProfile" ToRole="People" />
+          <NavigationProperty Name="People1" Relationship="KiaGalleryMainModel.FK_dbo_People_dbo_UserProfile_ModifyUserId" FromRole="UserProfile" ToRole="People" />
+          <Property Name="PrintingHouseId" Type="Int32" />
+          <Property Name="ConfirmationCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Sms" Relationship="KiaGalleryMainModel.FK_dbo_Sms_dbo_UserProfile_CreateUserId" FromRole="UserProfile" ToRole="Sms" />
+          <NavigationProperty Name="Sms1" Relationship="KiaGalleryMainModel.FK_dbo_Sms_dbo_UserProfile_ModifyUserId" FromRole="UserProfile" ToRole="Sms" />
+          </EntityType>
+        <Association Name="FK_dbo_Branches_dbo_UserProfile_CreateUserId">
+          <End Type="KiaGalleryMainModel.UserProfile" Role="UserProfile" Multiplicity="1" />
+          <End Type="KiaGalleryMainModel.Branches" Role="Branches" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Branches">
+              <PropertyRef Name="CreateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Branches_dbo_UserProfile_ModifyUserId">
+          <End Type="KiaGalleryMainModel.UserProfile" Role="UserProfile" Multiplicity="1" />
+          <End Type="KiaGalleryMainModel.Branches" Role="Branches" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Branches">
+              <PropertyRef Name="ModifyUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserProfile_dbo_Branches_BranchId">
+          <End Type="KiaGalleryMainModel.Branches" Role="Branches" Multiplicity="0..1" />
+          <End Type="KiaGalleryMainModel.UserProfile" Role="UserProfile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branches">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserProfile">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserProfile_dbo_UserProfile_CreateUserId">
+          <End Type="KiaGalleryMainModel.UserProfile" Role="UserProfile" Multiplicity="0..1" />
+          <End Type="KiaGalleryMainModel.UserProfile" Role="UserProfile1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserProfile1">
+              <PropertyRef Name="CreateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserProfile_dbo_UserProfile_ModifyUserId">
+          <End Type="KiaGalleryMainModel.UserProfile" Role="UserProfile" Multiplicity="0..1" />
+          <End Type="KiaGalleryMainModel.UserProfile" Role="UserProfile1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserProfile1">
+              <PropertyRef Name="ModifyUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="People">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PersonNumber" Type="Int32" Nullable="false" />
+          <Property Name="BranchId" Type="Int32" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ShortName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NikName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FatherName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Gender" Type="Boolean" Nullable="false" />
+          <Property Name="NationalCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="BirthCertificateNumber" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="BirthDate" Type="DateTime" Precision="3" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="14" FixedLength="false" Unicode="true" />
+          <Property Name="MobileNumber" Type="String" MaxLength="14" FixedLength="false" Unicode="true" />
+          <Property Name="NecessaryNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ExportFrom" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Supervisor" Type="Boolean" Nullable="false" />
+          <Property Name="ContractSubject" Type="Int32" Nullable="false" />
+          <Property Name="PromissoryNoteNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="JobId" Type="Int32" />
+          <Property Name="Married" Type="Boolean" Nullable="false" />
+          <Property Name="Children" Type="Int32" />
+          <Property Name="Contract" Type="Boolean" Nullable="false" />
+          <Property Name="ContractInMonth" Type="Int32" Nullable="false" />
+          <Property Name="AccountNumber" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="ContractStartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ContractEndDate" Type="DateTime" Precision="3" />
+          <Property Name="Insurance" Type="Boolean" Nullable="false" />
+          <Property Name="InsuranceNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="InsuranceExpireDate" Type="DateTime" Precision="3" />
+          <Property Name="InsuranceBeginDate" Type="DateTime" Precision="3" />
+          <Property Name="Education" Type="Int32" Nullable="false" />
+          <Property Name="Reward" Type="Int64" />
+          <Property Name="ActivityAmount" Type="Int64" />
+          <Property Name="SupervisorSalary" Type="Int64" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="Major" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="MajorCurrent" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EducationalStatus" Type="Boolean" Nullable="false" />
+          <Property Name="PersonType" Type="Int32" Nullable="false" />
+          <Property Name="ShiftActivity" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="CreateUserId" Type="Int32" Nullable="false" />
+          <Property Name="ModifyUserId" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifyDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Ip" Type="String" MaxLength="45" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Branches" Relationship="KiaGalleryMainModel.FK_dbo_People_dbo_Branches_BranchId" FromRole="People" ToRole="Branches" />
+          <NavigationProperty Name="UserProfile" Relationship="KiaGalleryMainModel.FK_dbo_People_dbo_UserProfile_CreateUserId" FromRole="People" ToRole="UserProfile" />
+          <NavigationProperty Name="UserProfile1" Relationship="KiaGalleryMainModel.FK_dbo_People_dbo_UserProfile_ModifyUserId" FromRole="People" ToRole="UserProfile" />
+        </EntityType>
+        <Association Name="FK_dbo_People_dbo_Branches_BranchId">
+          <End Type="KiaGalleryMainModel.Branches" Role="Branches" Multiplicity="0..1" />
+          <End Type="KiaGalleryMainModel.People" Role="People" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branches">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="People">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_People_dbo_UserProfile_CreateUserId">
+          <End Type="KiaGalleryMainModel.UserProfile" Role="UserProfile" Multiplicity="1" />
+          <End Type="KiaGalleryMainModel.People" Role="People" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="People">
+              <PropertyRef Name="CreateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_People_dbo_UserProfile_ModifyUserId">
+          <End Type="KiaGalleryMainModel.UserProfile" Role="UserProfile" Multiplicity="1" />
+          <End Type="KiaGalleryMainModel.People" Role="People" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="People">
+              <PropertyRef Name="ModifyUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Sms">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DestinationNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DayOfMonth" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DayOfWeek" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SendingTimeMethod" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="BranchId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateUserId" Type="Int32" Nullable="false" />
+          <Property Name="ModifyUserId" Type="Int32" Nullable="false" />
+          <Property Name="SendingDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Time" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TimeTotalMinutes" Type="Int32" Nullable="false" />
+          <Property Name="Sent" Type="Boolean" Nullable="false" />
+          <Property Name="Ip" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserProfile" Relationship="KiaGalleryMainModel.FK_dbo_Sms_dbo_UserProfile_CreateUserId" FromRole="Sms" ToRole="UserProfile" />
+          <NavigationProperty Name="UserProfile1" Relationship="KiaGalleryMainModel.FK_dbo_Sms_dbo_UserProfile_ModifyUserId" FromRole="Sms" ToRole="UserProfile" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifyDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <Association Name="FK_dbo_Sms_dbo_UserProfile_CreateUserId">
+          <End Type="KiaGalleryMainModel.UserProfile" Role="UserProfile" Multiplicity="1" />
+          <End Type="KiaGalleryMainModel.Sms" Role="Sms" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Sms">
+              <PropertyRef Name="CreateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Sms_dbo_UserProfile_ModifyUserId">
+          <End Type="KiaGalleryMainModel.UserProfile" Role="UserProfile" Multiplicity="1" />
+          <End Type="KiaGalleryMainModel.Sms" Role="Sms" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Sms">
+              <PropertyRef Name="ModifyUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="KiaGalleryMainModelStoreContainer" CdmEntityContainer="KiaGalleryMainEntities">
+          <EntitySetMapping Name="Branches">
+            <EntityTypeMapping TypeName="KiaGalleryMainModel.Branches">
+              <MappingFragment StoreEntitySet="Branches">
+                <ScalarProperty Name="Ip" ColumnName="Ip" />
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ModifyUserId" ColumnName="ModifyUserId" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="GoldCredit" ColumnName="GoldCredit" />
+                <ScalarProperty Name="RialDebt" ColumnName="RialDebt" />
+                <ScalarProperty Name="GoldDebt" ColumnName="GoldDebt" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="CreditCard" ColumnName="CreditCard" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="EnglishAddress" ColumnName="EnglishAddress" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="EnglishName" ColumnName="EnglishName" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Alias" ColumnName="Alias" />
+                <ScalarProperty Name="OwnerFatherName" ColumnName="OwnerFatherName" />
+                <ScalarProperty Name="OwnerNationalityNo" ColumnName="OwnerNationalityNo" />
+                <ScalarProperty Name="OwnerNationalityCode" ColumnName="OwnerNationalityCode" />
+                <ScalarProperty Name="OwnerName" ColumnName="OwnerName" />
+                <ScalarProperty Name="WorkingHour" ColumnName="WorkingHour" />
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+                <ScalarProperty Name="BranchType" ColumnName="BranchType" />
+                <ScalarProperty Name="CityId" ColumnName="CityId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserProfile">
+            <EntityTypeMapping TypeName="KiaGalleryMainModel.UserProfile">
+              <MappingFragment StoreEntitySet="UserProfile">
+                <ScalarProperty Name="ConfirmationCode" ColumnName="ConfirmationCode" />
+                <ScalarProperty Name="PrintingHouseId" ColumnName="PrintingHouseId" />
+                <ScalarProperty Name="Ip" ColumnName="Ip" />
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ModifyUserId" ColumnName="ModifyUserId" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="UserType" ColumnName="UserType" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Salt" ColumnName="Salt" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="WorkshopId" ColumnName="WorkshopId" />
+                <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="People">
+            <EntityTypeMapping TypeName="KiaGalleryMainModel.People">
+              <MappingFragment StoreEntitySet="People">
+                <ScalarProperty Name="Ip" ColumnName="Ip" />
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ModifyUserId" ColumnName="ModifyUserId" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="ShiftActivity" ColumnName="ShiftActivity" />
+                <ScalarProperty Name="PersonType" ColumnName="PersonType" />
+                <ScalarProperty Name="EducationalStatus" ColumnName="EducationalStatus" />
+                <ScalarProperty Name="MajorCurrent" ColumnName="MajorCurrent" />
+                <ScalarProperty Name="Major" ColumnName="Major" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="SupervisorSalary" ColumnName="SupervisorSalary" />
+                <ScalarProperty Name="ActivityAmount" ColumnName="ActivityAmount" />
+                <ScalarProperty Name="Reward" ColumnName="Reward" />
+                <ScalarProperty Name="Education" ColumnName="Education" />
+                <ScalarProperty Name="InsuranceBeginDate" ColumnName="InsuranceBeginDate" />
+                <ScalarProperty Name="InsuranceExpireDate" ColumnName="InsuranceExpireDate" />
+                <ScalarProperty Name="InsuranceNumber" ColumnName="InsuranceNumber" />
+                <ScalarProperty Name="Insurance" ColumnName="Insurance" />
+                <ScalarProperty Name="ContractEndDate" ColumnName="ContractEndDate" />
+                <ScalarProperty Name="ContractStartDate" ColumnName="ContractStartDate" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="ContractInMonth" ColumnName="ContractInMonth" />
+                <ScalarProperty Name="Contract" ColumnName="Contract" />
+                <ScalarProperty Name="Children" ColumnName="Children" />
+                <ScalarProperty Name="Married" ColumnName="Married" />
+                <ScalarProperty Name="JobId" ColumnName="JobId" />
+                <ScalarProperty Name="PromissoryNoteNumber" ColumnName="PromissoryNoteNumber" />
+                <ScalarProperty Name="ContractSubject" ColumnName="ContractSubject" />
+                <ScalarProperty Name="Supervisor" ColumnName="Supervisor" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="ExportFrom" ColumnName="ExportFrom" />
+                <ScalarProperty Name="NecessaryNumber" ColumnName="NecessaryNumber" />
+                <ScalarProperty Name="MobileNumber" ColumnName="MobileNumber" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
+                <ScalarProperty Name="BirthCertificateNumber" ColumnName="BirthCertificateNumber" />
+                <ScalarProperty Name="NationalCode" ColumnName="NationalCode" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="FatherName" ColumnName="FatherName" />
+                <ScalarProperty Name="NikName" ColumnName="NikName" />
+                <ScalarProperty Name="ShortName" ColumnName="ShortName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+                <ScalarProperty Name="PersonNumber" ColumnName="PersonNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sms">
+            <EntityTypeMapping TypeName="KiaGalleryMainModel.Sms">
+              <MappingFragment StoreEntitySet="Sms">
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Ip" ColumnName="Ip" />
+                <ScalarProperty Name="Sent" ColumnName="Sent" />
+                <ScalarProperty Name="TimeTotalMinutes" ColumnName="TimeTotalMinutes" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="SendingDate" ColumnName="SendingDate" />
+                <ScalarProperty Name="ModifyUserId" ColumnName="ModifyUserId" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="SendingTimeMethod" ColumnName="SendingTimeMethod" />
+                <ScalarProperty Name="DayOfWeek" ColumnName="DayOfWeek" />
+                <ScalarProperty Name="DayOfMonth" ColumnName="DayOfMonth" />
+                <ScalarProperty Name="DestinationNumber" ColumnName="DestinationNumber" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

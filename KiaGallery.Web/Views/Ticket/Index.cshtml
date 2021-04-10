@@ -1,0 +1,492 @@
+﻿
+@model List<KiaGallery.Web.Models.UserListViewModel>
+@{
+    ViewBag.Title = "تیکت";
+}
+<style>
+
+    .image-list {
+        padding: 5px
+    }
+
+    .margin {
+        margin: 10px
+    }
+
+    .text-message {
+        border: 2px solid #dedede;
+        background-color: #f1f1f1;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 10px 0;
+    }
+
+    .darker {
+        border-color: #ccc;
+        background-color: #ddd;
+        margin-left: 5px
+    }
+
+    .text-message::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    .time-right {
+        float: right;
+        color: #aaa;
+    }
+
+    .time-left {
+        float: left;
+        color: #999;
+    }
+    a:hover{
+        color:deepskyblue
+    }
+    a{
+        color:gray
+    }
+</style>
+<button id="newTicket" class="btn btn-primary">
+    <i class="fa fa-plus v-middle" aria-hidden="true"></i>&nbsp;
+    <span>تیکت جدید</span>
+</button>
+<div id="content">
+
+</div>
+<div class="modal fade" id="modal-new" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">ارسال تیکت</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form">
+                    <div class="margin">
+                        <label>ارسال به</label>
+                        <select class="form-control" name="toUserId" data-validate="required">
+                            <option value="">...</option>
+                            @foreach (var item in Model)
+                            {
+                                <option value="@item.id">@item.firstName @item.lastName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="margin">
+                        <label>موضوع تیکت</label>
+                        <input id="title" class="form-control" name="title" data-validate="required" />
+                    </div>
+                    <div class="margin">
+                        <label>متن تیکت</label>
+                        <textarea style="resize: vertical;" class="form-control text" name="text"></textarea>
+                    </div>
+                    <input id="file" type="file" class="hidden" />
+                    <div style="display:flex;" id="ticketFile-content"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="btnSave">ارسال</button>
+                <button type="button" class="btn btn-success" id="openFile">  <span style="cursor:pointer;margin-right:5px" data-title="افزودن فایل" data-toggle="tooltip" class="fa fa-upload"></span> افزودن فایل </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="overflow:auto" class="modal fade" id="modal-message" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span id="toUsername"></span></h4>
+                <hr />
+                <h4 class="modal-title"><span id="ticketTitle"></span></h4>
+            </div>
+            <form id="message-form">
+                <div class="modal-body">
+                    <div id="message-content" style="overflow:auto;height:350px">
+
+                    </div>
+                    <div class="margin">
+                        <textarea id="textMessage" style="resize: vertical;" class="form-control text" name="text" placeholder="چیزی بنویسید"></textarea>
+                    </div>
+                    <input type="hidden" id="hiddenTicketId" name="ticketId" />
+
+                    <div style="" id="ticketMessageFile-content">
+
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <input id="fileMessage" type="file" class="hidden" />
+                <button type="button" class="btn btn-success" id="btnSendMessage">ارسال</button>
+                <button type="button" class="btn btn-success" id="openMessageFile">  <span style="cursor:pointer;margin-right:5px" data-title="افزودن فایل" data-toggle="tooltip" class="fa fa-upload"></span> افزودن فایل </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background: rgba(0,0,0,.9);text-align:center">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <img src="" class="imagepreview" style="width: 50%;">
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 20,
+        }
+        $(document).ready(function () {
+             $(document).on('click', ".pop", function () {
+                    $('.imagepreview').attr('src', $(this).find("img").attr('src'));
+                    $('#imagemodal').modal('show');
+                });
+            $(document).on("click", ".deleteTicket", function () {
+                var id = $(this).attr("data-id")
+                //confirmMessage("آیا از حذف تیکت اطمینان دارید؟", function () {
+                    loader(true)
+                    $.get("/ticket/delete/" + id, function (response) {
+                        if (response.status == 200) {
+                            getList();
+                        }
+                        else {
+                            alert(response.message)
+                        }
+                        loader(false)
+                    //})
+                })
+            })
+            $(document).on("click", ".change-status", function () {
+                var id = $(this).attr("data-id")
+                var status = $(this).attr("data-status")
+                confirmMessage("آیا از تغییر وضعیت تیکت اطمینان دارید؟", function () {
+                    loader(true)
+                    $.get("/ticket/changeStatus/", { id: id, status: status }, function (response) {
+                        if (response.status == 200) {
+                            getList();
+                        }
+                        else {
+                            alert(response.message)
+                        }
+                        loader(false)
+                    })
+                })
+            })
+            getList()
+            $("#btnSave").click(function () {
+                save(getEntity("#form"))
+            })
+            $("#btnSendMessage").click(function () {
+                sendMessage(getEntity("#message-form"))
+
+            })
+            $("#newTicket").click(function () {
+                clearEntity("#form")
+                $("#modal-new").modal("show")
+                setTimeout(function () { $('textarea[name="text"]').focus() }, 200);
+                $("#ticketFile-content").empty()
+            })
+            $(document).on("click", ".viewMessage", function () {
+                $("#message-content").empty()
+                clearEntity("#message-form")
+                var id = $(this).attr("data-id")
+                var ticketTitle = $(this).attr("data-ticket-title")
+                var toUsername = $(this).attr("data-to-username")
+                $("#hiddenTicketId").val(id);
+                $("#ticketTitle").html(ticketTitle);
+                $("#toUsername").html(toUsername);
+                $("#modal-message").modal("show")
+                setTimeout(function () { $('textarea[id="textMessage"]').focus() }, 200);
+                if ($(this).attr("data-status") == 3) {
+                    $("#btnSendMessage,#openMessageFile,#textMessage").addClass("hidden")
+                }
+                else {
+                    $("#btnSendMessage,#openMessageFile,#textMessage").removeClass("hidden")
+                    setTimeout(function () { $('textarea[name="text"]').focus() }, 200);
+                }
+                getMessageList(id)
+                //$("#ticketMessageFile").empty()
+
+
+            })
+        })
+        uploadNewTicketFile("ticketFile", function (fileName) {
+            var fileExtentionIndex = fileName.lastIndexOf(".");
+            if (fileExtentionIndex > 0) {
+                var fileExtention = fileName.substring(fileExtentionIndex)
+            }
+            if (fileExtention == ".png" || fileExtention == ".jpg" || fileExtention == ".JPG" || fileExtention == ".jpeg" || fileExtention == ".gif") {
+                $("#ticketFile-content").append($("#template-image-list").html().replaceAll("{{:fileName}}", fileName));
+            }
+            else {
+                $("#ticketFile-content").append($("#template-file-list").html().replaceAll("{{:fileName}}", fileName));
+            }
+        })
+
+        uploadTicketMessageFile("ticketFile", function (fileName) {
+            var fileExtentionIndex = fileName.lastIndexOf(".");
+            if (fileExtentionIndex > 0) {
+                var fileExtention = fileName.substring(fileExtentionIndex)
+            }
+            if (fileExtention == ".png" || fileExtention == ".jpg" || fileExtention == ".JPG" || fileExtention == ".jpeg" || fileExtention == ".gif") {
+                $("#ticketMessageFile-content").append($("#template-image-list").html().replaceAll("{{:fileName}}", fileName));
+            }
+            else {
+                $("#ticketMessageFile-content").append($("#template-file-list").html().replaceAll("{{:fileName}}", fileName));
+            }
+        })
+        function save(entity) {
+            var entity = entity;
+            entity.fileList = [];
+              $(".file-name").each(function (i, e) {
+                entity.fileList.push($(e).val())
+              })
+            var fileList = entity.fileList;
+            entity.fileName = fileList.join("*")
+            if (checkForm("#form")) {
+                $.post("/ticket/save", entity, function (response) {
+                    if (response.status == 200) {
+                        getList();
+                        $("#modal-new").modal("hide")
+                        $(".text").val(null)
+                    }
+                    else {
+                        alert(response.message)
+                    }
+                })
+            }
+        }
+        function uploadNewTicketFile(path, callback) {
+            $("#deleteFile").on("click", function () {
+                $('#txtFileName').val("");
+                checkForm("#form");
+                $('.progress .progress-bar').css('width', '0%');
+            });
+            $("#openFile").on("click", function () {
+                $("#file").click();
+            });
+            $('#file').fileupload({
+                dataType: 'json',
+                url: "/base/upload?path=" + path,
+                autoUpload: true,
+                done: function (e, data) {
+                    var response = data.result;
+                    if (response.status == 200) {
+                        $('#txtFileName').val(response.data.name);
+
+                        if (callback)
+                            callback(response.data.name);
+
+                    }
+                    //alert(response.message);
+                    loader(false);
+                }
+            }).on('fileuploadprogressall', function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('.progress .progress-bar').css('width', progress + '%');
+            });
+        }
+        function uploadTicketMessageFile(path, callback) {
+            $("#deleteFile").on("click", function () {
+                $('#txtMessageFileName').val("");
+                checkForm("#form");
+                $('.progress .progress-bar').css('width', '0%');
+            });
+
+            $("#openMessageFile").on("click", function () {
+                $("#fileMessage").click();
+            });
+
+            $('#fileMessage').fileupload({
+                dataType: 'json',
+                url: "/base/upload?path=" + path,
+                autoUpload: true,
+                done: function (e, data) {
+                    var response = data.result;
+                    if (response.status == 200) {
+                        $('#txtMessageFileName').val(response.data.name);
+
+                        if (callback)
+                            callback(response.data.name);
+
+                    }
+                    //alert(response.message);
+                    loader(false);
+                }
+            }).on('fileuploadprogressall', function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('.progress .progress-bar').css('width', progress + '%');
+            });
+        }
+        function sendMessage(entity) {
+
+            var entity = entity;
+              entity.fileList = [];
+            $(".file-name").each(function (i, e) {
+                entity.fileList.push($(e).val())
+              })
+            var fileList = entity.fileList;
+            entity.fileName = fileList.join("*")
+
+            $.post("/ticket/save", entity, function (response) {
+                if (response.status == 200) {
+                    getList();
+                    $("#message-content").animate({ scrollTop: 999999 }, 1000);
+                    $(".text").val(null)
+                    clearEntity("#form")
+                    getMessageList($("#hiddenTicketId").val())
+
+                }
+                else {
+                    alert(response.message)
+                }
+            })
+        }
+        function getList() {
+            $.get("/ticket/search/", defaultEntity, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+            })
+        }
+
+        function getMessageList(id) {
+            $.get("/ticket/searchMessage/", { ticketId: id }, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template-message");
+                    var htmlOutput = template.render(data);
+                    $("#message-content").html(htmlOutput);
+                    $("#ticketFile-content").empty();
+                    $("#ticketMessageFile-content").empty();
+                    //var list = data.list;
+                    //for (var i = 0; i < list.length; i++) {
+                    //    console.log(13)
+                    //    if (list[i].fileName != null) {
+                    //        var fileList = list[i].fileName.split("*")
+                    //        console.log(fileList)
+                    //        if (fileList.length > 0) {
+                    //            for (j = 0; j < fileList.length; j++) {
+                    //                $(".message-file-" + i).append($("#template-message-file-list").html().replaceAll("{{:fileName}}", fileList[j]))
+                    //            }
+                    //        }
+                    //    }
+                    //}
+                }
+            })
+        }
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        {{if list != null && list.length > 0}}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>موضوع</th>
+                    <th>آخرین پیام</th>
+                    <th>ارسال کننده</th>
+                    <th>مقصد</th>
+                    <th>تاریخ</th>
+                    <th>وضعیت</th>
+                    <th class="icon-col text-center">مشاهده</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td>{{:id}}</td>
+                    <td>{{:title}}</td>
+                    <td>{{:text}}</td>
+                    <td>{{:fromUserName}}</td>
+                    <td>{{:toUserName}}</td>
+                    <td>{{:persianDate}}</td>
+                    <td>
+                        {{if ticketStatus == 1}}
+                        <div style="cursor:pointer" class="dropdown badge">
+                            <div class="dropdown-toggle " data-toggle="dropdown">
+                                {{:ticketStatusTitle}}
+                                <span class="caret"></span>
+                            </div>
+                            <ul class="dropdown-menu">
+                                <li style="cursor:pointer" class="change-status" data-status="3" data-id="{{:id}}"><a> بسته </a></li>
+                            </ul>
+                        </div>
+                        {{else}}
+                        {{:ticketStatusTitle}}
+                        {{/if}}
+                    </td>
+                    <td class="txt-al-c v-middle">
+                        <button data-status="{{:ticketStatus}}" data-id="{{:id}}" data-ticket-title="{{:title}}" data-to-username="{{:toUserName}}" class="btn btn-primary btn-xs viewMessage" data-title="مشاهده" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                    </td>
+                    <td class="txt-al-c v-middle">
+                        <button class="deleteTicket btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        {{else}}
+        <h5>سوابقی برای این روز یافت نشد</h5>
+        {{/if}}
+
+    </script>
+    <script id="template-message" type="text/x-jsrender">
+        {{if list != null && list.length > 0}}
+        {{for list}}
+        <div style="width:100%" dir="rtl">
+
+            <div style="background-color:{{if sender}}#f1f1f1 {{else}} #ddd {{/if}};width:80%;float:{{if sender}}right {{else}}left {{/if}}" class="text-message darker">
+                <p class="" style="word-wrap:break-word">{{:text}}</p>
+                {{if fileNameList}}
+                {{for fileNameList}}
+                {{if fileExtension == ".png" || fileExtension == ".jpg" || fileExtension == ".JPG" || fileExtension == ".jpeg"  || fileExtension == ".gif" }}
+                <div class="message-file-{{:#index}} pop">
+                    <img class="message-image " style="width:50px" src="/upload/ticketFile/{{:fileName}}" data-test="{{:1}}" />
+                    <input class="message-fileName hidden" value="{{:fileName}}" />
+                </div>
+                {{else}}
+                <div style="padding:10px">
+                    <a href="/upload/ticketFile/{{:fileName}}">
+                        <span class="fa fa-file fa-4x"></span>
+                    </a>
+                </div>
+                {{/if}}
+                {{/for}}
+                {{/if}}
+                <span class="time-left">{{:createTime}}</span>
+                <span class="time-right">{{:userName}}</span>
+            </div>
+        </div>
+        {{/for}}
+        {{else}}
+        <h5>سوابقی برای این روز یافت نشد</h5>
+        {{/if}}
+    </script>
+
+    <script id="template-image-list" type="text/x-jsrender">
+        <img class="file-image" style="width:100px" src="/upload/ticketFile/{{:fileName}}" />
+        <input class="file-name hidden" value="{{:fileName}}" />
+    </script>
+
+    <script id="template-file-list" type="text/x-jsrender">
+        
+            <a href="/upload/ticketFile/{{:fileName}}">
+                <span class="fa fa-file fa-5x"></span>
+            </a>
+            <input class="file-name hidden" value="{{:fileName}}" />
+      
+    
+    </script>
+
+}

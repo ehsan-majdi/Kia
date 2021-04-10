@@ -1,0 +1,2842 @@
+﻿
+<style>
+    .fa-plus {
+        cursor: pointer;
+    }
+</style>
+<div id="form" class="container">
+    <div class="row form-group">
+        <div class="col-xs-12">
+            <ul class="nav nav-pills nav-justified thumbnail setup-panel no-margin">
+                <li id="headerStep1" class="active">
+                    <a href="#step-1">
+                        <h4 class="list-group-item-heading">
+                            <i class="fa fa-user" aria-hidden="true"></i>&nbsp;
+                            مشخصات کاربر
+                        </h4>
+                        <p class="list-group-item-text hidden-xs">اطلاعات فردی کاربر رو وارد کنید.</p>
+                    </a>
+                </li>
+                <li id="headerStep2">
+                    <a href="#step-2">
+                        <h4 class="list-group-item-heading">
+                            <i class="fa fa-user-circle" aria-hidden="true"></i>&nbsp;
+                            تصویر
+                        </h4>
+                        <p class="list-group-item-text hidden-xs">بارگذاری تصویر کاربر</p>
+                    </a>
+                </li>
+                <li id="headerStep3">
+                    <a href="#step-3">
+                        <h4 class="list-group-item-heading">
+                            <i class="fa fa-chain-broken" aria-hidden="true"></i>&nbsp;
+                            حقوق دسترسی
+                        </h4>
+                        <p class="list-group-item-text hidden-xs">دسترسی کاربر به بخش های برنامه</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row setup-content" id="step-1">
+        <div class="col-xs-12">
+            <div class="col-md-12 well">
+                <div id="step1" class="col-md-4 col-md-offset-4">
+                    <div class="form-group">
+                        <label for="cmbUserType">نوع کاربر</label>
+                        <select id="cmbUserType" class="form-control" name="userType">
+                            <option value="">...</option>
+                            <option value="0">کاربر سیستم</option>
+                            <option value="1">کاربر شعبه</option>
+                            <option value="2">کاربر کارگاه</option>
+                            <option value="3">خریدار خرجکار</option>
+                            <option value="4">کاربر چاپخانه</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cmbWorkshop">کارگاه</label>
+                        <select id="cmbWorkshop" class="form-control" name="workshopId">
+                            <option value="">...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cmbBranch">شعبه</label>
+                        <select id="cmbBranch" class="form-control" name="branchId">
+                            <option value="">...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cmbPrintingHouse">چاپخانه</label>
+                        <select id="cmbPrintingHouse" class="form-control" name="printingHouseId">
+                            <option value="">...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtFirstName">نام به فارسی</label>
+                        <input id="txtFirstName" type="text" class="form-control" name="firstName" maxlength="50" data-validate="required, maxLength(50), persianText">
+                        <input type="hidden" value="" name="id" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtLastName">نام خانوادگی به فارسی</label>
+                        <input id="txtLastName" type="text" class="form-control" name="lastName" maxlength="50" data-validate="required, maxLength(50), persianText">
+                    </div>
+                    <div class="form-group">
+                        <label for="txtUsername">نام کاربری به انگلیسی</label>
+                        <input id="txtUsername" type="text" class="form-control" name="username" maxlength="50" data-validate="required, maxLength(50), username">
+                    </div>
+                    @if (ViewBag.Id == null)
+                    {
+                        <div class="form-group">
+                            <label for="txtPassowrd">گذرواژه</label>
+                            <input id="txtPassowrd" type="password" class="form-control" name="password" maxlength="50" data-validate="required, length(6-50)">
+                        </div>
+                        <div class="form-group">
+                            <label for="txtConfirmPassowrd">تکرار گذرواژه</label>
+                            <input id="txtConfirmPassowrd" type="password" class="form-control" name="confirmPassword" maxlength="50" data-validate="required, length(6-50)">
+                        </div>
+                    }
+                    <div class="form-group">
+                        <label for="txtPhoneNumber">تلفن همراه</label>
+                        <input id="txtPhoneNumber" type="tel" class="form-control" name="phoneNumber" maxlength="14" data-validate="mobileNumber">
+                    </div>
+                    <div class="form-group">
+                        <label for="txtTelephone">تلفن ثابت</label>
+                        <input id="txtTelephone" type="tel" class="form-control" name="telephone" maxlength="14" data-validate="telephone">
+                    </div>
+                    <div class="form-group">
+                        <label for="cmbActive">وضعیت</label>
+                        <select id="cmbActive" class="form-control" data-validate="required" name="active">
+                            <option value="">...</option>
+                            <option value="true">فعال</option>
+                            <option value="false">غیرفعال</option>
+                        </select>
+                    </div>
+                    <div class="form-group inline-block w100">
+                        <button id="btnNextStep1" type="submit" class="btn btn-primary pull-left">
+                            <span>بعدی</span>&nbsp;
+                            <i class="fa fa-arrow-left v-middle" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row setup-content" id="step-2">
+        <div class="col-xs-12">
+            <div class="col-md-12 well">
+                <div id="step1" class="col-md-4 col-md-offset-4 text-center">
+                    <div class="form-group">
+                        <img id="imgUserImage" src="~/content/image/user.png" style="max-width: 200px; border-radius: 50%;" />
+                    </div>
+                    <div class="form-group">
+                        <input id="file" type="file" class="hidden" />
+                        <input id="txtFileName" type="text" class="form-control" name="fileName" readonly>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <i id="openFile" class="fa fa-upload btn btn-success btn-icon" aria-hidden="true"></i>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <i id="deleteFile" class="fa fa-trash btn btn-danger btn-icon" aria-hidden="true"></i>
+                    </div>
+                    <div class="form-group inline-block w100">
+                        <button id="btnPrevStep2" type="submit" class="btn btn-primary pull-right">
+                            <i class="fa fa-arrow-right v-middle" aria-hidden="true"></i>&nbsp;
+                            <span>قبلی</span>
+                        </button>
+                        <button id="btnNextStep2" type="submit" class="btn btn-primary pull-left">
+                            <span>بعدی</span>&nbsp;
+                            <i class="fa fa-arrow-left v-middle" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row setup-content" id="step-3">
+        <div class="col-xs-12">
+            <div class="col-xs-12 well">
+                <div class="col-xs-12">
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="product" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>محصولات</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="stoneTable" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>میز سنگ</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="size" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>سایز</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="branch" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>شعب</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="workshop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>کارگاه</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="stone" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>سنگ</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="leather" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>چرم</span>
+                            </label>
+                        </div>
+                        @*<div class="form-group">
+            <label>
+                <input type="checkbox" value="plaque" class="no-margin v-middle" name="roleList" />&nbsp;
+                <span>پلاک لیزر</span>
+            </label>
+        </div>*@
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="admin-user" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>مدیریت کاربران</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="reason" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>علت های وضعیت کالا</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="marquisFileUpload" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>آپلود فایل مارکیز</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="marquisFileDownload" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>دانلود فایل مارکیز</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="allWorkshop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>مشاهده تب های کارگاه</span>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="specialProducts" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>محصولات ویژه</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="ticket" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>تیکت</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="branchInventory" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>محصولات موجود در شعبه</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="showNotOrderableProductForBranch" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>نمایش محصولات غیر قابل سفارش برای شعب</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="onlyForWorkshop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>مخصوص ساخت کارگاه</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="orderButton" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>نمایش محصولات بدون دکمه سفارش</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="leatherProductUser" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>خرج کار-زنجیرساعت-لیزری</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="stoneOuterwerk" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>خرج کار سنگی</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="leatherOuterwerk" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>خرج کار چرمی</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="foodRegistration" class="no-margin v-middle" name="roleList" maxlength="20" />&nbsp;
+                                <span> ثبت غذا</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="outerWerkPlacement" class="no-margin v-middle" name="roleList" maxlength="20" />&nbsp;
+                                <span>جایگاه خرج کار</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="goldPriceCalculate" class="no-margin v-middle" name="roleList" maxlength="20" />&nbsp;
+                                <span>محاسبه قیمت طلا</span>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="bankAccount" class="no-margin v-middle" name="roleList" maxlength="20" />&nbsp;
+                                <span>حساب های بانکی</span>
+                            </label>
+                        </div>
+                        <div class="text-center" style="border-top:1px solid deeppink;padding:5px">
+                            <span>امور مشتریان</span>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="sendSms" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>ارسال پیامک به مشتری</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="crm" class="no-margin v-middle" name="roleList" maxlength="20" />&nbsp;
+                                <span>ارتباط با مشتری</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="officeCrm" class="no-margin v-middle" name="roleList" maxlength="20" />&nbsp;
+                                <span>ارتباط با مشتری آنلاین</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="branchCrm" class="no-margin v-middle" name="roleList" maxlength="20" />&nbsp;
+                                <span> ارتباط با مشتری شعب</span>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="foodCensus" class="no-margin v-middle" name="roleList" maxlength="20" />&nbsp;
+                                <span> مدیریت ثبت اطلاعات غذا</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="loyalCustomer" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>مدیریت مشتریان وفادار</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="loyalityFactor" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span> مشتریان وفادارشعب</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="customerCard" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span> کارت مشتری</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="customerCardChargeAggrement" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span> تایید شارژ کارت مشتری</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="customerCardCharge" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span> شارژ کارت مشتری</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="customerCardChargeCrm" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span> مشاهده و تایید شارژ های روابط عمومی</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="customerCardChargeAccounting" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span> مشاهده و تایید شارژ های واحد مالی</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="gift" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>مدیریت گیفت</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="giftRegistration" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>ثبت و ابطال گیفت</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="solicitorshipGift" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span> ثبت و ابطال گیفت نمایندگی</span>
+                            </label>
+                        </div>
+                        <div class="text-center" style="border-top:1px solid deeppink;padding:5px">
+                            <span>پست</span>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="post" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>سیستم پست</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="post-edit" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>ویرایش و حذف مرسوله</span>
+                            </label>
+                        </div>
+
+                    </div>
+                    <div class="col-xs-4">
+
+                        @*   کل دسترسی های تب های ادمین سفارشات  *@
+                        <div class="form-group">
+                            <label>
+                                <span>
+                                    <i class="fa fa-plus open-manage-order-tab" style="padding:5px"></i>
+                                    دسترسی تب های سفارشات
+                                </span>
+                            </label>
+                        </div>
+                        <div class="manage-order-tab" style="display:none; padding:10px 10px 0 0; border:1px solid silver;margin-bottom:10px;">
+
+                            @*   دسترسی تب ثبت شده سفارشات   *@
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="registeredTab" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span class="green">ثبت شده</span>
+                                    <span>
+                                        <i class="fa fa-plus open-manage-order-register-tab" style="padding:5px"></i>
+                                        دکمه ها
+                                    </span>
+                                </label>
+                            </div>
+                            @*  لیست دکمه های دسترسی تب های سفارشات  *@
+
+                            <div class="manage-order-register-tab" style="display:none; padding:10px 10px 0 0; border:1px solid silver;margin-bottom:10px;">
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_roll-back-registered" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ثبت شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_inWorkShop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_roll-back-inWorkshop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_roll-back-underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_roll-back-outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_inWorkShop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_roll-back-inWorkshop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_roll-back-underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_roll-back-outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_inPreparation " class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_roll-back-inPreparation" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_roll-back-readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_sent" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_roll-back-returned" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">مرجوعی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_shortage" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">کسری</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_register_cancel" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger"> لغو سفارشات</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            @*   دسترسی تب ارسال شده به کارگاه سفارشات   *@
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="sentToWorkshopTab" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span class="green">ارسال شده به کارگاه</span>
+                                    <span>
+                                        <i class="fa fa-plus open-manage-order-sentToWorkshop-tab" style="padding:5px"></i>
+                                        دکمه ها
+                                    </span>
+                                </label>
+                            </div>
+                            @*  لیست دکمه های دسترسی تب های سفارشات  *@
+
+                            <div class="manage-order-sentToWorkshop-tab" style="display:none; padding:10px 10px 0 0; border:1px solid silver;margin-bottom:10px;">
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_roll-back-registered" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ثبت شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_inWorkShop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_roll-back-inWorkshop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_roll-back-underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_roll-back-outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_inWorkShop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_roll-back-inWorkshop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_roll-back-underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_roll-back-outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_inPreparation " class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_roll-back-inPreparation" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_roll-back-readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_sent" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_roll-back-returned" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">مرجوعی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_shortage" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">کسری</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshop_cancel" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger"> لغو سفارشات</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            @*   دسترسی تب در حال ساخت سفارشات   *@
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="underConstructionTab" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span class="green">در حال ساخت</span>
+                                    <span>
+                                        <i class="fa fa-plus open-manage-order-underConstruction-tab" style="padding:5px"></i>
+                                        دکمه ها
+                                    </span>
+                                </label>
+                            </div>
+                            @*  لیست دکمه های دسترسی تب های سفارشات  *@
+
+                            <div class="manage-order-underConstruction-tab" style="display:none; padding:10px 10px 0 0; border:1px solid silver;margin-bottom:10px;">
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_roll-back-registered" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ثبت شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_inWorkShop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_roll-back-inWorkshop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_roll-back-underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_roll-back-outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_inWorkShop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_roll-back-inWorkshop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_roll-back-underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_roll-back-outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_inPreparation " class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_roll-back-inPreparation" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_roll-back-readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_sent" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_roll-back-returned" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">مرجوعی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_shortage" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">کسری</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_underConstruction_cancel" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger"> لغو سفارشات</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            @*   دسترسی تب اتمام ساخت سفارشات   *@
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="outOfConstructionTab" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span class="green">اتمام ساخت</span>
+                                    <span>
+                                        <i class="fa fa-plus open-manage-order-outOfConstruction-tab" style="padding:5px"></i>
+                                        دکمه ها
+                                    </span>
+                                </label>
+                            </div>
+                            @*  لیست دکمه های دسترسی تب های سفارشات  *@
+
+                            <div class="manage-order-outOfConstruction-tab" style="display:none; padding:10px 10px 0 0; border:1px solid silver;margin-bottom:10px;">
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_roll-back-registered" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ثبت شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_inWorkShop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_roll-back-inWorkshop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_roll-back-underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_roll-back-outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_inWorkShop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_roll-back-inWorkshop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_roll-back-underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_roll-back-outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_inPreparation " class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_roll-back-inPreparation" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_roll-back-readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_sent" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_roll-back-returned" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">مرجوعی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_shortage" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">کسری</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstruction_cancel" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger"> لغو سفارشات</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            @*   دسترسی تب ارسال شده به کارگاه دوم/مونتاژ سفارشات   *@
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="sentToWorkshopTwoTab" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span class="green">ارسال شده به کارگاه دوم/مونتاژ</span>
+                                    <span>
+                                        <i class="fa fa-plus open-manage-order-sentToWorkshopTwo-tab" style="padding:5px"></i>
+                                        دکمه ها
+                                    </span>
+                                </label>
+                            </div>
+                            @*  لیست دکمه های دسترسی تب های سفارشات  *@
+
+                            <div class="manage-order-sentToWorkshopTwo-tab" style="display:none; padding:10px 10px 0 0; border:1px solid silver;margin-bottom:10px;">
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_roll-back-registered" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ثبت شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_inWorkShop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_roll-back-inWorkshop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_roll-back-underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_roll-back-outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_inWorkShop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_roll-back-inWorkshop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_roll-back-underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_roll-back-outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_inPreparation " class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_roll-back-inPreparation" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_roll-back-readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_sent" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_roll-back-returned" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">مرجوعی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_shortage" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">کسری</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sentToWorkshopTwo_cancel" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger"> لغو سفارشات</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            @*   دسترسی تب در حال ساخت در کارگاه دوم/مونتاژ سفارشات   *@
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="inPreprationInWorkshopTwoTab" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span class="green">در حال ساخت در کارگاه دوم/مونتاژ</span>
+                                    <span>
+                                        <i class="fa fa-plus open-manage-order-inPreprationInWorkshopTwo-tab" style="padding:5px"></i>
+                                        دکمه ها
+                                    </span>
+                                </label>
+                            </div>
+                            @*  لیست دکمه های دسترسی تب های سفارشات  *@
+
+                            <div class="manage-order-inPreprationInWorkshopTwo-tab" style="display:none; padding:10px 10px 0 0; border:1px solid silver;margin-bottom:10px;">
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_roll-back-registered" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ثبت شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_inWorkShop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_roll-back-inWorkshop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_roll-back-underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_roll-back-outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_inWorkShop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_roll-back-inWorkshop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_roll-back-underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_roll-back-outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_inPreparation " class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_roll-back-inPreparation" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_roll-back-readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_sent" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_roll-back-returned" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">مرجوعی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_shortage" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">کسری</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPreprationInWorkshopTwo_cancel" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger"> لغو سفارشات</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            @*   دسترسی تب اتمام ساخت در کارگاه دوم/مونتاژ سفارشات   *@
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="outOfConstructionInWorkshopTwoTab" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span class="green">اتمام ساخت در کارگاه دوم/مونتاژ</span>
+                                    <span>
+                                        <i class="fa fa-plus open-manage-order-outOfConstructionInWorkshopTwo-tab" style="padding:5px"></i>
+                                        دکمه ها
+                                    </span>
+                                </label>
+                            </div>
+                            @*  لیست دکمه های دسترسی تب های سفارشات  *@
+
+                            <div class="manage-order-outOfConstructionInWorkshopTwo-tab" style="display:none; padding:10px 10px 0 0; border:1px solid silver;margin-bottom:10px;">
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_roll-back-registered" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ثبت شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_inWorkShop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_roll-back-inWorkshop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_roll-back-underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_roll-back-outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_inWorkShop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_roll-back-inWorkshop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_roll-back-underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_roll-back-outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_inPreparation " class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_roll-back-inPreparation" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_roll-back-readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_sent" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_roll-back-returned" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">مرجوعی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_shortage" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">کسری</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_outOfConstructionInWorkshopTwo_cancel" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger"> لغو سفارشات</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            @*   دسترسی تب در حال آماده سازی سفارشات   *@
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="inPreprationTab" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span class="green">در حال آماده سازی</span>
+                                    <span>
+                                        <i class="fa fa-plus open-manage-order-inPrepration-tab" style="padding:5px"></i>
+                                        دکمه ها
+                                    </span>
+                                </label>
+                            </div>
+                            @*  لیست دکمه های دسترسی تب های سفارشات  *@
+
+                            <div class="manage-order-inPrepration-tab" style="display:none; padding:10px 10px 0 0; border:1px solid silver;margin-bottom:10px;">
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_roll-back-registered" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ثبت شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_inWorkShop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_roll-back-inWorkshop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_roll-back-underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_roll-back-outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_inWorkShop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_roll-back-inWorkshop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_roll-back-underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_roll-back-outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_inPreparation " class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_roll-back-inPreparation" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_roll-back-readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_sent" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_roll-back-returned" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">مرجوعی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_shortage" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">کسری</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_inPrepration_cancel" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger"> لغو سفارشات</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            @*   دسترسی تب آماده تحویل سفارشات   *@
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="readyForDeliverTab" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span class="green">آماده تحویل</span>
+                                    <span>
+                                        <i class="fa fa-plus open-manage-order-readyForDeliver-tab" style="padding:5px"></i>
+                                        دکمه ها
+                                    </span>
+                                </label>
+                            </div>
+                            @*  لیست دکمه های دسترسی تب های سفارشات  *@
+
+                            <div class="manage-order-readyForDeliver-tab" style="display:none; padding:10px 10px 0 0; border:1px solid silver;margin-bottom:10px;">
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_roll-back-registered" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ثبت شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_inWorkShop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_roll-back-inWorkshop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_roll-back-underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_roll-back-outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_inWorkShop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_roll-back-inWorkshop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_roll-back-underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_roll-back-outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_inPreparation " class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_roll-back-inPreparation" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_roll-back-readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_sent" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_roll-back-returned" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">مرجوعی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_shortage" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">کسری</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_readyForDeliver_cancel" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger"> لغو سفارشات</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            @*   دسترسی تب ارسال شده سفارشات   *@
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="sentTab" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span class="green">ارسال شده</span>
+                                    <span>
+                                        <i class="fa fa-plus open-manage-order-sent-tab" style="padding:5px"></i>
+                                        دکمه ها
+                                    </span>
+                                </label>
+                            </div>
+                            @*  لیست دکمه های دسترسی تب های سفارشات  *@
+
+                            <div class="manage-order-sent-tab" style="display:none; padding:10px 10px 0 0; border:1px solid silver;margin-bottom:10px;">
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_roll-back-registered" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ثبت شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_inWorkShop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_roll-back-inWorkshop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_roll-back-underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_roll-back-outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_inWorkShop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_roll-back-inWorkshop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_roll-back-underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_roll-back-outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_inPreparation " class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_roll-back-inPreparation" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_roll-back-readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_sent" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_roll-back-returned" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">مرجوعی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_shortage" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">کسری</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_sent_cancel" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger"> لغو سفارشات</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            @*   دسترسی تب کسری سفارشات   *@
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="shortageTab" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span class="green">کسری</span>
+                                    <span>
+                                        <i class="fa fa-plus open-manage-order-shortage-tab" style="padding:5px"></i>
+                                        دکمه ها
+                                    </span>
+                                </label>
+                            </div>
+                            @*  لیست دکمه های دسترسی تب های سفارشات  *@
+
+                            <div class="manage-order-shortage-tab" style="display:none; padding:10px 10px 0 0; border:1px solid silver;margin-bottom:10px;">
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_roll-back-registered" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ثبت شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_inWorkShop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_roll-back-inWorkshop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_roll-back-underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_roll-back-outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_inWorkShop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_roll-back-inWorkshop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_roll-back-underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_roll-back-outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_inPreparation " class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_roll-back-inPreparation" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_roll-back-readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_sent" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_roll-back-returned" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">مرجوعی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_shortage" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">کسری</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_shortage_cancel" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger"> لغو سفارشات</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            @*   دسترسی تب لغو شده سفارشات   *@
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="canceledTab" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span class="green">لغو شده</span>
+                                    <span>
+                                        <i class="fa fa-plus open-manage-order-canceled-tab" style="padding:5px"></i>
+                                        دکمه ها
+                                    </span>
+                                </label>
+                            </div>
+                            @*  لیست دکمه های دسترسی تب های سفارشات  *@
+
+                            <div class="manage-order-canceled-tab" style="display:none; padding:10px 10px 0 0; border:1px solid silver;margin-bottom:10px;">
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_roll-back-registered" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ثبت شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_inWorkShop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_roll-back-inWorkshop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_roll-back-underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_roll-back-outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_inWorkShop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_roll-back-inWorkshop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به ارسال به کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_roll-back-underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_roll-back-outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به اتمام ساخت در کارگاه دوم</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_inPreparation " class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_roll-back-inPreparation" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به در حال آماده سازی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_roll-back-readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">بازگشت به آماده تحویل</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_sent" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-primary">ارسال شده</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_roll-back-returned" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">مرجوعی</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_shortage" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger">کسری</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" value="order_canceled_cancel" class="no-margin v-middle" name="roleList" />&nbsp;
+                                        <span class="text-danger"> لغو سفارشات</span>
+                                    </label>
+                                </div>
+
+                            </div>
+
+                            @*   دسترسی تب همه سفارشات   *@
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="allTab" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span class="green">همه</span>
+                                </label>
+                            </div>
+                            @*  لیست دکمه های دسترسی تب های سفارشات  *@
+                            @*<div class="form-group">
+                <label>
+                    <span>
+                        <i class="fa fa-plus open-manage-order-all-tab" style="padding:5px"></i>
+                        جزییات
+                    </span>
+                </label>
+            </div>*@
+                            @*<div class="manage-order-all-tab" style="display:none; padding:10px 10px 0 0; border:1px solid silver;margin-bottom:10px;">
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_roll-back-registered" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-danger">بازگشت به ثبت شده</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_inWorkShop" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-primary">ارسال به کارگاه</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_roll-back-inWorkshop" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-danger">بازگشت به ارسال به کارگاه</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-primary">در حال ساخت</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_roll-back-underConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-danger">بازگشت به در حال ساخت</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-primary">اتمام ساخت</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_roll-back-outOfConstruction" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-danger">بازگشت به اتمام ساخت</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_inWorkShop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-primary">ارسال به کارگاه دوم</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_roll-back-inWorkshop2" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-danger">بازگشت به ارسال به کارگاه دوم</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-primary">در حال ساخت در کارگاه دوم</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_roll-back-underConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-danger">بازگشت به در حال ساخت در کارگاه دوم</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-primary">اتمام ساخت در کارگاه دوم</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_roll-back-outOfConstruction2" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-danger">بازگشت به اتمام ساخت در کارگاه دوم</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_inPreparation " class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-primary">در حال آماده سازی</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_roll-back-inPreparation" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-danger">بازگشت به در حال آماده سازی</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-primary">آماده تحویل</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_roll-back-readyForDelivery" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-danger">بازگشت به آماده تحویل</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_sent" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-primary">ارسال شده</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_roll-back-returned" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-danger">مرجوعی</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_shortage" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-danger">کسری</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" value="order_all_cancel" class="no-margin v-middle" name="roleList" />&nbsp;
+                        <span class="text-danger"> لغو سفارشات</span>
+                    </label>
+                </div>
+            </div>*@
+
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="admin-order" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>مدیریت سفارشات</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="admin-order-delete" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>حذف سفارشات</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="order" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>سفارشات شعب</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="orderOuterWerk" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>سفارشات خرج کار</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="confirm-order" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>تایید سفارشات شعب</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="branch-label" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>دسترسی به لیبل سایر شعب</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="order-workshop" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>سفارشات کارگاه</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="internalOrderBranch" class="no-margin v-middle" name="roleList" maxlength="20" />&nbsp;
+                                <span>سفارشات داخلی شعب</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="internalOrderOffice" class="no-margin v-middle" name="roleList" maxlength="20" />&nbsp;
+                                <span>سفارشات داخلی دفتر مرکزی</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="internalOrderOfficeBarcodeRoom" class="no-margin v-middle" name="roleList" maxlength="20" />&nbsp;
+                                <span>سفارشات داخلی دفتر مرکزی اتاق بارکد</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="allOrder" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>ادمین سفارشات</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="nonLeatherOrder" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span> سفارشات غیر چرمی</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="orderDescription" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span> توضیحات سفارشات</span>
+                            </label>
+                        </div>
+                       
+                        <div class="form-group">
+                            <label>
+                                <span>مدیریت چاپخانه</span>
+                            </label>
+                            <i class="fa fa-plus open-usableProduct pull-right" style="padding:5px"></i>
+                        </div>
+                        <div class="ordersUsableProduct" style="padding: 10px 10px 0px 0px; border: 1px solid silver; margin-bottom: 10px; display:none;">
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="orderUsableProduct" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>ثبت سفارش محصولات چاپخانه</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="createUsableProduct" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>ایجاد محصولات چاپخانه</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="deleteOrder" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>حذف سفارش ثبت شده</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="orderUsableProductManagerBranch" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>مدیریت سفارشات(شعب)</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="orderUsableProductManager" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>مدیریت سفارشات(دفترمرکزی)</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="printingHouse" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>مدیریت سفارشات(چاپخانه)</span>
+                                </label>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <span>گزارشات</span>
+                            </label>
+                            <i class="fa fa-plus open-report pull-right" style="padding:5px"></i>
+                        </div>
+                        <div class="reports" style="padding: 10px 10px 0px 0px; border: 1px solid silver; margin-bottom: 10px; display:none;">
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="report" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>گزارش محصول</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="singleReport" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>گزارش انتخابی محصول</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="dailyReport" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>گزارشات روزانه سیستم</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="inventoryReport" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>گزارش موجودی طلا در دفترمرکزی</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="dailyReportManage" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>مدیریت گزارشات روزانه سیستم</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="dailyReportPersonel" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span> گزارشات روزانه سیستم (مخصوص پرسنل)</span>
+                                </label>
+                            </div>
+                        </div>
+                       
+                        <div class="form-group">
+                            <label>
+                                <span>مدیریت مالی</span>
+                            </label>
+                            <i class="fa fa-plus open-branchesPayments pull-right" style="padding:5px"></i>
+                        </div>
+                        <div class="branchesPayments" style="padding: 10px 10px 0px 0px; border: 1px solid silver; margin-bottom: 10px; display:none;">
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="financialBranchgoldcartFactor" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>مشاهده سبد شعبه و ثبت فاکتور</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="branchGoldManage" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>مدیریت حساب طلای سفارشات شعب</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="financialBranch" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>مدیریت مالی شعب</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="branchesPayments" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>ثبت و صدور فاکتور پرداختی</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="branchesPaymentsDeposits" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>واریزی شعب</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="branchesPaymentsReturned" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>مرجوعی شعب</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="branchesPaymentsSale" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>فروش شعب</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="branchesPaymentsDifferentReturns" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>مرجوعی متفرقه شعب</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="branchesPaymentsDifferentSale" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>فروش متفرقه شعب</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="branchesPaymentsDifferentGoldReturns" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>مرجوعی طلا متفرقه شعب</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="userData" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>مدیریت کاربران ربات پرداخت شعب</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" value="companyInvoice" class="no-margin v-middle" name="roleList" />&nbsp;
+                                    <span>مدیریت صدور فاکتور حقوقی یا شرکتی شعب</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="salary" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>مدیریت حقوق و مزایا</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="soldGoldManage" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>طلای فروش رفته شعب</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="soldGold" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>طلای فروش رفته شعب(مخصوص پرسنل)</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="boughtGold" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>طلای خریداری شده</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="person" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>مدیریت پرسنل</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="manageImage" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>مدیریت عکس</span>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="createSms" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>مدیریت و ویرایش پیام</span>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" value="phoneBook" class="no-margin v-middle" name="roleList" />&nbsp;
+                                <span>دفترچه تلفن</span>
+                            </label>
+                        </div>
+                        
+
+                        @*<div class="form-group">
+            <label>
+                <input type="checkbox" value="notOrderableProduct" class="no-margin v-middle" name="roleList" />&nbsp;
+                <span> مدیریت محصولات غیر قابل سفارش برای کارگاه</span>
+            </label>
+        </div>*@
+                        @*<div class="form-group">
+            <label>
+                <input type="checkbox" value="leatherOrder" class="no-margin v-middle" name="roleList" />&nbsp;
+                <span class="text-danger"> سفارشات چرمی</span>
+            </label>
+        </div>*@
+                    </div>
+                </div>
+                <div class="form-group col-xs-12">
+                    <button id="btnPrevStep3" type="submit" class="btn btn-primary pull-right">
+                        <i class="fa fa-arrow-right v-middle" aria-hidden="true"></i>&nbsp;
+                        <span>قبلی</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button id="btnSave" type="submit" class="btn btn-success">
+        <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+        ذخیره
+    </button>
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+
+        var id = @(ViewBag.Id != null? ViewBag.Id : 0);
+
+        $(document).ready(function () {
+            setUpStepWizard();
+
+            setupUpload("user", function (fileName) {
+                $("#imgUserImage").attr("src", "/upload/user/" + fileName);
+            });
+            loadRemoteSelect("#cmbWorkshop", "/workshop/getAll", null, "id", "name", "...", function () {
+                loadRemoteSelect("#cmbBranch", "/branch/getAll", null, "id", "name", "...", function () {
+                    loadRemoteSelect("#cmbPrintingHouse", "/printingHouse/search", null, "id", "name", "...", function () {
+                    load();
+                    });
+                });
+            });
+
+            $("#cmbWorkshop").on("change", function () {
+                if ($(this).val() > 0) {
+                    $("#cmbBranch").val($("#cmbBranch option:first").val());
+                    $("#cmbPrintingHouse").val($("#cmbPrintingHouse option:first").val());
+                }
+            });
+
+            $("#cmbBranch").on("change", function () {
+                if ($(this).val() > 0) {
+                    $("#cmbWorkshop").val($("#cmbWorkshop option:first").val());
+                    $("#cmbPrintingHouse").val($("#cmbPrintingHouse option:first").val());
+                }
+            });
+
+            $("#cmbPrintingHouse").on("change", function () {
+                if ($(this).val() > 0) {
+                    $("#cmbBranch").val($("#cmbBranch option:first").val());
+                    $("#cmbWorkshop").val($("#cmbWorkshop option:first").val());
+                }
+            });
+
+            $("#btnSave").on("click", function (event) {
+                event.preventDefault();
+
+                if (checkForm("#form")) {
+                    var entity = getEntity("#form");
+                    loader(true);
+                    $.post("/account/save", entity, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                document.location = "/account";
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    });
+                }
+            });
+
+            $("#btnNextStep1").on("click", function (event) {
+                event.preventDefault();
+                if (checkForm("#form")) {
+                    showStep(2);
+                }
+            });
+
+            $("#btnPrevStep2").on("click", function (event) {
+                event.preventDefault();
+                showStep(1);
+            });
+            $("#btnNextStep2").on("click", function (event) {
+                event.preventDefault();
+                showStep(3);
+            });
+
+            $("#btnPrevStep3").on("click", function (event) {
+                event.preventDefault();
+                showStep(2);
+            });
+
+            $(".open-manage-order").on("click", function (event) {
+                event.preventDefault();
+                $(".manage-order").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+
+            $(".open-manage-order-tab").on("click", function (event) {
+                event.preventDefault();
+                $(".manage-order-tab").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+
+            $(".open-manage-order-register-tab").on("click", function (event) {
+                event.preventDefault();
+                $(".manage-order-register-tab").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+
+            $(".open-manage-order-sentToWorkshop-tab").on("click", function (event) {
+                event.preventDefault();
+                $(".manage-order-sentToWorkshop-tab").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+
+            $(".open-manage-order-inPrepration-tab").on("click", function (event) {
+                event.preventDefault();
+                $(".manage-order-inPrepration-tab").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+
+            $(".open-manage-order-outOfConstruction-tab").on("click", function (event) {
+                event.preventDefault();
+                $(".manage-order-outOfConstruction-tab").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+
+            $(".open-manage-order-sentToWorkshopTwo-tab").on("click", function (event) {
+                event.preventDefault();
+                $(".manage-order-sentToWorkshopTwo-tab").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+
+            $(".open-manage-order-inPreprationInWorkshopTwo-tab").on("click", function (event) {
+                event.preventDefault();
+                $(".manage-order-inPreprationInWorkshopTwo-tab").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+
+            $(".open-manage-order-outOfConstructionInWorkshopTwo-tab").on("click", function (event) {
+                event.preventDefault();
+                $(".manage-order-outOfConstructionInWorkshopTwo-tab").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+
+            $(".open-manage-order-underConstruction-tab").on("click", function (event) {
+                event.preventDefault();
+                $(".manage-order-underConstruction-tab").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+
+            $(".open-manage-order-readyForDeliver-tab").on("click", function (event) {
+                event.preventDefault();
+                $(".manage-order-readyForDeliver-tab").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+
+            $(".open-manage-order-sent-tab").on("click", function (event) {
+                event.preventDefault();
+                $(".manage-order-sent-tab").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+
+            $(".open-manage-order-shortage-tab").on("click", function (event) {
+                event.preventDefault();
+                $(".manage-order-shortage-tab").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+
+            $(".open-manage-order-canceled-tab").on("click", function (event) {
+                event.preventDefault();
+                $(".manage-order-canceled-tab").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+
+            $(".open-manage-order-all-tab").on("click", function (event) {
+                event.preventDefault();
+                $(".manage-order-all-tab").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+
+            $(".open-branchesPayments").on("click", function (event) {
+                event.preventDefault();
+                $(".branchesPayments").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+
+            $(".open-report").on("click", function (event) {
+                event.preventDefault();
+                $(".reports").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+
+            $(".open-usableProduct").on("click", function (event) {
+                event.preventDefault();
+                $(".ordersUsableProduct").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+        });
+
+        function load() {
+            if (id > 0) {
+                loader(true);
+                $.get("/account/load/" + id, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        setEntity(response.data, "#form");
+                        checkForm("#form");
+                        if (response.data.fileName)
+                            $("#imgUserImage").attr("src", "/upload/user/" + response.data.fileName);
+                    }
+                    else {
+                        callbackAlert(response.message, function () {
+                            document.location = "/account";
+                        });
+                    }
+                });
+            }
+        }
+
+    </script>
+}

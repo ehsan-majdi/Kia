@@ -1,0 +1,371 @@
+﻿@{
+    ViewBag.Title = "Edit";
+}
+<style>
+    #btnSave {
+        background-color: #e57373;
+        transition: all 500ms ease;
+    }
+
+        #btnSave:hover {
+            background-color: red;
+            color: white;
+        }
+
+    .contents {
+        display: none;
+    }
+
+    .distance {
+        margin: 10px 0 10px 0;
+    }
+
+    .color-theme {
+        background-color: #808080;
+        margin-left: 1px;
+    }
+
+    .i-reomve {
+        cursor: pointer;
+        margin: 10px 222px 0;
+        position: absolute;
+    }
+
+        .i-reomve:hover {
+            transition: all 0.5s;
+            border-radius: 5px;
+            color: red;
+        }
+
+    .i-reomve-detail {
+        cursor: pointer;
+    }
+
+        .i-reomve-detail:hover {
+            transition: all 0.5s;
+            border-radius: 5px;
+            color: red;
+        }
+
+    #cntCheckbox {
+        background-color: #ffc107;
+        padding: 26px 0;
+        border-radius: 5px;
+        display: none;
+    }
+
+    .verticalLine {
+        border-left: 3px solid #ffc107;
+        height: 223px;
+        position: absolute;
+        border-radius: 9px;
+        left: 0;
+    }
+
+    .horizantalLine {
+        border-bottom: 3px solid #ffc107;
+        position: absolute;
+        width: 308px;
+        right: 0px;
+    }
+
+    .change-color {
+        border-left: thick solid #e63232;
+    }
+</style>
+<div class="container ">
+    <form>
+        <div id="form">
+            <input type="hidden" name="id" />
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="txtOrder">ترتیب دسته بندی</label>
+                        <input id="txtOrder" class="form-control" name="order" placeholder="ترتیب دسته بندی" required />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="txtTitle">عنوان دسته بندی</label>
+                        <input id="txtTitle" class="form-control" name="title" placeholder="عنوان دسته بندی" required />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="cmbSmsCategory">نوع پیام</label>
+                        <select id="cmbSmsCategory" class="form-control" name="categoryType" placeholder="نوع پیام" required>
+                            <option value="">...</option>
+                            <option value="0">چندانتخابی </option>
+                            <option value="1">تک انتخابی </option>
+                            <option value="2">تک انتخابی - تشریحی</option>
+                            <option value="3">پیام آزاد</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="txtColor">رنگ</label>
+                        <input id="txtColor" class="form-control" name="color" placeholder="رنگ" required style="direction:rtl" />
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="cmbActive">وضعیت</label>
+                        <select id="cmbActive" class="form-control" data-validate="required" name="active">
+                            <option value="">...</option>
+                            <option value="true">فعال</option>
+                            <option value="false">غیر فعال</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row description-show">
+                    <div class="col-md-12">
+                        <textarea id="txtDescriptive" class="form-control empty-val" cols="10" rows="15" name="description" style="resize: none"></textarea>
+                        <span id="counter">0</span> / <span id="counterPlus">0</span>
+                    </div>
+                </div>
+                <div class="row freeMessage-show">
+                    <div class="col-md-12">
+                        <input id="txtFreeMessage" class="form-control empty-val" cols="10" rows="15" name="freeMessage" />
+                        <span id="counter1">0</span> / <span class="counterPlus1">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="">
+            <button id="btnAddCheckboxDetail" class="btn btn-success contents">+</button>
+            <br />
+            <br />
+        </div>
+        <!-- قسمت چند انتخابی-حاوی مقدار-->
+        <div id="cntCheckboxDetail" class="row ">
+
+        </div>
+        <!--قسمت تک انتخابی-فاقد مقدار-->
+        <div id="cntCheckbox" class="row ">
+            <p class="text-center">مقادیر تک انتخابی فاقد مقدار</p>
+            <hr />
+            @*<div class="text-center appended-element-content detail-entity distance">
+                    <div class="form-inline form-element-content appended-element">
+                        <div class="col-md-3">
+                            <input type="hidden" name="id" value="" />
+                            <i class="fa fa-close remove i-reomve"></i>
+                            <input type="text" class="form-control required inputJustDetail change-color" placeholder="مقدار" name="detailName" data-value-id="" />
+                        </div>
+                    </div>
+                </div>*@
+        </div>
+        <!--نمایش ظرف تشریحی-->
+
+        <br />
+        <div class="col-md-4 col-md-offset-4 text-center">
+            <button class="btn btn-success" type="submit" id="btnSubmit" style="">ثبت </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+
+        $(document).ready(function () {
+            var txt_max = 0;
+            $("#counter").html(txt_max);
+            $(document).on("keyup", "#txtDescriptive", function () {
+                var text_length = $(this).val();
+                text_length = text_length.length;
+                $("#counter").html(text_length % 75)
+                $("#counterPlus").html(Math.floor(text_length / 75));
+            });
+            var txt_max = 0;
+            $("#counter1").html(txt_max);
+            $(document).on("keyup", "#txtFreeMessage", function () {
+                var text_length = $(this).val();
+                text_length = text_length.length;
+                $("#counter1").html(text_length % 75)
+                $("#counterPlus1").html(Math.floor(text_length / 75));
+            });
+
+            $(".empty-check").prop('checked', false);
+            load();
+            valueChange();
+
+
+            $("#cmbSmsCategory").change(function () {
+                //اگر گزینه چند انتخابی ، انتخاب شد
+                valueChange();
+                //if ($(this).val() == 0) {
+                //    emptyValue()
+                //}
+            });
+
+            $(document).on("click", ".remove", function (event) {
+                event.preventDefault();
+                $(this).parents(".appended-element-content").remove();
+            });
+            $("#btnAddCheckboxDetail").on("click", function (event) {
+                event.preventDefault();
+
+                var value = $("#cmbSmsCategory").val();
+                if (value == 0) {
+                    $("#cntCheckboxDetail").show();
+                    $("#cntCheckboxDetail").append($("#tmplCheckboxDetail").text());
+                }
+                else if (value == 1) {
+                    $("#cntCheckbox").show();
+                    $("#cntCheckbox").append($("#tmplCheckbox").text());
+                }
+            });
+            $("#btnSubmit").on("click", function (event) {
+                event.preventDefault();
+                var entity = getEntity("#form");
+                entity.createMessageList = [];
+                $(".detail-entity").each(function (index, element) {
+                    var detailEntity = getEntity(element);
+                    if (detailEntity.detailName) {
+                        entity.createMessageList.push(detailEntity);
+                    }
+                });
+
+                if (checkForm("#form")) {
+                    loader(true);
+                    $.post("/smscategory/Save", entity, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                document.location = "/smscategory/index/";
+                            })
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    });
+                }
+            });
+        });
+
+        function load() {
+            if (id > 0)
+            {
+                loader(true);
+                $.get("/smsCategory/load/" + id, function (response) {
+                    if (response.status == 200) {
+                        var data = response.data;
+                        setEntity(data, "#form");
+                        $("#txtDescriptive").val(data.description);
+                        $("#txtFreeMessage").val(data.freeMessage);
+                        $("#cmbSmsCategory").change();
+                        if (data.categoryType == 0) {
+                            for (var i = 0; i < data.createMessageList.length; i++) {
+                                $("#cntCheckboxDetail").append($("#tmplCheckboxDetail").text().replaceAll("{{:id}}", data.createMessageList[i].id));
+                                $(".inputName[data-value-id=" + data.createMessageList[i].id +"]").val(data.createMessageList[i].name);
+                                $(".inputDetail[data-value-id=" + data.createMessageList[i].id + "]").val(data.createMessageList[i].detailName);
+                            }
+                        }
+                        if (data.categoryType == 1) {
+                            for (var i = 0; i < data.createMessageList.length; i++) {
+                                $("#cntCheckbox").show();
+                                $("#cntCheckbox").append($("#tmplCheckbox").text());
+                                $(".inputJustDetail[data-value-id=" + data.createMessageList[i].id + "]").val(data.createMessageList[i].detailName);
+                            }
+
+                            $("#cntCheckbox").find(".detail-entity").each(function (index, element) {
+                                setEntity(data.createMessageList[index], element);
+                            });
+                        }
+                        if (data.categoryType == 2) {
+                            $("#txtDescriptive").val(data.description);
+                        }
+                        if (data.freeMessage == 3) {
+                            $("#txtFreeMessage").val(data.freeMessage);
+                        }
+                    }
+
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            }
+        }
+
+        function valueChange() {
+            var value = $("#cmbSmsCategory").val();
+
+            $(".contents").hide();
+            if (value == "") {
+                $(".contents").hide();
+                $(".checkBoxDetail-show").hide();
+                $(".checkBox-show").hide();
+                $(".description-show").hide();
+                $(".freeMessage-show").hide();
+            }
+            else if (value == 0) {
+                $(".contents").show();
+                $(".checkBoxDetail-show").show();
+                $(".checkBox-show").show();
+                $(".description-show").hide();
+                $(".freeMessage-show").hide();
+                emptyValue();
+            }
+            else if (value == 1) {
+                $(".contents").show();
+                $(".checkBox-show").show();
+                $(".description-show").hide();
+                $("#cntCheckboxDetail").hide();
+
+
+            }
+            else if (value == 2) {
+                $(".description-show").show();
+                $(".freeMessage-show").hide();
+                $("#cntCheckbox").hide();
+
+            }
+            else if (value == 3) {
+                $(".description-show").hide();
+                $("#cntCheckbox").hide();
+                $("#cntCheckboxDetail").hide();
+                $(".freeMessage-show").show();
+            }
+        }
+        function emptyValue() {
+            $(".appended-element").remove();
+            $(".empty-val").val("");
+            $(".empty-check").prop('checked', false);
+        }
+
+    </script>
+
+    <script id="tmplCheckboxDetail" type="text/x-jsrender">
+        <div class="appended-element-content detail-entity checkBoxDetail-show distance">
+            <div class="form-element-content appended-element">
+                <div class="col-md-3" style="margin-top:12px">
+                    <i class="fa fa-close remove i-reomve-detail"></i>
+                    <input type="hidden" name="id" value="{{:id}}" />
+                    <span class="verticalLine"></span>
+                    <input type="text" class="form-control empty-val inputName" placeholder="نام" name="name" data-value-id="{{:id}}" />
+                    <textarea type="text" class="form-control distance required inputDetail" cols="10" rows="5" data-validate="required" placeholder="مقدار" name="detailName" data-value-id="{{:id}}" style="resize:none"></textarea>
+                    <span class="horizantalLine"></span>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script id="tmplCheckbox" type="text/x-jsrender">
+        <div class="text-center appended-element-content detail-entity checkBox-show distance">
+            <div class="form-inline form-element-content appended-element">
+                <div class="col-md-3 content-show">
+                    <input type="hidden" name="id" value="{{:id}}" />
+                    <i class="fa fa-close remove i-reomve"></i>
+                    <input type="text" class="form-control required inputJustDetail change-color" placeholder="مقدار" name="detailName" data-value-id="{{:id}}" />
+                </div>
+            </div>
+        </div>
+    </script>
+
+}
+

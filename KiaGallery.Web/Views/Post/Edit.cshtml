@@ -1,0 +1,168 @@
+﻿<div id="form" class="container">
+    <div class="row form-group">
+
+        <div class="row">
+            <div id="step1" class="col-md-4 col-md-offset-4">
+                <input type="hidden" name="id" />
+                <div class="form-group hidden">
+                    <label for="txtDatePost">تاریخ تحویل به پست</label>
+                    <input id="txtDatePost" type="text" class="form-control date" data-validate="required" name="postDate" maxlength="14">
+                </div>
+                <div class="form-group relative">
+                    <label for="cmbProvince">استان</label>
+                    <select id="cmbProvince" class="form-control focus" data-validate="required" name="provinceId">
+                        <option value="">...</option>
+                    </select>
+                </div>
+                <div class="form-group relative">
+                    <label for="cmbCity">شهر</label>
+                    <select id="cmbCity" class="form-control focus" data-validate="required" name="cityId">
+                        <option value="">...</option>
+                    </select>
+                </div>
+                <div class="form-group relative">
+                    <label for="cmbRegister">کاربر ثبت کننده:</label>
+                    <select id="cmbRegister" class="form-control focus" data-validate="required" name="submitUser"></select>
+                </div>
+                <div class="form-group">
+                    <label for="txtInvoiceNo">شماره فاکتور</label>
+                    <input id="txtInvoiceNo" type="text" class="form-control focus" name="invoiceNo" maxlength="50" data-validate="required, maxLength(50)">
+                </div>
+                <div class="form-group">
+                    <label for="txtDate">تاریخ </label>
+                    <input id="txtDate" type="text" class="form-control date focus" data-validate="required" name="submitDate" maxlength="14">
+                </div>
+                <div class="form-group">
+                    <label for="txtCount">تعداد</label>
+                    <input id="txtCount" type="text" class="form-control number-only focus" name="count" maxlength="10" data-validate="required, number, maxLength(10)">
+                </div>
+                <div class="form-group">
+                    <label for="txtWeight">وزن</label>
+                    <input id="txtWeight" type="text" class="form-control focus" name="weight" maxlength="10" data-validate="required, float, maxLength(10)">
+                </div>
+                <div class="form-group relative">
+                    <label for="txtPrice">قیمت</label>
+                    <input id="txtPrice" type="text" class="form-control number-only money-separator focus" name="price" maxlength="19" data-validate="required, maxLength(19)">
+                    <span class="toman">تومان</span>
+                </div>
+                <div class="form-group">
+                    <label for="txtCustomer">مشتری</label>
+                    <input id="txtCustomer" type="text" class="form-control focus" name="customer" maxlength="100" data-validate="required, persianText, maxLength(100)">
+                </div>
+                <div class="form-group relative">
+                    <label for="cmbSex">جنسیت</label>
+                    <select id="cmbSex" class="form-control" data-validate="required" name="sex">
+                        <option value="true">آقا</option>
+                        <option value="false">خانم</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtPhoneNumber">تلفن ثابت</label>
+                    <input id="txtPhoneNumber" type="text" class="form-control number-only focus" name="phoneNumber" maxlength="15" data-validate="required, maxLength(15)">
+                </div>
+                <div class="form-group">
+                    <label for="txtMobileNumber">موبایل</label>
+                    <input id="txtMobileNumber" type="text" class="form-control number-only focus" name="mobileNumber" maxlength="15" data-validate="required, maxLength(15)">
+                </div>
+                <div class="form-group">
+                    <label for="txtAddress">آدرس</label>
+                    <textarea id="txtAddress" class="form-control focus" name="address" maxlength="100" data-validate="required maxLength(100)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="txtPostalCode">کد پستی</label>
+                    <input id="txtPostalCode" type="text" class="form-control focus" name="postalCode" maxlength="10" data-validate="required, maxLength(10)">
+                </div>
+                <div class="form-group">
+                    <button id="btnSave" type="submit" class="btn btn-success">
+                        <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                        ذخیره
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+    var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+
+        $(document).ready(function () {
+            $('.focus').keydown(function (e) {
+                console.log(e.which)
+                if (e.which === 13) {
+                    $(this).closest(".form-group").next('.form-group').find(".focus").focus();
+                }
+            });
+            loadRemoteSelect("#cmbRegister", "/post/getPostUserList/", null, "name", "name", "...", function () { $(".combo-chosen").trigger("chosen:updated"); });
+            $(".date").pDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true
+            });
+            $(".date").val("");
+            var date = new persianDate();
+            date.formatPersian = false;
+            $(".date").val(date.format("YYYY/MM/DD"));
+
+
+        loadRemoteSelect("#cmbProvince", "/location/getAllProvince", null, "id", "name", "...", function () {
+            load();
+            $(".combo-chosen").chosen({ width: "100%", placeholder_text_single: 'یک مورد را انتخاب کنید.', search_contains: true });
+        });
+
+        $("#cmbProvince").on("change", function () {
+            if ($("#cmbProvince").val()) {
+                loadRemoteSelect("#cmbCity", "/location/getAllCity/" + $("#cmbProvince").val(), null, "id", "name", "...",function(){$(".combo-chosen").trigger("chosen:updated");});
+            }
+            else {
+                $("#cmbCity").empty();
+                $("#cmbCity").append("<option value=\"\">...</option>");
+                $(".combo-chosen").trigger("chosen:updated");
+            }
+        });
+
+        $("#btnSave").on("click", function (event) {
+            event.preventDefault();
+            if (checkForm("#form")) {
+                var entity = getEntity("#form");
+                loader(true);
+                $.ajax({
+                    method: "POST",
+                    url: "/post/save",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                document.location = "/post";
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                        loader(false);
+                    }
+                });
+            }
+        });
+    });
+
+    function load() {
+        if (id > 0) {
+            loader(true);
+            $.get("/post/load/" + id, function (response) {
+                if (response.status == 200) {
+                    loadRemoteSelect("#cmbCity", "/location/getAllCity/" + response.data.provinceId, null, "id", "name", "...", function () {
+                        setEntity(response.data, "#form");
+                    });
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    }
+
+    </script>
+}

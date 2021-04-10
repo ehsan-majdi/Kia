@@ -1,0 +1,191 @@
+﻿
+@{
+    ViewBag.Title = "مدیریت فایل پرسنل";
+}
+
+<div id="control-section">
+    <button id="btnAdd" class="btn btn-primary">
+        <i class="fa fa-plus v-middle" aria-hidden="true"></i>&nbsp;
+        <span>جدید</span>
+    </button>
+</div>
+
+<div id="content">
+
+</div>
+
+<div id="fileModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">فایل</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input id="hiddenId" type="hidden" name="id" />
+                    <input id="personId" type="hidden" name="personId" value=""/>
+                    <label for="txtTitle">عنوان</label>
+                    <input id="txtTitle" type="text" name="title" class="form-control"  data-validate="required"/>
+                </div>
+                <div class="form-group">
+                    <label for="cmbCategory">دسته بندی</label>
+                    <select id="cmbCategory" class="form-control" data-validate="required" name="category">
+                        <option value="">...</option>
+                        <option value="0">عکس پرسنلی</option>
+                        <option value="1">فرم قرارداد</option>
+                        <option value="2">پزشکی</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cmbFileType">نوع فایل</label>
+                    <select id="cmbFileType" class="form-control" data-validate="required" name="fileType">
+                        <option value="">...</option>
+                        <option value="0">تصویر</option>
+                        <option value="1">PDF</option>
+                    </select>
+                </div>
+                <div class="form-group relative">
+                    <label for="txtFileName">تصویر</label>
+                    <input id="txtFileName" type="text" name="fileName" class="file form-control" disabled data-validate="required" />
+                    <input id="file" type="file" class="hidden" />
+                    <i id="openFile" class="fa fa-upload fa-20px file-icon" aria-hidden="true" style="left: 13px; top: 32px;"></i>
+                    <i id="deleteFile" class="fa fa-remove fa-20px file-icon" aria-hidden="true" style="left: 45px; top: 32px;"></i>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" type="button" class="btn btn-success btn-password btn-control">ثبت</button>
+                <button type="button" class="btn btn-danger btn-password btn-control" data-dismiss="modal">لغو</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script type="text/javascript">
+        var personId = @ViewBag.PersonId;
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(document).ready(function () {
+            getList();
+            setupUpload("person");
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف فایل پرسنل اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/person/deleteFile/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+            $(document).on("click", ".edit", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                loader(true);
+                $.get("/person/loadFile/" + id, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        setEntity(response.data, "#fileModal");
+                        $("#fileModal").modal("show");
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                })
+            });
+            $(document).on("click", "#btnAdd", function (event) {
+                event.preventDefault();
+                clearEntity("#fileModal");
+                $("#personId").val(personId);
+                $("#fileModal").modal("show");
+            });
+            $("#btnSave").on("click", function (event) {
+                event.preventDefault();
+                if (checkForm("#form")) {
+                    var entity = getEntity("#fileModal");
+                    loader(true);
+                    $.ajax({
+                        method: "POST",
+                        url: "/person/saveFile",
+                        data: entity,
+                        success: function (response) {
+                            if (response.status == 200) {
+                                $("#fileModal").modal("hide");
+                                getList();
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                            loader(false);
+                        }
+                    });
+                }
+            });
+        });
+
+        function getList() {
+            loader(true);
+            $.get("/person/SearchFile", { personId:@ViewBag.PersonId}, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>نام</th>
+                    <th>نوع</th>
+                    <th class="icon-col text-center">دانلود</th>
+                    <th class="icon-col text-center">ویرایش</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td>{{:#index + 1}}</td>
+                    <td>{{:title}}</td>
+                    <td>{{:type}}</td>
+                    <td class="txt-al-c">
+                        <a href="/upload/person/{{:fileName}}" class="btn btn-success btn-xs" data-title="دانلود" data-id="{{:id}}"><i class="fa fa-download" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <button class="edit btn btn-primary btn-xs" data-title="ویرایش"  data-id="{{:id}}"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                    </td>
+                    <td class="txt-al-c">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+
+}

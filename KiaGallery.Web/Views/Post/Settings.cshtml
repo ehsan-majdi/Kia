@@ -1,0 +1,49 @@
+﻿<div id="form" class="container">
+    <div class="row form-group">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="form-group">
+                    <label for="txtSenderAddress">آدرس فرستنده</label>
+                    <textarea id="txtSenderAddress" name="senderAddress" class="form-control" style="resize: vertical;" rows="4">@ViewBag.SenderAddress</textarea>
+                </div>
+                <div class="form-group">
+                    <button id="btnSave" type="submit" class="btn btn-success">
+                        <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                        ذخیره
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnSave").on("click", function (event) {
+            event.preventDefault();
+            if (checkForm("#form")) {
+                var entity = getEntity("#form");
+                loader(true);
+                $.ajax({
+                    method: "POST",
+                    url: "/post/saveSettings",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                document.location = "/post";
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                        loader(false);
+                    }
+                });
+            }
+        });
+    });
+    </script>
+}

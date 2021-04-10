@@ -1,0 +1,490 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Scripts/bootstrap-rtl.min.js"></script>
+    <link href="~/Content/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="~/Content/fonts/fontawsome/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/content/fonts/sans/fontiran.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width" />
+    <title>راه ارتباطی با ما</title>
+</head>
+<body>
+    <style>
+        html, body, .container {
+            height: 100%;
+            background-color: silver;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            font-family: IRANSans;
+        }
+
+        .telegram-title {
+            margin-top: 130px;
+        }
+
+        .container {
+            position: relative;
+        }
+
+        .color-telegram {
+            color: #0088cc;
+        }
+
+        .color-instagram {
+            color: #c13584;
+        }
+
+        .color-facebook {
+            color: #3b5998
+        }
+
+        .color-site {
+            color: #ee9600
+        }
+
+        .pane.telegram {
+            background-color: #0088cc;
+        }
+
+        .pane.instagram {
+            background-color: #c13584;
+        }
+
+        .pane.site {
+            background-color: #ee9600;
+        }
+
+        .pane.facebook {
+            background-color: #3b5998;
+        }
+
+        .pane .plus {
+            font-size: 25px;
+            display: inline-block;
+            cursor: pointer;
+            transition: all 1000ms;
+            z-index: 100;
+            padding: 10px;
+        }
+
+        .pane.active .plus {
+            transform: rotate(45deg);
+            transition: all 1000ms;
+            z-index: 100;
+        }
+
+        .pane .title {
+            cursor: pointer;
+            animation: fadeIn 500ms linear forwards;
+        }
+
+        .pane.active h4 {
+            animation: fadeOut 200ms linear forwards;
+            position: absolute;
+        }
+
+        .pane.active .title {
+            animation: fadeOut 500ms linear forwards;
+        }
+
+        .pane .content {
+            max-width: 350px;
+            margin: auto;
+            opacity: 0;
+            display: none;
+        }
+
+        .pane.active .content {
+            animation: fadeIn 750ms linear forwards;
+        }
+
+        .white {
+            color: white;
+        }
+
+        .img-social {
+            width: 150px;
+            margin-top: 100px;
+        }
+
+        .social-title {
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        .detail-content {
+            margin-bottom: 18px;
+            margin-top: 30px !important;
+        }
+
+        .divLeft {
+            display: inline-block;
+            width: 200px;
+            font-size: 18px;
+        }
+
+        .divRight {
+            box-shadow: -1px 7px 5px -6px rgb(0, 0, 0);
+            display: inline-block;
+            width: 100px;
+            float: right;
+            background: white;
+            text-align: center;
+            border-radius: 15px;
+            padding: 5px;
+            text-decoration: none;
+        }
+
+        a {
+            text-decoration: none !important;
+        }
+
+        @@media only screen and (orientation: landscape) {
+            .pane {
+                position: fixed;
+                width: 50%;
+                height: 50%;
+                transition: all 500ms;
+                z-index: 20;
+                cursor: pointer;
+            }
+
+                .pane.telegram {
+                    top: 0;
+                    left: 0;
+                }
+
+                .pane.instagram {
+                    top: 0;
+                    left: 50%;
+                }
+
+                .pane.site {
+                    top: 50%;
+                    left: 0;
+                }
+
+                .pane.facebook {
+                    top: 50%;
+                    left: 50%;
+                }
+
+                .pane.active {
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    transition: all 500ms;
+                    z-index: 100;
+                }
+        }
+
+        @@media only screen and (orientation: portrait) {
+            .pane {
+                position: fixed;
+                width: 100%;
+                height: 25%;
+                transition: all 500ms;
+                z-index: 20;
+                cursor: pointer;
+            }
+
+                .pane.telegram {
+                    top: 0;
+                    left: 0;
+                }
+
+                .pane.instagram {
+                    top: 25%;
+                    left: 0;
+                }
+
+                .pane.site {
+                    top: 75%;
+                    left: 0;
+                }
+
+                .pane.facebook {
+                    top: 50%;
+                    left: 0;
+                }
+
+                .pane.active {
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    transition: all 500ms;
+                    z-index: 100;
+                }
+        }
+
+        @@media (min-device-width:320px) and (max-device-width:768px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio:0) {
+            .pane {
+                position: fixed;
+                width: 100%;
+                height: 25%;
+                transition: all 500ms;
+                z-index: 20;
+                cursor: pointer;
+            }
+
+            .img-social {
+                width: 150px;
+                margin-top: 60px;
+            }
+
+            .detail-content {
+                margin-top: 27px;
+            }
+
+            .telegram-title {
+                margin-top: 50px;
+            }
+        }
+
+        @@media (min-device-width:375px) and (max-device-width:812px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio:0) {
+            .pane {
+                position: fixed;
+                width: 50%;
+                height: 50%;
+                transition: all 500ms;
+                z-index: 20;
+                cursor: pointer;
+            }
+
+                .pane.telegram {
+                    top: 0;
+                    left: 0;
+                }
+
+                .pane.instagram {
+                    top: 0;
+                    left: 50%;
+                }
+
+                .pane.site {
+                    top: 50%;
+                    left: 0;
+                }
+
+                .pane.facebook {
+                    top: 50%;
+                    left: 50%;
+                }
+
+                .pane.active {
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    transition: all 500ms;
+                    z-index: 100;
+                }
+
+            .img-social {
+                width: 130px;
+                margin-top: 0px;
+            }
+
+            .detail-content {
+                margin-bottom: 18px;
+                margin-top: 20px !important;
+            }
+
+            .telegram-title {
+                margin-top: 5px;
+            }
+
+            .pane.active {
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                transition: all 500ms;
+                z-index: 40;
+                cursor: pointer;
+            }
+        }
+
+        @@keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @@keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+    </style>
+
+    <div class="container">
+        <div class="pane telegram">
+            <h4 class="white" style="padding:10px;">Telegram</h4>
+            <div class="plus white">+</div>
+            <div style="display:inline-block;vertical-align:super">
+                @*<p class="title white">مشاهده کردن</p>*@
+                <p class="title white">Visit</p>
+            </div>
+            <div class="content">
+                <div class="text-center">
+                    <img class="img-social" src="~/Content/Image/Telegram.png" />
+                </div>
+                <div class="telegram-title">
+                    <p class="social-title white">Telegram</p>
+                </div>
+                <div class="detail-content">
+                    <div class="divLeft">
+                        <span class="white">@@KiaGallery_bot</span>
+                    </div>
+                    <div class="divRight">
+                        @*<a class="color-telegram" href="http://telegram.me/kiagallery_bot">ورود</a>*@
+                        <a class="color-telegram" href="http://telegram.me/kiagallery_bot">Enter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pane instagram">
+            <h4 class="white" style="padding:10px;">Instagram</h4>
+            <span class="plus white">+</span>
+            <div style="display:inline-block;vertical-align:super">
+                @*<p class="title white">مشاهده کردن</p>*@
+                <p class="title white">Visit</p>
+            </div>
+            <div class="content">
+                <div class="text-center">
+                    <img class="img-social" src="~/Content/Image/Instagram .png" />
+                </div>
+                <div class="telegram-title">
+                    <p class="social-title white">Instagram</p>
+                </div>
+                <div class="detail-content">
+                    <div class="divLeft">
+                        <span class="white">@@KiaGallery</span>
+                    </div>
+                    <div class="divRight">
+                        @*<a class="color-instagram" href="http://www.instagram.com/kiagallery/">ورود</a>*@
+                        <a class="color-instagram" href="http://www.instagram.com/kiagallery/">Enter</a>
+                    </div>
+                </div>
+                <div class="detail-content">
+                    <div class="divLeft">
+                        <span class="white">@@KiaClassic</span>
+                    </div>
+                    <div class="divRight">
+                        @*<a class="color-instagram" href="http://www.instagram.com/kia.classic/">ورود</a>*@
+                        <a class="color-instagram" href="http://www.instagram.com/kia.classic/">Enter</a>
+                    </div>
+                </div>
+                <div class="detail-content">
+                    <div class="divLeft">
+                        <span class="white">@@KiaGalleryFans</span>
+                    </div>
+                    <div class="divRight">
+                        @*<a class="color-instagram" href="http://www.instagram.com/kiagalleryfans/">ورود</a>*@
+                        <a class="color-instagram" href="http://www.instagram.com/kiagalleryfans/">Enter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pane facebook">
+            <h4 class="white" style="padding:10px;">Facebook</h4>
+            <span class="plus white">+</span>
+            <div style="display:inline-block;vertical-align:super">
+                @*<p class="title white">مشاهده کردن</p>*@
+                <p class="title white">Visit</p>
+            </div>
+            <div class="content">
+                <div class="text-center">
+                    <img class="img-social" src="~/Content/Image/Facebook.png" />
+                </div>
+                <div class="telegram-title">
+                    <p class="social-title white">Facebook</p>
+                </div>
+                <div class="detail-content">
+                    <div class="divLeft">
+                        <span class="white">@@KiaGallery</span>
+                    </div>
+                    <div class="divRight">
+                        @*<a class="color-facebook" href="http://www.facebook.com/KiaGallery">ورود</a>*@
+                        <a class="color-facebook" href="http://www.facebook.com/KiaGallery">Enter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pane site">
+            <h4 class="white" style="padding:10px;">Site</h4>
+            <span class="plus white">+</span>
+            <div style="display:inline-block;vertical-align:super">
+                @*<p class="title white">مشاهده کردن</p>*@
+                <p class="title white">Visit</p>
+            </div>
+            <div class="content">
+                <div class="text-center">
+                    <img class="img-social" src="~/Content/Image/Site.png" />
+                </div>
+                <div class="telegram-title">
+                    <p class="social-title white">Site</p>
+                </div>
+                <div class="detail-content">
+                    <div class="divLeft">
+                        <span class="white">www.kia-gallery.com</span>
+                    </div>
+                    <div class="divRight">
+                        @*<a class="color-site" href="http://www.kia-gallery.com">ورود</a>*@
+                        <a class="color-site" href="http://www.kia-gallery.com">Enter</a>
+                    </div>
+                </div>
+                <div class="detail-content">
+                    <div class="divLeft">
+                        <span class="white">ShopOnline</span>
+                    </div>
+                    <div class="divRight">
+                        @*<a class="color-site" href="http://kia-gallery.com/ShopFa.aspx?t=100">ورود</a>*@
+                        <a class="color-site" href="http://kia-gallery.com/ShopFa.aspx?t=100">Enter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(document).on("click", ".pane:not(.active)", function () {
+            show($(this));
+            $(".content").show();
+        });
+        $(document).on("click", ".plus", function () {
+            close($(this));
+        });
+    });
+
+    function show(action) {
+        var pane = action.closest(".pane");
+        pane.addClass("active");
+    }
+
+    function close(action) {
+        var pane = action.closest(".pane");
+        pane.removeClass("active");
+    }
+
+</script>

@@ -1,0 +1,386 @@
+﻿
+@{
+    ViewBag.Title = "EditQuestion";
+}
+<style>
+    /*استایل مربوط به دکمه ثبت*/
+    * {
+        -webkit-transition-property: all;
+        -webkit-transition-duration: .2s;
+        -moz-transition-timing-function: cubic-bezier(100,50,21,6);
+        -moz-transition-property: all;
+        -moz-transition-duration: .2s;
+        -moz-transition-timing-function: cubic-bezier(100,50,21,6);
+    }
+
+    .test {
+        position: relative;
+        display: inline-block;
+        width: 166px;
+        height: 45px;
+        font-size: 15px;
+        line-height: 45px;
+        text-align: center;
+        text-transform: uppercase;
+        color: #000000;
+        cursor: pointer;
+        overflow: hidden;
+    }
+
+        .test svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+            .test svg rect {
+                fill: none;
+                stroke: #130c0c;
+                stroke-width: 5;
+                stroke-dasharray: 422, 0;
+                transition: all 1300ms ease-in-out;
+            }
+
+        .test:hover svg rect {
+            stroke-width: 5;
+            stroke-dasharray: 10, 310;
+            stroke-dashoffset: 33;
+        }
+
+        .test:hover {
+            color: #fff;
+            font-size: 18px;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+    #btnSave {
+        padding: 0 30px !important;
+    }
+
+
+    .remove {
+        font-size: 20px;
+        background-color: darkgrey;
+        border-radius: 5px;
+        text-align: center;
+        cursor: pointer;
+        width: 20px;
+        -webkit-animation: in 1s;
+        vertical-align: middle;
+    }
+
+        .remove:hover {
+            background-color: red;
+            transition: 0.6s;
+            color: white;
+            -webkit-animation: out 1s;
+        }
+
+    #cntYesNo input[type=radio] {
+        margin-left: 4px;
+    }
+
+    .form-element-content {
+        padding: 12px 0 0 0;
+    }
+
+    .form-element {
+        margin-right: 10px !important;
+        margin-top: 3px !important;
+        display: inline-block;
+    }
+
+    .contents {
+        display: none;
+    }
+
+    #txtTitle {
+        resize: none;
+    }
+
+    @@-webkit-keyframes in {
+        from {
+            -webkit-transform: rotate(0deg);
+        }
+
+        to {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+</style>
+<div class="container">
+    <form>
+        <div id="form">
+            <input type="hidden" name="id" />
+            <div class="row">
+                <div class="col-md-12">
+                    <label id="lbl-title" for="txtTitle">عنوان سوال خود را وارد کنید</label>
+                    <textarea class="form-control" id="txtTitle" name="title" data-validate="required"></textarea>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 7px; margin-bottom: 20px;">
+
+                <div class="form-group  col-md-3">
+                    <label for="cmbCategory">انتخاب دسته دسته بندی</label>
+                    <select id="cmbCategory" class="form-control" name="categoryQuestionId" data-validate="required">
+                        <option value="">...</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="cmbBuyType">انتخاب نوع خرید مشتری</label>
+                    <select id="cmbBuyType" class="form-control" name="buyType" data-validate="required">
+                        <option value="">...</option>
+                        <option value="0">خرید در شعبه</option>
+                        <option value="1">خرید غیر حضوری</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="cmbBuyTypeSubset">انتخاب نوع سفارش مشتری</label>
+                    <select id="cmbBuyTypeSubset" class="form-control" name="buyTypeSubset" data-validate="required">
+                        <option value="">...</option>
+                        <option value="0">سفارشی</option>
+                        <option value="1">تعمیری</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="cmbBuyTypeOnline">انتخاب نحوه خرید</label>
+                    <select id="cmbBuyTypeOnline" class="form-control" name="buyTypeOnline" data-validate="required">
+                        <option value="">...</option>
+                        <option value="0">تلفنی</option>
+                        <option value="1">سایت </option>
+                        <option value="2">حضوری</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="cmbQuestion">انتخاب نوع پرسش</label>
+                    <select id="cmbQuestion" class="form-control" name="crmQuestionType" data-validate="required">
+                        <option value="0">بله / خیر</option>
+                        <option value="1">چند انتخابی</option>
+                        <option value="2">تک انتخابی</option>
+                        <option value="3">تشریحی</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="txtOrder">ترتیب </label>
+                    <input id="txtOrder" class="form-control" name="order" placeholder="ترتیب دسته بندی" data-validate="required" />
+                </div>
+            </div>
+            <!--نمایش ظرف تشریحی-->
+            <div id="cntDescriptive" class="row contents">
+                <div class="col-md-12">
+                    <textarea id="txtDescriptive" class="form-control empty-val " cols="10" name="defaultDescriptive" style="resize: none"></textarea>
+                </div>
+            </div>
+        </div>
+        <!--نمایش بله/خیر-->
+        <div id="cntYesNo" class="row contents">
+            <div class="col-md-12">
+                <label>
+                    <input type="radio" class="empty-check" name="defaultYesNo" disabled /> بله
+                </label>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <label>
+                    <input type="radio" class="empty-check" name="defaultYesNo" disabled /> خیر
+                </label>
+            </div>
+        </div>
+        <!--قسمت چند انتخابی-->
+        <div id="cntCheckbox" class="row contents">
+            <div class="col-md-12">
+                <button id="btnAddCheckbox" class="btn btn-success">+</button>
+            </div>
+            <div class="col-md-12">
+                <div class="form-inline form-element-content detail-entity">
+                    <input type="hidden" name="id" value="" />
+                    <input type="text" class="form-control empty-val inputValueMain" placeholder="مقدار" name="value" />
+                    <input type="checkbox" class="form-element v-middle empty-check chkMain" checked="checked" name="defaultSelected" />
+                </div>
+            </div>
+        </div>
+        @*<textarea type="text" class="form-control empty-val v-middle" placeholder="توضیحات" cols="10" name="description" style="resize:none;width:600px;margin: 0 10px;"></textarea>*@
+        <!--قسمت تک انتخابی-->
+        <div id="cntRadiobox" class="row contents">
+            <div class="col-md-12">
+                <button id="btnAddRadio" class="btn btn-success">+</button>
+            </div>
+            @*<div class="col-md-12">
+                    <div class="form-inline form-element-content detail-entity">
+                        <input type="hidden" name="id" value="" />
+                        <input type="text" class="form-control empty-val" placeholder="مقدار" name="value" />
+                        <input type="radio" class="form-element v-middle empty-check" name="defaultSelected" />
+                    </div>
+                </div>*@
+        </div>
+        <br />
+        <br />
+        <div class="col-md-12">
+            <div id="btnSubmit" class="test">
+                <svg>
+                    <rect x="0" y="0" fill="none" width="166" height="45" />
+                </svg>
+                <span><i class="fa fa-check"></i></span>
+                ثبت
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+
+
+        $(document).ready(function () {
+            valueChange();
+            $(".empty-check").prop('checked', false);
+            $("#cmbQuestion").change(function () {
+                //اگر گزینه چند انتخابی ، انتخاب شد
+                valueChange();
+            });
+
+            $(document).on("click", ".remove", function (event) {
+                event.preventDefault();
+                $(this).parents(".appended-element-content").remove();
+            });
+
+            $("#btnAddCheckbox").on("click", function (event) {
+                event.preventDefault();
+                $("#cntCheckbox").append($("#tmplCheckbox").text());
+            });
+
+            $("#btnAddRadio").on("click", function (event) {
+                event.preventDefault();
+                $("#cntRadiobox").append($("#tmplRadio").text());
+            });
+
+            $("#btnSubmit").on("click", function (event) {
+                event.preventDefault();
+                var question = getEntity("#form");
+
+                question.crmQuestionValueViewModelList = [];
+                $(".detail-entity").each(function (index, element) {
+                    var detailEntity = getEntity(element);
+
+                    if (detailEntity.value) {
+                        question.crmQuestionValueViewModelList.push(detailEntity);
+                    }
+                });
+
+                if (question.crmQuestionType == 1 || question.crmQuestionType == 2) {
+                    if (question.crmQuestionValueViewModelList.length == 0) {
+                        alert("ثبت یک پاسخ برای نوع چند انتخابی و تک انتخابی الزامی است.");
+                        return;
+                    }
+                }
+
+                if (checkForm("#form")) {
+                    loader(true);
+                    $.post("/crm/SaveQuestion", question, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                document.location = "/crm/CreateQuestion/";
+                            })
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    });
+                }
+            });
+            loadRemoteSelect("#cmbCategory", "/crm/GetAllCategory", null, "id", "title", "...", function () {
+                load();
+            });
+        });
+
+        function load() {
+            if (id > 0) {
+                loader(true);
+                $.get("/crm/load/" + id , function (response) {
+                    if (response.status == 200) {
+                        var data = response.data;
+                        var list = data.crmQuestionValueViewModelList;
+                        setEntity(data , "#form");
+                        $("#cmbQuestion").change();
+                        setEntity(data , "#form");
+                        if (data.crmQuestionType == 1) {
+                            for (var i = 0; i < data.crmQuestionValueViewModelList.length - 1; i++) {
+                                $("#cntCheckbox").append($("#tmplCheckbox").text().replaceAll("{{:id}}", data.crmQuestionValueViewModelList[i].id));
+                                $(".inputVal[data-question-value-id=" + data.crmQuestionValueViewModelList[i].id + "]").val(data.crmQuestionValueViewModelList[i + 1].value);
+                                $(".check[data-question-value-id=" + data.crmQuestionValueViewModelList[i].id + "]").prop("checked", data.crmQuestionValueViewModelList[i + 1].defaultSelected);
+                            }
+                            $(".inputValueMain").val(data.crmQuestionValueViewModelList[0].value);
+                            $(".chkMain").prop("checked", data.crmQuestionValueViewModelList[0].defaultSelected);
+                        }
+                        if (data.crmQuestionType == 2) {
+                            for (var i = 0; i < data.crmQuestionValueViewModelList.length; i++) {
+                                $("#cntRadiobox").append($("#tmplRadio").html());
+                            }
+                            $("#cntRadiobox").find(".detail-entity").each(function (index, element) {
+                                //setEntity(data.crmQuestionValueViewModelList[index], element);
+                                var item = list[index];
+                                $(element).find("[name=value]").val(item.value);
+                                $(element).find("[name=defaultSelected]").prop("checked" , item.defaultSelected);
+                            });
+
+                        }
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            }
+
+        }
+
+        function valueChange() {
+            var value = $("#cmbQuestion").val();
+            emptyValue();
+
+            $(".contents").hide();
+            if (value == 0) {
+                $("#cntYesNo").show();
+            }
+            else if (value == 1) {
+                $("#cntCheckbox").show();
+            }
+            else if (value == 2) {
+                $("#cntRadiobox").show();
+            }
+            else if (value == 3) {
+                $("#cntDescriptive").show();
+            }
+        }
+
+        function emptyValue() {
+            $(".appended-element").remove();
+            $(".empty-val").val('');
+            $(".empty-check").prop('checked', false);
+        }
+    </script>
+
+    <script id="tmplRadio" type="text/x-jsrender">
+        <div class="col-md-12 appended-element-content detail-entity">
+            <div class="form-inline form-element-content appended-element">
+                <input type="hidden" name="id" value="" />
+                <input type="text" class="form-control required " placeholder="مقدار" name="value" />
+                <input type="radio" class="form-element v-middle rdoMain" name="defaultSelected" value="true" />
+                <i class="fa fa-close remove"></i>
+            </div>
+        </div>
+    </script>
+
+    <script id="tmplCheckbox" type="text/x-jsrender">
+        <div class="col-md-12 appended-element-content detail-entity">
+            <div class="form-inline form-element-content appended-element">
+                <input type="hidden" name="id" value="" />
+                <input type="text" class="form-control required inputVal" placeholder="مقدار" name="value" data-question-value-id="{{:id}}" />
+                <input type="checkbox" class="form-element v-middle check" name="defaultSelected" value="true" data-question-value-id="{{:id}}" />
+                <i class="fa fa-close remove"></i>
+            </div>
+        </div>
+    </script>
+}
+

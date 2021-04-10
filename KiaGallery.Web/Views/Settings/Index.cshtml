@@ -1,0 +1,132 @@
+﻿
+@{
+    List<Settings> settingsList = ViewBag.SettingsList;
+}
+
+    <div id="form" class="container">
+        <div class="form-group" style="margin-right: 1025px;">
+            <button id="btnSave" type="submit" class="btn btn-success">
+                <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                ذخیره
+            </button>
+        </div>
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#home">مصوبات</a></li>
+            <li><a data-toggle="tab" href="#menu1">شعبه</a></li>
+            <li><a data-toggle="tab" href="#menu2">دفتر مرکزی</a></li>
+        </ul>
+        <br />
+        <div class="tab-content">
+            <div id="home" class="tab-pane fade in active">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="form-group">
+                        <label for="txtKeyContractYear">سال جاری</label>
+                        <input id="txtKeyContractYear" class="form-control " name="@KiaGallery.Model.Context.Settings.KeyContractYear" data-validate="required,maxLength(4),number" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeyContractYear).Value" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtKeyMontlyPayment">نرخ حقوق پایه ماهانه مصوب سال </label>
+                        <input id="txtSalaryKeyMontlyPayment" name="@KiaGallery.Model.Context.Settings.KeyBaseSalary" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeyBaseSalary).Value" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtYearAddedRate">اضافی در سال</label>
+                        <input id="txtYearAddedRate" name="@KiaGallery.Model.Context.Settings.KeyYearAddedRate" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeyYearAddedRate).Value" />
+                    </div>
+                </div>
+            </div>
+            <div id="menu1" class="tab-pane fade">
+               
+                <div class="col-md-6">
+                    <label>پرسنل</label>
+                    <br />
+                    <br />
+                    <div class="form-group">
+                        <label for="txtOvertime">نرخ هر ساعت کاری</label>
+                        <input id="txtOvertime" name="@KiaGallery.Model.Context.Settings.KeyBranchPersonelHourlyPayment" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeyBranchPersonelHourlyPayment).Value" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtOvertime">نرخ اضافه کاری</label>
+                        <input id="txtOvertime" name="@KiaGallery.Model.Context.Settings.KeyBranchPersonelOverTime" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeyBranchPersonelOverTime).Value" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtSalaryBaseBranch">نرخ ماموریت</label>
+                        <input id="txtSalaryBaseBranch" name="@KiaGallery.Model.Context.Settings.KeyBranchPersonelMission" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeyBranchPersonelMission).Value" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtOvertime">ساعت کاری ماهانه</label>
+                        <input id="txtOvertime" name="@KiaGallery.Model.Context.Settings.KeyBranchPersonelMonthlyWorkingHour" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeyBranchPersonelMonthlyWorkingHour).Value" />
+                    </div>
+
+                </div>
+              
+                <div class="col-md-6">
+                    <label>سرپرست</label>
+                    <br />
+                    <br />
+                    @*<div class="form-group">
+                        <label for="txtOvertime">نرخ هر ساعت کاری</label>
+                        <input id="txtOvertime" name="@KiaGallery.Model.Context.Settings.KeySuperVisorHourlyPayment" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeySuperVisorHourlyPayment).Value" />
+                    </div>*@
+                    <div class="form-group">
+                        <label for="txtOvertime">نرخ اضافه کاری</label>
+                        <input id="txtOvertime" name="@KiaGallery.Model.Context.Settings.KeySuperVisorOverTime" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeySuperVisorOverTime).Value" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtSalaryBaseBranch">نرخ ماموریت</label>
+                        <input id="txtSalaryBaseBranch" name="@KiaGallery.Model.Context.Settings.KeySuperVisorMission" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeySuperVisorMission).Value" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtOvertime">ساعت کاری ماهانه</label>
+                        <input id="txtOvertime" name="@KiaGallery.Model.Context.Settings.KeySuperVisorMonthlyWorkingHour" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeySuperVisorMonthlyWorkingHour).Value" />
+                    </div>
+
+                </div>
+
+            </div>
+            <div id="menu2" class="tab-pane fade">
+                <div class="col-md-4 col-md-offset-4">
+
+                    <div class="form-group">
+                        <label for="txtOvertime">نرخ هر ساعت کاری</label>
+                        <input id="txtOvertime" name="@KiaGallery.Model.Context.Settings.KeyOfficeHourlyPayment" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeyOfficeHourlyPayment).Value" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtOvertime">نرخ اضافه کاری</label>
+                        <input id="txtOvertime" name="@KiaGallery.Model.Context.Settings.KeyOfficeOverTime" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeyOfficeOverTime).Value" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtSalaryBaseBranch">نرخ ماموریت</label>
+                        <input id="txtSalaryBaseBranch" name="@KiaGallery.Model.Context.Settings.KeyOfficeMission" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeyOfficeMission).Value" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtOvertime">ساعت کاری ماهانه</label>
+                        <input id="txtOvertime" name="@KiaGallery.Model.Context.Settings.KeyOfficeMonthlyWorkingHour" class="form-control money-separator" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeyOfficeMonthlyWorkingHour).Value" />
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#form").find(".money-separator").each(function (index, element) {
+                moneySeparator(element);
+            });
+
+            $("#btnSave").on("click", function (event) {
+                event.preventDefault();
+                if (checkForm("#form")) {
+                    var entity = getEntity(form)
+                    $.post("/settings/SettingSave", entity, function (response) {
+                        alert(response.message);
+                    });
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,20 @@
+﻿<Window x:Class="KiaGallery.Crm.App.Forms.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KiaGallery.Crm.App.Forms"
+        mc:Ignorable="d"
+        Title="ورود" Height="300" Width="500" FontFamily="IRANSans" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="#f3f3f3">
+    <Grid FlowDirection="RightToLeft">
+        <Image HorizontalAlignment="Left" Height="179" Margin="290,40,0,0" VerticalAlignment="Top" Width="192" Source="/KiaGallery.Crm.App;component/Image/kia-gallery-logo-square.png"/>
+
+        <Label Content="نام کاربری" HorizontalAlignment="Left" Margin="27,26,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtUsername" HorizontalAlignment="Left" Height="30" Margin="27,61,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="224" Padding="3" Text="admin" />
+
+        <Label Content="گذرواژه"  HorizontalAlignment="Left" Margin="27,96,0,0" VerticalAlignment="Top"/>
+        <PasswordBox x:Name="txtPassword" HorizontalAlignment="Left" Height="30" Margin="27,131,0,0" VerticalAlignment="Top" Width="224" Padding="3" Password="alialiali" />
+
+        <Button x:Name="btnLogin" Content="ورود" HorizontalAlignment="Left" Margin="27,187,0,0" VerticalAlignment="Top" Width="224" Height="32" Background="#B0BEC5" Click="btnLogin_Click"/>
+    </Grid>
+</Window>

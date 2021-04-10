@@ -1,0 +1,269 @@
+﻿
+@{
+    ViewBag.Title = "مدیریت حقوق و دستمزد";
+}
+
+<div id="control-section">
+    <button id="print" class="btn btn-primary">
+        <i class="fa fa-print v-middle" aria-hidden="true"></i>&nbsp;
+        <span>چاپ</span>
+    </button>
+    <button id="importFile" class="btn btn-primary">
+        <i class="fa fa-plus v-middle" aria-hidden="true"></i>&nbsp;
+        <span>وارد کردن اکسل</span>
+    </button>
+    <input type="file" id="file" style="display:none;"/>
+</div>
+
+<div id="content">
+
+</div>
+<div id="importModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">وارد کردن اکسل</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input id="hiddenId" type="hidden" />
+                    <label>تاریخ</label>
+                    <select class="cmbYear form-control" data-validate="required" name="year">
+                        <option value="">...</option>
+                        @for (int i = 1396; i < 1450; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+                    
+                </div>
+                <div class="form-group">
+                    <label>ماه</label>
+                    <select class="cmbMonth form-control" data-validate="required" name="month">
+                        <option value="">...</option>
+                        <option value="1">فروردین</option>
+                        <option value="2">اردیبهشت</option>
+                        <option value="3">خرداد</option>
+                        <option value="4">تیر</option>
+                        <option value="5">مرداد</option>
+                        <option value="6">شهریور</option>
+                        <option value="7">مهر</option>
+                        <option value="8">آبان</option>
+                        <option value="9">آذر</option>
+                        <option value="10">دی</option>
+                        <option value="11">بهمن</option>
+                        <option value="12">اسفند</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnImport" type="button" class="btn btn-success btn-upload btn-control">
+                    <i class="fa fa-upload v-middle" aria-hidden="true"></i>&nbsp;
+                    <span>آپلود</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="printModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">چاپ فیش حقوقی</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input id="hiddenId" type="hidden" />
+                    <label>تاریخ</label>
+                    <select class="cmbYear form-control" data-validate="required" name="year">
+                        <option value="">...</option>
+                        @for (int i = 1396; i < 1450; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+
+                </div>
+                <div class="form-group">
+                    <label>ماه</label>
+                    <select class="cmbMonth form-control" data-validate="required" name="month">
+                        <option value="">...</option>
+                        <option value="1">فروردین</option>
+                        <option value="2">اردیبهشت</option>
+                        <option value="3">خرداد</option>
+                        <option value="4">تیر</option>
+                        <option value="5">مرداد</option>
+                        <option value="6">شهریور</option>
+                        <option value="7">مهر</option>
+                        <option value="8">آبان</option>
+                        <option value="9">آذر</option>
+                        <option value="10">دی</option>
+                        <option value="11">بهمن</option>
+                        <option value="12">اسفند</option>
+                    </select>
+                </div>
+                <div id="parent-section" class="form-group relative">
+                    <label for="cmbBranch">شعبه</label>
+                    <select id="cmbBranch" class="form-control" name="branchId">
+                        <option value="">...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnPrint" type="button" class="btn btn-success btn-upload btn-control">
+                    <i class="fa fa-print v-middle" aria-hidden="true"></i>&nbsp;
+                    <span>پرینت</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script type="text/javascript">
+        var yearImport="", monthImport="";
+        var defaultEntity = {
+            page: 0,
+            count: 200,
+            term: null,
+            branchId: null
+        }
+
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(document).ready(function () {
+            loadRemoteSelect("#cmbBranch", "/branch/getAll", null, "id", "name", "...", function () {
+                getList();
+            });
+            $("#importFile").on("click", function (event) {
+                event.preventDefault();
+                $("#importModal").modal('show');
+            });
+            $("#print").on("click", function (event) {
+                event.preventDefault();
+                $("#printModal").modal('show');
+            });
+            $("#btnPrint").on("click", function (event) {
+                var yearPrint = $("#printModal .cmbYear").val();
+                var monthPrint = $("#printModal .cmbMonth").val();
+                if (yearPrint != null && yearPrint != "" && monthPrint != null && monthPrint != "") {
+                    window.open("/salary/print?date=" + + yearPrint + "/" + monthPrint + "/1&branchId="+$("#cmbBranch").val(), "_blank");
+                    $("#printModal").modal('hide');
+                }
+                else {
+                    alert("تاریخ را انتخاب کنید.");
+                }
+            });
+            $("#btnImport").on("click", function (event) {
+                yearImport = $("#importModal .cmbYear").val();
+                monthImport = $("#importModal .cmbMonth").val();
+                if (yearImport != null && yearImport != "" && monthImport != null && monthImport != "") {
+                    importFile(yearImport + "/" + monthImport + "/1");
+                    $("#file").click();
+                }
+                else {
+                    alert("تاریخ را انتخاب کنید.");
+                }
+            });
+
+            $('#file').fileupload({
+                dataType: 'json',
+                url: "/salary/import?date=",
+                autoUpload: true,
+                start: function () {
+                    loader(true);
+                },
+                done: function (e, data) {
+                    var response = data.result;
+                    alert(response.message);
+                    $("#importModal").modal('hide');
+                    loader(false);
+                    getList();
+                }
+            }).on('fileuploadprogressall', function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('.progress .progress-bar').css('width', progress + '%');
+            });
+        });
+
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+
+            loader(true);
+            $.get("/salary/search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+        function importFile(date) {
+            $('#file').fileupload("destroy");
+            $('#file').fileupload({
+                dataType: 'json',
+                url: "/salary/import?date=" + date,
+                autoUpload: true,
+                start: function () {
+                    loader(true);
+                },
+                done: function (e, data) {
+                    var response = data.result;
+                    alert(response.message);
+                    loader(false);
+                    $("#importModal").modal('hide');
+                    getList();
+                }
+            }).on('fileuploadprogressall', function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('.progress .progress-bar').css('width', progress + '%');
+            });
+        }
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>نام، نام خانوادگی</th>
+                    <th>ساعت</th>
+                    <th>شعبه</th>
+                    <th>تاریخ</th>
+                    <th class="icon-col text-center">ویرایش</th>
+                    <th class="icon-col text-center">پرینت</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td>{{:#index + 1}}</td>
+                    <td>{{:fullName}}</td>
+                    <td>{{:workHours}}</td>
+                    <td>{{:monthCalculated}}</td>
+                    <td>{{:branch}}</td>
+                    <td class="txt-al-c">
+                        <a href="/salary/edit/{{:id}}" class="btn btn-primary btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <a href="/salary/print?date={{:monthCalculated}}&salaryId={{:id}}" class="btn btn-primary btn-xs" data-title="پرینت"><i class="fa fa-print" aria-hidden="true"></i></a>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+}

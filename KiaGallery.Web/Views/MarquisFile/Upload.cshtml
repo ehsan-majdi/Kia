@@ -1,0 +1,407 @@
+﻿
+@{
+    ViewBag.Title = "آپلود فایل";
+}
+
+<style type="text/css">
+    .file {
+        text-align: left;
+        direction: ltr;
+        border: solid 1px silver;
+        padding: 4px;
+        margin: 4px 0;
+    }
+
+    .m-file-icon {
+        width: 25px;
+        display: inline-block;
+        text-align: center;
+        color: #00796b;
+        font-size: 15px;
+    }
+
+    #contentFileDetail table td {
+        border: none;
+    }
+</style>
+
+<div class="container">
+    <div style="margin-bottom: 10px;">
+        <button id="btnShowUploadModal" class="btn btn-success" style="width: 150px;">آپلود فایل</button>
+    </div>
+    <div>
+        <input id="txtSearchDate" type="text" placeholder="تاریخ" class="form-control date" style="width: 200px; display: inline-block;" autocomplete="off" />
+
+        <select id="cmbSearchBranch" class="form-control cmbBranch" style="width: 200px; display: inline-block;">
+            <option value="">...</option>
+        </select>
+        <button id="btnSearch" class="btn btn-primary">جستجو</button>
+    </div>
+    <div id="content">
+
+    </div>
+</div>
+
+<div id="fileModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">آپلود فایل</h4>
+                <input id="file" type="file" multiple class="hidden" />
+            </div>
+            <div id="frmUpload" class="modal-body">
+                <div>
+                    @*<input type="text" placeholder="تاریخ" class="form-control date" style="width: 200px; display: inline-block;" autocomplete="off" name="persianDate" />*@
+
+                    <select id="cmbBranch" class="form-control cmbBranch" style="width: 200px; display: inline-block;" name="branchId">
+                        <option value="">...</option>
+                    </select>
+                    <button id="btnSelectFiles" class="btn btn-primary">انتخاب فایل</button>
+                    <textarea id="txtDescription" class="form-control" style="resize: vertical; margin-top: 10px;" placeholder="توضیحات" name="description"></textarea>
+
+                    <div id="fileList">
+
+                    </div>
+                    <div class="progress hidden">
+                        <div id="progressBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                            <span class="sr-only">45%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" type="button" class="btn btn-success  btn-control">ذخیره</button>
+                <button type="button" class="btn btn-danger btn-control" data-dismiss="modal">لغو</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="descriptionModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <input id="hiddenEditId" type="hidden" />
+                <textarea id="txtEditDescription" class="form-control" style="resize: vertical; margin-top: 10px;" placeholder="توضیحات" rows="7"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSaveDesc" type="button" class="btn btn-success btn-control">ذخیره</button>
+                <button type="button" class="btn btn-danger  btn-control" data-dismiss="modal">لغو</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="fileDetailModal" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="max-height: 90%;overflow-y: scroll;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id="contentFileDetail">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-control" data-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 30
+        }
+
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(document).ready(function () {
+            loadRemoteSelect(".cmbBranch", "/branch/getAll", null, "id", "name", "انتخاب شعبه ...", function () {
+                getList();
+            });
+
+            $(".date").pDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true
+            });
+
+            $("#btnShowUploadModal").on("click", function () {
+                $("#cmbBranch").val($("#cmbBranch option:first").val());
+                $("#txtDescription").val("");
+                $("#fileList").empty();
+                $("#fileModal").modal({ backdrop: 'static', keyboard: false });
+                $("#progressBar").closest(".progress").addClass("hidden");
+                $("#fileModal").modal("show");
+            });
+
+            $("#btnSelectFiles").on("click", function () {
+                $("#file").click();
+            });
+
+            $("#btnSave").on("click", function () {
+                if ($("#cmbBranch").val() > 0) {
+                    save();
+                }
+                else {
+                    alert("انتخاب شعبه اجباری است.");
+                }
+            });
+
+            $("#file").on("change", function () {
+                var files = $("#file").prop("files");
+                console.log(file)
+                $("#fileList").empty();
+                for (var i = 0; i < files.length; i++) {
+                    if (files[i].name.substring(0, 3).toLowerCase() == "img" || files[i].name.substring(0, 2).toLowerCase() == "dt") {
+                        var template = $.templates("#templateFile");
+                        var htmlOutput = template.render(files[i]);
+                        $("#fileList").append(htmlOutput);
+                    }
+                    else {
+                        alert("فایل ها به درستی انتخاب نشده است.");
+                        $("#fileList").empty();
+                        break;
+                    }
+                }
+            });
+
+            $("#btnSearch").on("click", function (e) {
+                e.preventDefault();
+
+                var param = { branchId: $("#cmbSearchBranch").val(), date: $("#txtSearchDate").val() }
+                manipulateParam(param, "page");
+
+                getList();
+            });
+
+            $(document).on("click", ".download", function () {
+                var id = $(this).attr("data-id");
+                loader(true);
+                $.get("/marquisFile/getDetailFiles/" + id, {}, function (response) {
+                    if (response.status == 200) {
+                        var data = response.data;
+                        var template = $.templates("#templateFileDetail");
+                        var htmlOutput = template.render(data);
+                        $("#contentFileDetail").html(htmlOutput);
+                        $("#fileDetailModal").modal("show");
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            });
+
+            $(document).on("click", ".remove", function () {
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف فایل اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/marquisFile/delete/" + id, {}, function (response) {
+                        if (response.status == 200) {
+                            getList();
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                        loader(false);
+                    });
+                });
+            });
+
+            $("#btnSaveDesc").on("click", function () {
+                var entity = {
+                    id: $("#hiddenEditId").val(),
+                    description: $("#txtEditDescription").val()
+                }
+                loader(true);
+                $.post("/marquisFile/changeDescription", entity, function (response) {
+                    if (response.status == 200) {
+                        $("#descriptionModal").modal("hide");
+                        getList();
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            });
+
+            $(document).on("click", ".description", function () {
+                var id = $(this).attr("data-id");
+                var description = $(this).attr("data-description");
+
+                $("#hiddenEditId").val(id);
+                $("#txtEditDescription").val(description);
+                $("#descriptionModal").modal("show");
+            });
+
+        });
+
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend({}, defaultEntity, newParams);
+            params.date = $("#txtSearchDate").val();
+
+            if (params.branchId)
+                $("#cmbSearchBranch").val(params.branchId)
+            else
+                $("#cmbSearchBranch option:first").val()
+
+            loader(true);
+            $.get("/marquisFile/getFiles", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+        function save() {
+
+            var params = getEntity("#frmUpload");
+
+            $("#fileModal").find("button").prop("disabled", true);
+            $("#fileModal").find("input").prop("disabled", true);
+            $("#fileModal").find("textarea").prop("disabled", true);
+            $("#fileModal").find("select").prop("disabled", true);
+
+            var filesList = $("#file").prop("files");
+            $("#file").fileupload({
+                dataType: 'json',
+                url: "/marquisFile/save",
+                formData: params,
+                autoUpload: false,
+                start: function () {
+                    $("#progressBar").closest(".progress").removeClass("hidden");
+                },
+                success: function (response, textStatus, jqXHR) {
+                    $("#fileModal").find("button").prop("disabled", false);
+                    $("#fileModal").find("input").prop("disabled", false);
+                    $("#fileModal").find("textarea").prop("disabled", false);
+                    $("#fileModal").find("select").prop("disabled", false);
+                    $("#file").fileupload("destroy");
+
+                    if (response.status === 403 || response.status === 401) {
+                        document.location.href = "/login?redirect=" + document.location.pathname;
+                    }
+                    else if (response.status === 200) {
+                        callbackAlert(response.message, function () {
+                            $("#fileModal").modal("hide");
+                            getList();
+                        })
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $("#file").fileupload("destroy");
+                    $("#progressBar").closest(".progress").removeClass("hidden");
+                },
+                complete: function (result, textStatus, jqXHR) {
+                    $("#file").fileupload("destroy");
+                    $("#progressBar").closest(".progress").addClass("hidden");
+                },
+                progressall: function (e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    console.log(progress)
+                    $('#progressBar').css({ 'width': progress + "%" });
+                    $('#progressBar').find(".sr-only").html(progress + "%");
+                }
+            });
+
+            $("#file").fileupload('send', { files: filesList });
+        }
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        {{if list.length > 0}}
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>شعبه</th>
+                    <th class="txt-al-c">تاریخ</th>
+                    <th>تعداد فایل</th>
+                    <th>توضیحات</th>
+                    <th class="text-center" style="width: 80px;">عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td>{{:#index + 1}}</td>
+                    <td>{{:branchName}}</td>
+                    <td class="ltr txt-al-c">{{:persianDate}}</td>
+                    <td>{{:fileCount}}</td>
+                    <td><span class="description pointer" data-id="{{:id}}" data-description="{{:description}}">{{:description == null ? '-' : description.substr(0, 50)}}</span></td>
+                    <td class="txt-al-c">
+                        <button class="remove btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                        <button class="download btn btn-primary btn-xs" data-title="دانلود" data-id="{{:id}}"><i class="fa fa-list" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+        {{else}}
+        <h4 style="margin-top: 50px;" class="txt-al-c">در تاریخ مورد نظر فایل یافت نشد.</h4>
+        {{/if}}
+    </script>
+
+    <script id="templateFile" type="text/x-jsrender">
+        <div class="file">
+            {{if name.substring(0, 3).toLowerCase() == "img"}}
+            <span class="m-file-icon"><i class="fa fa-image"></i></span>
+            {{/if}}
+            {{if name.substring(0, 2).toLowerCase() == "dt"}}
+            <span class="m-file-icon"><i class="fa fa-file"></i></span>
+            {{/if}}
+
+            {{:name}}
+        </div>
+    </script>
+
+    <script id="templateFileDetail" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th class="txt-al-c">نام فایل</th>
+                    <th class="icon-col text-center">دانلود</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td class="ltr txt-al-l">
+                        <div>
+                            {{if fileName.substring(0, 3).toLowerCase() == "img"}}
+                            <span class="m-file-icon"><i class="fa fa-image"></i></span>
+                            {{/if}}
+                            {{if fileName.substring(0, 2).toLowerCase() == "dt"}}
+                            <span class="m-file-icon"><i class="fa fa-file"></i></span>
+                            {{/if}}
+                            <span class="inline-block">
+                                {{:fileName}}
+                            </span>
+                        </div>
+                    </td>
+                    <td class="txt-al-c" style="margin-right: 20px;">
+                        <a href="/marquisFile/download/file/{{:fileId}}/{{:fileName}}"><i class="fa fa-download" aria-hidden="true"></i></a>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}

@@ -1,0 +1,140 @@
+/// ??? ???? ?????
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        public ActionResult PrintReport(int id)
+        {
+            using (var db = new KiaGalleryContext())
+            {
+                var data = db.CompanyInvoiceDetails.Where(x => x.CompanyInvoiceId == id).ToList();
+
+                int count = (int)(data.Count() / 4);
+
+                if (data.Count() % 4 == 0) count++;
+                List<StiReport> repo = new List<StiReport>();
+
+                for (int i = 1; i < count; i++)
+                {
+                    var dataForPrint = data.Skip(i * 4).Take(4).ToList();
+
+                    DataSet dataset = new DataSet("DataSource");
+                    DataTable dataTable = new DataTable();
+                    dataTable.Columns.Add("Row");
+                    dataTable.Columns.Add("Carat");
+                    dataTable.Columns.Add("Wage");
+                    dataTable.Columns.Add("Gram");
+                    dataTable.Columns.Add("DescriptionProduct");
+                    dataTable.Columns.Add("IdentificationCode");
+                    dataTable.Columns.Add("StonePrice");
+                    dataTable.Columns.Add("StoneWeight");
+                    dataTable.Columns.Add("Whistle");
+                    dataTable.Columns.Add("GoldPrice");
+                    dataTable.Columns.Add("Percent");
+                    dataTable.Columns.Add("SumPrice");
+                    
+                    var rowNumber = 1;
+                    double whistle = 0;
+                    int gram = 0;
+                    double Percent = 0.07;
+                    int stonePrice = 0;
+                    int goldPrice = 0;
+                    int wage = 0;
+                    List<string> sum = new List<string>();
+                    for (int j = 0; j < dataForPrint.Count; j++)
+                    {
+                        DataRow row = dataTable.NewRow();
+                        row["Row"] = j + 1;
+                        row["Carat"] = data[j].Carat.ToString().ToPersianNumber();
+                        row["Wage"] = data[j].Wage.ToString("N0").ToPersianNumber();
+                        row["Gram"] = data[j].Gram.ToString().ToPersianNumber();
+                        row["IdentificationCode"] = data[j].IdentificationCode.ToPersianNumber();
+                        row["StonePrice"] = data[j].StonePrice.ToString("N0").ToPersianNumber(); ;
+                        row["StoneWeight"] = data[j].StoneWeight.ToString().ToPersianNumber();
+                        row["Whistle"] = data[j].Whistle.ToString().ToPersianNumber();
+                        row["GoldPrice"] = data[j].GoldPrice.ToString("N0").ToPersianNumber();
+                        row["Percent"] = "7%";
+                        whistle = data[j].Whistle;
+                        whistle = whistle / 1000;
+
+                        gram = data[j].Gram;
+                        stonePrice = Convert.ToInt32(data[j].StonePrice);
+                        goldPrice = Convert.ToInt32(data[j].GoldPrice);
+                        wage = Convert.ToInt32(data[j].Wage);
+                        var section1 = whistle + gram;
+                        var section2 = goldPrice + wage;
+                        var section3 = (section1 * section2) + stonePrice;
+                        var section = Convert.ToInt32(section3 * Percent);
+                        var phrase2 = section + section3;
+                        row["SumPrice"] = phrase2.ToString("N0").ToPersianNumber();
+                        sum.Add(phrase2.ToString());
+                        rowNumber++;
+                        dataTable.Rows.Add(row);
+                    }
+                    dataset.Tables.Add(dataTable);
+
+                    StiReport report = new StiReport();
+                    report.Load(Server.MapPath("~/Report/CompanyInvoice/Factor.mrt"));
+
+
+                    report.Dictionary.Databases.Clear();
+                    report.ScriptLanguage = StiReportLanguageType.CSharp;
+                    report.RegData("DataSource", dataset.Tables[0].DefaultView);
+                    var branchPhone = data.Select(x => x.CompanyInvoice.Branch.Phone).FirstOrDefault();
+                    var branchName = data.Select(x => x.CompanyInvoice.Branch.Name).FirstOrDefault();
+                    var companyInvoice = data.Select(x => x.CompanyInvoice).FirstOrDefault();
+                    var collect = sum.Sum(x => Convert.ToDecimal(x));
+                    report.Dictionary.Variables["Date"].Value = DateUtility.GetPersianDate(DateTime.Now);
+                    report.Dictionary.Variables["BuyerName"].Value = companyInvoice.BuyerName;
+                    report.Dictionary.Variables["BuyerEconomicalNumber"].Value = companyInvoice.BuyerEconomicalNumber;
+                    report.Dictionary.Variables["BuyerNationalId"].Value = companyInvoice.BuyerNationalId;
+                    report.Dictionary.Variables["BuyerPhone"].Value = companyInvoice.BuyerPhone;
+                    report.Dictionary.Variables["BuyerPostalCode"].Value = companyInvoice.BuyerPostalCode;
+                    report.Dictionary.Variables["BuyerAddress"].Value = companyInvoice.BuyerAddress;
+                    report.Dictionary.Variables["Collect"].Value = collect.ToString("N0").ToPersianNumber();
+                    report.Dictionary.Variables["Reduction"].Value = companyInvoice.Reduction.ToString("N0").ToPersianNumber();
+                    var DeductionDiscounts = collect + companyInvoice.Reduction;
+                    report.Dictionary.Variables["DeductionDiscounts"].Value = DeductionDiscounts.ToString("N0").ToPersianNumber();
+                    decimal value1 = 0.06M;
+                    decimal value2 = 0.03M;
+                    var Taxation = Math.Floor(DeductionDiscounts * value1) + (DeductionDiscounts * value2);
+                    report.Dictionary.Variables["Taxation"].Value = Taxation.ToString("N0").ToPersianNumber();
+                    var Result = Taxation + DeductionDiscounts;
+                    report.Dictionary.Variables["Result"].Value = Result.ToString("N0").ToPersianNumber();
+
+                    report.Compile();
+                    report.Render(false);
+
+                    repo.Add(report);
+                    sum = null;
+                } 
+                StiReport joinedReport = new StiReport();
+                joinedReport.NeedsCompiling = false;
+                joinedReport.IsRendered = true;
+                joinedReport.RenderedPages.Clear();
+                foreach (var report in repo)
+                {
+                    foreach (StiPage page in report.CompiledReport.RenderedPages)
+                    {
+                        page.Report = joinedReport;
+                        page.NewGuid();
+                        joinedReport.RenderedPages.Add(page);
+                    }
+                }
+                MemoryStream stream = new MemoryStream();
+                StiPdfExportSettings settings = new StiPdfExportSettings();
+                StiPdfExportService service = new StiPdfExportService();
+                service.ExportPdf(joinedReport, stream, settings);
+
+                this.Response.Buffer = true;
+                this.Response.ClearContent();
+                this.Response.ClearHeaders();
+                this.Response.ContentType = "application/pdf";
+                this.Response.AddHeader("Content-Disposition", "attachment; filename=\"Report.pdf\"");
+                this.Response.ContentEncoding = Encoding.UTF8;
+                this.Response.AddHeader("Content-Length", stream.Length.ToString());
+                this.Response.BinaryWrite(stream.ToArray());
+                this.Response.End();
+                return new FileStreamResult(stream, "application/pdf");
+            }
+        }

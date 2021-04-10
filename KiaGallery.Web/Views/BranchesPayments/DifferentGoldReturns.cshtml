@@ -1,0 +1,127 @@
+﻿
+@{
+    List<KiaGallery.Web.Models.BranchModel> branchList = ViewBag.BranchList;
+    ViewBag.Title = "مرجوعی طلا متفرقه";
+}
+<link href="~/Content/ios-switch-rtl.css" rel="stylesheet" />
+<link href="~/content/order-page.css" rel="stylesheet" />
+<br />
+<div id="control-section">
+    <a href="/branchesPayments/addDifferentGoldReturns" class="btn btn-primary">
+        <i class="fa fa-plus v-middle" aria-hidden="true"></i>&nbsp;
+        <span>جدید</span>
+    </a>
+</div>
+<br />
+<div>
+    <div id="menu">
+        <ul>
+            @for (int i = 0; i < branchList.Count(); i++)
+            {
+                <li><a href="#" class="branch" data-id="@branchList[i].id">@branchList[i].name</a></li>
+            }
+            <li><a id="all" href="#" class="branch" data-id="-1">همه</a></li>
+        </ul>
+    </div>
+    <div id="content">
+
+    </div>
+</div>
+
+
+@section scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            branch:null,
+            page: 0,
+            count: 50,
+            typePayments:5
+        }
+
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(document).ready(function () {
+            getList();
+            $(document).on("click", ".branch", function (event) {
+                event.preventDefault();
+                var entity = {
+                    branch: $(this).attr("data-id")
+                };
+                manipulateParam(entity, "page");
+            });
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف شعبه اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/BranchesPayments/delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+        });
+
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+            $("#menu li").removeClass("active");
+            if (params["branch"] && params["branch"] >= 0)
+                $("#menu li a[data-id=" + params["branch"] + "]").closest("li").addClass("active");
+            else {
+                $("#menu li:last").addClass("active");
+                defaultEntity.status = null;
+            }
+            loader(true);
+            $.get("/BranchesPayments/search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>شعبه</th>
+                    <th>نوع</th>
+                    <th class="icon-col text-center">جزئیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td>{{:#index + 1}}</td>
+                    <td>{{:branchName}}</td>
+                    <td>{{:typePaymentsTitle}}</td>
+                    <td class="txt-al-c">
+                        <a href="/branchesPayments/editDifferentGoldReturns/{{:id}}" class="btn btn-primary btn-xs" data-title="جزئیات"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+}

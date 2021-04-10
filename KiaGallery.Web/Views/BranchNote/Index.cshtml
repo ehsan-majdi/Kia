@@ -1,0 +1,145 @@
+﻿@{
+    ViewBag.Title = "مدیریت محصولات";
+}
+<style>
+    .txt-info{
+        height: 60px;
+        overflow: hidden;
+        margin-top: 5px;
+        text-align: justify;
+    }
+    .well{
+        height:140px;
+    }
+</style>
+<div id="control-section" class="form-inline">
+    <a href="/branchNote/add" class="btn btn-primary">
+        <i class="fa fa-plus v-middle" aria-hidden="true"></i>&nbsp;
+        <span>جدید</span>
+    </a>
+</div>
+<br />
+<div id="control-section" class="form-inline">
+    <input id="txtTerm" type="text" name="term" class="form-control" placeholder="نام کاربر ثبت کننده"/>
+    <input id="btnSearch" type="button" value="جستجو" class="btn btn-primary" />
+</div>
+
+<div id="content" class="table-data table-responsive">
+
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+
+
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(document).ready(function () {
+            getList();
+
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف محصول اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/branchNote/delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+
+            $(document).on("click", "#btnSearch", function (event) {
+                event.preventDefault();
+                manipulateParam({ term: $("#txtTerm").val() }, "page");
+            });
+
+            $("#txtTerm").on("keyup", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    if ($("#txtTerm").val()) {
+                        var param = { term: $("#txtTerm").val() }
+                        manipulateParam(param, "page");
+                    }
+                    else
+                        removeParam("term");
+                }
+            });
+        });
+
+        function getList() {
+            updateForm();
+
+            var defaultEntity = {
+                page: 0,
+                count: 50,
+                term: null
+            }
+
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+
+            loader(true);
+            $.get("/branchNote/search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+        function updateForm() {
+            var params = getParam();
+
+            // term
+            if (params["term"]) {
+                $("#txtTerm").val(params["term"]);
+            }
+            else {
+                $("#txtTerm").val("");
+            }
+        }
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <div>
+            {{for list}}
+            <div class="col-md-3">
+                <div class="well">
+                    <div class="text-muted">
+                        <span class="createUser col-md-6">{{:createUserName}}</span>
+                        <span class="createDate col-md-6 text-left">{{:createDate}}</span>
+                    </div>
+                    <div class="txt-info col-md-12">{{:text}}</div>
+                    <div class="col-md-2 pull-left">
+                        <a href="/branchNote/edit/{{:id}}" class="btn btn-primary btn-xs" data-title="ویرایش" target="_blank"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </div>
+                    <div class="col-md-1 pull-left">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </div>
+                  
+                </div>
+            </div>
+            {{/for}}
+        </div>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+}

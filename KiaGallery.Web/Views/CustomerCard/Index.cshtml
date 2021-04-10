@@ -1,0 +1,1471 @@
+﻿
+@{
+    ViewBag.Title = "مدیریت کارت";
+}
+<style>
+    .form-item {
+        margin: 10px auto;
+        width: 30%;
+    }
+
+    .hide-form, .debit-price {
+        display: none
+    }
+
+    .bg-debit {
+        background-color: #d9534f !important;
+    }
+
+    .bg-credit {
+        background-color: #5cb85c !important;
+    }
+
+    .bg-balance {
+        background-color: deepskyblue !important;
+    }
+
+    .bg-orange {
+        background-color: #f0ad4e
+    }
+
+    .bg-silver {
+        background-color: silver;
+        color: white;
+    }
+
+    .bg-black {
+        background-color: black;
+        color: white
+    }
+
+    .btnOperation {
+        display: block;
+        margin: 5px auto;
+        width: 200px
+    }
+
+    .passWordMobile {
+        display: none
+    }
+
+    .newCariorCard {
+        display: none
+    }
+
+    .detail {
+        padding: 10px;
+        width: 200px;
+        margin: 7px;
+        display: inline-block
+    }
+
+    .fullName {
+        padding: 10px;
+        width: 200px;
+    }
+
+    tr > td {
+        border: none !important
+    }
+
+    #changeCardAlert {
+        color: red
+    }
+
+    .refresh {
+        top: -30px;
+        right: -65px;
+        color: deepskyblue;
+        transform: rotate(-90deg);
+        transition: 500ms ease;
+    }
+
+        .refresh:hover {
+            transform: rotate(90deg);
+            transition: 500ms ease;
+            cursor: pointer;
+            color: #5cb85c
+        }
+
+        .refresh:active {
+            color: #d9534f;
+            transition: 100ms
+        }
+
+    #form {
+        margin: 10px 0 0 0;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border-style: solid;
+        border-color: #eeeeee
+    }
+
+
+
+    .margin-top {
+        margin-top: 10px
+    }
+
+    .factor-number {
+        display: none
+    }
+
+    #detail-content {
+        text-align: center;
+        width: 20%;
+    }
+
+    #form {
+        margin: 30px auto;
+        width: 70%;
+        position: absolute;
+        top: 100px;
+        left: 90px;
+    }
+
+    @@media only screen and (max-width: 1500px) {
+
+        #form {
+            left: 50px;
+            width: 60%;
+            right: unset
+        }
+    }
+
+    @@media only screen and (max-width: 1000px) {
+
+        #form {
+            left: 50px;
+            right: unset;
+            width: 50%;
+        }
+    }
+
+    .parent {
+        background-color: deepskyblue;
+        border-radius: 10px;
+        color: white;
+        font-size: 10px;
+        border: 1px solid deepskyblue;
+        width: 65px !important;
+        display: inline-block;
+        text-align: center;
+        margin-right: 5px;
+    }
+
+    .delete-code {
+        cursor: pointer;
+        font-size: 10px;
+        margin-right: 2px
+    }
+
+    #appendTo {
+        background-color: white;
+        border-radius: 2px 2px 2px 2px;
+    }
+
+    .icon-1 {
+        cursor: pointer;
+    }
+
+    .icon-2 {
+        cursor: pointer;
+    }
+</style>
+
+<div class="relative hide-operation">
+    <i class="fa fa-refresh fa-2x absolute refresh"></i>
+    <div class=" col-md-6">
+    </div>
+    <div class="text-left col-md-6 " style="        height: 35px">
+        <div class="hide-form">
+            <button id="btnLog" class="btn btn-info">سوابق</button>
+
+            @if (User.IsInRole("admin") || User.IsInRole("customerCardCharge"))
+            {
+                <button id="btnCharge" class="btn btn-success ">شارژ</button>
+            }
+
+            <button id="btnDebit" class="btn btn-danger ">مرجوعی</button>
+            <button id="btnReport" class="btn btn-info">مشاهده تراکنش</button>
+            <button id="btnOperation" class="btn btn-success">عملیات کارت</button>
+        </div>
+
+    </div>
+</div>
+
+<div>
+    <div id="detail-content">
+    </div>
+    <div id="form">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group col-md-6 col-sm-6">
+                    <label for="txtCariorcard">کد مشتری/شماره کارت/موبایل: <span style="color: red" id="replica"></span></label>
+                    <input id="txtCariorcard" type="text" class="form-control " name="cariorcard" data-validate="" />
+                </div>
+                <div class="form-group col-md-6 col-sm-6 hide-form">
+                    <label>کارت:</label>
+                    <input id="txtCardNumber" type="text" class="form-control" name="cardNo" data-validate="required" readonly />
+                </div>
+                <div class="form-group col-md-6 col-sm-6 hide-form">
+                    <label>نام کامل:</label>
+                    <input id="txtFirstName" type="text" class="form-control" name="fullName" data-validate="required" />
+                </div>
+                <div class="form-group col-md-6 hide-form">
+                    <label>شعبه ثبت کننده:</label>
+                    <input id="txtEmail" type="text" class="form-control" name="branchName" readonly />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class=" col-md-12" style="        margin: 0 auto">
+                <div class="form-group relative col-md-6 col-sm-6 hide-form">
+                    <label>شماره موبایل:</label>
+                    <input id="txtmMobile" type="text" class="form-control number-only" name="mobile" data-validate="required " maxlength="11" />
+                    <span style="        color: red;
+        position: absolute;
+        top: 35px;
+        left: 0">*</span>
+                </div>
+                <div class="form-group  col-md-6 col-sm-6 col-sm-6 hide-form">
+                    <label>شماره تلفن:</label>
+                    <input id="txtTelHome" type="text" class="form-control" name="telHome" data-validate="" />
+
+                </div>
+                <div class="form-group col-md-6 col-sm-6 relative hide-form">
+                    <label>تاریخ تولد:</label>
+                    <input id="txtJbirthDate" type="text" class="form-control date" autocomplete="off" name="birthDate" data-validate="required" />
+                    <input id="hidden-birthDate" type="hidden" class="form-control" autocomplete="off" name="jbirthDate" data-validate="required" />
+                    <span style="        color: red;
+        position: absolute;
+        top: 35px;
+        left: 0">*</span>
+                </div>
+                <div class="form-group col-md-6 col-sm-6 relative hide-form">
+                    <label>تاریخ ازدواج:</label>
+                    <input id="txtMarriedDate" type="text" class="form-control date" autocomplete="off" name="persianMarriedDate" data-validate="" />
+                </div>
+                <div class="form-group col-md-6 col-sm-6 hide-form">
+                    <label>استان:</label>
+                    <input id="txtProvince" type="text" class="form-control" name="province" value="تهران" readonly disabled placeholder="تهران" />
+                </div>
+                <div class="form-group col-md-6 col-sm-6 hide-form">
+                    <label>محدوده سکونت:</label>
+                    <input id="txtArea" type="text" class="form-control" name="area" data-validate="" />
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group col-md-12 hide-form">
+            <label>آدرس محل سکونت:</label>
+            <textarea id="txtHomeAddr" type="text" style="resize: none" rows="2" class="form-control" name="homeAddr" data-validate=""></textarea>
+        </div>
+        <div class="form-group col-md-4 text-center hide-form">
+            <button id="btnSave" class="btn btn-success" style="width:100%">
+                ذخیره
+            </button>
+        </div>
+    </div>
+
+</div>
+<div class="form-group col-md-3 text-center debit-price">
+
+</div>
+<div class="modal fade" id="modal-debit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="        overflow: auto">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="exampleModalLabel">مرجوع</h5>
+            </div>
+            <div class="modal-body">
+                <form id="form-debit">
+                    <div class="margin-top">
+                        <label>شماره مشتری:</label>
+                        <input type="text" class="form-control hidden-cariorCode" name="cariorCard" data-validate="" readonly />
+                    </div>
+                    <div class="margin-top">
+                        <label><label>مبلغ (ریال):</label></label>
+                        <input id="txtDebitPrice" type="text" class="form-control money-separator number-only" name="amount" data-validate="" />
+                        <input id="" type="hidden" class="txtDebitPointPercent" name="pointPercent" />
+                        <input id="hiddenLocalBalance" type="hidden" class="" name="localBalance" />
+                        <input id="hiddenUserId" type="hidden" class="" name="userInfoId" />
+                    </div>
+                    <div class="margin-top">
+                        <label>کاربر ثبت کننده</label>
+                        <select class="form-control" data-validate="required" name="userId">
+                            <option value="">...</option>
+                            @foreach (var item in ViewBag.UserList)
+                            {
+                                <option value="@item.Id">@item.FirstName @item.LastName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="margin-top" style="margin: 10px;text-align: justify">
+                        <p>همکار گرامی مبلغ ریالی مرجوعی که به مشتری مسترد می گردد را وارد نمایید، سیستم به صورت خودکار مبلغ اعتبار مورد نظر را از اعتبار مشتری کسر می نماید. </p>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">بستن</button>
+                <button id="btnSaveDebit" class="btn btn-danger">
+                    کسر موجودی
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-operation" tabindex="-1" role="dialog" aria-hidden="true" style="        overflow: auto">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="exampleModalLabel">عملیات کارت</h5>
+            </div>
+            <div class="modal-body">
+                <form id="form-operation">
+                    <div class="text-center margin-top">
+                        <button type="button" class="btn btn-warning btnOperation" data-operation="1"> تغییر رمز کارت </button>
+                        @*<button type="button" class="btn btn-danger btnOperation" data-operation="2"> غیر فعال سازی کارت </button>*@
+                        <button type="button" class="btn btn-success btnOperation" data-operation="3"> تعویض کارت</button>
+                    </div>
+                    <div margin-top>
+                        <label>شماره مشتری:</label>
+                        <input type="text" class="form-control hidden-cariorCode" name="cariorCard" data-validate="required" readonly />
+                    </div>
+                    <div class="passWordMobile margin-top">
+                        <label>شماره موبایل:</label>
+                        <input id="txtMobile" type="text" class="form-control" name="mobile" readonly />
+                    </div>
+                    <div class="newCariorCard margin-top">
+                        <label>شماره مشتری کارت جدید:</label>
+                        <input id="txtNewCariorCard" type="text" class="form-control number-only" name="newCariorCard" data-validate="required" maxlength="7" />
+                    </div>
+                    <div class="cardType margin-top">
+                        <label>نوع کارت:</label>
+                        <div class="form-inline text-center margin-top">
+                            <label>تغییر سطح:</label>
+                            <input id="" type="radio" class="form-control" name="cardType" value="false" />
+                            &nbsp;
+                            &nbsp;
+                            &nbsp;
+                            <label>المثنی:</label>
+                            <input id="" type="radio" class="form-control" name="cardType" value="true" />
+                        </div>
+                    </div>
+                    <input id="hiddenOperationId" type="hidden" />
+                    <input id="hiddenDebitAmount" name="amount" type="hidden" />
+                    <input id="hidden-kiaPoint" type="hidden" class="form-control" name="kiaPoint" />
+                    <input id="hidden-credit-sum" type="hidden" class="form-control" name="chargeAmount" />
+                    <input id="hidden-debit-sum" type="hidden" class="form-control" name="debitAmount" />
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">بستن</button>
+                <button id="btnSaveOperation" class="btn btn-success">
+                    ذخیره
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-report" tabindex="-1" role="dialog" aria-hidden="true" style="        overflow: auto">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title">تراکنش ها</h5>
+            </div>
+            <div class="modal-body">
+                <div id="content">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-charge" tabindex="-1" role="dialog" aria-hidden="true" style="        overflow: auto">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="exampleModalLabel">شارژ کردن حساب</h5>
+            </div>
+            <div class="modal-body">
+                <form id="form-charge">
+                    <input id="" type="hidden" class="txtDebitPointPercent" name="pointPercent" />
+                    <div class="margin-top">
+                        <label>شماره مشتری:</label>
+                        <input type="text" class="form-control hidden-cariorCode" name="cariorCard" data-validate="" readonly />
+                    </div>
+                    <div class="margin-top">
+                        <label>مبلغ (ریال):</label>
+                        <input id="txtChargeAmount" type="text" class="form-control  money-separator number-only" name="amount" />
+                        <input id="hiddenUserInfoId" type="hidden" name="userInfoId" />
+                    </div>
+                    <div class="margin-top">
+                        <label>نوع شارژ:</label>
+                        <div class="">
+                            <div>
+                                <span>غیر پوز: (پول نقد ، واریز به حساب، کارت به کارت، سکه، ارز ، طلای متفرقه ،تبدیل به حساب طلایی، طلا کیا):</span>
+                                <input type="radio" class="form-control w15" name="descriptionType" value="2" />
+                            </div>
+                            <hr />
+                            <div>
+                                <span>بازگشت اعتبار استفاده شده در فاکتور مرجوعی:</span>
+                                <input type="radio" class="form-control w15 ss" name="descriptionType" value="0" />
+                            </div>
+                            <hr />
+                            <div>
+                                <span>خدمات مدیریت روابط مشتری:</span>
+                                <input type="radio" class="form-control w15" name="descriptionType" value="1" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="margin-top">
+                        <label>کاربر ثبت کننده</label>
+                        <select class="form-control" data-validate="required" name="userId">
+                            <option value="">...</option>
+                            @foreach (var item in ViewBag.UserList)
+                            {
+                                <option value="@item.Id">@item.FirstName @item.LastName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="margin-top factor-number">
+                        <label>شماره فاکتور</label>
+                        <input id="txtFactorNumber" type="text" class="form-control" name="factorNumber" />
+                    </div>
+
+                    <div class="margin-top">
+                        <label>توضیحات</label>
+                        <textarea id="txtDescription" type="text" class="form-control" name="description"></textarea>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">بستن</button>
+                <button id="btnSaveCharge" class="btn btn-success">
+                    ذخیره
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-debit-alert" tabindex="-1" role="dialog" aria-hidden="true" style="        overflow: auto">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>*@
+                <h5 class="modal-title">توجه</h5>
+            </div>
+            <div class="modal-body">
+                <div id="content-debit-alert">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="confirm-debit-alert" type="button" class="btn btn-info" data-dismiss="modal">تایید</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-log" tabindex="-1" role="dialog" aria-hidden="true" style="        overflow: auto">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title">سوابق</h5>
+            </div>
+            <div class="modal-body">
+                <div id="log-content">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+
+    <script type="text/javascript">
+        var availableTags = [
+            "ازگل",
+            "اقدسیه",
+            "الهیه",
+            "امام زاده قاسم",
+            "اوین",
+            "باغ فردوس",
+            "تجریش",
+            "جماران",
+            "چیذر",
+            "داراباد",
+            "دربند",
+            "درکه",
+            "دزاشیب",
+            "جوزستان",
+            "زعفرانیه",
+            "سوهانک",
+            "شهرک نفت",
+            "شهرک محلاتی",
+            "فرمانیه",
+            "فرشته",
+            "قیطریه",
+            "کاشانک",
+            "کامرانیه",
+            "محمودیه",
+            "نیاوران",
+            "ولنجک",
+            "برق آلستوم",
+            "تهران ویلا",
+            "ستارخان",
+            "سعادت آباد",
+            "شهرک غرب",
+            "شهرک مخابرات",
+            "شهر آرا",
+            "صادقیه",
+            "طرشت",
+            "فرحزاد",
+            "گیشا",
+            "همایون شهر",
+            "مرزداران",
+            "اختیاریه",
+            "پاسداران",
+            "دروس",
+            "دولت",
+            "دیباجی",
+            "جردن",
+            "ولیعصر",
+            "سید خندان",
+            "ظفر",
+            "قلهک",
+            "میرداماد",
+            "ونک",
+            "بلوار پروین",
+            "تهرانپارس",
+            "حکیمیه",
+            "سراج",
+            "شمس آباد",
+            "مجیدیه",
+            "شمیران نو",
+            "علم و صنعت",
+            "فرجام",
+            "قنات کوثر",
+            "لویزان",
+            "شیان",
+            "مهران",
+            "نارمک",
+            "هروی",
+            "هنگام",
+            "آیت اله کاشانی",
+            "اشرفی اصفهانی",
+            "باغ فیض",
+            "بلوار فردوس",
+            "پونک",
+            "جنت آباد",
+            "حصارک",
+            "سازمان برنامه",
+            "شاهین",
+            "شهران",
+            "شهر زیبا",
+            "شهرک آپادانا",
+            "شهرک اکبتان",
+            "شهرک اندیشه",
+            "شهرک پرواز",
+            "شهرک کوهسار",
+            "شهرک والفجر",
+            "کنکوی",
+            "ارمکوی",
+            "بیمه",
+            "آرژانتین",
+            "امیرآباد",
+            "ایرانشهر",
+            "بهجت آباد",
+            "پارک لااله",
+            "جنت",
+            "رفتگر",
+            "جمالزاده",
+            "دانشگاه تهران",
+            "شریعتی",
+            "شیراز",
+            "عباس آباد",
+            "فاطمی",
+            "قایم مقام",
+            "سنایی",
+            "قزل قلعه",
+            "کشاورز غربی",
+            "کریمخان",
+            "گاندی",
+            "میدان جهاد",
+            "میدان ولیعصر",
+            "نصرتی",
+            "وسف آباد",
+            "اجاره دار",
+            "ارامنه",
+            "امجدیه",
+            "خاقانی",
+            "باغ صبا",
+            "سهروردی",
+            "بهار",
+            "حشمتیه",
+            "خواجه نصیر",
+            "حقوقی",
+            "دبستان",
+            "سبلان",
+            "اندیشه",
+            "قصر",
+            "کاج",
+            "کریمخان",
+            "نامجو",
+            "نظام آباد",
+            "نیلوفر",
+            "شهید قندی",
+            "هفت تیر",
+            "تسهیلات",
+            "تهرانپارس",
+            "دردشت",
+            "زرکش",
+            "فدک",
+            "کرمان",
+            "لشگر",
+            "مجیدیه جنوبی",
+            "مداین",
+            "وحیدیه",
+            "هفت حوض",
+            "استاد معین",
+            "امامزاده عبداله",
+            "دکتر هوشیار",
+            "سر آسیاب",
+            "forodgah mehrabad",
+            "شمشیری",
+            "شهید دستغیب",
+            "فتح",
+            "صنعتی",
+            "بریانک",
+            "سلیمانی تیموری",
+            "شبیری جی",
+            "هفت چنار",
+            "سلسبیل جنوبی",
+            "کارون جنوبی",
+            "هاشمی",
+            "زنجان جنوبی",
+            "کارون شمالی",
+            "آذربایجان",
+            "آزادی",
+            "امام خمینی",
+            "جیحون",
+            "حسام الدین",
+            "خوش",
+            "دامپزشکی",
+            "رودکی",
+            "سینا",
+            "قصرالدشت",
+            "مالک اشتر",
+            "نواب",
+            "کارون",
+            "کمیل",
+            "شیخ هادی",
+            "انقلاب",
+            "امیریه",
+            "فروزش",
+            "قلمستان",
+            "منیریه",
+            "حشمت الدوله",
+            "اسکندری",
+            "دخانیات",
+            "مخصوص",
+            "جمهروری",
+            "حر",
+            "انبار نفت",
+            "آگاهی",
+            "راه آهن",
+            "عباسی",
+            "هلال احمر",
+            "ابوسعید",
+            "اسکندری جنوبی",
+            "پاستور",
+            "حسن آباد",
+            "گمرک",
+            "وحدت اسلامی",
+            "کارگر جنوبی",
+            "کاشان",
+            "بهارستان",
+            "فردوسی",
+            "امامزاده یحیی",
+            "پامنار",
+            "بازار",
+            "سنگلج",
+            "تختی",
+            "هرندی",
+            "آبشار",
+            "قیام",
+            "کوثر",
+            "ایران",
+            "دروازه شمیران",
+            "امین حضور",
+            "پانزده خرداد",
+            "پیچ شمران",
+            "خراسان",
+            "ری",
+            "سعدی",
+            "لاله زار نو",
+            "مولوی",
+            "میدان قیام",
+            "صفا",
+            "شهید اسدی",
+            "زاهد گیلانی",
+            "اشراقی",
+            "دهقان",
+            "نیروی هوایی",
+            "پیروزی",
+            "حافظیه",
+            "امامت",
+            "شورا",
+            "آشتیانی",
+            "زینبیه",
+            "سرخه حضار",
+            "تهران نو",
+            "دماوند",
+            "شکوفه",
+            "چهارصد دستگاه",
+            "جابر",
+            "دژکام",
+            "مینای شمالی",
+            "نیکنام",
+            "آهنگران",
+            "بروجردی",
+            "فرزانه",
+            "سر آسیب دولاب",
+            "شیوا",
+            "نبی اکرم",
+            "شهرابی",
+            "شکیب",
+            "پرستار",
+            "13 ابان",
+            "ابوذر",
+            "تاکسیرانی",
+            "مینای جنوبی",
+            "دولاب",
+            "خاوران",
+            "آهنگ",
+            "قصر فیروزه",
+            "اتوبان محلاتی",
+            "افراسیاب شمالی",
+            "اندرزگو",
+            "پاسدار گمنام",
+            "شهید محلاتی",
+            "فلاح",
+            "نبرد",
+            "هفده شهریور",
+            "مظاهری",
+            "مینایی",
+            "بیستم",
+            "شوش",
+            "طیب",
+            "مطهری",
+            "هاشم آباد",
+            "اتابک",
+            "شهید بروجردی",
+            "کیانشهر شمالی",
+            "کیانشهر جنوبی",
+            "رضویه",
+            "مشیریه",
+            "افسریه",
+            "مسعودیه",
+            "قیامدشت",
+            "خاور شهر",
+            "اتوبان بعثت",
+            "جوادیه",
+            "نازی آباد",
+            "مشیریه",
+            "شهرک بعثت",
+            "آهنگ",
+            "عل آباد جنوبی",
+            "باغ آذری",
+            "رجایی",
+            "جوادیه",
+            "نازی آباد",
+            "خزانه",
+            "شهرک بعثت",
+            "علی آباد شمالی",
+            "علی آباد جنوبی",
+            "یاخچی آباد",
+            "تختی",
+            "باغ آذری",
+            "رجایی",
+            "ابوذز غربی",
+            "آذری",
+            "امام زاده حسن",
+            "یافت آباد",
+            "جلیلی",
+            "زهتابی",
+            "زمزم",
+            "سجاد",
+            "گلچین",
+            "وصفنارد",
+            "ابوذر شرقی",
+            "باغ خزانه",
+            "بلورسازی",
+            "مقدم",
+            "قزوین",
+            "فردوس",
+            "تولیدارو",
+            "بهداشت",
+            "ولیعصر شمالی",
+            "ولیعصر جنوبی",
+            "صاحب الزمان",
+            "یافت آباد شمالی",
+            "یافت آباد جنوبی",
+            "شاد آباد",
+            "خلیج فارس",
+            "خلیج فارس شمالی",
+            "خلیج فارس جنوبی",
+            "بزرگراه آزادگان",
+            "سعید آباد",
+            "شهرک صاحب الزمان",
+            "شهرک ولیعصر",
+            "خانی آباد شمالی",
+            "خانی آباد جنوبی",
+            "خانی آباد",
+            "اسفندیاری",
+            "بهمن یار",
+            "شریعتی شمالی",
+            "شریعتی جنوبی",
+            "شکوفه شمالی",
+            "شکوفه جنوبی",
+            "نعمت آباد",
+            "دولت خواه",
+            "اسماعیل آباد",
+            "شهید کاظمی",
+            "رسالت",
+            "عبدل آباد",
+            "صفاییه",
+            "ظهیر آباد",
+            "غیوری",
+            "جوانمرد قصاب",
+            "حمزه آباد",
+            "دلیمان",
+            "فیروز آبادی",
+            "منصوریه",
+            "دولت آباد",
+            "شهادت",
+            "استخر",
+            "بهشتی",
+            "سر تخت",
+            "علایین",
+            "نفر آباد",
+            "ولی آباد",
+            "امین آباد",
+            "تقی آباد",
+            "نظامی",
+            "کهریزک",
+            "شهرک دریا",
+            "تهرانسر",
+            "تهرانسر شرقی",
+            "تهرانسر غربی",
+            "باشکاه نفت",
+            "تهرانسر مرکزی",
+            "شهرک پاسداران",
+            "شهرک آزادی",
+            "شهرک فرهنگیان",
+            "شهرک استقلال",
+            "شهرک دانشگاه",
+            "شهرک غزالی",
+            "شهرک شهرداری",
+            "شهرک 22 بهمن",
+            "شهرک دانشگاه شریف",
+            "بزرگراه فتح",
+            "کرج",
+            "وردآورد",
+            "شهرک ویلا شهر",
+            "چیتگر",
+            "چیتگر",
+            "دهکده المپیک",
+            "زیبا دشت بالا",
+            "گلستان شرقی",
+            "گلستان غربی",
+            "زیبا دشت پایین",
+            "شریف",
+            "امید",
+            "دژبان",
+            "شهید باقری",
+            "آزادشهر",
+            "پیکان شهر",
+            "دریاچه چیتگر",
+            "شهرک راه آهن",
+            "شهرک گلستان",
+]
+        var defaultEntity = {
+            pageNumber: "0",
+            pageSize: "50"
+        }
+
+
+        $("#txtArea").autocomplete({
+            source: availableTags,
+        });
+
+        $(document).ready(function () {
+            $("#txtCariorcard").on("keyup", function (e) {
+                console.log($(this).val())
+                $("#hidden-carrior-card").val($(this).val())
+                var code = e.which
+                if ($(this).val()) {
+                    if (code == 13) {
+                        $(".hide-form").hide()
+                        var id = $(this).val();
+                        $("input[type='text']").val(null)
+                        $("input[type='radio']").prop("checked", false)
+                        $(".factor-number").hide();
+                        $("textarea").val(null);
+                        loadUserInfo(id);
+                    }
+                }
+                else {
+                    $(".hide-form").hide()
+                }
+            });
+            $("input[type='radio']").prop("checked", false)
+            $(".factor-number").hide();
+            $(".refresh").click(function () {
+                $("input[type='text'],textarea").val(null);
+                $(".hide-form").hide();
+                $("#detail-content").empty();
+
+            });
+
+            $("input[name='descriptionType']").change(function () {
+                var id = $(this).val();
+                if (id == 0 || id == 2) {
+                    $(".factor-number").show();
+                }
+                else {
+                    $(".factor-number").hide();
+
+                }
+                console.log(id)
+
+            });
+            var interval = setInterval(blinker, 1000);
+            function blinker() {
+
+                $(document).find("#changeCardAlert").fadeOut(1000);
+                $(document).find("#changeCardAlert").fadeIn(1000);
+            }
+            $("#txtCariorcard").focus();
+            $(".cardType").hide();
+            $(".date").pDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true
+            });
+            $(".date").val("");
+
+            $("#btnSave").on("click", function () {
+                save();
+            });
+            $("#btnLog").on("click", function () {
+                $("#modal-log").modal("show");
+                getLogList($("#hiddenUserInfoId").val());
+            });
+            $("#txtJbirthDate").on("change", function () {
+                if ($(this).val()) {
+                    $("#hidden-birthDate").val($(this).val())
+                }
+            });
+
+            $("#btnSaveDebit").on("click", function () {
+                saveDebit()
+            });
+            $("#btnSaveCharge").on("click", function () {
+                saveCharge();
+            });
+
+            $(".btnOperation").on("click", function () {
+                var operation = $(this).attr("data-operation");
+                $("#hiddenOperationId").val(operation)
+                if (operation == 1) {
+                    $(".passWordMobile").show();
+                    $("#btnSaveOperation").show();
+                    $(".newCariorCard").hide();
+                    $(".cardType").hide();
+                }
+                if (operation == 3) {
+                    $(".newCariorCard").show();
+                    $(".passWordMobile").hide();
+                    $("#btnSaveOperation").show();
+                    $(".cardType").show();
+                }
+            });
+            $("#btnDebit").on("click", function () {
+                $("#modal-debit").modal("show");
+                $(".hidden-cariorCode").val($("#txtCariorcard").val());
+            });
+
+            $("#btnCharge").on("click", function () {
+                $("#modal-charge").modal("show");
+                $(".hidden-cariorCode").val($("#txtCariorcard").val());
+            });
+
+            $("#btnOperation").on("click", function () {
+                $("#modal-operation").modal("show");
+                $(".hidden-cariorCode").val($("#txtCariorcard").val());
+            });
+
+            $("#btnReport").on("click", function () {
+                $("#modal-report").modal("show");
+            });
+            $("#btnSaveOperation").on("click", function () {
+                var data = getEntity("#form-operation");
+                if ($("#hiddenOperationId").val() == 1) {
+                    forgotPassword(data);
+                }
+                if ($("#hiddenOperationId").val() == 2) {
+                    emptyCard(data);
+                }
+                if ($("#hiddenOperationId").val() == 3) {
+                    changeCard(data);
+                }
+            });
+
+        });
+        function loadUserInfo(id) {
+            loader(true);
+            $.get("/customerCard/loadUserInfo/"+ id, function (response) {
+                if (response.status == 200) {
+                    setEntity(response.data, "#form");
+                    //$(".hide-form").show()
+                    $("#hiddenUserInfoId").val(response.data.id);
+                    $("#hidden-birthDate").val(response.data.birthDate);
+                    $(".txtDebitPointPercent").val(response.data.pointPercent);
+                    console.log(response.data.pointPercent)
+                    $("#txtMobile").val(response.data.mobile);
+                    $("#replica").html(response.data.replica);
+                    $("#hiddenUserId").val(response.data.id);
+                    if (response.data.fullName == "بي نام" || response.data.fullName == "بی نام" || response.data.fullName == "بینام") {
+                        $(".hide-operation").hide()
+                    }
+                    else {
+                        $(".hide-operation").show()
+
+                    }
+                    report(id)
+                }
+                else {
+                    alert(response.message)
+                }
+                loader(false);
+            });
+        }
+        function save() {
+            var entity = getEntity("#form");
+
+            var param = $.extend({}, defaultEntity, entity);
+            if (checkForm("#form")) {
+                loader(true);
+                $.get("/customerCard/updateUserInfo", param, function (response) {
+                    if (response.status == 200) {
+
+                        alert(response.message)
+                    }
+                    else {
+                        alert(response.message)
+                    }
+                    loader(false);
+                });
+            }
+
+        }
+        function saveDebit() {
+            var entity = getEntity("#form-debit");
+            if (!entity.userId) {
+                alert("کاربر ثبت کننده وارد نشده است.");
+                return;
+            }
+            if (!entity.amount) {
+                alert("مبلغ وارد نشده است.");
+                return;
+            }
+            var param = $.extend({}, defaultEntity, entity);
+            var calc = (entity.amount * entity.pointPercent) / 100;
+            if (calc > $("#hiddenLocalBalance").val()) {
+                var division = calc - $("#hiddenLocalBalance").val();
+                var returnPrice = entity.amount - division;
+                var template = $("#debit-money-template").html();
+                template = template.replaceAll("{{balance}}", addCommas($("#hiddenLocalBalance").val()))
+                template = template.replaceAll("{{returnPrice}}", addCommas(returnPrice))
+                template = template.replaceAll("{{debit}}", addCommas(entity.amount))
+                template = template.replaceAll("{{division}}", addCommas(division))
+                $("#content-debit-alert").html(template)
+                $("#modal-debit").modal("hide");
+
+                $('#modal-debit-alert').modal({
+                    backdrop: false
+                });
+                $("#modal-debit-alert").modal("show")
+                $("#confirm-debit-alert").click(function () {
+                    param.amount = $("#hiddenLocalBalance").val() * 100;
+                    confirmMessage("آیا از اطلاعات وارد شده اطمینان دارید؟", function () {
+                        loader(true);
+                        $.get("/customerCard/adminDebit", param, function (response) {
+                            if (response.status == 200) {
+                                var id = entity.cariorCard;
+                                report(id)
+
+                                $("#modal-debit").modal("hide");
+                            }
+                            else {
+                                alert(response.message)
+                            }
+                            loader(false);
+                        });
+                    });
+                });
+            }
+            else {
+                confirmMessage("آیا از اطلاعات وارد شده اطمینان دارید؟", function () {
+                    loader(true);
+                    $.get("/customerCard/adminDebit", param, function (response) {
+                        if (response.status == 200) {
+                            var id = entity.cariorCard;
+                            report(id)
+                            clearEntity("#form-debit");
+                            $("#modal-debit").modal("hide");
+                        }
+                        else {
+                            alert(response.message)
+                        }
+                        loader(false);
+                    });
+                });
+            }
+        }
+        function saveCharge() {
+            var entity = getEntity("#form-charge");
+            console.log(entity.pointPercent)
+
+            console.log(entity);
+            if (!entity.userId) {
+                alert("کاربر ثبت کننده وارد نشده است.");
+                return;
+            }
+            if (!entity.amount) {
+                alert("مبلغ وارد نشده است.");
+                return;
+            }
+            if (!entity.cariorCard) {
+                alert("شماره مشتری وارد نشده است.");
+                return;
+            }
+
+             if (!entity.descriptionType) {
+                alert("نوع شارژ وارد نشده است.");
+                return;
+            }
+            if (entity.descriptionType == 0 || entity.descriptionType == 2) {
+
+                if (!entity.factorNumber) {
+                    alert("شماره فاکتور وارد نشده است.");
+                    return;
+                }
+            }
+            else {
+                if (!entity.description) {
+                    alert("توضیحات وارد نشده است.");
+                    return;
+                }
+            }
+            confirmMessage("آیا از اطلاعات وارد شده اطمینان دارید؟", function () {
+                loader(true);
+                $.get("/customerCard/cardChargeTransaction", entity, function (response) {
+                    if (response.status == 200) {
+                        var id = entity.cariorCard;
+                        report(id)
+                        $("#form-charge input[type='text'] ").val(null)
+                        $("#form-charge input[type='textarea'] ").val(null)
+                        $("#form-charge input[type='radio']").prop("checked", false)
+                        $(".factor-number").hide();
+                        $("#modal-charge").modal("hide");
+                    }
+                    else {
+                        alert(response.message)
+                    }
+                    loader(false);
+                });
+            });
+        }
+        //function saveCharge() {
+        //    var entity = getEntity("#form-charge");
+        //    var param = $.extend({}, defaultEntity, entity);
+        //    loader(true);
+        //    $.get("/customerCard/ChargeAccountMerchant", param, function (response) {
+        //        if (response.status == 200) {
+        //            var id = entity.cariorCard;
+        //            report(id)
+        //            $("#modal-charge").modal("hide");
+        //        }
+        //        else {
+        //            alert(response.message)
+        //        }
+        //        loader(false);
+        //    });
+        //}
+        function emptyCard(data) {
+            loader(true);
+            $.get("/customerCard/disableCard", data, function (response) {
+                if (response.status == 200) {
+                    $("#modal-operation").modal("hide")
+                    alert(response.message)
+                }
+                else {
+                    alert(response.message)
+                }
+                loader(false);
+            });
+        }
+        function report(data) {
+            loader(true);
+            $.get("/customerCard/Report/"+ data, function (response) {
+                if (response.status == 200) {
+                    if (response.data) {
+                        var data = response.data.list;
+                        var template = $.templates("#template");
+                        var htmlOutput = template.render(data);
+                        $("#content").html(htmlOutput);
+                        $("#hiddenDebitAmount").val(data.localBalance);
+                        var detailTemplate = $("#detail-template").html();
+                        $(".fullName").html(response.data.list.fullName);
+                        $("#hiddenLocalBalance").val(response.data.list.localBalance)
+                        detailTemplate = detailTemplate.replace("{{fullName}}", response.data.list.fullName);
+                        detailTemplate = detailTemplate.replace("{{level}}", response.data.list.level);
+                        detailTemplate = detailTemplate.replace("{{kiaPoint}}", response.data.list.kiaPoint);
+                        //detailTemplate = detailTemplate.replace("{{kiaLevel}}", response.data.list.kiaLevel);
+                        console.log(response.data.list.pointPercent)
+                        if (response.data.list.kiaPoint > 500 && response.data.list.kiaPoint < 1500 && response.data.list.pointPercent == 1) {
+                            detailTemplate = detailTemplate.replace("{{changeCardAlert}}", "تعویض کارت به سطح نقره ای");
+
+                        }
+                        else if (response.data.list.kiaPoint > 1500 && response.data.list.pointPercent == 1.5) {
+                            detailTemplate = detailTemplate.replace("{{changeCardAlert}}", "تعویض کارت به سطح VIP");
+                        }
+                        else {
+                            detailTemplate = detailTemplate.replace("{{changeCardAlert}}", "");
+                        }
+
+                        detailTemplate = detailTemplate.replace("{{localBalanceSeparator}}", response.data.list.localBalanceSeparator);
+                        detailTemplate = detailTemplate.replace("{{pointPercent}}", response.data.list.pointPercent);
+                        detailTemplate = detailTemplate.replace("{{creditSumSeparator}}", response.data.list.creditSumSeparator);
+                        detailTemplate = detailTemplate.replace("{{creditCountSeparator}}", response.data.list.creditCountSeparator);
+                        detailTemplate = detailTemplate.replace("{{debitSumSeparator}}", response.data.list.debitSumSeparator);
+                        detailTemplate = detailTemplate.replace("{{debitCountSeparator}}", response.data.list.debitCountSeparator);
+                        detailTemplate = detailTemplate.replace("{{totalTrnCount}}", response.data.list.totalTrnCount);
+                        $("#detail-content").html(detailTemplate);
+                        $("#hidden-kiaPoint").val(response.data.list.creditCount);
+                        $("#hidden-credit-sum").val(response.data.list.creditSum);
+                        $("#hidden-debit-sum").val(response.data.list.debitSum);
+                        $(".hide-form").show();
+                    }
+                    else {
+                        $("#content").html("<h3 class=\"text-center\" >تراکنشی یافت نشد</h3>");
+                        $("#detail-content").html("<h3 class=\"text-center\" >تراکنشی یافت نشد</h3>");
+                        $(".hide-form").show();
+                    }
+                }
+                else {
+                    alert(response.message)
+                    clearEntity("#form");
+                    $(".hide-form").hide();
+                    $("#content").html("<h3 class=\"text-center\" >تراکنشی یافت نشد</h3>");
+                    $("#detail-content").html("<h3 class=\"text-center\" >تراکنشی یافت نشد</h3>");
+                }
+                loader(false);
+            });
+        }
+        function forgotPassword(data) {
+            loader(true);
+            $.get("/customerCard/forgotPassword", data, function (response) {
+                if (response.status == 200) {
+                    alert(response.message)
+                }
+                else {
+                    alert(response.message)
+                }
+                loader(false);
+            });
+        }
+        function changeCard(data) {
+            if (checkForm("#form-operation")) {
+                if ($("input[name='cardType']").is(':checked')) {
+                    loader(true);
+                    $.get("/customerCard/ChangeCustomerCard", data, function (response) {
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                $("#modal-operation").modal("hide");
+                            })
+                        }
+                        else {
+                            alert(response.message)
+                        }
+                        loader(false);
+                    });
+                }
+                else {
+                    alert("لطفا نوع کارت را مشخص کنید.")
+                }
+
+            }
+
+        }
+        function getLogList(id) {
+            loader(true);
+            
+            $.get("/customerCard/getLogList/"+ id, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    console.log(data)
+                    var template = $.templates("#log-template");
+                    var htmlOutput = template.render(data);
+                    $("#log-content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message)
+                }
+                loader(false);
+            });
+        }
+        function addCommas(nStr) {
+            nStr += '';
+            x = nStr.split('.');
+            x1 = x[0];
+            x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
+
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <div class="table table-data table-responsive">
+            <span class="badge bg-balance">کیاپوینت: {{:kiaPoint}} امتیاز</span>
+            <span class="badge bg-balance">موجودی: {{:localBalanceSeparator}} ریال</span>
+            <span class="badge bg-credit">مجموع خرید: {{:creditSumSeparator}} ریال</span>
+            <span class="badge bg-credit"> تعداد خرید : {{:creditCountSeparator}} </span>
+            <span class="badge bg-debit">مجموع کسر: {{:debitSumSeparator}} ریال</span>
+            <span class="badge bg-debit"> تعداد کسر: {{:debitCountSeparator}} </span>
+            <span class="badge "> تراکنش ها: {{:totalTrnCount}} </span>
+        </div>
+        <div style="        height: 500px;
+        overflow-y: scroll;
+        overflow-x: hidden">
+            <table class="table table-data table-responsive">
+                <thead>
+                    <tr>
+                        <th class="txt-al-c">ردیف</th>
+                        <th class="txt-al-c">تاریخ</th>
+                        <th class="txt-al-c">افزایش موجودی</th>
+                        <th class="txt-al-c">کسر موجودی</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{for lstTransaction}}
+                    <tr>
+                        <td class="txt-al-c">{{:#index + 1}}</td>
+                        <td class="txt-al-c">{{:jDate}}</td>
+                        <td class="txt-al-c">{{:creditAmountSeparator}}</td>
+                        <td class="txt-al-c">{{:debitAmountSeparator}}</td>
+                    </tr>
+                    {{/for}}
+                </tbody>
+            </table>
+        </div>
+    </script>
+    <script type="text/html" id="detail-template">
+        <span class="detail text-center" id="changeCardAlert"> {{changeCardAlert}} </span>
+        <span class="badge detail bg-orange"> نام: {{fullName}} </span>
+        <div style="        text-align: center">
+            <hr />
+
+            <span class=" detail">امتیاز</span>
+            <span class="badge detail {{if pointPercent == 1}} bg-debit {{/if}}{{if pointPercent == 1.5}} bg-silver {{/if}}{{if pointPercent == 2}} bg-black {{/if}}"> سطح: {{level}} {{pointPercent}} %</span>
+            <span class="badge detail bg-balance"> کیاپوینت: {{kiaPoint}} امتیاز </span>
+            @*<span class="badge detail bg-balance">  سطح: {{kiaLevel}}  </span>*@
+        </div>
+        <div style="text-align: center">
+            <hr />
+            <span class=" detail">اعتبار</span>
+            <span class="badge detail bg-credit"> اعتبار کسب شده: {{creditSumSeparator}} ریال </span>
+            <span class="badge detail bg-debit"> اعتبار استفاده شده: {{debitSumSeparator}} ریال </span>
+            <span class="badge detail bg-balance"> اعتبار قابل استفاده: {{localBalanceSeparator}} ریال </span>
+        </div>
+
+        <div style="text-align: center">
+            <hr />
+            <span class=" detail"> تراکنش</span>
+            <span class="badge detail bg-credit"> تراکنش های ورودی : {{creditCountSeparator}} </span>
+            <span class="badge detail bg-debit"> تراکنش های خروجی: {{debitCountSeparator}} </span>
+            <span class="badge detail "> مجموع تراکنش ها: {{totalTrnCount}} </span>
+        </div>
+    </script>
+
+    <script id="debit-money-template" type="text/html">
+
+        <span>مبلغ مرجوعی بیشتر از موجودی حساب می باشد.</span>
+        <br />
+        <h4>جزییات:</h4>
+        <br />
+        <span>مبلغ موجودی اعتبار باشگاهی: {{balance}} ریال</span>
+        <br />
+        <br />
+        <span>مبلغ کسر اعتبار باشگاهی: {{debit}} ریال</span>
+        <br />
+        <br />
+        <span>اختلاف اعتبار باشگاهی: {{division}}- ریال</span>
+        <br />
+        <br />
+        <span> مبلغ قابل پرداخت نهایی مرجوعی: ریال {{returnPrice}} =  {{division}} - {{debit}} </span>
+        <br />
+        <br />
+        <span style="color:red">لطفا مبلغ  {{returnPrice}} ریال به مشتری مسترد گردد.</span>
+    </script>
+    <script id="log-template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th class="txt-al-c">موبایل</th>
+                    <th class="txt-al-c">تاریخ</th>
+                    <th class="txt-al-c">شماره فاکتور</th>
+                    <th class="txt-al-c">کد کالا</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td class="txt-al-c">{{:mobile}}</td>
+                    <td class="txt-al-c">{{:persianDate}}</td>
+                    <td class="txt-al-c">{{:factorNumber}}</td>
+                    <td class="txt-al-c">{{:productCode}}</td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}

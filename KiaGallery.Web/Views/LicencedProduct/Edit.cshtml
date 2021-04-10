@@ -1,0 +1,283 @@
+﻿
+<div id="form" class="container">
+    <div class="row form-group">
+        <div class="row">
+            <div id="step1" class="col-md-4 col-md-offset-4">
+                <input type="hidden" name="id" value="@ViewBag.Id">
+                <input id="hiddenProductId" type="hidden" name="productId">
+
+                <div class="form-group">
+                    <label for="txtProductName">نام یا کد محصول</label>
+                    <input id="txtProductName" type="text" class="form-control" name="productName">
+                </div>
+                <div class="form-group">
+                    <label for="txtCode">کد</label>
+                    <input id="txtCode" type="text" class="form-control" name="code" data-validate="required">
+                </div>
+                <div class="form-group">
+                    <label for="txtBarcode">بارکد</label>
+                    <input id="txtBarcode" type="text" class="form-control" name="barcode" data-validate="required">
+                </div>
+                <div id="image" class="form-group relative">
+                    <label for="txtFileName">تصویر</label>
+                    <input id="txtFileName" type="text" name="fileName" class="file form-control" disabled data-validate="" />
+                    <input id="file" type="file" class="hidden" />
+                    <i id="openFile" class="fa fa-upload fa-20px file-icon" aria-hidden="true" style="left: 13px; top: 32px;"></i>
+                    <i id="deleteFile" class="fa fa-remove fa-20px file-icon" aria-hidden="true" style="left: 45px; top: 32px;"></i>
+                </div>
+                <div class="form-group">
+                    <label for="txtColor">متریال</label>
+                    <datalist id="material">
+                        <option value="Gold" />
+                        <option value="Silver" />
+                        <option value="Stone" />
+                        <option value="Gold&Silver&Leather" />
+                        <option value="Gold&Silver&Beads" />
+                        <option value="Gold&Beads" />
+                        <option value="Gold&Silver" />
+                        <option value="Gold&Leather" />
+                        <option value="Silver&Beads" />
+                        <option value="Silver&Leather" />
+                    </datalist>
+                    <input id="txtColor" type="text" class="form-control" name="color" data-validate="required" list="material">
+                </div>
+                <div class="form-group">
+                    <label for="txtWeight">وزن</label>
+                    <input id="txtWeight" type="text" class="form-control" name="weight" data-validate="required">
+                </div>
+                <div class="form-group">
+                    <label for="txtWage">اجرت (تومان)</label>
+                    <input id="txtWage" type="text" class="form-control money-separator" name="wage" data-validate="required">
+                </div>
+                <div class="form-group">
+                    <label for="txtLeatherStonePrice">قیمت سنگ یا چرم (تومان)</label>
+                    <input id="txtLeatherStonePrice" type="text" class="form-control money-separator" name="leatherStonePrice" data-validate="required">
+                </div>
+                <div class="form-group">
+                    <label for="txtCalculatedRialPrice">قیمت به تومان</label>
+                    <input id="txtCalculatedRialPrice" type="text" class="form-control money-separator" name="" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="txtCalculatedEuroPrice">قیمت یورو</label>
+                    <input id="txtCalculatedEuroPrice" type="text" class="form-control" name="" readonly>
+                </div>
+                <div id="additionalEuro" class="form-group">
+                    <label for="txtAdditionalEuro">اضافی یورو</label>
+                    <input id="txtAdditionalEuro" type="text" class="form-control" name="euro" data-validate="required">
+                </div>
+                <div id="finalEuro" class="form-group">
+                    <label for="txtFinalEuroPrice">قیمت یورو نهایی</label>
+                    <input id="txtFinalEuroPrice" type="text" class="form-control" name="" readonly>
+                </div>
+                <div class="form-group">
+                    <button id="btnSave" type="submit" class="btn btn-success">
+                        <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                        ذخیره
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+        var goldPrice = @ViewBag.GoldPrice
+        var euroPrice = @ViewBag.EuroPrice
+
+        $(document).ready(function () {
+            $("#additionalEuro").hide()
+            $("#finalEuro").hide()
+            $("#txtProductName").on("change", function () {
+                if ($("#hiddenProductId").val() != null && $("#hiddenProductId").val() > 0) {
+                    console.log($("#hiddenProductId").val())
+                    $("#image").hide()
+                }
+                else {
+                    $("#image").show()
+                }
+            })
+             $("#txtProductName").on("keyup", function () {
+                    $("#hiddenProductId").val("");
+            })
+            $("#txtLeatherStonePrice").on("keyup", function (e) {
+                if ($("#txtColor").val() != "Silver" && $("#txtColor").val() != "Silver&Beads" && $("#txtColor").val() != "Silver&Leather") {
+                    var wage = parseInt($("#txtWage").val().replace(',', ''));
+                    var weight = parseFloat($("#txtWeight").val());
+                    var stoneLeatherPrice = parseInt($("#txtLeatherStonePrice").val().replace(',', ''));
+                    var calculatedRialPrice = parseInt(((((wage + goldPrice) * weight) + ((wage + goldPrice) * weight) * 0.07) + stoneLeatherPrice) + ((((wage + goldPrice) * weight) + ((wage + goldPrice) * weight) * 0.07) + stoneLeatherPrice) * 0.09);
+                    $("#txtCalculatedRialPrice").val(calculatedRialPrice - calculatedRialPrice % 1000)
+                    $("#txtCalculatedRialPrice").change()
+                    var euro = calculatedRialPrice / euroPrice
+                    $("#txtCalculatedEuroPrice").val(parseInt(euro))
+
+                    //$("#txtAdditionalEuroFinal").val(parseInt(euro) + parseInt($("#txtAdditionalEuro").val()))
+                    if (e.which == 8 || !$(this).val()) {
+                        $("#additionalEuro").hide();
+                        $("#txtCalculatedRialPrice").val("");
+                        $("#txtCalculatedEuroPrice").val("");
+                        $("#txtFinalEuroPrice").val("");
+                        $("#finalEuro").hide();
+                    }
+                    else {
+                        $("#additionalEuro").show()
+                        $("#finalEuro").show()
+                    }
+                }
+                else {
+                    if (e.which == 8 || !$(this).val()) {
+                        $("#additionalEuro").hide();
+                        $("#txtCalculatedRialPrice").val("");
+                        $("#txtCalculatedEuroPrice").val("");
+                        $("#txtFinalEuroPrice").val("");
+                        $("#finalEuro").hide();
+                    }
+                    else {
+                        $("#additionalEuro").show()
+                        $("#finalEuro").show()
+                    }
+                    $("#txtCalculatedRialPrice").val("");
+                    var leatherStonePrice = $(this).val().replaceAll(',', '')
+                    $("#txtCalculatedRialPrice").val(leatherStonePrice);
+                    $("#txtCalculatedRialPrice").change();
+                    var calculatedRialPrice = $("#txtCalculatedRialPrice").val().replaceAll(',', '');
+                    $("#txtCalculatedEuroPrice").val(calculatedRialPrice / euroPrice);
+                }
+            });
+
+            $("#txtAdditionalEuro").on("keyup", function () {
+                var additionalEuro = parseInt($(this).val());
+                var calculatedEuroPrice = parseInt($("#txtCalculatedEuroPrice").val());
+                $("#txtFinalEuroPrice").val(additionalEuro + calculatedEuroPrice);
+            });
+
+            load();
+            productAutoCompelete();
+            setupUpload("product");
+            $("#btnSave").on("click", function (event) {
+                event.preventDefault();
+                if (checkForm("#form")) {
+                    var entity = getEntity("#form");
+                    console.log(entity)
+                    loader(true);
+                    $.ajax({
+                        method: "POST",
+                        url: "/licencedProduct/save",
+                        data: entity,
+                        success: function (response) {
+                            if (response.status == 200) {
+                                callbackAlert(response.message, function () {
+                                    document.location = "/licencedProduct";
+                                });
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                            loader(false);
+                        }
+                    });
+                }
+            });
+        });
+        function load() {
+            if (id > 0) {
+                loader(true);
+                $.get("/licencedProduct/load/" + id, function (response) {
+                    if (response.status == 200) {
+
+                        setEntity(response.data, "#form");
+                        if (response.data.color != "Silver" && response.data.color != "Silver&Beads" && response.data.color != "Silver&Leather") {
+                            var wage = parseInt($("#txtWage").val().replace(',', ''));
+                            var weight = parseFloat($("#txtWeight").val());
+                            var stoneLeatherPrice = parseInt($("#txtLeatherStonePrice").val().replace(',', ''));
+                            var calculatedRialPrice = parseInt(((((wage + goldPrice) * weight) + ((wage + goldPrice) * weight) * 0.07) + stoneLeatherPrice) + ((((wage + goldPrice) * weight) + ((wage + goldPrice) * weight) * 0.07) + stoneLeatherPrice) * 0.09);
+                            $("#txtCalculatedRialPrice").val(calculatedRialPrice - calculatedRialPrice % 1000)
+                            $("#txtCalculatedRialPrice").change()
+                            var euro = calculatedRialPrice / euroPrice
+                            $("#txtCalculatedEuroPrice").val(parseInt(euro))
+                            var additionalEuro = parseInt($("#txtAdditionalEuro").val());
+                            var calculatedEuroPrice = parseInt($("#txtCalculatedEuroPrice").val());
+                            $("#txtFinalEuroPrice").val(additionalEuro + calculatedEuroPrice);
+                            $("#additionalEuro").show();
+                            $("#finalEuro").show();
+                            $("#image").hide()
+                        }
+                        else {
+                            $("#image").show()
+                            $("#txtCalculatedRialPrice").val($("#txtLeatherStonePrice").val().replaceAll(',', ''));
+                            $("#txtCalculatedRialPrice").change();
+                            $("#additionalEuro").show()
+                            $("#finalEuro").show()
+                            $("#txtCalculatedEuroPrice").val($("#txtCalculatedRialPrice").val().replaceAll(',', '') / euroPrice);
+                            var additionalEuro = parseInt($("#txtAdditionalEuro").val());
+                            var calculatedEuroPrice = parseInt($("#txtCalculatedEuroPrice").val());
+                            $("#txtFinalEuroPrice").val(additionalEuro + calculatedEuroPrice);
+                        }
+                        //$("#txtAdditionalEuroFinal").val(parseInt(euro) + parseInt($("#txtAdditionalEuro").val()))
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            }
+        }
+        function productAutoCompelete() {
+
+            $("#txtProductName").on("focus", function () {
+                $(this).autocomplete({
+                    focus: function (event, ui) {
+                        $("#project").val(ui.item.label);
+                        return false;
+                    },
+                    select: function (event, ui) {
+                        $(this).val(ui.item.title);
+                        $("#txtCode").val(ui.item.code);
+                        $("#hiddenProductId").val(ui.item.id);
+                        if ($("#hiddenProductId").val() != null && $("#hiddenProductId").val() > 0) {
+                            $("#image").hide()
+                        }
+                        else {
+                            $("#image").show()
+                        }
+                        return false;
+                    },
+                    source: function (request, response) {
+
+                        var element = this;
+                        $.ajax({
+                            url: "/product/getProductAutoComplete",
+                            data:
+                            {
+                                term: request.term,
+                            },
+                            success: function (data) {
+                                response(data);
+                            }
+                        });
+                    },
+                    minLength: 2,
+                    open: function () {
+                        $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+                    },
+                    close: function () {
+                        $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+                    }
+                }).autocomplete("instance")._renderItem = function (ul, item) {
+                    if (item.fileName) {
+                        return $("<li>")
+                            .append("<div><img style=\"width: 50px;\" src=\"/image/product/500x500/" + item.fileName + "\" /><span class=\"auto-complete-item\"> " + "نام کالا: " + item.title + " <br/> " + "کد سایت: " + (item.code ? item.code : '-') + "<br/>" + "کد کارگاه: " + (item.bookCode ? item.bookCode : '-') + "</span ></div > ")
+                            .appendTo(ul);
+                    }
+                    else {
+                        return $("<li>")
+                            .append("<div><img style=\"width: 60px;\" src=\"/content/image/kia-gallery-logo-square.png\" /><span class=\"auto-complete-item\">" + item.title + "<br/>" + item.bookCode + "</span></div>")
+                            .appendTo(ul);
+                    }
+                };
+            })
+
+        }
+    </script>
+}

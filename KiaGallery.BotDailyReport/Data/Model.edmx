@@ -1,0 +1,1180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="KiaGalleryMainModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Branches">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CityId" Type="int" Nullable="false" />
+          <Property Name="BranchType" Type="int" Nullable="false" />
+          <Property Name="OrderNo" Type="int" Nullable="false" />
+          <Property Name="WorkingHour" Type="int" Nullable="false" />
+          <Property Name="OwnerName" Type="nvarchar(max)" />
+          <Property Name="OwnerNationalityCode" Type="nvarchar(max)" />
+          <Property Name="OwnerNationalityNo" Type="nvarchar(max)" />
+          <Property Name="OwnerFatherName" Type="nvarchar(max)" />
+          <Property Name="Alias" Type="nvarchar" MaxLength="5" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="EnglishName" Type="nvarchar" MaxLength="100" />
+          <Property Name="Address" Type="nvarchar" MaxLength="1000" />
+          <Property Name="EnglishAddress" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Color" Type="nvarchar" MaxLength="7" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="100" />
+          <Property Name="MobileNumber" Type="nvarchar(max)" />
+          <Property Name="CreditCard" Type="int" />
+          <Property Name="Latitude" Type="nvarchar" MaxLength="38" />
+          <Property Name="Longitude" Type="nvarchar" MaxLength="38" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="GoldDebt" Type="real" Nullable="false" />
+          <Property Name="RialDebt" Type="bigint" Nullable="false" />
+          <Property Name="GoldCredit" Type="real" Nullable="false" />
+          <Property Name="CreateUserId" Type="int" Nullable="false" />
+          <Property Name="ModifyUserId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifyDate" Type="datetime" Nullable="false" />
+          <Property Name="Ip" Type="nvarchar" MaxLength="45" />
+        </EntityType>
+        <EntityType Name="BranchGolds">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BranchId" Type="int" Nullable="false" />
+          <Property Name="Weight" Type="float" Nullable="false" />
+          <Property Name="Price" Type="bigint" Nullable="false" />
+          <Property Name="Date" Type="datetime" />
+          <Property Name="CreateUserId" Type="int" Nullable="false" />
+          <Property Name="ModifyUserId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifyDate" Type="datetime" Nullable="false" />
+          <Property Name="Ip" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="AppToken">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="100" />
+          <Property Name="Voided" Type="bit" Nullable="false" />
+          <Property Name="TokenType" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="VoidedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Bank">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BranchId" Type="int" Nullable="false" />
+          <Property Name="OrderNo" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="CreateUserId" Type="int" Nullable="false" />
+          <Property Name="ModifyUserId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifyDate" Type="datetime" Nullable="false" />
+          <Property Name="Ip" Type="nvarchar" MaxLength="45" />
+        </EntityType>
+        <EntityType Name="BotDailyReportUserData">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserType" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="ModifyUserId" Type="int" />
+          <Property Name="BranchId" Type="nvarchar(max)" />
+          <Property Name="ChatId" Type="bigint" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="200" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="200" />
+          <Property Name="Username" Type="nvarchar" MaxLength="200" />
+          <Property Name="Stoped" Type="bit" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="BotUserType" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BranchCalendar">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BranchId" Type="int" Nullable="false" />
+          <Property Name="ReportDate" Type="datetime" Nullable="false" />
+          <Property Name="CreateUserId" Type="int" Nullable="false" />
+          <Property Name="ModifyUserId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifyDate" Type="datetime" Nullable="false" />
+          <Property Name="Ip" Type="nvarchar" MaxLength="45" />
+        </EntityType>
+        <EntityType Name="Currency">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrderNo" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="CreateUserId" Type="int" Nullable="false" />
+          <Property Name="ModifyUserId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifyDate" Type="datetime" Nullable="false" />
+          <Property Name="Ip" Type="nvarchar" MaxLength="45" />
+        </EntityType>
+        <EntityType Name="DailyReport">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BranchId" Type="int" Nullable="false" />
+          <Property Name="BranchCalendarId" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="NumberSaleFactor" Type="int" Nullable="false" />
+          <Property Name="SaleWeight" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="SaleWeightPercent" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="SaleEntry" Type="bigint" Nullable="false" />
+          <Property Name="SaleExit" Type="bigint" Nullable="false" />
+          <Property Name="NumberReturnedFactor" Type="int" Nullable="false" />
+          <Property Name="ReturnedWeight" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ReturnWeightPercent" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ReturnedEntry" Type="bigint" Nullable="false" />
+          <Property Name="ReturnedExit" Type="bigint" Nullable="false" />
+          <Property Name="OtherCash" Type="bigint" Nullable="false" />
+          <Property Name="CashEntry" Type="bigint" Nullable="false" />
+          <Property Name="CashExit" Type="bigint" Nullable="false" />
+          <Property Name="OtherCurrency" Type="nvarchar(max)" />
+          <Property Name="OtherCurrencyValue" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="OtherCurrencyRialValue" Type="bigint" Nullable="false" />
+          <Property Name="OtherCurrencyRialEntry" Type="bigint" Nullable="false" />
+          <Property Name="OtherCurrencyRialExit" Type="bigint" Nullable="false" />
+          <Property Name="InventoryCash" Type="bigint" Nullable="false" />
+          <Property Name="GoldDeficitWeight" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="GoldDeficitEntry" Type="bigint" Nullable="false" />
+          <Property Name="GoldDeficitExit" Type="bigint" Nullable="false" />
+          <Property Name="GiftNumberEntry" Type="int" Nullable="false" />
+          <Property Name="GiftNumberExit" Type="int" Nullable="false" />
+          <Property Name="GiftEntry" Type="bigint" Nullable="false" />
+          <Property Name="GiftExit" Type="bigint" Nullable="false" />
+          <Property Name="CheckNumber" Type="int" Nullable="false" />
+          <Property Name="CheckEntry" Type="bigint" Nullable="false" />
+          <Property Name="CheckExit" Type="bigint" Nullable="false" />
+          <Property Name="LeatherStoneDescriptionEntry" Type="nvarchar" MaxLength="255" />
+          <Property Name="LeatherStoneDescriptionExit" Type="nvarchar" MaxLength="255" />
+          <Property Name="LeatherStoneEntry" Type="bigint" Nullable="false" />
+          <Property Name="LeatherStoneExit" Type="bigint" Nullable="false" />
+          <Property Name="CoinNumber" Type="int" Nullable="false" />
+          <Property Name="CoinDescription" Type="nvarchar" MaxLength="255" />
+          <Property Name="CoinEntry" Type="bigint" Nullable="false" />
+          <Property Name="CoinExit" Type="bigint" Nullable="false" />
+          <Property Name="OtherKiaGoldWeight" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="OtherKiaGoldEntry" Type="bigint" Nullable="false" />
+          <Property Name="OtherKiaGoldExit" Type="bigint" Nullable="false" />
+          <Property Name="OtherGoldWeight" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="OtherGoldEntry" Type="bigint" Nullable="false" />
+          <Property Name="OtherGoldExit" Type="bigint" Nullable="false" />
+          <Property Name="CreditorCustomerEntry" Type="bigint" Nullable="false" />
+          <Property Name="CreditorCustomerExit" Type="bigint" Nullable="false" />
+          <Property Name="DebtorCustomerEntry" Type="bigint" Nullable="false" />
+          <Property Name="DebtorCustomerExit" Type="bigint" Nullable="false" />
+          <Property Name="DepositBeforeCount" Type="int" Nullable="false" />
+          <Property Name="DepositBeforeEntry" Type="bigint" Nullable="false" />
+          <Property Name="DepositBeforeExit" Type="bigint" Nullable="false" />
+          <Property Name="DepositNewCount" Type="int" Nullable="false" />
+          <Property Name="DepositNewEntry" Type="bigint" Nullable="false" />
+          <Property Name="DepositNewExit" Type="bigint" Nullable="false" />
+          <Property Name="DiscountEntry" Type="bigint" Nullable="false" />
+          <Property Name="DiscountExit" Type="bigint" Nullable="false" />
+          <Property Name="LoyalityEntry" Type="bigint" Nullable="false" />
+          <Property Name="LoyalityExit" Type="bigint" Nullable="false" />
+          <Property Name="CostCourierPostEntry" Type="bigint" Nullable="false" />
+          <Property Name="CostCourierPostExit" Type="bigint" Nullable="false" />
+          <Property Name="CostEntry" Type="bigint" Nullable="false" />
+          <Property Name="CostExit" Type="bigint" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="Sent" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DailyReportBank">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DailyReportId" Type="int" Nullable="false" />
+          <Property Name="BankId" Type="int" Nullable="false" />
+          <Property Name="Entry" Type="bigint" Nullable="false" />
+          <Property Name="Exit" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DailyReportCurrency">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DailyReportId" Type="int" Nullable="false" />
+          <Property Name="CurrencyId" Type="int" Nullable="false" />
+          <Property Name="Value" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="RialValue" Type="bigint" Nullable="false" />
+          <Property Name="RialEntry" Type="bigint" Nullable="false" />
+          <Property Name="RialExit" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DailyReportLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DailyReportId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="PrevData" Type="nvarchar(max)" />
+          <Property Name="Ip" Type="nvarchar" MaxLength="48" />
+        </EntityType>
+        <EntityType Name="DailyReportMessage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BranchId" Type="int" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="ChatId" Type="bigint" />
+          <Property Name="MessageId" Type="int" />
+          <Property Name="Text" Type="nvarchar(max)" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="Unknown" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DailyReportSettings">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Key" Type="nvarchar" MaxLength="150" />
+          <Property Name="Value" Type="nvarchar(max)" />
+          <Property Name="CreateUserId" Type="int" Nullable="false" />
+          <Property Name="ModifyUserId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifyDate" Type="datetime" Nullable="false" />
+          <Property Name="Ip" Type="nvarchar" MaxLength="45" />
+        </EntityType>
+        <Association Name="FK_dbo_BranchGolds_dbo_Branches_BranchId">
+          <End Role="Branches" Type="Self.Branches" Multiplicity="1" />
+          <End Role="BranchGolds" Type="Self.BranchGolds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branches">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BranchGolds">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_drf_Bank_dbo_Branches_BranchId">
+          <End Role="Branches" Type="Self.Branches" Multiplicity="1" />
+          <End Role="Bank" Type="Self.Bank" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branches">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bank">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_drf_BranchCalendar_dbo_Branches_BranchId">
+          <End Role="Branches" Type="Self.Branches" Multiplicity="1" />
+          <End Role="BranchCalendar" Type="Self.BranchCalendar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branches">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BranchCalendar">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_drf_DailyReport_dbo_Branches_BranchId">
+          <End Role="Branches" Type="Self.Branches" Multiplicity="1" />
+          <End Role="DailyReport" Type="Self.DailyReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branches">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DailyReport">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_drf_DailyReport_drf_BranchCalendar_BranchCalendarId">
+          <End Role="BranchCalendar" Type="Self.BranchCalendar" Multiplicity="1" />
+          <End Role="DailyReport" Type="Self.DailyReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BranchCalendar">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DailyReport">
+              <PropertyRef Name="BranchCalendarId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_drf_DailyReportBank_drf_Bank_BankId">
+          <End Role="Bank" Type="Self.Bank" Multiplicity="1" />
+          <End Role="DailyReportBank" Type="Self.DailyReportBank" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bank">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DailyReportBank">
+              <PropertyRef Name="BankId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_drf_DailyReportBank_drf_DailyReport_DailyReportId">
+          <End Role="DailyReport" Type="Self.DailyReport" Multiplicity="1" />
+          <End Role="DailyReportBank" Type="Self.DailyReportBank" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DailyReport">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DailyReportBank">
+              <PropertyRef Name="DailyReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_drf_DailyReportCurrency_drf_Currency_CurrencyId">
+          <End Role="Currency" Type="Self.Currency" Multiplicity="1" />
+          <End Role="DailyReportCurrency" Type="Self.DailyReportCurrency" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DailyReportCurrency">
+              <PropertyRef Name="CurrencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_drf_DailyReportCurrency_drf_DailyReport_DailyReportId">
+          <End Role="DailyReport" Type="Self.DailyReport" Multiplicity="1" />
+          <End Role="DailyReportCurrency" Type="Self.DailyReportCurrency" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DailyReport">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DailyReportCurrency">
+              <PropertyRef Name="DailyReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_drf_DailyReportLog_drf_DailyReport_DailyReportId">
+          <End Role="DailyReport" Type="Self.DailyReport" Multiplicity="1" />
+          <End Role="DailyReportLog" Type="Self.DailyReportLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DailyReport">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DailyReportLog">
+              <PropertyRef Name="DailyReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="KiaGalleryMainModelStoreContainer">
+          <EntitySet Name="Branches" EntityType="Self.Branches" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BranchGolds" EntityType="Self.BranchGolds" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AppToken" EntityType="Self.AppToken" Schema="drf" store:Type="Tables" />
+          <EntitySet Name="Bank" EntityType="Self.Bank" Schema="drf" store:Type="Tables" />
+          <EntitySet Name="BotDailyReportUserData" EntityType="Self.BotDailyReportUserData" Schema="drf" store:Type="Tables" />
+          <EntitySet Name="BranchCalendar" EntityType="Self.BranchCalendar" Schema="drf" store:Type="Tables" />
+          <EntitySet Name="Currency" EntityType="Self.Currency" Schema="drf" store:Type="Tables" />
+          <EntitySet Name="DailyReport" EntityType="Self.DailyReport" Schema="drf" store:Type="Tables" />
+          <EntitySet Name="DailyReportBank" EntityType="Self.DailyReportBank" Schema="drf" store:Type="Tables" />
+          <EntitySet Name="DailyReportCurrency" EntityType="Self.DailyReportCurrency" Schema="drf" store:Type="Tables" />
+          <EntitySet Name="DailyReportLog" EntityType="Self.DailyReportLog" Schema="drf" store:Type="Tables" />
+          <EntitySet Name="DailyReportMessage" EntityType="Self.DailyReportMessage" Schema="drf" store:Type="Tables" />
+          <EntitySet Name="DailyReportSettings" EntityType="Self.DailyReportSettings" Schema="drf" store:Type="Tables" />
+          <AssociationSet Name="FK_dbo_BranchGolds_dbo_Branches_BranchId" Association="Self.FK_dbo_BranchGolds_dbo_Branches_BranchId">
+            <End Role="Branches" EntitySet="Branches" />
+            <End Role="BranchGolds" EntitySet="BranchGolds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_drf_Bank_dbo_Branches_BranchId" Association="Self.FK_drf_Bank_dbo_Branches_BranchId">
+            <End Role="Branches" EntitySet="Branches" />
+            <End Role="Bank" EntitySet="Bank" />
+          </AssociationSet>
+          <AssociationSet Name="FK_drf_BranchCalendar_dbo_Branches_BranchId" Association="Self.FK_drf_BranchCalendar_dbo_Branches_BranchId">
+            <End Role="Branches" EntitySet="Branches" />
+            <End Role="BranchCalendar" EntitySet="BranchCalendar" />
+          </AssociationSet>
+          <AssociationSet Name="FK_drf_DailyReport_dbo_Branches_BranchId" Association="Self.FK_drf_DailyReport_dbo_Branches_BranchId">
+            <End Role="Branches" EntitySet="Branches" />
+            <End Role="DailyReport" EntitySet="DailyReport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_drf_DailyReport_drf_BranchCalendar_BranchCalendarId" Association="Self.FK_drf_DailyReport_drf_BranchCalendar_BranchCalendarId">
+            <End Role="BranchCalendar" EntitySet="BranchCalendar" />
+            <End Role="DailyReport" EntitySet="DailyReport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_drf_DailyReportBank_drf_Bank_BankId" Association="Self.FK_drf_DailyReportBank_drf_Bank_BankId">
+            <End Role="Bank" EntitySet="Bank" />
+            <End Role="DailyReportBank" EntitySet="DailyReportBank" />
+          </AssociationSet>
+          <AssociationSet Name="FK_drf_DailyReportBank_drf_DailyReport_DailyReportId" Association="Self.FK_drf_DailyReportBank_drf_DailyReport_DailyReportId">
+            <End Role="DailyReport" EntitySet="DailyReport" />
+            <End Role="DailyReportBank" EntitySet="DailyReportBank" />
+          </AssociationSet>
+          <AssociationSet Name="FK_drf_DailyReportCurrency_drf_Currency_CurrencyId" Association="Self.FK_drf_DailyReportCurrency_drf_Currency_CurrencyId">
+            <End Role="Currency" EntitySet="Currency" />
+            <End Role="DailyReportCurrency" EntitySet="DailyReportCurrency" />
+          </AssociationSet>
+          <AssociationSet Name="FK_drf_DailyReportCurrency_drf_DailyReport_DailyReportId" Association="Self.FK_drf_DailyReportCurrency_drf_DailyReport_DailyReportId">
+            <End Role="DailyReport" EntitySet="DailyReport" />
+            <End Role="DailyReportCurrency" EntitySet="DailyReportCurrency" />
+          </AssociationSet>
+          <AssociationSet Name="FK_drf_DailyReportLog_drf_DailyReport_DailyReportId" Association="Self.FK_drf_DailyReportLog_drf_DailyReport_DailyReportId">
+            <End Role="DailyReport" EntitySet="DailyReport" />
+            <End Role="DailyReportLog" EntitySet="DailyReportLog" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="KiaGalleryMainModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AppToken">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Code" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Voided" Type="Boolean" Nullable="false" />
+          <Property Name="TokenType" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="VoidedDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Bank">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BranchId" Type="Int32" Nullable="false" />
+          <Property Name="OrderNo" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="CreateUserId" Type="Int32" Nullable="false" />
+          <Property Name="ModifyUserId" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifyDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Ip" Type="String" MaxLength="45" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DailyReportBank" Relationship="Self.FK_drf_DailyReportBank_drf_Bank_BankId" FromRole="Bank" ToRole="DailyReportBank" />
+          <NavigationProperty Name="Branches" Relationship="KiaGalleryMainModel.FK_drf_Bank_dbo_Branches_BranchId" FromRole="Bank" ToRole="Branches" />
+        </EntityType>
+        <EntityType Name="BranchCalendar">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BranchId" Type="Int32" Nullable="false" />
+          <Property Name="ReportDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreateUserId" Type="Int32" Nullable="false" />
+          <Property Name="ModifyUserId" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifyDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Ip" Type="String" MaxLength="45" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Branches" Relationship="KiaGalleryMainModel.FK_drf_BranchCalendar_dbo_Branches_BranchId" FromRole="BranchCalendar" ToRole="Branches" />
+          <NavigationProperty Name="DailyReport" Relationship="KiaGalleryMainModel.FK_drf_DailyReport_drf_BranchCalendar_BranchCalendarId" FromRole="BranchCalendar" ToRole="DailyReport" />
+        </EntityType>
+        <EntityType Name="Currency">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderNo" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="CreateUserId" Type="Int32" Nullable="false" />
+          <Property Name="ModifyUserId" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifyDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Ip" Type="String" MaxLength="45" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DailyReportCurrency" Relationship="KiaGalleryMainModel.FK_drf_DailyReportCurrency_drf_Currency_CurrencyId" FromRole="Currency" ToRole="DailyReportCurrency" />
+        </EntityType>
+        <EntityType Name="DailyReportBank">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DailyReportId" Type="Int32" Nullable="false" />
+          <Property Name="BankId" Type="Int32" Nullable="false" />
+          <Property Name="Entry" Type="Int64" Nullable="false" />
+          <Property Name="Exit" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="Bank" Relationship="Self.FK_drf_DailyReportBank_drf_Bank_BankId" FromRole="DailyReportBank" ToRole="Bank" />
+          <NavigationProperty Name="DailyReport" Relationship="KiaGalleryMainModel.FK_drf_DailyReportBank_drf_DailyReport_DailyReportId" FromRole="DailyReportBank" ToRole="DailyReport" />
+        </EntityType>
+        <EntityType Name="DailyReportLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DailyReportId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="PrevData" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Ip" Type="String" MaxLength="48" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DailyReport" Relationship="KiaGalleryMainModel.FK_drf_DailyReportLog_drf_DailyReport_DailyReportId" FromRole="DailyReportLog" ToRole="DailyReport" />
+        </EntityType>
+        <EntityType Name="DailyReportMessage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BranchId" Type="Int32" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="ChatId" Type="Int64" />
+          <Property Name="MessageId" Type="Int32" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Unknown" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DailyReportSettings">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Key" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateUserId" Type="Int32" Nullable="false" />
+          <Property Name="ModifyUserId" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifyDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Ip" Type="String" MaxLength="45" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_drf_DailyReportBank_drf_Bank_BankId">
+          <End Role="Bank" Type="Self.Bank" Multiplicity="1" />
+          <End Role="DailyReportBank" Type="Self.DailyReportBank" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bank">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DailyReportBank">
+              <PropertyRef Name="BankId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="KiaGalleryMainEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AppToken" EntityType="Self.AppToken" />
+          <EntitySet Name="Bank" EntityType="Self.Bank" />
+          <EntitySet Name="BranchCalendar" EntityType="Self.BranchCalendar" />
+          <EntitySet Name="Currency" EntityType="Self.Currency" />
+          <EntitySet Name="DailyReportBank" EntityType="Self.DailyReportBank" />
+          <EntitySet Name="DailyReportLog" EntityType="Self.DailyReportLog" />
+          <EntitySet Name="DailyReportMessage" EntityType="Self.DailyReportMessage" />
+          <EntitySet Name="DailyReportSettings" EntityType="Self.DailyReportSettings" />
+          <AssociationSet Name="FK_drf_DailyReportBank_drf_Bank_BankId" Association="Self.FK_drf_DailyReportBank_drf_Bank_BankId">
+            <End Role="Bank" EntitySet="Bank" />
+            <End Role="DailyReportBank" EntitySet="DailyReportBank" />
+          </AssociationSet>
+          <EntitySet Name="Branches" EntityType="KiaGalleryMainModel.Branches" />
+          <AssociationSet Name="FK_drf_Bank_dbo_Branches_BranchId" Association="KiaGalleryMainModel.FK_drf_Bank_dbo_Branches_BranchId">
+            <End Role="Branches" EntitySet="Branches" />
+            <End Role="Bank" EntitySet="Bank" />
+          </AssociationSet>
+          <AssociationSet Name="FK_drf_BranchCalendar_dbo_Branches_BranchId" Association="KiaGalleryMainModel.FK_drf_BranchCalendar_dbo_Branches_BranchId">
+            <End Role="Branches" EntitySet="Branches" />
+            <End Role="BranchCalendar" EntitySet="BranchCalendar" />
+          </AssociationSet>
+          <EntitySet Name="BotDailyReportUserData" EntityType="KiaGalleryMainModel.BotDailyReportUserData" />
+          <EntitySet Name="DailyReportCurrency" EntityType="KiaGalleryMainModel.DailyReportCurrency" />
+          <AssociationSet Name="FK_drf_DailyReportCurrency_drf_Currency_CurrencyId" Association="KiaGalleryMainModel.FK_drf_DailyReportCurrency_drf_Currency_CurrencyId">
+            <End Role="Currency" EntitySet="Currency" />
+            <End Role="DailyReportCurrency" EntitySet="DailyReportCurrency" />
+          </AssociationSet>
+          <EntitySet Name="BranchGolds" EntityType="KiaGalleryMainModel.BranchGolds" />
+          <AssociationSet Name="FK_dbo_BranchGolds_dbo_Branches_BranchId" Association="KiaGalleryMainModel.FK_dbo_BranchGolds_dbo_Branches_BranchId">
+            <End Role="Branches" EntitySet="Branches" />
+            <End Role="BranchGolds" EntitySet="BranchGolds" />
+          </AssociationSet>
+          <EntitySet Name="DailyReport" EntityType="KiaGalleryMainModel.DailyReport" />
+          <AssociationSet Name="FK_drf_DailyReport_dbo_Branches_BranchId" Association="KiaGalleryMainModel.FK_drf_DailyReport_dbo_Branches_BranchId">
+            <End Role="Branches" EntitySet="Branches" />
+            <End Role="DailyReport" EntitySet="DailyReport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_drf_DailyReport_drf_BranchCalendar_BranchCalendarId" Association="KiaGalleryMainModel.FK_drf_DailyReport_drf_BranchCalendar_BranchCalendarId">
+            <End Role="BranchCalendar" EntitySet="BranchCalendar" />
+            <End Role="DailyReport" EntitySet="DailyReport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_drf_DailyReportBank_drf_DailyReport_DailyReportId" Association="KiaGalleryMainModel.FK_drf_DailyReportBank_drf_DailyReport_DailyReportId">
+            <End Role="DailyReport" EntitySet="DailyReport" />
+            <End Role="DailyReportBank" EntitySet="DailyReportBank" />
+          </AssociationSet>
+          <AssociationSet Name="FK_drf_DailyReportCurrency_drf_DailyReport_DailyReportId" Association="KiaGalleryMainModel.FK_drf_DailyReportCurrency_drf_DailyReport_DailyReportId">
+            <End Role="DailyReport" EntitySet="DailyReport" />
+            <End Role="DailyReportCurrency" EntitySet="DailyReportCurrency" />
+          </AssociationSet>
+          <AssociationSet Name="FK_drf_DailyReportLog_drf_DailyReport_DailyReportId" Association="KiaGalleryMainModel.FK_drf_DailyReportLog_drf_DailyReport_DailyReportId">
+            <End Role="DailyReport" EntitySet="DailyReport" />
+            <End Role="DailyReportLog" EntitySet="DailyReportLog" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Branches">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CityId" Type="Int32" Nullable="false" />
+          <Property Name="BranchType" Type="Int32" Nullable="false" />
+          <Property Name="OrderNo" Type="Int32" Nullable="false" />
+          <Property Name="Alias" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EnglishName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="EnglishAddress" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Color" Type="String" MaxLength="7" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CreditCard" Type="Int32" />
+          <Property Name="Latitude" Type="String" MaxLength="38" FixedLength="false" Unicode="true" />
+          <Property Name="Longitude" Type="String" MaxLength="38" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="GoldDebt" Type="Single" Nullable="false" />
+          <Property Name="RialDebt" Type="Int64" Nullable="false" />
+          <Property Name="GoldCredit" Type="Single" Nullable="false" />
+          <Property Name="CreateUserId" Type="Int32" Nullable="false" />
+          <Property Name="ModifyUserId" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifyDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Ip" Type="String" MaxLength="45" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Bank" Relationship="KiaGalleryMainModel.FK_drf_Bank_dbo_Branches_BranchId" FromRole="Branches" ToRole="Bank" />
+          <NavigationProperty Name="BranchCalendar" Relationship="KiaGalleryMainModel.FK_drf_BranchCalendar_dbo_Branches_BranchId" FromRole="Branches" ToRole="BranchCalendar" />
+          <NavigationProperty Name="BranchGolds" Relationship="KiaGalleryMainModel.FK_dbo_BranchGolds_dbo_Branches_BranchId" FromRole="Branches" ToRole="BranchGolds" />
+          <Property Name="WorkingHour" Type="Int32" Nullable="false" />
+          <Property Name="OwnerName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OwnerNationalityCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OwnerNationalityNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OwnerFatherName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DailyReport" Relationship="KiaGalleryMainModel.FK_drf_DailyReport_dbo_Branches_BranchId" FromRole="Branches" ToRole="DailyReport" />
+          <Property Name="MobileNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_drf_Bank_dbo_Branches_BranchId">
+          <End Type="KiaGalleryMainModel.Branches" Role="Branches" Multiplicity="1" />
+          <End Type="KiaGalleryMainModel.Bank" Role="Bank" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branches">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bank">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_drf_BranchCalendar_dbo_Branches_BranchId">
+          <End Type="KiaGalleryMainModel.Branches" Role="Branches" Multiplicity="1" />
+          <End Type="KiaGalleryMainModel.BranchCalendar" Role="BranchCalendar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branches">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BranchCalendar">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="BotDailyReportUserData">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserType" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="ModifyUserId" Type="Int32" />
+          <Property Name="BranchId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ChatId" Type="Int64" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Username" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Stoped" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="BotUserType" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DailyReportCurrency">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DailyReportId" Type="Int32" Nullable="false" />
+          <Property Name="CurrencyId" Type="Int32" Nullable="false" />
+          <Property Name="Value" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="RialValue" Type="Int64" Nullable="false" />
+          <Property Name="RialEntry" Type="Int64" Nullable="false" />
+          <Property Name="RialExit" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="Currency" Relationship="KiaGalleryMainModel.FK_drf_DailyReportCurrency_drf_Currency_CurrencyId" FromRole="DailyReportCurrency" ToRole="Currency" />
+          <NavigationProperty Name="DailyReport" Relationship="KiaGalleryMainModel.FK_drf_DailyReportCurrency_drf_DailyReport_DailyReportId" FromRole="DailyReportCurrency" ToRole="DailyReport" />
+        </EntityType>
+        <Association Name="FK_drf_DailyReportCurrency_drf_Currency_CurrencyId">
+          <End Type="KiaGalleryMainModel.Currency" Role="Currency" Multiplicity="1" />
+          <End Type="KiaGalleryMainModel.DailyReportCurrency" Role="DailyReportCurrency" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DailyReportCurrency">
+              <PropertyRef Name="CurrencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="BranchGolds">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BranchId" Type="Int32" Nullable="false" />
+          <Property Name="Weight" Type="Double" Nullable="false" />
+          <Property Name="Price" Type="Int64" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="CreateUserId" Type="Int32" Nullable="false" />
+          <Property Name="ModifyUserId" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifyDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Ip" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Branches" Relationship="KiaGalleryMainModel.FK_dbo_BranchGolds_dbo_Branches_BranchId" FromRole="BranchGolds" ToRole="Branches" />
+        </EntityType>
+        <Association Name="FK_dbo_BranchGolds_dbo_Branches_BranchId">
+          <End Type="KiaGalleryMainModel.Branches" Role="Branches" Multiplicity="1" />
+          <End Type="KiaGalleryMainModel.BranchGolds" Role="BranchGolds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branches">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BranchGolds">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DailyReport">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BranchId" Type="Int32" Nullable="false" />
+          <Property Name="BranchCalendarId" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="NumberSaleFactor" Type="Int32" Nullable="false" />
+          <Property Name="SaleWeight" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SaleWeightPercent" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SaleEntry" Type="Int64" Nullable="false" />
+          <Property Name="SaleExit" Type="Int64" Nullable="false" />
+          <Property Name="NumberReturnedFactor" Type="Int32" Nullable="false" />
+          <Property Name="ReturnedWeight" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ReturnWeightPercent" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ReturnedEntry" Type="Int64" Nullable="false" />
+          <Property Name="ReturnedExit" Type="Int64" Nullable="false" />
+          <Property Name="OtherCash" Type="Int64" Nullable="false" />
+          <Property Name="CashEntry" Type="Int64" Nullable="false" />
+          <Property Name="CashExit" Type="Int64" Nullable="false" />
+          <Property Name="OtherCurrency" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OtherCurrencyValue" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="OtherCurrencyRialValue" Type="Int64" Nullable="false" />
+          <Property Name="OtherCurrencyRialEntry" Type="Int64" Nullable="false" />
+          <Property Name="OtherCurrencyRialExit" Type="Int64" Nullable="false" />
+          <Property Name="InventoryCash" Type="Int64" Nullable="false" />
+          <Property Name="GoldDeficitWeight" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="GoldDeficitEntry" Type="Int64" Nullable="false" />
+          <Property Name="GoldDeficitExit" Type="Int64" Nullable="false" />
+          <Property Name="GiftNumberEntry" Type="Int32" Nullable="false" />
+          <Property Name="GiftNumberExit" Type="Int32" Nullable="false" />
+          <Property Name="GiftEntry" Type="Int64" Nullable="false" />
+          <Property Name="GiftExit" Type="Int64" Nullable="false" />
+          <Property Name="CheckNumber" Type="Int32" Nullable="false" />
+          <Property Name="CheckEntry" Type="Int64" Nullable="false" />
+          <Property Name="CheckExit" Type="Int64" Nullable="false" />
+          <Property Name="LeatherStoneDescriptionEntry" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="LeatherStoneDescriptionExit" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="LeatherStoneEntry" Type="Int64" Nullable="false" />
+          <Property Name="LeatherStoneExit" Type="Int64" Nullable="false" />
+          <Property Name="CoinNumber" Type="Int32" Nullable="false" />
+          <Property Name="CoinDescription" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="CoinEntry" Type="Int64" Nullable="false" />
+          <Property Name="CoinExit" Type="Int64" Nullable="false" />
+          <Property Name="OtherKiaGoldWeight" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="OtherKiaGoldEntry" Type="Int64" Nullable="false" />
+          <Property Name="OtherKiaGoldExit" Type="Int64" Nullable="false" />
+          <Property Name="OtherGoldWeight" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="OtherGoldEntry" Type="Int64" Nullable="false" />
+          <Property Name="OtherGoldExit" Type="Int64" Nullable="false" />
+          <Property Name="CreditorCustomerEntry" Type="Int64" Nullable="false" />
+          <Property Name="CreditorCustomerExit" Type="Int64" Nullable="false" />
+          <Property Name="DebtorCustomerEntry" Type="Int64" Nullable="false" />
+          <Property Name="DebtorCustomerExit" Type="Int64" Nullable="false" />
+          <Property Name="DepositBeforeCount" Type="Int32" Nullable="false" />
+          <Property Name="DepositBeforeEntry" Type="Int64" Nullable="false" />
+          <Property Name="DepositBeforeExit" Type="Int64" Nullable="false" />
+          <Property Name="DepositNewCount" Type="Int32" Nullable="false" />
+          <Property Name="DepositNewEntry" Type="Int64" Nullable="false" />
+          <Property Name="DepositNewExit" Type="Int64" Nullable="false" />
+          <Property Name="DiscountEntry" Type="Int64" Nullable="false" />
+          <Property Name="DiscountExit" Type="Int64" Nullable="false" />
+          <Property Name="CostCourierPostEntry" Type="Int64" Nullable="false" />
+          <Property Name="CostCourierPostExit" Type="Int64" Nullable="false" />
+          <Property Name="CostEntry" Type="Int64" Nullable="false" />
+          <Property Name="CostExit" Type="Int64" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Sent" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Branches" Relationship="KiaGalleryMainModel.FK_drf_DailyReport_dbo_Branches_BranchId" FromRole="DailyReport" ToRole="Branches" />
+          <NavigationProperty Name="BranchCalendar" Relationship="KiaGalleryMainModel.FK_drf_DailyReport_drf_BranchCalendar_BranchCalendarId" FromRole="DailyReport" ToRole="BranchCalendar" />
+          <NavigationProperty Name="DailyReportBank" Relationship="KiaGalleryMainModel.FK_drf_DailyReportBank_drf_DailyReport_DailyReportId" FromRole="DailyReport" ToRole="DailyReportBank" />
+          <NavigationProperty Name="DailyReportCurrency" Relationship="KiaGalleryMainModel.FK_drf_DailyReportCurrency_drf_DailyReport_DailyReportId" FromRole="DailyReport" ToRole="DailyReportCurrency" />
+          <NavigationProperty Name="DailyReportLog" Relationship="KiaGalleryMainModel.FK_drf_DailyReportLog_drf_DailyReport_DailyReportId" FromRole="DailyReport" ToRole="DailyReportLog" />
+          <Property Name="LoyalityEntry" Type="Int64" Nullable="false" />
+          <Property Name="LoyalityExit" Type="Int64" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_drf_DailyReport_dbo_Branches_BranchId">
+          <End Type="KiaGalleryMainModel.Branches" Role="Branches" Multiplicity="1" />
+          <End Type="KiaGalleryMainModel.DailyReport" Role="DailyReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branches">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DailyReport">
+              <PropertyRef Name="BranchId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_drf_DailyReport_drf_BranchCalendar_BranchCalendarId">
+          <End Type="KiaGalleryMainModel.BranchCalendar" Role="BranchCalendar" Multiplicity="1" />
+          <End Type="KiaGalleryMainModel.DailyReport" Role="DailyReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BranchCalendar">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DailyReport">
+              <PropertyRef Name="BranchCalendarId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_drf_DailyReportBank_drf_DailyReport_DailyReportId">
+          <End Type="KiaGalleryMainModel.DailyReport" Role="DailyReport" Multiplicity="1" />
+          <End Type="KiaGalleryMainModel.DailyReportBank" Role="DailyReportBank" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DailyReport">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DailyReportBank">
+              <PropertyRef Name="DailyReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_drf_DailyReportCurrency_drf_DailyReport_DailyReportId">
+          <End Type="KiaGalleryMainModel.DailyReport" Role="DailyReport" Multiplicity="1" />
+          <End Type="KiaGalleryMainModel.DailyReportCurrency" Role="DailyReportCurrency" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DailyReport">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DailyReportCurrency">
+              <PropertyRef Name="DailyReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_drf_DailyReportLog_drf_DailyReport_DailyReportId">
+          <End Type="KiaGalleryMainModel.DailyReport" Role="DailyReport" Multiplicity="1" />
+          <End Type="KiaGalleryMainModel.DailyReportLog" Role="DailyReportLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DailyReport">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DailyReportLog">
+              <PropertyRef Name="DailyReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="KiaGalleryMainModelStoreContainer" CdmEntityContainer="KiaGalleryMainEntities">
+          <EntitySetMapping Name="AppToken">
+            <EntityTypeMapping TypeName="KiaGalleryMainModel.AppToken">
+              <MappingFragment StoreEntitySet="AppToken">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Voided" ColumnName="Voided" />
+                <ScalarProperty Name="TokenType" ColumnName="TokenType" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="VoidedDate" ColumnName="VoidedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Bank">
+            <EntityTypeMapping TypeName="KiaGalleryMainModel.Bank">
+              <MappingFragment StoreEntitySet="Bank">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="ModifyUserId" ColumnName="ModifyUserId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="Ip" ColumnName="Ip" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BranchCalendar">
+            <EntityTypeMapping TypeName="KiaGalleryMainModel.BranchCalendar">
+              <MappingFragment StoreEntitySet="BranchCalendar">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+                <ScalarProperty Name="ReportDate" ColumnName="ReportDate" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="ModifyUserId" ColumnName="ModifyUserId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="Ip" ColumnName="Ip" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Currency">
+            <EntityTypeMapping TypeName="KiaGalleryMainModel.Currency">
+              <MappingFragment StoreEntitySet="Currency">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="ModifyUserId" ColumnName="ModifyUserId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="Ip" ColumnName="Ip" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DailyReportBank">
+            <EntityTypeMapping TypeName="KiaGalleryMainModel.DailyReportBank">
+              <MappingFragment StoreEntitySet="DailyReportBank">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="DailyReportId" ColumnName="DailyReportId" />
+                <ScalarProperty Name="BankId" ColumnName="BankId" />
+                <ScalarProperty Name="Entry" ColumnName="Entry" />
+                <ScalarProperty Name="Exit" ColumnName="Exit" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DailyReportLog">
+            <EntityTypeMapping TypeName="KiaGalleryMainModel.DailyReportLog">
+              <MappingFragment StoreEntitySet="DailyReportLog">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="DailyReportId" ColumnName="DailyReportId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="PrevData" ColumnName="PrevData" />
+                <ScalarProperty Name="Ip" ColumnName="Ip" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DailyReportMessage">
+            <EntityTypeMapping TypeName="KiaGalleryMainModel.DailyReportMessage">
+              <MappingFragment StoreEntitySet="DailyReportMessage">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ChatId" ColumnName="ChatId" />
+                <ScalarProperty Name="MessageId" ColumnName="MessageId" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Unknown" ColumnName="Unknown" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DailyReportSettings">
+            <EntityTypeMapping TypeName="KiaGalleryMainModel.DailyReportSettings">
+              <MappingFragment StoreEntitySet="DailyReportSettings">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="ModifyUserId" ColumnName="ModifyUserId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="Ip" ColumnName="Ip" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Branches">
+            <EntityTypeMapping TypeName="KiaGalleryMainModel.Branches">
+              <MappingFragment StoreEntitySet="Branches">
+                <ScalarProperty Name="MobileNumber" ColumnName="MobileNumber" />
+                <ScalarProperty Name="OwnerFatherName" ColumnName="OwnerFatherName" />
+                <ScalarProperty Name="OwnerNationalityNo" ColumnName="OwnerNationalityNo" />
+                <ScalarProperty Name="OwnerNationalityCode" ColumnName="OwnerNationalityCode" />
+                <ScalarProperty Name="OwnerName" ColumnName="OwnerName" />
+                <ScalarProperty Name="WorkingHour" ColumnName="WorkingHour" />
+                <ScalarProperty Name="Ip" ColumnName="Ip" />
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ModifyUserId" ColumnName="ModifyUserId" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="GoldCredit" ColumnName="GoldCredit" />
+                <ScalarProperty Name="RialDebt" ColumnName="RialDebt" />
+                <ScalarProperty Name="GoldDebt" ColumnName="GoldDebt" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="CreditCard" ColumnName="CreditCard" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="EnglishAddress" ColumnName="EnglishAddress" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="EnglishName" ColumnName="EnglishName" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Alias" ColumnName="Alias" />
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+                <ScalarProperty Name="BranchType" ColumnName="BranchType" />
+                <ScalarProperty Name="CityId" ColumnName="CityId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BotDailyReportUserData">
+            <EntityTypeMapping TypeName="KiaGalleryMainModel.BotDailyReportUserData">
+              <MappingFragment StoreEntitySet="BotDailyReportUserData">
+                <ScalarProperty Name="BotUserType" ColumnName="BotUserType" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Stoped" ColumnName="Stoped" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="ChatId" ColumnName="ChatId" />
+                <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+                <ScalarProperty Name="ModifyUserId" ColumnName="ModifyUserId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="UserType" ColumnName="UserType" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DailyReportCurrency">
+            <EntityTypeMapping TypeName="KiaGalleryMainModel.DailyReportCurrency">
+              <MappingFragment StoreEntitySet="DailyReportCurrency">
+                <ScalarProperty Name="RialExit" ColumnName="RialExit" />
+                <ScalarProperty Name="RialEntry" ColumnName="RialEntry" />
+                <ScalarProperty Name="RialValue" ColumnName="RialValue" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="CurrencyId" ColumnName="CurrencyId" />
+                <ScalarProperty Name="DailyReportId" ColumnName="DailyReportId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BranchGolds">
+            <EntityTypeMapping TypeName="KiaGalleryMainModel.BranchGolds">
+              <MappingFragment StoreEntitySet="BranchGolds">
+                <ScalarProperty Name="Ip" ColumnName="Ip" />
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ModifyUserId" ColumnName="ModifyUserId" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DailyReport">
+            <EntityTypeMapping TypeName="KiaGalleryMainModel.DailyReport">
+              <MappingFragment StoreEntitySet="DailyReport">
+                <ScalarProperty Name="LoyalityExit" ColumnName="LoyalityExit" />
+                <ScalarProperty Name="LoyalityEntry" ColumnName="LoyalityEntry" />
+                <ScalarProperty Name="Sent" ColumnName="Sent" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CostExit" ColumnName="CostExit" />
+                <ScalarProperty Name="CostEntry" ColumnName="CostEntry" />
+                <ScalarProperty Name="CostCourierPostExit" ColumnName="CostCourierPostExit" />
+                <ScalarProperty Name="CostCourierPostEntry" ColumnName="CostCourierPostEntry" />
+                <ScalarProperty Name="DiscountExit" ColumnName="DiscountExit" />
+                <ScalarProperty Name="DiscountEntry" ColumnName="DiscountEntry" />
+                <ScalarProperty Name="DepositNewExit" ColumnName="DepositNewExit" />
+                <ScalarProperty Name="DepositNewEntry" ColumnName="DepositNewEntry" />
+                <ScalarProperty Name="DepositNewCount" ColumnName="DepositNewCount" />
+                <ScalarProperty Name="DepositBeforeExit" ColumnName="DepositBeforeExit" />
+                <ScalarProperty Name="DepositBeforeEntry" ColumnName="DepositBeforeEntry" />
+                <ScalarProperty Name="DepositBeforeCount" ColumnName="DepositBeforeCount" />
+                <ScalarProperty Name="DebtorCustomerExit" ColumnName="DebtorCustomerExit" />
+                <ScalarProperty Name="DebtorCustomerEntry" ColumnName="DebtorCustomerEntry" />
+                <ScalarProperty Name="CreditorCustomerExit" ColumnName="CreditorCustomerExit" />
+                <ScalarProperty Name="CreditorCustomerEntry" ColumnName="CreditorCustomerEntry" />
+                <ScalarProperty Name="OtherGoldExit" ColumnName="OtherGoldExit" />
+                <ScalarProperty Name="OtherGoldEntry" ColumnName="OtherGoldEntry" />
+                <ScalarProperty Name="OtherGoldWeight" ColumnName="OtherGoldWeight" />
+                <ScalarProperty Name="OtherKiaGoldExit" ColumnName="OtherKiaGoldExit" />
+                <ScalarProperty Name="OtherKiaGoldEntry" ColumnName="OtherKiaGoldEntry" />
+                <ScalarProperty Name="OtherKiaGoldWeight" ColumnName="OtherKiaGoldWeight" />
+                <ScalarProperty Name="CoinExit" ColumnName="CoinExit" />
+                <ScalarProperty Name="CoinEntry" ColumnName="CoinEntry" />
+                <ScalarProperty Name="CoinDescription" ColumnName="CoinDescription" />
+                <ScalarProperty Name="CoinNumber" ColumnName="CoinNumber" />
+                <ScalarProperty Name="LeatherStoneExit" ColumnName="LeatherStoneExit" />
+                <ScalarProperty Name="LeatherStoneEntry" ColumnName="LeatherStoneEntry" />
+                <ScalarProperty Name="LeatherStoneDescriptionExit" ColumnName="LeatherStoneDescriptionExit" />
+                <ScalarProperty Name="LeatherStoneDescriptionEntry" ColumnName="LeatherStoneDescriptionEntry" />
+                <ScalarProperty Name="CheckExit" ColumnName="CheckExit" />
+                <ScalarProperty Name="CheckEntry" ColumnName="CheckEntry" />
+                <ScalarProperty Name="CheckNumber" ColumnName="CheckNumber" />
+                <ScalarProperty Name="GiftExit" ColumnName="GiftExit" />
+                <ScalarProperty Name="GiftEntry" ColumnName="GiftEntry" />
+                <ScalarProperty Name="GiftNumberExit" ColumnName="GiftNumberExit" />
+                <ScalarProperty Name="GiftNumberEntry" ColumnName="GiftNumberEntry" />
+                <ScalarProperty Name="GoldDeficitExit" ColumnName="GoldDeficitExit" />
+                <ScalarProperty Name="GoldDeficitEntry" ColumnName="GoldDeficitEntry" />
+                <ScalarProperty Name="GoldDeficitWeight" ColumnName="GoldDeficitWeight" />
+                <ScalarProperty Name="InventoryCash" ColumnName="InventoryCash" />
+                <ScalarProperty Name="OtherCurrencyRialExit" ColumnName="OtherCurrencyRialExit" />
+                <ScalarProperty Name="OtherCurrencyRialEntry" ColumnName="OtherCurrencyRialEntry" />
+                <ScalarProperty Name="OtherCurrencyRialValue" ColumnName="OtherCurrencyRialValue" />
+                <ScalarProperty Name="OtherCurrencyValue" ColumnName="OtherCurrencyValue" />
+                <ScalarProperty Name="OtherCurrency" ColumnName="OtherCurrency" />
+                <ScalarProperty Name="CashExit" ColumnName="CashExit" />
+                <ScalarProperty Name="CashEntry" ColumnName="CashEntry" />
+                <ScalarProperty Name="OtherCash" ColumnName="OtherCash" />
+                <ScalarProperty Name="ReturnedExit" ColumnName="ReturnedExit" />
+                <ScalarProperty Name="ReturnedEntry" ColumnName="ReturnedEntry" />
+                <ScalarProperty Name="ReturnWeightPercent" ColumnName="ReturnWeightPercent" />
+                <ScalarProperty Name="ReturnedWeight" ColumnName="ReturnedWeight" />
+                <ScalarProperty Name="NumberReturnedFactor" ColumnName="NumberReturnedFactor" />
+                <ScalarProperty Name="SaleExit" ColumnName="SaleExit" />
+                <ScalarProperty Name="SaleEntry" ColumnName="SaleEntry" />
+                <ScalarProperty Name="SaleWeightPercent" ColumnName="SaleWeightPercent" />
+                <ScalarProperty Name="SaleWeight" ColumnName="SaleWeight" />
+                <ScalarProperty Name="NumberSaleFactor" ColumnName="NumberSaleFactor" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="BranchCalendarId" ColumnName="BranchCalendarId" />
+                <ScalarProperty Name="BranchId" ColumnName="BranchId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,119 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html dir="rtl">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/fonts/fontawsome/font-awesome.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Scripts/bootstrap-rtl.js"></script>
+    <link href="~/Content/bootstrap-rtl.css" rel="stylesheet" />
+    <link href="~/Content/fonts/Bmitra/Bmitra.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width" />
+    <title>فرم تسویه حساب</title>
+    <style>
+        * {
+            font-family: BMitra;
+            /*font-size:17px !important*/
+        }
+
+        @@page {
+            /* dimensions for the whole page */
+            size: A5;
+            margin: 0;
+        }
+
+        html {
+            /* off-white, so body edge is visible in browser */
+            background: #eee;
+        }
+
+        body {
+            /* A5 dimensions */
+            height: 185mm;
+            width: 148.5mm;
+            margin: 15px auto;
+        }
+
+        .face {
+            height: 50%;
+            width: 100%;
+            position: relative;
+        }
+
+        /* the back face */
+        .face-back {
+            background: #f6f6f6;
+        }
+
+        /* the front face */
+        .face-front {
+            background: #fff;
+        }
+
+        #header h3 {
+            padding-top: 70px;
+            font-weight: 700;
+        }
+
+        .context {
+            width: 500px;
+            word-wrap: break-word;
+            text-align: justify;
+            line-height: 40px;
+        }
+
+            .context p {
+                font-size: 20px;
+            }
+    </style>
+</head>
+<body>
+    <div>
+        <div id="header" class="text-center">
+            <h3>
+                << فرم تسویه حساب پرسنلی >>
+            </h3>
+        </div>
+        <div class="beginner text-center">
+            <h3>
+                به نام خدا
+            </h3>
+        </div>
+        <div class="container align-center context" style="">
+            <!--عنوان فرم-->
+            <p>
+                تسویه حساب @ViewBag.Gender  @ViewBag.FullName
+            </p>
+            <!--متن فرم-->
+            <p>
+                احتراماً اینجانب @ViewBag.FullName فرزند @ViewBag.FatherName متولد @ViewBag.BirthDate صادره از @ViewBag.ExportFrom
+                به شماره شناسنامه @ViewBag.BirthCertificateNumber و کدملی @ViewBag.NationalCode اعلام می نمایم
+                کلیه حق و حقوق و مزایای قانونی خود از بدو استخدام از تاریخ @ViewBag.ContractStartDate لغایت @ViewBag.ContractEndDate اعم از حقوق و مزایا، عیدی و پاداش، طلب مرخصی، اضافه کار خود را با توجه به قرارداد از گالری کیا دریافت نموده و حق هرگونه شکایت و ادعائی را در مراجع صالحه اعم از دادگستری ، وزارت کار و تامین اجتماعی از خود با امضاء و اثر انگشت ذیل سلب می نمایم.
+            </p>
+            <br />
+            <!--فوتر فرم-->
+            <div class="row" style="margin-right:80px">
+                <p>
+                    نام و نام خانوادگی:.........................
+                </p>
+
+                <p>
+                    تاریخ:..............................
+                </p>
+
+                <p>
+                    امضاء و اثر انگشت:
+                </p>
+            </div>
+            <div class="face face-back"></div>
+            <div class="face face-front"></div>
+        </div>
+    </div>
+
+</body>
+</html>

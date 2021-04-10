@@ -1,0 +1,114 @@
+﻿@{
+    ViewBag.Title = "کاتالوگ سنگ";
+}
+<div class="container">
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tabTransparent" data-toggle="tab">براق</a></li>
+            <li><a href="#tabSedimentary" data-toggle="tab">رسوبی</a></li>
+            <li><a href="#tabPearl" data-toggle="tab">مروارید</a></li>
+            @*<li><a href="#tabAtomic" data-toggle="tab">اتمی</a></li>*@
+            <li><a href="#tabLeatherBraceletStone" data-toggle="tab">سنگ دستبند چرمی</a></li>
+            <li><a href="#tabBraceletStone" data-toggle="tab">دستبند سنگی</a></li>
+        </ul>
+        <div class="tab-content clearfix">
+            <div class="tab-pane active" id="tabTransparent">
+                @foreach (var item in ViewBag.Transparent)
+                {
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 txt-al-c">
+                        @if (string.IsNullOrEmpty(item.FileName))
+                        {
+                            <img style="width: 100%;" src="/content/image/kia-gallery-logo-square.png" />
+                        }
+                        else
+                        {
+                            <img src="/image/stone/500x500/@item.FileName" />
+                        }
+                        <h5 class="txt-al-c">@item.Name</h5>
+                    </div>
+                }
+            </div>
+            <div class="tab-pane" id="tabSedimentary">
+                @foreach (var item in ViewBag.Sedimentary)
+                {
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 txt-al-c">
+                        @if (string.IsNullOrEmpty(item.FileName))
+                        {
+                            <img style="width: 100%;" src="/content/image/kia-gallery-logo-square.png" />
+                        }
+                        else
+                        {
+                            <img src="/image/stone/500x500/@item.FileName" />
+                        }
+                        <h5 class="txt-al-c">@item.Name</h5>
+                    </div>
+                }
+            </div>
+            <div class="tab-pane" id="tabPearl">
+                @foreach (var item in ViewBag.Pearl)
+                {
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 txt-al-c">
+                        @if (string.IsNullOrEmpty(item.FileName))
+                        {
+                            <img style="width: 100%;" src="/content/image/kia-gallery-logo-square.png" />
+                        }
+                        else
+                        {
+                            <img src="/image/stone/500x500/@item.FileName" />
+                        }
+                        <h5 class="txt-al-c">@item.Name</h5>
+                    </div>
+                }
+            </div>
+            @*<div class="tab-pane" id="tabAtomic">
+                @foreach (var item in ViewBag.Atomic)
+                {
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 txt-al-c">
+                        @if (string.IsNullOrEmpty(item.FileName))
+                        {
+                            <img style="width: 100%;" src="/content/image/kia-gallery-logo-square.png" />
+                        }
+                        else
+                        {
+                            <img src="/image/stone/500x500/@item.FileName" />
+                        }
+                        <h5 class="txt-al-c">@item.Name</h5>
+                    </div>
+                }
+            </div>*@
+            <div class="tab-pane" id="tabLeatherBraceletStone">
+                @foreach (var item in ViewBag.LeatherBraceletStone)
+                {
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 txt-al-c">
+                        @if (string.IsNullOrEmpty(item.FileName))
+                {
+                            <img style="width: 100%;" src="/content/image/kia-gallery-logo-square.png" />
+                        }
+                        else
+                        {
+                            <img src="/image/stone/500x500/@item.FileName" />
+                        }
+                        <h5 class="txt-al-c">@item.Name</h5>
+                    </div>
+                }
+            </div>
+            <div class="tab-pane" id="tabBraceletStone">
+                @foreach (var item in ViewBag.BraceletStone)
+                {
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 txt-al-c">
+                        @if (string.IsNullOrEmpty(item.FileName))
+                        {
+                            <img style="width: 100%;" src="/content/image/kia-gallery-logo-square.png" />
+                        }
+                        else
+                        {
+                            <img src="/image/stone/500x500/@item.FileName" />
+                        }
+                        <h5 class="txt-al-c">@item.Name</h5>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>

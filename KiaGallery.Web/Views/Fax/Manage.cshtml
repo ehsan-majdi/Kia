@@ -1,0 +1,175 @@
+﻿
+@{
+    ViewBag.Title = "مدیریت سفارشات";
+}
+<style>
+    .send {
+        background-color: #259b25;
+    }
+
+    .register {
+        background-color: wheat;
+    }
+</style>
+<div id="content">
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            getList();
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف سفارش اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/fax/delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+        });
+        function getList() {
+            updateForm();
+            var defaultEntity = {
+                page: 0,
+                count: 50,
+                branchId: [],
+                usableProductId: null,
+            }
+
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+
+            loader(true);
+            $.post("/fax/GetOrderUsableProductList", params, function (response) {
+                if (response.status == 200) {
+                    if (response.data.list.length > 0) {
+                        var data = response.data;
+                        var template = $.templates("#template");
+                        var htmlOutput = template.render(data);
+                        $("#content").html(htmlOutput);
+                        $('[data-toggle="tooltip"]').tooltip();
+                        console.log(data)
+                    }
+                    else {
+                        $("#content").html("<br/><h5 class='txt-al-c'>همکارگرامی؛در سیستم سفارشی ثبت نشده است..</h5>");
+                    }
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+        function updateForm() {
+            var params = getParam();
+
+            // branch id
+            if (params["branchId"] && params["branchId"].length > 0)
+                $("#cmbBranch").val(params["branchId"]);
+            else
+                $("#cmbBranch").val("");
+
+            // date
+            if (params["date"] && params["date"].length > 0)
+                $("#cmbDate").val(params["date"]);
+            else
+                $("#cmbDate").val("");
+
+            // term
+            if (params["term"]) {
+                $("#txtTerm").val(params["term"]);
+            }
+            else {
+                $("#txtTerm").val("");
+            }
+
+            //archive
+            if (params["archive"]) {
+                $("#chkArchive").prop("checked", true);
+            }
+            else {
+                $("#chkArchive").prop("checked", false);
+            }
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th>شماره سفارش مرجع</th>
+                    <th class="hidden-xs text-center">تعداد</th>
+                    <th class="hidden-xs hidden-sm text-center">شعبه</th>
+                    <th class="hidden-xs hidden-sm text-center">کاربر ثبت کننده</th>
+                    <th class="hidden-xs hidden-sm text-center" style="width: 110px;">تاریخ ثبت</th>
+                    <th class="hidden-xs hidden-sm text-center">وضعیت سفارش</th>
+                    @if (User.IsInRole("admin") || User.IsInRole("orderUsableProductManager"))
+                    {
+                        <th class="icon-col text-center" style="width:61px">ارسال به چاپخانه</th>
+                    }
+                    @if (User.IsInRole("admin") || User.IsInRole("orderUsableProduct"))
+                    {
+                        <th class="icon-col text-center">جزئیات</th>
+                    }
+                    @*@if (User.IsInRole("admin") || User.IsInRole("deleteOrder"))
+                        {
+                            <th class="icon-col text-center">حذف</th>
+                        }*@
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr class="{{:bgColor}}" @*class="{{:bgColor}} {{if orderUsableProductStatus==2}} send{{else}}register{{/if}}"*@>
+                    <td>SPLY-{{:alias}}-{{:id}}</td>
+                    <td class="hidden-xs text-center">{{:productCount}}</td>
+                    <td class="hidden-xs hidden-sm text-center">{{:createBranch}}</td>
+                    <td class="hidden-xs hidden-sm text-center">{{:createUser}}</td>
+                    <td class="hidden-xs hidden-sm text-center">{{:persianDate}}</td>
+                    <td class="hidden-xs hidden-sm text-center">{{:orderUsableProductStatusTitle}}</td>
+                    @if (User.IsInRole("admin") || User.IsInRole("orderUsableProductManager"))
+                    {
+                        <text>
+                            {{if branchType==2 || branchType==0}}
+                            <td class="txt-al-c">
+                                <a href="/fax/manipulate/{{:id}}" class="btn btn-success btn-xs" data-title="ارسال به چاپخانه"><i class="fa fa-home " aria-hidden="true"></i></a>
+                            </td>
+                            {{/if}}
+                            {{if branchType==1}}
+                            <td class="txt-al-c">
+                                <a href="#" data-title="ارسال به چاپخانه"><i class="fa fa-close red" aria-hidden="true"></i></a>
+                            </td>
+                            {{/if}}
+                        </text>
+                    }
+
+                    @if (User.IsInRole("admin") || User.IsInRole("orderUsableProductManagerBranch"))
+                    {
+                        <td class="txt-al-c">
+                            <a href="/fax/orderDetail/{{:id}}" class="btn btn-primary btn-xs" data-title="جزئیات"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        </td>
+                    }
+
+
+                    @*@if (User.IsInRole("admin") || User.IsInRole("deleteOrder"))
+                        {
+                            <td class="txt-al-c">
+                                <a href="#" class="btn btn-danger btn-xs delete" data-title="حذف" data-id="{{:id}}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                            </td>
+                        }*@
+                </tr>
+                {{/for}}
+            </tbody>
+
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+}

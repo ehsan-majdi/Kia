@@ -1,0 +1,218 @@
+﻿
+@{
+    ViewBag.Title = "لیست محصولات";
+}
+<style>
+    td {
+       text-align:center;
+       vertical-align:middle !important
+    }
+    th{
+    text-align:center
+    }
+</style>
+<div>
+    <a href="/licencedProduct/add" class="btn btn-success">جدید</a>
+    <button data-toggle="modal" data-target="#myModal" type="button" class="btn btn-info">نرخ یورو و طلا</button>
+</div>
+<br />
+<input type="button" class="select-all btn btn-info" value="انتخاب همه" />
+<input type="button" class="print btn btn-success" value="چاپ شناسنامه" />
+<input type="button" class="printMin btn btn-info" value="چاپ لیست" />
+<input type="button" class="export btn btn-success" value="اکسل کلی" />
+<div id="content"></div>
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">مدیریت نرخ یورو و طلا</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div>
+                        <label>نرخ طلا</label>
+                        <input id="goldPrice" type="text" class="form-control money-separator" name="goldPrice" value="@ViewBag.GoldPrice" />
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <label>نرخ یورو</label>
+                        <input id="euroPrice" type="text" class="form-control money-separator" name="euroPrice" value="@ViewBag.EuroPrice" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="saveSetting" type="button" class="btn btn-default" data-dismiss="modal">ذخیره</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+@section scripts{
+
+    <script type="text/javascript">
+         var entity = {
+                page: 0,
+                count:100,
+                word: $("#word").val()
+            }
+        $(document).ready(function () {
+             $(document).on("click", ".page-number", function (event) {
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+            });
+                getList();
+
+              $(window).on("hashchange", function () {
+                getList();
+            });
+            $(document).on("click", ".print", function () {
+                var idList = new Array();
+                $('.productItem:checked').each(function () {
+                    idList.push(this.value);
+                   
+                });
+                if (idList.length > 0) {
+                    var list = idList;
+                    var entity = { id: list }
+                    document.location = "/licencedProduct/makeProductLicenceReport/" + "?model=" + JSON.stringify(entity);
+                }
+                else {
+                    alert("حد اقل یک مورد انتخاب کنید.");
+                }
+            });
+             $(document).on("click", ".printMin", function () {
+                 var idList = new Array();
+                var rowList = new Array();
+                $('.productItem:checked').each(function () {
+                    idList.push(this.value);
+                     rowList.push($(this).attr("data-row"))
+                });
+                if (idList.length > 0) {
+                    var list = idList;
+                    var listRow = rowList
+                    var entity = { id: list, listRow: listRow }
+                    console.log(listRow)
+                    document.location = "/licencedProduct/makeProductLicenceReportMin/" + "?model=" + JSON.stringify(entity);
+                }
+                else {
+                    alert("حد اقل یک مورد انتخاب کنید.");
+                }
+             });
+            $(document).on("click", ".export", function () {
+                document.location = "/licencedProduct/export/";
+            });
+            $(".select-all").on("click", function (event) {
+                if ($(".productItem").not(":checked").length > 0) {
+                    $(".productItem").prop("checked", true);
+                }
+                else {
+                    $(".productItem").prop("checked", false);
+                }
+                $(".productItem").change();
+            });
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/licencedProduct/delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+
+            $(document).on("click", "#saveSetting", function () {
+                var entity = {
+                    goldPrice: $("#goldPrice").val(),
+                    euroPrice: $("#euroPrice").val()
+                }
+                $.post("/licencedProduct/saveSetting", entity, function (response) {
+                    if (response.status == 200) {
+                        window.location.reload();
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            });
+
+        });
+        function getList() {
+            var newParams = getParam();
+            
+            console.log(newParams)
+
+            var params = $.extend(entity, newParams);
+            $.get("/licencedProduct/search",params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>ردیف</th>
+                    <th>کد</th>
+                    <th>بارکد</th>
+                    <th class="hidden-xs">متریال</th>
+                    <th class="hidden-xs">وزن</th>
+                    <th class="hidden-xs">عیار</th>
+                    <th class="hidden-xs">قیمت به تومان</th>
+                    <th class="hidden-xs">یورو اضافی</th>
+                    <th class="hidden-xs">قیمت یورو</th>
+                    <th class="hidden-xs text-center">تصویر</th>
+                    <th class="icon-col text-center">ویرایش</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list ~row=#data}}
+                <tr>
+                    <td class="v-middle">
+                        <input id="chkOrder{{:id}}" class="productItem" name="productItem" type="checkbox" value="{{:id}}" data-row="{{:(#index + 1) + ((~row.page - 1) * 100)}}" />
+                    </td>
+                    <td>{{:(#index + 1) + ((~row.page - 1) * 100)}}</td>
+                    <td>{{:code}}</td>
+                    <td>{{:barcode}}</td>
+                    <td>{{:color}}</td>
+                    <td>{{:weight}}</td>
+                    <td>{{:purity}}</td>
+                    <td>{{:stringPrice}}</td>
+                    <td>{{:euro}}</td>
+                    <td>{{:euroPrice}}</td>
+                    <td style="text-align:center"><img src="/image/product/100x100/{{:fileName}}" style="width: 100px;" /></td>
+                    <td class="txt-al-c">
+                        <a href="/licencedProduct/edit/{{:id}}" class="btn btn-primary btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+}

@@ -1,0 +1,1072 @@
+﻿@{
+    ViewBag.Title = "سفارش";
+}
+
+<link href="~/Content/ios-switch-rtl.css" rel="stylesheet" />
+<link href="~/content/order-page.css" rel="stylesheet" />
+<link href="~/Content/nouislider.min.css" rel="stylesheet" />
+<style>
+    .product-item .small-font .fa {
+        width: 25px;
+        color: #555;
+        text-align: center;
+    }
+
+    .site-label {
+        margin: 0 7px;
+    }
+
+        .site-label .chk {
+            margin: 0;
+            vertical-align: middle;
+            margin-left: 3px;
+        }
+    /*#filter-list {
+        width: 100% !important;
+    }*/
+    .related {
+        left: 35px !important;
+    }
+
+    .set {
+        left: 60px !important;
+    }
+
+    @@media only screen and (min-width : 992px) {
+        #menu-holder {
+            width: calc(75% - 112px);
+        }
+    }
+    /*.chkType-group{
+        display:none;
+    }*/
+    .fixed-filter {
+        position: fixed;
+        z-index: 10;
+        height: 100%;
+        overflow-x: hidden;
+        padding-left: 15px;
+    }
+
+    .open-chkType {
+        cursor: pointer;
+    }
+
+    #btnRange {
+        margin: auto;
+        margin-top: 10px
+    }
+
+    .popup {
+        cursor: pointer;
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        color: green
+    }
+    /* @@media screen and (min-width:600px){
+        #hidden-lower-value, #hidden-upper-value {
+            display: none
+        }
+    }*/
+
+
+</style>
+
+<div class="row" style="min-height: 85vh">
+    <div class="col-md-3 " style="">
+        <div id="filter-list" class="fixed-filter navbar-search hidden-xs  hidden-sm">
+            <div>
+                <input class="form-control txtCode" type="text" placeholder="جستجو..." name="code" />
+                <button class="btn btn-xs  btn-default clear-params" style="width: 100%;margin-top:10px"><i class="fa fa-filter" aria-hidden="true"></i> حذف فیلتر ها</button>
+
+            </div>
+            <br />
+            <div>
+                <select class="form-control" id="collectionId">
+
+                    <option value="">کالکشن</option>
+                    @foreach (var item in ViewBag.CollectionList)
+                    {
+                        <option value="@item.id">@item.title</option>
+                    }
+
+                </select>
+            </div>
+            <h5>جدید</h5>
+            <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkNew" type="checkbox" name="isNew" value="true"><span>جدید</span></label></div></div>
+            <div class="acardion">
+                <h5 style="margin-bottom:0"><i class="fa fa-minus open-chkType" style="padding:5px"></i> نوع</h5>
+                <div class="chkType-group">
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="0"><span>دستبند زنجير طلا</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="11"><span>دستبند چرمی</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="12"><span>دستبند ریلی</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="13"><span>دستبند سنگی - بافت</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="16"><span>دستبند نخی</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="9"><span>النگو</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="1"><span>گردنبند</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="8"><span>آویز</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="3"><span>انگشتر</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="2"><span>گوشواره</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType chkWatchPendent" name="type" value="4"><span>آویز ساعت</span></label></div></div>
+                    <div class="filter-item hidden"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType chkWatchPendent2" name="type" value="15"><span>2آویز ساعت</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="7"><span>پابند</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="6"><span>ست</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="5"><span>سنجاق سینه</span></label></div></div>
+                    @*@if (User.IsInRole("plaque") || User.IsInRole("admin"))
+                    {*@
+                        <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="14"><span>پلاک لیزر</span></label></div></div>
+                    @*}*@
+                    @*<div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="10"><span>خرج کار</span></label></div></div>*@
+                </div>
+
+            </div>
+            <div class="acardion">
+                <h5 style="margin-bottom:0"><i class="fa fa-plus open-chkType" style="padding:5px"></i> جنسیت</h5>
+                <div class="chkType-group-other">
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkSex" type="checkbox" name="sex" value="1"><span>مردانه</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkSex" type="checkbox" name="sex" value="2"><span>زنانه</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkSex" type="checkbox" name="sex" value="3"><span>کودک</span></label></div></div>
+                </div>
+            </div>
+
+            <div class="acardion">
+                <h5 style="margin-bottom:5px"><i class="fa fa-plus open-chkType" style="padding:5px"></i> محصولات ست و مرتبط</h5>
+                <div class="chkType-group-other">
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkRelated" type="checkbox" name="related" value="true"><span>موارد مرتبط</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkSet" type="checkbox" name="set" value="true"><span>موارد ست</span></label></div></div>
+                </div>
+            </div>
+
+            <div class="acardion">
+                <h5 style="margin-bottom:5px"><i class="fa fa-plus open-chkType" style="padding:5px"></i> رنگ طلا</h5>
+                <div class="chkType-group-other">
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkGoldColor" type="checkbox" name="goldColor" value="true"><span>گلد</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkRosegoldColor" type="checkbox" name="rosegoldColor" value="true"><span>رزگلد</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkWhiteColor" type="checkbox" name="whiteColor" value="true"><span>سفید</span></label></div></div>
+                </div>
+            </div>
+            <div class="acardion">
+                <h5 style="margin-bottom:5px"><i class="fa fa-plus open-chkType" style="padding:5px"></i> نوع طلا</h5>
+                <div class="chkType-group-other">
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkGoldType" type="checkbox" name="goldType" value="0"><span>مات</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkGoldType" type="checkbox" name="goldType" value="1"><span>براق</span></label></div></div>
+                </div>
+            </div>
+            <div class="acardion">
+                <h5 style="margin-bottom:5px"><i class="fa fa-plus open-chkType" style="padding:5px"></i> قابل سفارش برای</h5>
+                <div class="chkType-group-other">
+                    <div class="filter-item">
+                        <div class="checkbox ios-switch"><label><input class="chkOrderableBranchType" type="checkbox" name="orderableBranchType" value="true"><span>شعبه</span></label> </div>
+                    </div>
+                    <div class="filter-item">
+                        <div class="checkbox ios-switch">
+                            <label><input class="chkOrderableSolicitorshipType" type="checkbox" name="orderableSolicitorshipType" value="true"><span>نمایندگی</span></label>
+                        </div>
+                    </div>
+                    <div class="filter-item">
+                        <div class="checkbox ios-switch">
+                            <label><input class="chkOrderableCoWorkerType" type="checkbox" name="orderableCoWorkerType" value="true"><span>همکار</span></label>
+                        </div>
+                    </div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkOrderableOtherType" type="checkbox" name="orderableOtherType" value="true"><span>سایر</span></label></div></div>
+                </div>
+            </div>
+
+            <div class="range relative" style="padding:30px;margin-bottom:100px">
+                <div class="range-content hidden-sm hidden-xs">
+                    <div id="nonlinear" style="margin-bottom:30px"> </div>
+                    <div style="position:absolute;top:0;right:0;left:0">
+                        <span class="example-val pull-left lower-value" id="lower-value"></span>
+                        <span class="example-val upper-value" id="upper-value"></span>
+                    </div>
+                </div>
+                <div class="form-inline text-center">
+                    <input style="width:100px" class="form-control inline-block hidden-md hidden-lg" type="text" id="hidden-upper-value" placeholder="50" />
+                    <input style="width:100px" class="form-control inline-block hidden-md hidden-lg" type="text" id="hidden-lower-value" placeholder="0" />
+                </div>
+                <div style="text-align:center">
+                    <button class="btn btn-xs btn-info" id="btnRange">اعمال</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9 col-md-offset-3">
+        <div id="menu-holder" class="affix">
+            <div id="menu">
+                <ul>
+                    <li><a id="all-workshop" href="#">همه</a></li>
+                    @foreach (KiaGallery.Model.Context.Workshop item in ViewBag.Workshop)
+                    {
+                        if (string.IsNullOrEmpty(item.Color))
+                        {
+                            <li><a href="#!" class="workshop-item ltr" data-id="@item.Id">@item.Name</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="#!" class="workshop-item ltr" data-id="@item.Id" style="color: #@(item.Color);">@item.Name</a></li>
+                        }
+                    }
+                    <li><a id="fav" href="#"><span class="fa fa-heart v-top red"></span></a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="productList" class="col-xs-12">
+        </div>
+        <div class="col-xs-12">
+            <h6 class="more txt-al-c">
+                <span class="icon mdi-set mdi-chevron-double-down"></span><span>بیشتر...</span>
+            </h6>
+        </div>
+    </div>
+</div>
+
+<div id="modalAddFastItem" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">افزودن محصول</h4>
+            </div>
+            <div class="modal-body">
+                <label>تعداد</label>
+                <input type="hidden" id="hiddenAddToCartId" />
+                <select id="cmbAddToCartCount" class="form-control">
+                    <option value="-1">...</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                </select>
+                <br />
+                <p class="label-notice small-font">کلیه ویژگی محصول از قبیل مات و براق بودن، رنگ سنگ و چرم  و سایز با سلیقه دفتر مرکزی لحاظ خواهد شد.</p>
+            </div>
+            <div class="modal-footer">
+                <button id="btnAddToCart" type="button" class="btn btn-success btn-control">ثبت</button>
+                <button type="button" class="btn btn-danger btn-control" data-dismiss="modal">لغو</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalCustomize" class="modal fade" role="dialog" style="overflow-y: auto;">
+    <div class="modal-dialog modal-full">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">سفارشی کردن محصول</h4>
+            </div>
+            <div id="product-content" class="modal-body"></div>
+        </div>
+    </div>
+</div>
+
+<div class="hidden-sm hidden-md hidden-lg fab-filter">
+    <span class="fa fa-filter fab-filter-icon"></span>
+</div>
+
+<div class="modal fade" id="modal-filter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-block" data-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <img src="" class="imagepreview" style="width: 100%;">
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/Scripts/nouislider.js"></script>
+    <script type="text/javascript">
+        //$(".workshop-item").hide()
+        $(window).on('hashchange', function () {
+            getList();
+        });
+        $(document).ready(function () {
+            $(document).on('click', ".popup", function () {
+                $('.imagepreview').attr('src', $(this).parent("div").find('.popImage').attr('src'));
+                $('#imagemodal').modal('show');
+            });
+            range()
+            $(document).on("click", "#btnRange", function () {
+                var entity = {
+                    lower: $("#modal-filter").find("input[id='hidden-lower-value']").val() || $("input[id='hidden-lower-value']").val(),
+                    upper: $("#modal-filter").find("input[id='hidden-upper-value']").val() || $("input[id='hidden-upper-value']").val()
+                }
+                manipulateParam(entity,"page" )
+                //$("#modal-filter").find("input[id='hidden-upper-value']").val()
+            });
+            $(".chkType-group-other").slideToggle(1);
+            $(document).on("click touchstart", ".open-chkType", function (event) {
+                event.preventDefault();
+                $(this).parents(".acardion").find(".chkType-group").slideToggle("slow");
+
+            });
+            $(document).on("click touchstart", ".open-chkType", function (event) {
+                event.preventDefault();
+                $(this).parents(".acardion").find(".chkType-group-other").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+            var page = getParam()["page"];
+            if (page)
+                removeParam(["page"]);
+            else
+                getList();
+
+            var flag = true;
+            $(window).scroll(function () {
+                var isElementInView = Utils.isElementInView($('.more'), false);
+
+                if (flag && !$('.more').hasClass("hide") && isElementInView) {
+                    flag = false;
+                    setTimeout(function () {
+                        flag = true;
+                    }, 500);
+
+                    var page = getParam()["page"];
+                    if (page)
+                        setParam("page", ++page);
+                    else
+                        setParam("page", 1);
+                }
+            });
+
+            $("#all-workshop").on("click", function (event) {
+                event.preventDefault();
+                removeParam(["fav", "workshopId", "page"]);
+            });
+
+            $("#fav").on("click", function (event) {
+                event.preventDefault();
+                manipulateParam({ fav: true }, ["workshopId", "page"]);
+            });
+
+            $(document).on("change", ".chkWatchPendent", function (event) {
+                $(".chkWatchPendent2").click()
+            });
+            $(document).on("change", ".cmbBranchOrderType", function (event) {
+                event.preventDefault();
+                if ($(this).val()) {
+                    setParam("branchOrderTypeId", $(this).val())
+                }
+                else {
+                    removeParam("branchOrderTypeId");
+                }
+            });
+            $(document).on("change", ".chkOrderableBranchType", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { orderableBranchType: true }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["orderableBranchType", "page"]);
+                }
+            });
+            $(document).on("change", ".chkOrderableSolicitorshipType", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { orderableSolicitorshipType: true }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["orderableSolicitorshipType", "page"]);
+                }
+            });
+            $(document).on("change", ".chkOrderableCoWorkerType", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { orderableCoWorkerType: true }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["orderableCoWorkerType", "page"]);
+                }
+            });
+            $(document).on("change", ".chkOrderableOtherType", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { orderableOtherType: true }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["orderableOtherType", "page"]);
+                }
+            });
+            $(document).on("change", ".chkType", function (event) {
+                var value = $(this).parents(".acardion").find("input[type=checkbox][name=type]:checked").map(function () {
+                    return $(this).val();
+                }).get();
+
+                if (value.length > 0) {
+                    var param = { type: value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["type", "page"]);
+                }
+            });
+
+            $(document).on("change", ".chkSex", function (event) {
+                var value = $(this).parents(".acardion").find("input[type='checkbox'][name=sex]:checked").map(function () {
+                    return $(this).val();
+                }).get();
+                if (value.length > 0) {
+                    var param = { sex: value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["sex", "page"]);
+                }
+
+            });
+
+            $(document).on("change", "#collectionId", function (event) {
+                var value = $(this).val();
+                if (value.length > 0) {
+                    var param = {collectionId : value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["collectionId", "page"]);
+                }
+            });
+
+            $(document).on("keyup", ".txtCode", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    if ($(this).val()) {
+                        var param = { term: $(this).val() }
+                        manipulateParam(param, "page");
+                    }
+                    else
+                        removeParam("term");
+                }
+            });
+            $(document).on("change", ".chkOuterWerkType", function (event) {
+                var value = $(this).parents(".acardion").find("input[type=checkbox][name=outerWerkType]:checked").map(function () {
+                    return $(this).val();
+                }).get();
+
+                if (value.length > 0) {
+                    var param = { outerWerkType: value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["outerWerkType", "page"]);
+                }
+            });
+            $(document).on("change", ".chkGoldType", function (event) {
+                var value = $(this).parents(".acardion").find("input[type=checkbox][name=goldType]:checked").map(function () {
+                    return $(this).val();
+                }).get();
+
+                if (value.length > 0) {
+                    var param = { goldType: value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["goldType", "page"]);
+                }
+            });
+
+            $(document).on("change", ".chkNew", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { isNew: true }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["isNew", "page"]);
+                }
+            });
+
+            $(document).on("change", ".chkRelated", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { related: true }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["related", "page"]);
+                }
+            });
+            $(document).on("change", ".chkGoldColor", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { goldColor: true }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["goldColor", "page"]);
+                }
+            });
+            $(document).on("change", ".chkRosegoldColor", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { rosegoldColor: true }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["rosegoldColor", "page"]);
+                }
+            });
+            $(document).on("change", ".chkWhiteColor", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { whiteColor: true }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["whiteColor", "page"]);
+                }
+            });
+
+            $(document).on("change", ".chkSet", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { set: true }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["set", "page"]);
+                }
+            });
+
+            $("#chkLeatherBracelet").on("change", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { leatherBracelet: true }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["leatherBracelet", "page"]);
+                }
+            });
+
+            $("#btnAddToCart").on("click", function (event) {
+                var entity = {
+                    productId: $("#hiddenAddToCartId").val(),
+                    count: $("#cmbAddToCartCount").val()
+                };
+
+                if (entity.count <= 0) {
+                    alert("لطفا تعداد صحیح را انتخاب کنید.");
+
+                    return;
+                }
+                addToCart(entity);
+            });
+
+            $(".fab-filter").on("click", function () {
+                $("#modal-filter .modal-body").html($("#filter-list").html());
+                $("#modal-filter").modal("show");
+                updateForm();
+            });
+
+            $(document).on("click", ".workshop-item", function (event) {
+                event.preventDefault();
+                var entity = {
+                    workshopId: $(this).attr("data-id")
+                };
+                $("#productList").empty();
+                manipulateParam(entity, ["fav", "page"]);
+            });
+
+            $(document).on("click", ".btnPersonalization", function (event) {
+                event.preventDefault();
+
+                if ($(this).hasClass("disabled"))
+                    return;
+
+                var productId = $(this).attr("data-id");
+                var url = "/product/customize/" + productId;
+
+                loader(true);
+                $.ajax(url)
+                    .done(function (response) {
+                        loader(false);
+                        $('#product-content').html(response);
+                        $("#modalCustomize").modal("show");
+                    });
+            });
+
+            $(document).on("click", ".btnAddtoCart", function (event) {
+                event.preventDefault();
+
+                if ($(this).hasClass("disabled"))
+                    return;
+
+                var productId = $(this).attr("data-id");
+                $("#hiddenAddToCartId").val(productId);
+                $("#cmbAddToCartCount").val("");
+
+                $("#modalAddFastItem").modal("show");
+            });
+
+            $(document).on("click", ".btnAddCount", function (event) {
+                event.preventDefault();
+
+                if ($(this).hasClass("disabled"))
+                    return;
+
+                var productId = $(this).attr("data-id");
+                var entity = {
+                    productId: productId,
+                    count: 1
+                };
+
+                addToCart(entity);
+            });
+
+            $(document).on("click", ".btnRemoveCount", function (event) {
+                event.preventDefault();
+
+                if ($(this).hasClass("disabled"))
+                    return;
+
+                var productId = $(this).attr("data-id");
+                var entity = {
+                    productId: productId,
+                    count: 1
+                };
+
+                loader(true);
+                $.ajax({
+                    url: "/cart/removeCount",
+                    method: "POST",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status != 200)
+                            alert(response.message);
+                        loader(false);
+                        if (updateCart)
+                            updateCart();
+                    }
+                });
+            });
+
+             @if (BaseController.GetAuthenticatedUser().BranchId > 0)
+              {
+                <text>
+            $(document).on("click", ".fav.fa-heart-o", function () {
+                var item = $(this);
+                var id = item.attr("data-id");
+                loader(true);
+                $.post("/order/addToFavorite/" + id, function () {
+                    item.removeClass("fa-heart-o").addClass("fa-heart");
+                    loader(false);
+                });
+            });
+
+            $(document).on("click", ".fav.fa-heart", function () {
+                var item = $(this);
+                var id = item.attr("data-id");
+                loader(true);
+                $.post("/order/removeFavorite/" + id, function () {
+                    item.removeClass("fa-heart").addClass("fa-heart-o");
+                    loader(false);
+                });
+            });
+                </text>
+              }
+
+        });
+
+        function addToCart(entity) {
+            loader(true);
+            $.ajax({
+                url: "/cart/addToCart",
+                method: "POST",
+                data: entity,
+                success: function (response) {
+                    if (response.status != 200)
+                        alert(response.message);
+                    else
+                        $("#modalAddFastItem").modal('hide');
+                    loader(false);
+                    if (updateCart)
+                        updateCart();
+                }
+            });
+        }
+
+        function getList(lower,upper) {
+            updateForm();
+
+            var entity = {
+                page: 0,
+                count: 24,
+                workshopId: null,
+                term: null,
+                type: [],
+                sex: [],
+                leatherBracelet: null,
+                isNew: null,
+                active: true,
+                outerWerkType: [],
+                outerWerkCategory: [],
+                lower: $("#hidden-lower-value").val(),
+                upper: $("#hidden-upper-value").val(),
+                outerwerkPage:false
+            };
+            if (lower >= 1 && upper > 0 && upper <= 50) {
+                entity.lower = lower;
+                entity.upper = upper;
+            }
+            var urlParams = getParam();
+            var params = $.extend(entity, urlParams);
+
+            if (params.page == 0) {
+                $("#productList").empty();
+            }
+
+            loader(true);
+            $('.more').addClass("hide");
+            $.post("/product/search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#productList").append(htmlOutput);
+
+                    $(".more").removeClass("hide");
+
+                    //if (response.data.count == 0) {
+                    //    $(".workshop-item").each(function (i, e) {
+                    //        console.log($(e).attr("data-id"))
+                    //        console.log(response.workshopId)
+                    //        if ($(e).attr("data-id") == response.data.workshopId) {
+                    //             $(e).hide()
+                    //        }
+
+                    //    });
+                    //}
+
+                    if (response.data.pageCount == 0 || response.data.page == response.data.pageCount) {
+                        $(".more").addClass("hide");
+                    }
+                    else {
+                        $(".more").removeClass("hide");
+                    }
+                    updateUI();
+                    $('[data-toggle="tooltip"]').tooltip();
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+        function range() {
+            var nonLinearSlider = document.getElementById('nonlinear');
+            noUiSlider.create(nonLinearSlider, {
+                connect: true,
+                behaviour: 'tap',
+                start: [0, 50],
+                range: {
+                    'min': [0],
+                    'max': [50]
+                }
+            });
+            var nodes = [
+                document.getElementById('lower-value'),
+                document.getElementById('upper-value')
+            ];
+
+            nonLinearSlider.noUiSlider.on('update', function (values, handle, unencoded, isTap, positions) {
+                nodes[handle].innerHTML = values[handle] + ', ' + positions[handle].toFixed(2) + 'گرم';
+                $("#lower-value").text(values[0])
+                $("#hidden-lower-value").val(values[0])
+                $("#upper-value").text(values[1])
+                $("#hidden-upper-value").val(values[1])
+            });
+
+        }
+        function updateForm() {
+            var params = getParam();
+
+            if (params["fav"]) {
+                $("#menu li").removeClass("active");
+                $("#fav").closest("li").addClass("active");
+            }
+            else {
+                // workshop id
+                $("#menu li").removeClass("active");
+                if (params["workshopId"] && params["workshopId"] >= 0)
+                    $("#menu li a[data-id=" + params["workshopId"] + "]").closest("li").addClass("active");
+                else
+                    $("#menu li:first").addClass("active");
+            }
+
+            //outerWerkType
+            if (params["outerWerkType"]) {
+                var outerWerkTypeList = params["outerWerkType"];
+                $(".chkOuterWerkType").each(function (index, element) {
+                    if (outerWerkTypeList.indexOf($(this).val()) >= 0) {
+                        $(this).prop("checked", true);
+                    }
+                    else {
+                        $(this).prop("checked", false);
+                    }
+                });
+            }
+            else {
+                $(".chkOuterWerkType").prop("checked", false);
+            }
+
+            ///OuterWerkCategory
+
+
+            // term
+            if (params["term"]) {
+                $(".txtCode").val(params["term"]);
+            }
+            else {
+                $(".txtCode").val("");
+            }
+
+            // type
+            if (params["type"]) {
+                var typeList = params["type"];
+                $(".chkType").each(function (index, element) {
+                    if (typeList.indexOf($(this).val()) >= 0) {
+                        $(this).prop("checked", true);
+                    }
+                    else {
+                        $(this).prop("checked", false);
+                    }
+                });
+            }
+            else {
+                $(".chkType").prop("checked", false);
+            }
+
+             // Goldtype
+            if (params["goldType"]) {
+                var typeList = params["goldType"];
+                $(".chkGoldType").each(function (index, element) {
+                    if (typeList.indexOf($(this).val()) >= 0) {
+                        $(this).prop("checked", true);
+                    }
+                    else {
+                        $(this).prop("checked", false);
+                    }
+                });
+            }
+            else {
+                $(".chkGoldType").prop("checked", false);
+            }
+
+            //sex
+            if (params["sex"]) {
+                var typeList = params["sex"];
+                $(".chkSex").each(function (index, element) {
+                    if (typeList.indexOf($(this).val()) >= 0) {
+                        $(this).prop("checked", true);
+                    }
+                    else {
+                        $(this).prop("checked", false);
+                    }
+                });
+            }
+            else {
+                $(".chkSex").prop("checked", false);
+            }
+
+            //is New
+            if (params["isNew"]) {
+                $(".chkNew").prop("checked", true);
+            }
+            else {
+                $(".chkNew").prop("checked", false);
+            }
+
+            // is related
+            if (params["related"]) {
+                $(".chkRelated").prop("checked", true);
+            }
+            else {
+                $(".chkRelated").prop("checked", false);
+            }
+
+            if (params["goldColor"]) {
+                $(".chkGoldColor").prop("checked", true);
+            }
+            else {
+                $(".chkGoldColor").prop("checked", false);
+            }
+
+            if (params["rosegoldColor"]) {
+                $(".chkRosegoldColor").prop("checked", true);
+            }
+            else {
+                $(".chkRosegoldColor").prop("checked", false);
+            }
+
+            if (params["whiteColor"]) {
+                $(".chkWhiteColor").prop("checked", true);
+            }
+            else {
+                $(".chkWhiteColor").prop("checked", false);
+            }
+
+            // is set
+            if (params["set"]) {
+                $(".chkSet").prop("checked", true);
+            }
+            else {
+                $(".chkSet").prop("checked", false);
+            }
+
+            // leather Bracelet
+            if (params["leatherBracelet"]) {
+                $("#chkLeatherBracelet").prop("checked", true);
+            }
+            else {
+                $("#chkLeatherBracelet").prop("checked", false);
+            }
+
+            $("#modal-filter").css({ "overflow-y": "scroll" });
+
+        }
+
+        function updateUI() {
+            $(".badge").addClass("hidden");
+            if (cart) {
+                for (var i = 0; i < cart.list.length; i++) {
+                    var item = cart.list[i];
+                    $("#badge" + item.productId).html(item.count).removeClass("hidden");
+                }
+            }
+        }
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <div class="row">
+            {{for list}}
+            <div class="product-item col-sm-6 col-md-4 col-lg-3 pull-right">
+                <div style="background-color: white">
+                    <div class="relative" style="padding:{{:paddingImg}}px">
+                        <span id="badge{{:id}}" class="badge absolute hidden" style="top: 7px; right: 7px; background-color: red;"></span>
+                        {{if fileName}}
+                        <img class="popImage hidden" style="width: 100%;" src="/image/product/800x800/{{:fileName}}" />
+                        <img class="" style="width: 100%;" src="/image/product/500x500/{{:fileName}}" />
+                        {{else}}
+                        <img style="width: 100%;" src="/content/image/kia-gallery-logo-square.png" />
+                        {{/if}}
+                        {{if isNew}}
+                        <img class="ribbon-image" src="/content/image/newicon.png" />
+                        {{/if}}
+                        {{if productCollectionFileName}}
+                        <img class="collection-image" src="/image/productCollection/100x100/{{:productCollectionFileName}}" data-toggle="tooltip" title="{{:productCollectionTitle}}" />
+
+                        {{/if}}
+                        {{if productType == 10}}
+                        <img class="special-type" src="/content/image/kharje-kar.png" />
+                        {{/if}}
+                        <i class="fa fa-search-plus popup"></i>
+                    </div>
+                    @if (!User.IsInRole("orderButton"))
+                    {
+                        <div class="fast-cart" style="margin: 5px 0 0 0;">
+                            <button class="btnAddCount btn btn-primary w15 txt-al-c" style="border-top-left-radius:0;border-bottom-left-radius:0;" data-id="{{:id}}" {{if productType == 10 || notOrderableForBranch == true}} disabled data-toggle="tooltip" title="امکان سفارش سریع برای این محصول وجود ندارد" {{/if}}>
+                                <i class="fa fa-plus v-middle white" aria-hidden="true"></i>
+                            </button><button class="btnAddtoCart btn btn-primary w70" style="border-radius: 0;" data-id="{{:id}}" {{if productType == 10 || notOrderableForBranch == true }} disabled data-toggle="tooltip" title="امکان سفارش سریع برای این محصول وجود ندارد" {{/if}}>
+                                <i class="fa fa-shopping-bag v-middle white" aria-hidden="true"></i>&nbsp;
+                                <span>سفارش سریع</span>
+                            </button><button class="btnRemoveCount btn btn-primary w15 txt-al-c" style="border-top-right-radius:0;border-bottom-right-radius:0;" data-id="{{:id}}" {{if productType == 10 || notOrderableForBranch == true}} disabled data-toggle="tooltip" title="امکان سفارش سریع برای این محصول وجود ندارد" {{/if}}>
+                                <i class="fa fa-minus v-middle white" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <button class="btnPersonalization btn btn-success w100" style="margin: 5px 0 0 0; padding: 0.4em 1em;" data-id="{{:id}}" {{if notOrderableForBranch == true }} disabled data-toggle="tooltip" title="امکان سفارش  برای این محصول وجود ندارد" {{/if}}>
+                            <i class="fa fa-shopping-bag v-middle white" aria-hidden="true"></i>&nbsp;
+                            <span>سفارشی</span>
+                        </button>
+                    }
+
+                    <div class="relative" style="padding: 10px 3px 3px 0;">
+                        @if (BaseController.GetAuthenticatedUser().BranchId > 0)
+                        {
+                            <text>
+                                {{if isFav}}
+                                <span class="fav fa fa-heart fa-18px pointer red" data-id="{{:id}}"></span>
+                                {{else}}
+                                <span class="fav fa fa-heart-o fa-18px pointer red" data-id="{{:id}}"></span>
+                                {{/if}}
+                            </text>
+                        }
+                        {{if related > 0}}
+                        <i class="fav fa fa-link v-middle green fa-18px related" aria-hidden="true" title="تعداد موارد مرتبط {{:related}}"></i>
+                        {{/if}}
+                        {{if set > 0}}
+                        <i class="fav fa fa-cogs v-middle green fa-18px set" aria-hidden="true" title="تعداد موارد ست {{:set}}"></i>
+                        {{/if}}
+                        {{if title}}
+                        <span class="block small-font" style="white-space: nowrap; overflow: hidden;">
+                            <i class="fa fa-file-text-o v-middle" aria-hidden="true"></i> {{:title}}
+                        </span>
+                        {{else}}
+                        <span class="block small-font">
+                            <i class="fa fa-file-text-o v-middle" aria-hidden="true"></i> -
+                        </span>
+                        {{/if}}
+                        {{if code}}
+                        <span class="block small-font">
+                            <i class="fa fa-list-alt v-middle" aria-hidden="true"></i> کد: {{:code}}
+                        </span>
+                        {{else}}
+                        <span class="block small-font">
+                            <i class="fa fa-list-alt v-middle" aria-hidden="true"></i> کد: -
+                        </span>
+                        {{/if}}
+                        {{if bookCode}}
+                        <span class="block small-font">
+                            <i class="fa fa-barcode v-middle" aria-hidden="true"></i> کد کارگاه: {{:bookCode}}
+                        </span>
+                        {{else}}
+                        <span class="block small-font">
+                            <i class="fa fa-barcode v-middle" aria-hidden="true"></i> کد کارگاه: -
+                        </span>
+                        {{/if}}
+                        {{if weight >= 0}}
+                        <span class="block small-font">
+                            <i class="fa fa-balance-scale v-middle" aria-hidden="true"></i> وزن: {{:weight}}~
+                            {{if silverWeight}}
+                            <i class="fa fa-balance-scale v-middle" aria-hidden="true"></i>  وزن نقره: {{:silverWeight}}~
+                            {{/if}}
+                        </span>
+                        {{else}}
+                        <span class="block small-font">
+                            <i class="fa fa-balance-scale v-middle" aria-hidden="true"></i> وزن: 0-
+                        </span>
+                        {{/if}}
+                        <hr style="margin: 3px 0 0 0;" />
+                    </div>
+                </div>
+            </div>
+            {{/for}}
+        </div>
+    </script>
+}

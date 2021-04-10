@@ -1,0 +1,133 @@
+﻿
+@{
+    ViewBag.Title = "مدیریت چاپخانه";
+}
+
+<style>
+    hr.line {
+        border: 0;
+        height: 1px;
+        border-radius: 15px;
+        background-image: -moz-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+        position: relative;
+        top: -50px;
+    }
+
+    .addPrintingHouse {
+        width: 60px;
+        padding: 23px 0;
+        border-radius: 50%;
+        position: relative;
+        display: inline-block;
+        text-align: center;
+        height: 60px;
+        background: rgb(16,8,133);
+        background: linear-gradient(90deg, rgba(16,8,133,1) 0%, rgba(7,28,162,1) 50%, rgba(16,8,133,1) 100%);
+        z-index: 1;
+    }
+
+        .addPrintingHouse:hover {
+            color: white;
+        }
+</style>
+<div>
+    <h3>لیست چاپخانه</h3>
+    <a href="/printingHouse/Add/" class="addPrintingHouse">
+        <span class="fa fa-plus"></span>
+    </a>
+    <hr class="line" />
+</div>
+<div id="content">
+</div>
+@section Scripts{
+    <script type="text/javascript">
+         var defaultEntity = {
+            page: 0,
+            count: 200,
+        }
+        $(document).ready(function () {
+            getList();
+
+             $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف چاپخانه اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/printingHouse/Delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+        });
+         function getList() {
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+            loader(true);
+            $.get("/printingHouse/Search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+        
+    </script>
+    <script id="template" type="text/x-jsrender">
+
+        <table class="table">
+
+            <thead>
+                <tr>
+                    <th class="">نام چاپخانه </th>
+                    <th class="">مدیر چاپخانه </th>
+                    <th class="">شماره همراه </th>
+                    <th class="">شماره ثابت </th>
+                    <th class="text-center">وضعیت </th>
+                    <th class=" icon-col text-center">ویرایش</th>
+                    <th class=" icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td>{{:name}}</td>
+                    <td>{{:management}}</td>
+                    <td>{{:phoneNumber}}</td>
+                    <td>{{:phone}}</td>
+                    {{if active == true}}
+                    <td class="txt-al-c v-middle">
+                        <span>فعال</span>
+                    </td>
+                    {{else}}
+                    <td class="txt-al-c v-middle">
+                        <span>غیرفعال</span>
+                    </td>
+                    {{/if}}
+                    <td class="txt-al-c v-middle">
+                        <a href="/printingHouse/Edit/{{:id}}" class="btn btn-info btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c v-middle">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}

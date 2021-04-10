@@ -1,0 +1,485 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<link href="~/Content/ios-switch-rtl.css" rel="stylesheet" />
+
+<style>
+    .copyIcon {
+        cursor: pointer;
+        color: forestgreen
+    }
+
+    .smspadding {
+        margin-top: 10px
+    }
+
+    th {
+        text-align: center
+    }
+
+    tr:nth-child(even) {
+        background: #e0ebeb;
+    }
+
+    .margintop {
+        padding: 20px;
+    }
+</style>
+
+<div>
+    <a href="/bankaccount/add" class="button-new btn btn-success">
+        <span class="fa fa-plus"></span>
+        ثبت حساب جدید
+    </a>
+
+</div>
+
+<div class="form-inline pull-right" style="margin-top:10px">
+    <div class="form-group"><input id="Searching" class="form-control text-center" type="text" placeholder="جستجو..." /></div>
+</div>
+<div id="customerfilter" class="pull-left" style="top:38px;position: absolute;margin-right:200px;width: 202px;display: flex;">
+    <h5 style="position: relative;left: 7px;">شخص</h5>
+    <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkCustomer" type="checkbox" name="notCustomer" value="true"><span id="customerfilter-title"></span></label></div></div>
+
+</div>
+<div id="content">
+
+</div>
+
+<div id="modal-sms" class="modal" style="overflow-y: hidden;">
+    <div class="modal-dialog" id="form">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">ارسال پیام</h4>
+            </div>
+            <div class="modal-body col-md-12">
+                <input type="hidden" id="hiddenId" />
+                <div class="col-md-6 smspadding">
+                    <label>ارسال به...</label>
+                    <input class="form-control " id="sendToNumber" placeholder="ارسال به..." name="phoneNumber" />
+                </div>
+                <div class="col-md-6 smspadding">
+                    <label>نام صاحب حساب</label>
+                    <input class="form-control " id="firstName" placeholder="نام صاحب حساب" name="firstName" />
+                </div>
+                <div class="col-md-6 smspadding">
+                    <label>نام بانک</label>
+                    <input class="form-control " id="bankName" placeholder="نام بانک" name="bank" />
+                </div>
+                <div class="col-md-6 smspadding">
+                    <label>شماره حساب</label>
+                    <input class="form-control" id="accountNumber" placeholder="شماره حساب" name="accountNumber" />
+                </div>
+
+                <div class="col-md-6 smspadding">
+                    <label>شماره کارت</label>
+                    <input class="form-control " id="cardNumber" placeholder="شماره کارت" name="cardNumber" />
+                </div>
+                <br />
+
+                <div class="col-md-6 smspadding">
+                    <label>شماره شبا</label>
+                    <input class="form-control " id="iban" placeholder="شماره شبا" name="iban" />
+                </div>
+
+                <br />
+                <br />
+            </div>
+            <div class="modal-footer">
+                <button id="btnSendSms" class="btn btn-primary" style="width: 100px;">ارسال</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal-detail" class="modal" style="overflow-y: hidden;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">جزییات</h4>
+            </div>
+            <div class="modal-body">
+                <div id="detailContent"></div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 500,
+            text: null,
+            status: null,
+            userType: null,
+            name: null,
+            iban: null,
+            accountNumber: null,
+            cardNumber: null,
+            bank: null
+        };
+
+        $(document).ready(function () {
+            getList()
+
+            $(document).on("change", ".chkCustomer", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { organ: true }
+                    manipulateParam(param, "page");
+                    getList()
+                }
+                else {
+                    removeParam(["organ", "page"]);
+                    getList()
+
+                }
+            });
+            $(document).on("click", ".detail", function (event) {
+                $("#modal-detail").modal("show");
+
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                loader(true);
+                $.get("/bankAccount/GetDetailList/" + id, function (response) {
+                    if (response.status == 200) {
+                        var data = response.data;
+                        var template = $.templates("#detailTemplate");
+                        var htmlOutput = template.render(data);
+                        $("#detailContent").html(htmlOutput);
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                    //$("[data-toggle=tooltip]").tooltip();
+                });
+
+            });
+
+
+
+            $("#txtText").on("change", function () {
+                $(this).val($("#cardNumber").val())
+            })
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/bankaccount/delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+
+            $(document).on("click", ".sendSms", function (index, element) {
+
+                var id = $(this).attr("data-id");
+                var cn = $(this).attr("data-cn");
+                var an = $(this).attr("data-an");
+                var iban = $(this).attr("data-iban");
+                var bank = $(this).attr("data-bank");
+                var firstName = $(this).attr("data-firstName");
+
+                $("#cardNumber").val(cn);
+                $("#accountNumber").val(an);
+                $("#iban").val(iban);
+                $("#bankName").val(bank);
+                $("#firstName").val(firstName);
+
+                $("#modal-sms").modal("show");
+            });
+
+            $("#btnSendSms").on("click", function () {
+                if ($("#sendToNumber").val() == null || $("#sendToNumber").val().length < 11) {
+                    alert("شماره همراه صحیح نمی باشد");
+                } else {
+                    var phoneNumber = $("input[name=phoneNumber]").val();
+                    var text = $("input[name=text]").val();
+                    var params = { phoneNumber: phoneNumber, accountNumber: $("#accountNumber").val(), cardNumber: $("#cardNumber").val(), iban: $("#iban").val(), bank: $("#bankName").val(), text: $("input[name=text]").val(), firstName: $("input[name=firstName]").val() };
+                    $.get("/bankAccount/SendSms/", params, function (response) {
+                        if (response.status == 200) {
+                            alert(response.message);
+                            $("#modal-sms").modal("hide");
+
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                        loader(false);
+                    });
+                }
+
+            });
+            $("#Searching").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#TableSearch tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+
+        function getList() {
+            loader(true);
+            var newParams = getParam();
+            var params = $.extend({}, defaultEntity, newParams);
+            $.get("/bankAccount/search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                    $("[data-toggle=tooltip]").tooltip();
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+
+        function copyToClipboard(element) {
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val(element).select();
+            document.execCommand("copy");
+            $temp.remove();
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+
+        <table class="table">
+            <thead>
+                <tr class="text-center">
+
+                    <th>نام شخص</th>
+                    <th>شماره همراه</th>
+                    <th>شماره تماس ثابت</th>
+                    <th>بانک</th>
+                    <th>شماره کارت</th>
+                    <th>شماره حساب</th>
+                    <th>شماره شبا</th>
+                    <th>شرح حساب</th>
+                    <th>پیامک</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="TableSearch">
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td class="txt-al-r v-middle"> <i class="fa fa-info-circle" data-toggle="tooltip" data-title="توضیحات:{{:description}}" style="color:cornflowerblue;cursor:pointer"></i>&nbsp;&nbsp;{{:fullName}}  </td>
+                    <td class="txt-al-c v-middle">{{:phoneNumber}}</td>
+                    <td class="txt-al-c v-middle">{{:telephone}}</td>
+                    <td class="txt-al-c">
+                        @*<div>
+                                {{:bank}}
+                            </div>*@
+
+                        {{for detail}}
+                        <div class="" style="margin-top:13px;padding:0">
+                            {{if bankList == "پاسارگاد"}}
+                            <img src="/Content/bankLogo/bpi-300-c.png" width="25px" height="30px" data-toggle="tooltip" data-title="پاسارگاد" />
+                            {{/if}}
+                            {{if bankList == "ملی"}}
+                            <img src="/Content/bankLogo/bmi-300-c.png" width="25px" height="30px" data-toggle="tooltip" data-title="ملی" />
+                            {{/if}}
+                            {{if bankList == "انصار"}}
+                            <img src="/Content/bankLogo/ansar-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="انصار" />
+                            {{/if}}
+                            {{if bankList == "آینده"}}
+                            <img src="~/Content/bankLogo/ba-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="آینده" />
+                            {{/if}}
+                            {{if bankList == "صنعت و معدن"}}
+                            <img src="/Content/bankLogo/bim-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="صنعت و معدن" />
+                            {{/if}}
+                            {{if bankList == "کشاورزی"}}
+                            <img src="/Content/bankLogo/bki-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="کشاورزی" />
+                            {{/if}}
+                            {{if bankList == "صادرات"}}
+                            <img src="/Content/bankLogo/bsi-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="صادرات" />
+                            {{/if}}
+                            {{if bankList == "دی"}}
+                            <img src="/Content/bankLogo/day-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="دی" />
+                            {{/if}}
+                            {{if bankList == "توسعه صادرات"}}
+                            <img src="/Content/bankLogo/edbi-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="توسعه صادرات" />
+                            {{/if}}
+                            {{if bankList == "اقتصاد نوین"}}
+                            <img src="/Content/bankLogo/en-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="اقتصاد نوین" />
+                            {{/if}}
+                            {{if bankList == "قوامین"}}
+                            <img src="/Content/bankLogo/ghbi-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="قوامین" />
+                            {{/if}}
+                            {{if bankList == "حکمت ایرانیان"}}
+                            <img src="/Content/bankLogo/hi-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="حکمت ایرانیان" />
+                            {{/if}}
+                            {{if bankList == "مشترک ایران و ونزویلا"}}
+                            <img src="/Content/bankLogo/ivbb-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="مشترک ایران و ونزویلا" />
+                            {{/if}}
+                            {{if bankList == "ایران زمین"}}
+                            <img src="/Content/bankLogo/iz-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="ایران زمین" />
+                            {{/if}}
+                            {{if bankList == "کار آفرین"}}
+                            <img src="/Content/bankLogo/kar-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="کار آفرین" />
+                            {{/if}}
+                            {{if bankList == "مسکن"}}
+                            <img src="/Content/bankLogo/maskan-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="مسکن" />
+                            {{/if}}
+                            {{if bankList == "خاورمیانه"}}
+                            <img src="/Content/bankLogo/me-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="خاورمیانه" />
+                            {{/if}}
+                            {{if bankList == "ملت"}}
+                            <img src="/Content/bankLogo/mellat-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="ملت" />
+                            {{/if}}
+                            {{if bankList == "پارسیان"}}
+                            <img src="/Content/bankLogo/parsian-300-c.png" width=25px" height="30px" data-toggle="tooltip" data-title="پارسیان" />
+                            {{/if}}
+                            {{if bankList == "پست بانک ایران"}}
+                            <img src="/Content/bankLogo/post-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="پست بانک ایران" />
+                            {{/if}}
+                            {{if bankList == "رفاه کارگران"}}
+                            <img src="/Content/bankLogo/rb-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="رفاه کارگران" />
+                            {{/if}}
+                            {{if bankList == "سرمایه"}}
+                            <img src="/Content/bankLogo/sarmayeh-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="سرمایه" />
+                            {{/if}}
+                            {{if bankList == "سامان"}}
+                            <img src="/Content/bankLogo/sb-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="سامان" />
+                            {{/if}}
+                            {{if bankList == "سپه"}}
+                            <img src="/Content/bankLogo/sepah-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="سپه" />
+                            {{/if}}
+                            {{if bankList == "شهر"}}
+                            <img src="/Content/bankLogo/shahr-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="شهر" />
+                            {{/if}}
+                            {{if bankList == "سینا"}}
+                            <img src="/Content/bankLogo/sina-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="سینا" />
+                            {{/if}}
+                            {{if bankList == "تجارت"}}
+                            <img src="/Content/bankLogo/tejarat-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="تجارت" />
+                            {{/if}}
+                            {{if bankList == "گردشگری"}}
+                            <img src="/Content/bankLogo/tourism-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="گردشگری" />
+                            {{/if}}
+                            {{if bankList == "توسعه تعاون"}}
+                            <img src="/Content/bankLogo/tt-300-c.png" width="30px" height="30px" data-toggle="tooltip" data-title="توسعه تعاون" />
+                            {{/if}}
+                        </div>
+                        <br />
+                        {{/for}}
+                    </td>
+                    <td class="txt-al-l">
+                        @*<div>{{:cardNumber}} &nbsp;<i onclick="copyToClipboard('{{:cardNumber}}')" class="fa fa-save copyIcon"></i></div>*@
+
+                        {{for detail}}
+
+                        <div class="margintop">{{:cardNumberList}}&nbsp; <i onclick="copyToClipboard('{{:cardNumberList}}')" class="fa fa-save copyIcon"></i></div>
+
+                        {{/for}}
+                    </td>
+                    <td class="txt-al-l">
+                        @*<div>{{:accountNumber}} &nbsp; <i onclick="copyToClipboard('{{:accountNumber}}')" class="fa fa-save copyIcon"></i></div>*@
+
+                        {{for detail}}
+
+                        <div class="margintop">{{:accountNumberList}}&nbsp;<i onclick="copyToClipboard('{{:accountNumberList}}')" class="fa fa-save copyIcon"></i></div>
+
+                        {{/for}}
+                    </td>
+                    <td class="txt-al-l">
+                        @*<div>IR: {{:iban}}&nbsp; <i onclick="copyToClipboard('{{:iban}}')" class="fa fa-save copyIcon"></i></div>*@
+
+                        {{for detail}}
+
+                        <div class="margintop">IR:{{:ibanList}}&nbsp;<i onclick="copyToClipboard('{{:ibanList}}')" class="fa fa-save copyIcon"></i></div>
+
+                        {{/for}}
+
+                    </td>
+
+                    <td class="txt-al-c">
+                        @*<div>{{:explanation}}</div>*@
+
+                        {{for detail}}
+
+                        <div class="margintop">{{:explanationList}}</div>
+
+                        {{/for}}
+                    </td>
+
+                    <td class="txt-al-c">
+                        @*<div>
+                                <a data-cn="{{:cardNumber}}" data-an="{{:accountNumber}}" data-iban="IR:{{:iban}}" data-bank="{{:bank}}" data-firstName="{{:fullName}}" data-id="{{:id}}" class="btnSmsModal sendSms btn btn-success btn-xs" data-title=""><i class="fa fa-envelope" aria-hidden="true"></i></a>
+                            </div>*@
+
+                        {{for detail}}
+                        <div class="margintop">
+                            <a data-cn="{{:cardNumberList}}" data-an="{{:accountNumberList}}" data-iban="IR:{{:ibanList}}" data-bank="{{:bankList}}" data-firstName="{{:fullNameList}}" data-id="{{:id}}" class="btnSmsModal sendSms btn btn-success btn-xs" data-title=""><i class="fa fa-envelope" aria-hidden="true"></i></a>
+                        </div>
+
+                        {{/for}}
+                    </td>
+                    <td class="txt-al-c" style="width:2px">
+                        <div class="margintop hidden" style="width:2px">{{:description}}</div>
+                    </td>
+
+                    <td class="txt-al-c v-middle">
+                        <a href="/bankaccount/edit/{{:id}}" class="btn btn-info btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c v-middle">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                    @*<td class="txt-al-c v-middle">
+                            <button class="detail btn btn-default btn-xs" data-toggle="tooltip" title="جزییات" data-title="جزییات" data-id="{{:id}}"><span class="fa fa-eye"></span></button>
+                        </td>*@
+
+                </tr>
+
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+    <script id="detailTemplate" type="text/x-jsrender">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>نام بانک</th>
+                    <th>شبا</th>
+                    <th>شماره کارت</th>
+                    <th>شماره حساب</th>
+                    <th>شرح</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {{for list}}
+                {{for detail}}
+                <tr style="border-top: solid 1px silver">
+                    <td>{{:bankList}}</td>
+                    <td>{{:ibanlist}}</td>
+                    <td>{{:cardNumberList}}</td>
+                    <td>{{:accounNumberList}}</td>
+                    <td>{{:explanationList}}</td>
+                </tr>
+                {{/for}}
+                {{/for}}
+            </tbody>
+        </table>
+
+    </script>
+
+}

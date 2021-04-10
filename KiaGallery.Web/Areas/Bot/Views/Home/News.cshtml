@@ -1,0 +1,330 @@
+﻿
+@{
+    ViewBag.Title = "News";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<style type="text/css">
+    #filterContent .btn {
+        background-color: #b0bec5;
+        border-radius: 5px;
+        padding: 6px 15px;
+        text-decoration: none;
+        color: black;
+        cursor: pointer;
+    }
+
+    table {
+        border: solid 1px silver;
+        width: 100%;
+    }
+
+    td, th {
+        border-bottom: 1px solid silver;
+        padding: 4px 10px 4px 15px;
+    }
+
+    #filterContent {
+        background-color: ghostwhite;
+        border: 2px solid silver;
+        border-radius: 5px;
+        display: inline-block;
+        padding: 20px;
+    }
+
+        #filterContent div {
+            padding: 3px;
+        }
+
+        #filterContent label span:first-child {
+            width: 90px;
+            display: inline-block;
+        }
+</style>
+<div id="filter" class="gone absolute">
+    <div id="filterContent">
+        <div>
+            <label>
+                <span>Chat Id:</span>
+                <input id="txtChatId" type="text" />
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <span>Text:</span>
+                <input id="txtFilterText" type="text" />
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <span>From Date:</span>
+                <input id="txtFromDate" type="text" /><i class="linkIcon fa fa-calendar" style="padding: 5px; margin-top: 4px;" aria-hidden="true" onclick="getFromDateToday()"></i>
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <span>To Date:</span>
+                <input id="txtToDate" type="text" /><i class="linkIcon fa fa-calendar" style="padding: 5px; margin-top: 4px;" aria-hidden="true" onclick="getToDateToday()"></i>
+            </label>
+        </div>
+
+        <div style="margin-top: 5px;">
+            <label>
+                <span>Page Count:</span>
+            </label>
+            <span class="linkIcon" onclick="setPageCount(10)">10</span>
+            <span class="linkIcon" onclick="setPageCount(20)">20</span>
+            <span class="linkIcon" onclick="setPageCount(50)">50</span>
+            <span class="linkIcon" onclick="setPageCount(100)">100</span>
+
+            <span id="pageCount" style="margin-left: 20px;">10</span>
+        </div>
+
+        <div>
+            <label>
+                <span></span>
+                <input id="unknown" type="checkbox" checked />
+                Unknwon
+            </label>
+        </div>
+
+        <div style="margin-top: 15px;">
+            <label>
+                <span></span>
+                <span class="btn" onclick="_page = 0;closeFilter();getList()">
+                    <i class="fa fa-search" style="padding-right: 5px;" aria-hidden="true"></i>
+                    Search
+                </span>
+                &nbsp;&nbsp;
+                <span class="btn" onclick="closeFilter()">
+                    <i class="fa fa-remove" style="padding-right: 5px;" aria-hidden="true"></i>
+                    Close
+                </span>
+            </label>
+        </div>
+    </div>
+</div>
+
+<div>
+    <div class="item-row">
+        <textarea id="NewsBody" cols="60" rows="5"></textarea>
+    </div>
+    <div class="item-row">
+        <input id="txtExpiredDate" type="number" value="7" />
+    </div>
+    <div class="item-row">
+        <input id="File" type="text" readonly />
+        <input id="fileUpload" type="file" class="gone" />
+        <img id="imgDownload" src="~/Content/Images/download.png" class="icon" />
+        <img id="imgBrowser" src="~/Content/Images/folder.png" class="icon" />
+    </div>
+    <div class="item-row">
+        <input type="button" value="Save" onclick="Submit()" />
+    </div>
+</div>
+
+<div id="grid">
+
+</div>
+
+<script id="newsTmpl" type="text/x-jsrender">
+    <h3>
+        <i class="fa fa-gear linkIcon" aria-hidden="true" onclick="openFilter()"></i>&nbsp;&nbsp;
+        News Count: {{:newsCount}}
+    </h3>
+    <table>
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                Text
+            </th>
+            <th>
+                FileName
+            </th>
+            <th>
+                CreatedDate
+            </th>
+            <th>
+                ExpiredDate
+            </th>
+            <th>
+            </th>
+        </tr>
+        {{for list}}
+        <tr>
+            <td>{{:Id}}</td>
+            <td style="white-space: pre; direction: rtl;">{{:Text}}</td>
+            <td>{{:FileName}}</td>
+            <td>{{:CreatedDate}}</td>
+            <td>{{:ExpiredDate}}</td>
+            <td><i class="fa fa-edit linkIcon" aria-hidden="true" onclick="edit({{:Id}})"></i></td>
+        </tr>
+        {{/for}}
+    </table>
+</script>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#imgBrowser").click(function () {
+                $("#fileUpload").click();
+            });
+
+            $("#imgDownload").click(function () {
+                var fileName = $('#File').val();
+                if (fileName != "") {
+                    var win = window.open("/Files/Upload/" + fileName, '_blank');
+                    win.focus();
+                }
+                else {
+                    alert("File not found")
+                }
+            });
+
+            $('#fileUpload').fileupload({
+                dataType: 'json',
+                url: '/bot/Home/UploadFiles',
+                autoUpload: true,
+                drop: function (e, data) {
+                    loader(true);
+                },
+                done: function (e, data) {
+                    $('#File').val(data.result.name);
+                    loader(false);
+                }
+            }).on('fileuploadprogressall', function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('.progress .progress-bar').css('width', progress + '%');
+            });
+
+            //getNews();
+        });
+
+        function Submit() {
+            if (!$("#NewsBody").val()) {
+                alert("News Body is required.");
+                $("#NewsBody").focus();
+                return;
+            }
+
+            if (!$('#txtExpiredDate').val() || isNaN($('#txtExpiredDate').val()) || parseInt($('#txtExpiredDate').val()) <= 0) {
+                alert("Credit for news is invalid.");
+                return;
+            }
+
+            var data = {
+                Message: $("#NewsBody").val(),
+                FileName: $('#File').val(),
+                Credit: $('#txtExpiredDate').val()
+            };
+            loader(true);
+
+            $.ajax({
+                type: 'POST',
+                url: "/bot/Home/SaveNews",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(data),
+                dataType: "text",
+                success: function (response) {
+                    if (response.result) {
+                        alert("Send successfully");
+                        $("#NewsBody").val("");
+                        $('#File').val("");
+                    }
+                    else
+                        alert("Send failed");
+
+                    loader(false);
+                }
+            });
+
+        }
+
+        var _totalPage = 0;
+        var _page = 0;
+        var _count = 10;
+
+        var _listData = [];
+
+        function getNews() {
+            loader(true);
+
+            var _data = {
+                text: $("#txtFilterText").val(),
+                fromDate: $("#txtFromDate").val(),
+                toDate: $("#txtToDate").val(),
+                page: _page,
+                count: _count
+            };
+
+            $.ajax({
+                type: "GET",
+                url: "/bot/Home/GetNews",
+                data: _data,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    var tmpl = $.templates("#newsTmpl");
+                    var html = tmpl.render(result.data);
+                    $("#grid").html(html);
+
+                    $("#pageNo").html((_page + 1) + "/" + result.data.pageCount);
+                    if (_page == 0)
+                        $("#previewsPage").css({ 'visibility': 'hidden' });
+                    else
+                        $("#previewsPage").css({ 'visibility': 'visible' });
+
+                    if (_page + 1 == result.data.pageCount)
+                        $("#nextPage").css({ 'visibility': 'hidden' });
+                    else
+                        $("#nextPage").css({ 'visibility': 'visible' });
+
+                    _listData = result.data.list;
+
+                    _totalPage = result.data.pageCount;
+                    loader(false);
+                },
+                error: function (response) {
+                    alert('error');
+                    loader(false);
+                }
+            });
+        }
+
+        function edit(id) {
+            for (var i = 0; i < _listData.length; i++) {
+                var item = _listData[i];
+                if (id == item.Id) {
+                    $("#id").val(item.Id);
+                    $("#NewsBody").val(item.Text);
+                    var created = item.CreatedDate;
+                    var splitCreatedDate = created.split(" ");
+                    var createdDate = splitCreatedDate[0].split("/");
+                    var createdTime = splitCreatedDate[1].split(":");
+                    var createdDateTime = persianDate([parseInt(createdDate[0]), parseInt(createdDate[1]), parseInt(createdDate[2]), parseInt(createdTime[0]), parseInt(createdTime[1]), parseInt(createdTime[2])]);
+
+                    var expired = item.ExpiredDate;
+                    var splitExpiredDate = expired.split(" ");
+                    var expiredDate = splitExpiredDate[0].split("/");
+                    var expiredTime = splitExpiredDate[1].split(":");
+                    var expiredDateTime = persianDate([parseInt(expiredDate[0]), parseInt(expiredDate[1]), parseInt(expiredDate[2]), parseInt(expiredTime[0]), parseInt(expiredTime[1]), parseInt(expiredTime[2])]);
+
+                    var diff = expiredDateTime.diff(createdDateTime, 'days');
+                    $('#txtExpiredDate').val(diff);
+                    $("#File").val(item.FileName);
+                    break;
+                }
+            }
+
+            //showModal($("#response"));
+        }
+
+    </script>
+}

@@ -1,0 +1,114 @@
+﻿
+@{
+    ViewBag.Title = "Edit";
+    List<KiaGallery.Web.Models.BranchListViewModel> branchList = ViewBag.BranchList;
+    List<KiaGallery.Web.Models.CompanyListViewModel> companyList = ViewBag.CompanyList;
+}
+
+<div id="form" class="container">
+    <div class="row form-group">
+        <div class="row">
+            <div id="step1" class="col-md-4 col-md-offset-4">
+                <input id="txtHidden" type="hidden" name="id" value="@ViewBag.Id">
+                <div class="form-group">
+                    <label for="txtCode">کد</label>
+                    <input id="txtCode" type="text" class="form-control number-only" name="code" readonly="readonly">
+                </div>
+                <div class="form-group">
+                    <label for="cmbGiftType">نوع کارت</label>
+                    <select id="cmbGiftType" class="form-control" data-validate="required" name="cardType">
+                        <option value="">...</option>
+                        <option value="0">نقره ای</option>
+                        <option value="1">طلایی</option>
+                        <option value="2">پلاتینوم </option>
+                    </select>
+                </div>
+                @if (ViewBag.Id != null)
+                {
+                    <div class="form-group">
+                        <label for="txtCount">تعداد</label>
+                        <input id="txtCount" type="text" class="form-control number-only" name="count" data-validate="required,number" value="1" readonly="readonly">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cmbValue">وضعیت</label>
+                        <select id="cmbValue" class="form-control" name="cardStatus" data-validate="required">
+                            <option value="">...</option>
+                            <option value="0">ثبت شده</option>
+                            <option value="1">چاپ شده</option>
+                            <option value="2">ارسال شده به شعبه</option>
+                            <option value="3">تحویل به مشتری</option>
+                            <option value="4">سوخته</option>
+                            <option value="5">باطل</option>
+
+
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cmbBranchId">شعبه</label>
+                        <select id="cmbBranchId" class="form-control" name="branchIdShopping">
+                            <option value="">...</option>
+                            @foreach (KiaGallery.Web.Models.BranchListViewModel branch in branchList)
+                            {
+                                <option value="@branch.id">@branch.name</option>
+                            }
+                        </select>
+                    </div>
+                }
+                else
+                {
+                    <input id="txtGiftStatus" type="hidden" name="giftStatus" value="0">
+                    <div class="form-group">
+                        <label for="txtCount">تعداد</label>
+                        <input id="txtCount" type="text" class="form-control number-only" name="count" value="1" data-validate="required,number">
+                    </div>
+                }
+                <div class="form-group">
+                    <button id="btnSave" type="submit" class="btn btn-success">
+                        <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                        ذخیره
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+        $(document).ready(function () {
+            load()
+            $("#btnSave").click(function () {
+                save()
+            })
+
+        })
+        function save() {
+            if (checkForm("#form")) {
+                var entity = getEntity("#form");
+                $.post("/loyalityCard/save/", entity, function (response) {
+                    if (response.status == 200) {
+                        callbackAlert(response.message, function () {
+                            document.location = "/loyalityCard";
+                        });
+                    }
+                    else {
+                        alert(response.message)
+                    }
+                })
+            }
+        }
+        function load() {
+            $.get("/loyalityCard/load/" + id, function (response) {
+                if (response.status == 200) {
+                        setEntity(response.data, "#form");
+                    }
+                else {
+                    alert(response.message)
+                }
+            })
+        }
+    </script>
+}

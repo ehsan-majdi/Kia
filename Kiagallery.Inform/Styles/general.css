@@ -1,0 +1,147 @@
+﻿.txt-al-r {
+    text-align: right;
+}
+
+.txt-al-c {
+    text-align: center !important;
+}
+
+.txt-al-l {
+    text-align: left;
+}
+
+.ltr {
+    direction: ltr;
+}
+
+.rtl {
+    direction: rtl;
+}
+
+.v-middle {
+    vertical-align: middle;
+}
+
+.v-bottom {
+    vertical-align: bottom;
+}
+
+.hide {
+    display: none !important;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.no-decoration {
+    text-decoration: none;
+}
+
+    .no-decoration:hover {
+        text-decoration: none;
+    }
+
+.inline-block {
+    display: inline-block !important;
+}
+
+.inline {
+    display: inline;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.w100p {
+    width: 100%;
+}
+
+.w50 {
+    width: 50px;
+}
+
+.w85 {
+    width: 85px;
+}
+
+.w100 {
+    width: 100px;
+}
+
+.w120 {
+    width: 120px;
+}
+
+.w150 {
+    width: 150px;
+}
+
+.w200 {
+    width: 200px;
+}
+
+.w250 {
+    width: 250px;
+}
+
+.m-top-3 {
+    margin-top: 3px;
+}
+
+.m-top-7 {
+    margin-top: 7px;
+}
+
+.m-top-12 {
+    margin-top: 12px;
+}
+
+.m-top-20 {
+    margin-top: 20px;
+}
+
+.m-top-30 {
+    margin-top: 30px;
+}
+
+.m-bottom-10 {
+    margin-bottom: 10px;
+}
+
+.m-bottom-20 {
+    margin-bottom: 20px !important;
+}
+
+.m-bottom-30 {
+    margin-bottom: 30px;
+}
+
+.pad-left-10 {
+    padding-right: 10px;
+}
+
+.no-margin {
+    margin: 0 !important;
+}
+
+.no-resize {
+    resize: vertical;
+}
+
+.flol {
+    float: left;
+}
+
+.flo {
+    float: right;
+}

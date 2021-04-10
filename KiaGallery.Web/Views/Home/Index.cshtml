@@ -1,0 +1,989 @@
+﻿@{
+    /**/
+
+    ViewBag.Title = "صفحه اصلی";
+    var user = BaseController.GetAuthenticatedUser();
+}
+
+<style type="text/css">
+    .item {
+        padding: 30px 0px 30px 0;
+        margin-top: 10px;
+        border-radius: 5px;
+        color: white !important;
+        text-decoration: none !important;
+        height: 170px;
+    }
+
+        .item a:hover {
+            text-decoration: none;
+        }
+
+        .item p {
+            font-size: 16px;
+            padding: 0 10px;
+        }
+
+        .item .desc {
+            font-size: 12px;
+            color: #EEE;
+        }
+
+    .square {
+        display: block;
+        position: relative;
+        text-align: center;
+        background-color: rgba(0, 0, 0,0.6);
+        top: 30px;
+        max-width: 100%;
+        border-radius: 0px 2px 4px 4px;
+    }
+
+    .item-opacity:hover {
+        background-color: rgba(0, 0, 0,0.3) !important
+    }
+
+    .faplusposition {
+        margin-top: 40px;
+        display: inline;
+        position: absolute;
+        right: 50px;
+    }
+
+    .carttitleposition {
+        position: absolute;
+        left: calc(50% - 55px);
+        width: 110px;
+        top: 20px;
+    }
+</style>
+<input type="hidden" id="hiddenDate" name="date" value="@ViewBag.Date" />
+
+<div id="importModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5>محاسبه قیمت طلای خام</h5>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group" id="staticParent">
+                        <h4>قیمت نهایی محصول</h4>
+                        <input class="form-control deleteVal money-separator" type="text" id="finalProductPrice" name="" placeholder="0">
+                        <h4>وزن</h4>
+                        <input class="form-control deleteVal" type="text" id="weight" name="" placeholder="0">
+                        <h4>اجرت</h4>
+                        <input class="form-control deleteVal money-separator" type="text" id="wage" name="" placeholder="0">
+                        <h4>قیمت سنگ و چرم</h4>
+                        <input class="form-control deleteVal money-separator" type="text" id="stoneLeatherPrice" name="" placeholder="0">
+                        <h4>قیمت طلای خام</h4>
+                        <input class="form-control deleteVal money-separator " type="text" id="roundedGoldPrice" name="roundedGoldPrice" placeholder="0" readonly>
+                        <br />
+                        <button class="btn btn-success" id="calculate" type="button"><i class="fa fa-calculator">&nbsp;</i>محاسبه</button>
+                        <button class="btnDeleteVal btn btn-danger" type="button"><i class="fa fa-trash">&nbsp;</i>پاک کردن فیلد ها</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+<div id="branchGoldModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4>طلای شعب</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group" id="staticParent">
+                        <div>
+                            <span> <b>وزن</b> (میانگین طلای خام فروش رفته در مارکیز) </span>
+                            <input class="form-control deleteVal" type="text" id="branchGoldWeight" name="weight" placeholder="0">
+                        </div>
+                        <br />
+                        <div>
+                            <span> <b>قیمت</b> (میانگین طلای خام فروش رفته در مارکیز) </span>
+                            <input class="form-control deleteVal money-separator" type="text" id="price" name="price" placeholder="ریال">
+                        </div>
+
+                        <br />
+                        <button class="btn btn-success" id="btnSaveBranchGold" type="button"><i class="fa fa-check">&nbsp;</i>ثبت</button>
+                        <button class="btnDeleteVal btn btn-danger" type="button"><i class="fa fa-trash">&nbsp;</i>پاک کردن فیلد ها</button>
+                    </div>
+                </form>
+                <div class="soldGold-modal"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+@if ((user.WorkshopId > 0 || user.BranchId > 0) && (User.IsInRole("admin") || User.IsInRole("internalOrderBranch") || User.IsInRole("order") || User.IsInRole("order-workshop") || User.IsInRole("admin-order") || User.IsInRole("orderOuterWerk") || User.IsInRole("goldPriceCalculate") || User.IsInRole("manageImage")))
+{
+    <div class="row">
+
+        @if (user.BranchId > 0 && (User.IsInRole("admin") || User.IsInRole("order")))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/order" style="background-color: #303F9F;">
+                    <strong class="carttitleposition">محصولات</strong><br />
+                    <i class="fa fa-diamond fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">مشاهده محصولات، ثبت و ادامه سفارش</span></div>
+                </a>
+            </div>
+        }
+
+        @if (user.BranchId > 0 && (User.IsInRole("admin") || User.IsInRole("orderOuterWerk")))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center">
+                <a class="item block bg-success item-opacity" href="/order/outerWerk" style="background-color: #337AB7;">
+                    <strong class="carttitleposition">محصولات خرج کار</strong><br />
+                    <i class="fa fa-wrench fa-3x v-middle faplusposition"></i>
+                    <i class="fa fa-diamond fa-5x v-middle"></i>
+
+                    <div class="square"><span class="desc">مشاهده و سفارش محصولات خرج کار</span></div>
+
+                </a>
+            </div>
+        }
+        @if (user.BranchId > 0 && (User.IsInRole("admin") || User.IsInRole("order") || User.IsInRole("orderOuterWerk")))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center">
+                <a class="item block bg-primary item-opacity" href="/order/history" style="background-color: #E91E63">
+                    <strong class="carttitleposition">سوابق سفارش</strong><br />
+                    <i class="fa fa-paste fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">لیست سفارشات که تاکنون ارسال شده</span></div>
+
+                </a>
+            </div>
+
+        }
+        @if (user.WorkshopId > 0 && (User.IsInRole("admin") || User.IsInRole("order-workshop")))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center">
+                <a class="item block bg-success item-opacity" href="/order/workshop" style="background-color: #337AB7;">
+                    <strong class="carttitleposition">سبد سفارش</strong><br />
+                    <i class="fa fa-shopping-bag fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">سفارشات تازه ارسال شده به کارگاه</span></div>
+                </a>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center">
+                <a class="item block bg-primary item-opacity" href="/order/workshopHistory" style="background-color: #5CB85C">
+                    <strong class="carttitleposition">سوابق سفارش</strong><br />
+                    <i class="fa fa-paste fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">لیست سفارشات که تاکنون به کارگاه ارسال شده</span></div>
+                </a>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/workshop/products" style="background-color: #303F9F;">
+                    <strong class="carttitleposition">محصولات</strong><br />
+                    <i class="fa fa-diamond fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">مشاهده محصولات، ثبت و ادامه سفارش</span></div>
+                </a>
+            </div>
+        }
+
+        @if (User.IsInRole("admin") || User.IsInRole("admin-order"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center">
+                <a class="item block bg-success item-opacity" href="/order/manage" style="background-color: #FFC107;">
+                    <strong class="carttitleposition">مدیریت سفارشات</strong><br />
+                    <i class="fa fa-list fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">مدیریت و پردازش سفارشات ارسال شده</span></div>
+                </a>
+            </div>
+        }
+        @*@if (User.IsInRole("admin"))
+            {
+                <div class="col-xs-12 col-sm-6 col-lg-2 text-center">
+                    <a class="item block bg-success item-opacity" href="/order/operation" style="background-color: orangered;">
+                        <strong class="carttitleposition">عملیات سفارشات</strong><br />
+                        <i class="fa fa-refresh fa-5x v-middle"></i>
+                        <div class="square"><span class="desc"> مشاهده تعداد و وضعیت سفارشات </span></div>
+                    </a>
+                </div>
+            }*@
+        @if (User.IsInRole("admin") || User.IsInRole("manageImage"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/photographymanage/index" style="background-color:deepskyblue;cursor:pointer">
+                    <strong class="carttitleposition">مدیریت عکس</strong>
+                    <br />
+                    <i class="fa fa-image fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">مدیریت عکس های سایت</span></div>
+                </a>
+            </div>
+        }
+    </div>
+}
+@if (User.IsInRole("admin") || User.IsInRole("internalOrderOffice") || User.IsInRole("internalOrderBranch") || User.IsInRole("internalOrderOfficeBarcodeRoom"))
+{
+    <div class="row">
+        <br />
+        <h4 class="col-xs-12">سفارشات شعب</h4>
+    </div>
+    <div class="row">
+        @if (User.IsInRole("admin") || User.IsInRole("internalOrderBranch"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/internalOrder" style="background-color: orangered;">
+                    <strong class="carttitleposition">سفارشات مشتری</strong>
+                    <br />
+                    <i class="fa fa-wpforms fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">مدیریت سفارشات مشتریان شعب</span></div>
+                </a>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/internalOrder/add" style="background-color:blueviolet;">
+                    <strong class="carttitleposition">ثبت سفارش جدید</strong>
+                    <br />
+                    <i class="fa fa-plus fa-3x v-middle faplusposition"></i>
+                    <i class="fa fa-wpforms fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">صفحه ایجاد سفارش جدید مشتری</span></div>
+                </a>
+            </div>
+        }
+        @if (User.IsInRole("admin") || User.IsInRole("internalOrderOffice"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/internalOrder/acceptFromBranch" style="background-color:#64dd17;">
+                    <strong class="carttitleposition">تحویل از شعبه</strong>
+                    <br />
+                    <i class="fa fa-arrow-circle-o-down fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">تحویل سفارشات از شعب</span></div>
+                </a>
+            </div>
+        }
+        @if (User.IsInRole("admin") || User.IsInRole("internalOrderOffice"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/internalOrder/process" style="background-color: #424242;">
+                    <strong class="carttitleposition">پردازش</strong>
+                    <br />
+                    <i class="fa fa-spinner fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">مشاهده وضعیت سفارشات شعب</span></div>
+                </a>
+            </div>
+        }
+        @if (User.IsInRole("admin") || User.IsInRole("internalOrderOfficeBarcodeRoom"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/internalOrder/sendToBranch" style="background-color: #d50000;">
+                    <strong class="carttitleposition">ارسال به شعبه</strong>
+                    <br />
+                    <i class="fa fa-arrow-circle-o-up fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">ارسال سفارشات مشتریان شعب</span></div>
+                </a>
+            </div>
+        }
+
+    </div>
+}
+@if (User.IsInRole("admin") || User.IsInRole("financialBranch") || User.IsInRole("branchesPayments") || User.IsInRole("soldGold") || User.IsInRole("soldGoldManage") || User.IsInRole("branchGoldManage"))
+{
+    <div class="row">
+        <br />
+        <h4 class="col-xs-12">مالی</h4>
+    </div>
+    <div class="row">
+        @if (User.IsInRole("admin") || User.IsInRole("financialBranch"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/financialBranch" style="background-color: green;">
+                    <strong class="carttitleposition">مدیریت مالی شعب</strong>
+                    <br />
+                    <i class="fa fa-dollar fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">مدیریت مالی شعب</span></div>
+                </a>
+            </div>
+
+        }
+        @if (User.IsInRole("admin") || User.IsInRole("branchGoldManage"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/financialBranch/calculate" style="background-color: green;">
+                    <strong class="carttitleposition"> مدیریت حساب طلا</strong>
+                    <br />
+                    <i class="fa fa-dollar fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">مدیریت حساب طلای سفارشات شعب</span></div>
+                </a>
+            </div>
+        }
+        @if (User.IsInRole("admin") || User.IsInRole("branchesPayments"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/BranchesPayments" style="background-color: darkcyan;">
+                    <strong class="carttitleposition">فاکتور پرداختی</strong>
+                    <br />
+                    <i class="fa fa-file fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">ثبت و صدور فاکتور پرداختی</span></div>
+                </a>
+            </div>
+        }
+        @if (User.IsInRole("admin") || User.IsInRole("goldPriceCalculate"))
+        {
+
+            <div id="modalShow" class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" style="background-color:rebeccapurple;cursor:pointer">
+                    <strong class="carttitleposition">قیمت طلای خام</strong>
+                    <br />
+                    <i class="fa fa-calculator fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">محاسبه قیمت طلای خام</span></div>
+                </a>
+            </div>
+        }
+        @if (User.IsInRole("admin") || User.IsInRole("bankAccount"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/BankAccount" style="background-color:darkblue;cursor:pointer">
+                    <strong class="carttitleposition">اطلاعات حساب بانکی</strong>
+                    <br />
+                    <i class="fa fa-credit-card fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">اطلاعات کارت بانکی و حساب شخص</span></div>
+                </a>
+            </div>
+        }
+        @if (User.IsInRole("admin") || User.IsInRole("boughtGold"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/goldBalance/index" style="background-color:#FFC107;cursor:pointer">
+                    <strong class="carttitleposition">خریدوفروش طلا</strong>
+                    <br />
+                    <i class="fa fa-handshake-o fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">مدیریت روزانه معاملات طلا</span></div>
+                </a>
+            </div>
+        }
+        @if (User.IsInRole("admin") || User.IsInRole("soldGoldManage"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/branchGold/index" style="background-color:#4587ff;cursor:pointer">
+                    <strong class="carttitleposition">فروش طلای شعب</strong>
+                    <br />
+                    <i class="fa fa-handshake-o fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">مدیریت روزانه فروش طلا</span></div>
+                </a>
+            </div>
+        }
+        @if (User.IsInRole("admin") || User.IsInRole("soldGold"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center" id="branchGoldModalShow">
+                <span class="item block bg-success item-opacity" style="background-color:#2395f2;cursor:pointer">
+                    <strong class="carttitleposition">افزودن اطلاعات فروش طلا</strong>
+                    <br />
+                    <i class="fa fa-plus fa-5x v-middle"></i>
+                    <span class="square"><span class="desc">اطلاعات فروش وزنی و قیمت طلا</span></span>
+                </span>
+            </div>
+        }
+    </div>
+}
+
+@if (User.IsInRole("admin") || User.IsInRole("dailyReport") || User.IsInRole("dailyReportManage") || User.IsInRole("dailyReportPersonel"))
+{
+    <div class="row">
+        <br />
+        <h4 class="col-xs-12">گزارش فروش روزانه شعب</h4>
+    </div>
+    <div class="row">
+        @if (User.IsInRole("admin") || User.IsInRole("dailyReport"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/dailyReport/archive" style="background-color: darkcyan;">
+                    <strong class="carttitleposition">گزارش روزانه</strong>
+                    <br />
+                    <i class="fa v-middle fa fa-file fa-5x"></i>
+                    <div class="square"><span class="desc">مدیریت گزارش روزانه </span></div>
+                </a>
+            </div>
+        }
+        @if (User.IsInRole("admin") || User.IsInRole("dailyReportManage"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/dailyReport" style="background-color: darkgoldenrod;">
+                    <strong class="carttitleposition">آمار</strong>
+                    <br />
+                    <i class="fa v-middle fa fa-pie-chart fa-5x"></i>
+                    <div class="square"><span class="desc">مشاهده آمار </span></div>
+                </a>
+            </div>
+        }
+        @if (User.IsInRole("admin") || User.IsInRole("dailyReportPersonel"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity reportUrl" href="/dailyReport/report/@ViewBag.DashDate" style="background-color:#FF7043;">
+                    <strong class="carttitleposition">گزارش روزانه</strong>
+                    <br />
+                    <i class="fa v-middle fa fa-plus fa-5x"></i>
+                    <div class="square"><span class="desc">ثبت گزارش روزانه</span></div>
+                </a>
+            </div>
+        }
+        @if (User.IsInRole("admin") || User.IsInRole("branchInventory"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity reportUrl" href="/branchInventory" style="background-color:deepskyblue;">
+                    <strong class="carttitleposition">محصولات موجود در شعبه</strong>
+                    <br />
+                    <i class="fa v-middle fa fa-list fa-5x"></i>
+                    <div class="square"><span class="desc">ثبت محصولات موجود در شعبه</span></div>
+                </a>
+            </div>
+        }
+    </div>
+}
+@if (User.IsInRole("admin") || User.IsInRole("post"))
+{
+    <div class="row">
+        <br />
+        <h4 class="col-xs-12">پست</h4>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-lg-2 text-center">
+            <a class="item block bg-success item-opacity" href="/post" style="background-color: #337AB7;">
+                <strong class="carttitleposition">پست</strong><br />
+                <i class="fa fa-envelope fa-5x v-middle"></i>
+                <br />
+                <div class="square"><span class="desc">مشاهده لیست سفارشات پستی </span></div>
+            </a>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-lg-2 text-center">
+            <a class="item block bg-primary item-opacity" href="/post/add" style="background-color: orange">
+                <strong class="carttitleposition">ثبت مرسوله جدید</strong><br />
+                <i class="fa fa-plus fa-3x v-middle faplusposition"></i>
+                <i class="fa fa-envelope fa-5x v-middle"></i>
+
+                <br />
+                <div class="square"><span class="desc">ثبت مرسوله جدید پستی </span></div>
+            </a>
+        </div>
+    </div>
+}
+@if (User.IsInRole("admin") || User.IsInRole("gift") || User.IsInRole("giftRegistration"))
+{
+    <div class="row">
+        <br />
+        <h4 class="col-xs-12">کارت هدیه و بن خرید</h4>
+    </div>
+    <div class="row">
+        @if (User.IsInRole("admin") || User.IsInRole("gift"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center">
+                <a class="item block bg-success item-opacity " href="/gift" style="background-color: #5bc0de;">
+                    <strong class="carttitleposition">هدیه</strong><br />
+                    <i class="fa fa-gift fa-5x v-middle"></i>
+                    <br />
+                    <div class="square"><span class="desc">مدیریت کارت هدیه و بن خرید</span></div>
+                </a>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center">
+                <a class="item block bg-success item-opacity " href="/gift/usedgiftfactor" style="background-color: deepskyblue;">
+                    <strong class="carttitleposition">گزارش</strong><br />
+                    <i class="fa fa-gift fa-5x v-middle"></i>
+                    <br />
+                    <div class="square"><span class="desc">گزارش هدیه</span></div>
+                </a>
+            </div>
+        }
+        @if (User.IsInRole("admin") || User.IsInRole("giftRegistration"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/gift/registration" style="background-color: #8BC34A;">
+                    <strong class="carttitleposition">ثبت و ابطال هدیه</strong>
+                    <br />
+                    <i class="fa fa-plus fa-3x v-middle faplusposition"></i>
+                    <i class="fa fa-gift fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">عملیات ثبت و ابطال هدیه</span></div>
+                </a>
+            </div>
+        }
+        @*@if (User.IsInRole("admin") || User.IsInRole("giftRegistration") || User.IsInRole("gift"))
+            {
+                <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                    <a class="item block bg-success item-opacity" href="/gift/burn" style="background-color: #d1332e;">
+                        <strong class="carttitleposition">سوزاندن</strong>
+                        <br />
+                        <i class="fa fa-bolt fa-3x v-middle faplusposition"></i>
+                        <i class="fa fa-gift fa-5x v-middle"></i>
+                        <div class="square"><span class="desc">سوزاندن کارت هدیه و بن خرید</span></div>
+                    </a>
+                </div>
+            }*@
+        @if (User.IsInRole("giftRegistration"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/gift/manage" style="background-color: #337AB7;">
+                    <strong class="carttitleposition">مدیریت گیفت</strong>
+                    <br />
+                    <i class="fa fa-gift fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">مدیریت گیفت شعب</span></div>
+                </a>
+            </div>
+        }
+    </div>
+}
+
+@if (User.IsInRole("admin") || User.IsInRole("marquisFileUpload") || User.IsInRole("marquisFileDownload"))
+{
+    <div class="row">
+        <br />
+        <h4 class="col-xs-12">مدیریت فایل</h4>
+    </div>
+    <div class="row">
+        @if (User.IsInRole("admin") || User.IsInRole("marquisFileUpload"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/marquisFile/upload" style="background-color: deeppink;">
+                    <strong class="carttitleposition"> آپلود فایل</strong>
+                    <br />
+                    <i class="fa v-middle fa fa-upload fa-5x"></i>
+                    <div class="square"><span class="desc">مدیریت آپلود فایل </span></div>
+                </a>
+            </div>
+        }
+        @if (User.IsInRole("admin") || User.IsInRole("marquisFileDownload"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/marquisFile/download" style="background-color: #607D8B;">
+                    <strong class="carttitleposition">دانلود فایل</strong>
+                    <br />
+                    <i class="fa v-middle fa fa-download fa-5x"></i>
+                    <div class="square"><span class="desc">مدیریت دانلود فایل </span></div>
+                </a>
+            </div>
+        }
+    </div>
+}
+@*@if (User.IsInRole("admin") || (User.IsInRole("outerWerkPlacement")))
+    {
+        <div class="row">
+            <br />
+            <h4 class="col-xs-12">خرج کار</h4>
+        </div>
+        <div class="row">
+            @if (User.IsInRole("admin") || (User.IsInRole("outerWerkPlacement")))
+            {
+                <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                    <a class="item block bg-success item-opacity" href="/order/outerWerkPlacement" style="background-color: #607D8B;">
+                        <strong class="carttitleposition">جایگاه خرج کار</strong>
+                        <br />
+                        <i class="fa fa-wrench fa-5x v-middle"></i>
+                        <div class="square"><span class="desc">مشاهده جایگاه محصولات خرج کار</span></div>
+                    </a>
+                </div>
+            }
+        </div>
+    }*@
+
+
+@if (User.IsInRole("admin") || User.IsInRole("branchCrm") || User.IsInRole("officeCrm"))
+{
+    <div class="row">
+        <br />
+        <h4 class="col-xs-12">CRM</h4>
+    </div>
+    <div class="row">
+        @if (User.IsInRole("admin") || User.IsInRole("branchCrm") || User.IsInRole("officeCrm"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/crm/detailview" style="background-color: #A18651;">
+                    <strong class="carttitleposition">سیستم مدیریت ارتباط با مشتری</strong>
+                    <br />
+                    <i class="fa fa-users fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">CRM</span></div>
+                </a>
+            </div>
+        }
+    </div>
+}
+
+@if (User.IsInRole("admin") || User.IsInRole("loyalCustomer") || User.IsInRole("loyalityFactor"))
+{
+    <div class="row">
+        <br />
+        <h4 class="col-xs-12">سیستم مشتریان وفادار</h4>
+    </div>
+    <div class="row">
+        @if (User.IsInRole("admin") || User.IsInRole("loyalCustomer"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/customerLoyality/index" style="background-color: deeppink;">
+                    <strong class="carttitleposition">  مشتریان وفادار</strong>
+                    <br />
+                    <i class="fa v-middle"><img src="~/Content/Image/volunteers.png" style="width:70px" /></i>
+                    <div class="square"><span class="desc">مدیریت مشتریان وفادار </span></div>
+                </a>
+            </div>
+        }
+
+        @if (User.IsInRole("admin") || User.IsInRole("loyalityFactor"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/customerLoyality/add" style="background-color: #607D8B;">
+                    <strong class="carttitleposition">مشتریان وفادار</strong>
+                    <br />
+                    <i class="fa v-middle"><img src="~/Content/Image/volunteers.png" style="width:70px" /></i>
+                    <div class="square"><span class="desc">ثبت فاکتورمشتریان وفادار </span></div>
+                </a>
+            </div>
+        }
+
+        @*@if (User.IsInRole("admin"))
+            {
+                <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                    <a class="item block bg-success item-opacity" href="/customerLoyality/branchFactorReport" style="background-color: #607D8B;">
+                        <strong class="carttitleposition">گزارش فاکتور ها</strong>
+                        <br />
+                        <i class="fa v-middle"><img src="~/Content/Image/volunteers.png" style="width:70px" /></i>
+                        <div class="square"><span class="desc">ثبت فاکتورمشتریان وفادار </span></div>
+                    </a>
+                </div>
+            }
+            @if (User.IsInRole("admin"))
+            {
+                <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                    <a class="item block bg-success item-opacity" href="/customerLoyality/expiredCustomer" style="background-color: #303F9F;">
+                        <strong class="carttitleposition">فاکتور های منقضی</strong>
+                        <br />
+                        <i class="fa v-middle"><img src="~/Content/Image/volunteers.png" style="width:70px" /></i>
+                        <div class="square"><span class="desc">مشاهده فاکتورهای منقضی</span></div>
+                    </a>
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                    <a class="item block bg-success item-opacity" href="/LoyalityCard/" style="background-color: red;">
+                        <strong class="carttitleposition">کارت</strong>
+                        <br />
+                        <i class="fa v-middle"><img src="~/Content/Image/volunteers.png" style="width:70px" /></i>
+                        <div class="square"><span class="desc">لیست کارت ها</span></div>
+                    </a>
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                    <a class="item block bg-success item-opacity" href="/LoyalityCard/register" style="background-color: burlywood;">
+                        <strong class="carttitleposition">ثبت کارت برای مشتریان وفادار</strong>
+                        <br />
+                        <i class="fa v-middle"><img src="~/Content/Image/volunteers.png" style="width:70px" /></i>
+                        <div class="square"><span class="desc">ثبت کارت برای مشتریان وفادار</span></div>
+                    </a>
+                </div>
+
+            }*@
+    </div>
+}
+@if (User.IsInRole("admin") || User.IsInRole("customerCard") || User.IsInRole("customerCardCharge") || User.IsInRole("customerCardGift") || User.IsInRole("customerCardChargeAggrement"))
+{
+    <div class="row">
+        <br />
+        <h4 class="col-xs-12">کارت مشتریان وفادار</h4>
+    </div>
+    <div class="row">
+        @if (User.IsInRole("admin") || User.IsInRole("customerCard"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/customerCard" style="background-color: #ac0613;">
+                    <strong class="carttitleposition">کارت</strong>
+                    <br />
+                    <i class="fa fa-credit-card fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">کارت </span></div>
+                </a>
+            </div>
+        }
+        @if (User.IsInRole("admin") || User.IsInRole("customerCardGift"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/customerCard/gift" style="background-color: deeppink;">
+                    <strong class="carttitleposition">کارت هدیه </strong>
+                    <br />
+                    <i class="fa fa-gift fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">کارت هدیه </span></div>
+                </a>
+            </div>
+        }
+        @if (User.IsInRole("admin") || User.IsInRole("customerCardChargeAggrement"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/customerCard/chargeAccount" style="background-color: deepskyblue;">
+                    <strong class="carttitleposition">تایید شارژ</strong>
+                    <br />
+                    <i class="fa fa-plus fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">شارژ </span></div>
+                </a>
+            </div>
+        }
+        <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+            <a class="item block bg-success item-opacity" href="/customerCard/BranchChargeAccountList" style="background-color: orange;">
+                <strong class="carttitleposition">لیست شارژ </strong>
+                <br />
+                <i class="fa fa-plus fa-5x v-middle"></i>
+                <div class="square"><span class="desc">مدیریت شارژ مشتریان </span></div>
+            </a>
+        </div>
+
+    </div>
+}
+@if (User.IsInRole("admin") || User.IsInRole("sendSms") || User.IsInRole("createSms"))
+{
+    <div class="row">
+        <br />
+        <h4 class="col-xs-12">سیستم ارسال پیامک به مشتری</h4>
+    </div>
+    <div class="row">
+        @if (User.IsInRole("admin") || User.IsInRole("sendSms"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/smsCategory/Send" style="background-color: #978f02;">
+                    <strong class="carttitleposition">ارسال پیامک به مشتری</strong>
+                    <br />
+                    <i class="fa fa-comment fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">مدیریت ارسال پیامک </span></div>
+                </a>
+            </div>
+        }
+    </div>
+}
+@if (User.IsInRole("admin") || User.IsInRole("printingHouse"))
+{
+    <div class="row">
+        <br />
+        <h4 class="col-xs-12">سیستم ارسال فکس</h4>
+    </div>
+    <div class="row">
+        @if (User.IsInRole("admin") || User.IsInRole("createUsableProduct"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/usableproduct/index" style="background-color: deeppink;">
+                    <strong class="carttitleposition">محصول چاپخانه</strong>
+                    <br />
+                    <i class="fa v-middle"><span class="fa fa-product-hunt fa-5x"></span></i>
+                    <div class="square"><span class="desc">ایجاد محصول چاپخانه </span></div>
+                </a>
+            </div>
+        }
+
+        @if (User.IsInRole("admin") || User.IsInRole("orderUsableProduct") || User.IsInRole("orderUsableProductManagerBranch"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/fax/index" style="background-color: #607D8B;">
+                    <strong class="carttitleposition">ثبت سفارش </strong>
+                    <br />
+                    <i class="fa v-middle"><span class="fa fa-industry fa-5x"></span></i>
+                    <div class="square"><span class="desc">ثبت سفارش و ارسال از طریق فکس </span></div>
+                </a>
+            </div>
+        }
+        @if (User.IsInRole("admin") || User.IsInRole("printingHouse"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/printingHouse/FinalOrderPrintinHouse" style="background-color: #303F9F;">
+                    <strong class="carttitleposition">پیگیری سفارشات شعب </strong>
+                    <br />
+                    <i class="fa v-middle"><span class="fa fa-envelope  fa-5x"></span></i>
+                    <div class="square"><span class="desc">مشاهده لیست سفارشات شعب </span></div>
+                </a>
+            </div>
+        }
+    </div>
+}
+
+@if (User.IsInRole("admin") || User.IsInRole("foodRegistration"))
+{
+    <div class="row">
+        <br />
+        <h4 class="col-xs-12">ثبت  غذا</h4>
+    </div>
+    <div class="row">
+        @if (User.IsInRole("admin") || User.IsInRole("foodRegistration"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/foodRegistration/Index" style="background-color: #978f02;">
+                    <strong class="carttitleposition">ثبت غذا</strong>
+                    <br />
+                    <i class="fa fa-spoon fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">ثبت غذا</span></div>
+                </a>
+            </div>
+        }
+    </div>
+}
+@if (User.IsInRole("admin") || User.IsInRole(""))
+{
+    <div class="row">
+        <br />
+        <h4 class="col-xs-12">تصاویر محصولات اینستاگرام</h4>
+    </div>
+    <div class="row">
+        @if (User.IsInRole("admin") || User.IsInRole(""))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/InstagramPost/List" style="background-color: deeppink;">
+                    <strong class="carttitleposition">اینستاگرام</strong>
+                    <br />
+                    <i class="fa fa-instagram fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">اینستاگرام و محصولات</span></div>
+                </a>
+            </div>
+        }
+    </div>
+}
+@if (User.IsInRole("admin") || User.IsInRole("ticket"))
+{
+    <div class="row">
+        <br />
+        <h4 class="col-xs-12">سیستم تیکت</h4>
+    </div>
+    <div class="row">
+        @if (User.IsInRole("admin") || User.IsInRole("ticket"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/ticket" style="background-color: deepskyblue;">
+                    <strong class="carttitleposition">تیکت</strong>
+                    <br />
+                    <i class="fa fa-send fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">ارسال تیکت</span></div>
+                </a>
+            </div>
+        }
+    </div>
+}
+
+@if (User.IsInRole("admin") || User.IsInRole("companyInvoice"))
+{
+    <div class="row">
+        <br />
+        <h4 class="col-xs-12">صدور فاکتور حقوقی</h4>
+    </div>
+    <div class="row">
+        @if (User.IsInRole("admin") || User.IsInRole("companyInvoice"))
+        {
+            <div class="col-xs-12 col-sm-6 col-lg-2 text-center ">
+                <a class="item block bg-success item-opacity" href="/companyInvoice" style="background-color: #978f02;">
+                    <strong class="carttitleposition">صدور فاکتور حقوقی</strong>
+                    <br />
+                    <i class="fa fa-sticky-note fa-5x v-middle"></i>
+                    <div class="square"><span class="desc">صدور فاکتور حقوقی یا شرکتی</span></div>
+                </a>
+            </div>
+        }
+    </div>
+}
+@section scripts {
+    <script type="text/javascript">
+
+        $(function () {
+            $('#staticParent').on('keydown', '.form-control', function (e) { -1 !== $.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) || (/65|67|86|88/.test(e.keyCode) && (e.ctrlKey === true || e.metaKey === true)) && (!0 === e.ctrlKey || !0 === e.metaKey) || 35 <= e.keyCode && 40 >= e.keyCode || (e.shiftKey || 48 > e.keyCode || 57 < e.keyCode) && (96 > e.keyCode || 105 < e.keyCode) && e.preventDefault() });
+        })
+
+        $("#form").find("[name]").each(function (index, element) {
+            moneySeparator(element);
+        });
+
+        $("#modalShow").click(function () {
+            $("#importModal").modal("show")
+        });
+        $("#branchGoldModalShow").click(function () {
+            $("#branchGoldWeight").val("")
+            $("#price").val("")
+            $("#branchGoldModal").modal("show")
+            goldWeightList($("#hiddenDate").val())
+        });
+        $("#btnSaveBranchGold").click(function () {
+            var time = new Date();
+            var entity =
+            {
+                price: $("#price").val().replaceAll(",", ""),
+                date: $("#hiddenDate").val(),
+                hour: time.getHours(),
+                minute: time.getMinutes(),
+                second: time.getSeconds(),
+                weight: $("#branchGoldWeight").val()
+            }
+            if (!entity.price) {
+                alert("قیمت طلا به درستی وارد نشده است.")
+                return
+            }
+            if (!entity.weight) {
+                alert("وزن طلا به درستی وارد نشده است.")
+                return
+            }
+            loader(true);
+            $.post('/branchgold/save', entity, function (response) {
+                loader(false);
+                if (response.status == 200) {
+
+                    $("#branchGoldModal").modal("hide");
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        });
+        function goldWeightList(date) {
+            $.get('/branchgold/search', { date: date }, function (response) {
+                loader(false);
+                if (response.status == 200) {
+
+                    var data = response.data;
+                    var template = $.templates("#template-soldGold");
+                    var htmlOutput = template.render(data);
+                    $(".soldGold-modal").html(htmlOutput);
+
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        }
+
+        $(".btnDeleteVal").on("click", function () {
+            $(".deleteVal").val(null);
+        });
+
+        $("#calculate").click(function () {
+            var staticnum = 0.91743119266
+            var staticnum2 = 0.93457943925;
+            var weight = parseFloat($('#weight').val());
+            var wage = parseFloat($('#wage').val().replace(/,/g, ""));
+            var stoneLeatherPrice = parseFloat($('#stoneLeatherPrice').val().replace(/,/g, ""));
+            var finalProductPrice = parseFloat($('#finalProductPrice').val().replace(/,/g, ""));
+            var notRoundedGoldPrice = ((((finalProductPrice * 0.91743119266) - stoneLeatherPrice)) * 0.93457943925) / weight - wage;
+            var roundedGoldPrice = Math.ceil(notRoundedGoldPrice / 10000) * 10000;
+            $("#roundedGoldPrice").val(toSeparator(roundedGoldPrice));
+        });
+
+    </script>
+    <script id="template-soldGold" type="text/x-jsrender">
+        {{if list != null && list.length > 0}}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ساعت</th>
+                    <th>وزن</th>
+                    <th>قیمت</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td>{{:stringDate}}</td>
+                    <td>{{:weight}} گرم</td>
+                    <td>{{:stringPrice}} ریال</td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        {{else}}
+        <h5>سوابقی برای این روز یافت نشد</h5>
+        {{/if}}
+    </script>
+}
+
+

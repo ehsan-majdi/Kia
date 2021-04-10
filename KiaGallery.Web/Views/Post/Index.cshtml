@@ -1,0 +1,231 @@
+﻿
+@{
+    ViewBag.Title = "مدیریت پست";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="control-section" class="form-inline">
+
+            <a href="/post/add" class="btn btn-primary">
+                <i class="fa fa-plus v-middle" aria-hidden="true"></i>&nbsp;
+                <span>جدید</span>
+            </a>
+
+            <a id="btnPrint" href="#" class="btn btn-success">
+                <i class="fa fa-print v-middle" aria-hidden="true"></i>&nbsp;
+                <span>چاپ گزارش کلی</span>
+            </a>
+            <input id="txtSearch" type="text" class="form-control w70" placeholder="عبارت جستجو">
+           <button id="btnSearch" class="btn btn-info"><i class="fa fa-search"></i> جستجو</button>
+
+        </div>
+    </div>
+</div>
+
+<div id="content">
+
+</div>
+<input type="hidden" id="hiddenPostId" />
+<div id="refIdModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4>افزودن کد رهگیر</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group" id="staticParent">
+                        <div>
+                            <span> کد رهگیری </span>
+                            <input class="form-control number-only" type="text" id="refId" name="refId">
+                        </div>
+                    </div>
+                </form>
+                <div class="soldGold-modal"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" id="btnSubmit" type="button"><i class="fa fa-check">&nbsp;</i>ثبت</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 50
+        }
+
+        $(window).on('hashchange', function () {
+            getList();
+        });
+        $(document).on("click", "#btnSearch", function (event) {
+            event.preventDefault()
+            var term = $("#txtSearch").val();
+           
+            if (term != null && term != "") {
+                var param = { term: term }
+                manipulateParam(param, "page");
+            }
+            else {
+                removeParam(["term", "page"]);
+                defaultEntity.term = null;
+            }
+
+
+        });
+        $(document).ready(function () {
+            getList();
+            $(document).on("click", ".addRefId", function (event) {
+                $("#refIdModal").modal("show");
+                var id = $(this).attr("data-id")
+                $("#hiddenPostId").val(id)
+                $.post("/post/loadRefId/" + id, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+
+                        $("#refId").val(response.data)
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                })
+            });
+            $(document).on("click", "#btnSubmit", function (event) {
+
+                var id = $("#hiddenPostId").val();
+                loader(true);
+                $.post("/post/saveRefId/", { id: id, trackingCode: $("#refId").val() }, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        $("#refIdModal").modal("hide");
+                        callbackAlert(response.message, function () {
+                            getList();
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                })
+
+
+            });
+
+
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف پست اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/post/delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+
+            $("#btnPrint").on("click", function () {
+                var itemList = new Array();
+                $(".post-item:checked").each(function () {
+                    itemList.push($(this).val());
+                });
+
+                if (itemList.length <= 0) {
+                    alert("حداقل یک مورد جهت چاپ ضروری است.");
+                    return;
+                }
+
+                window.open("/post/printAll/" + itemList.join(","), "_blank")
+            });
+
+        });
+
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+
+            loader(true);
+            $.get("/post/search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>شهر</th>
+                    <th>شماره فاکتور</th>
+                    <th>تعداد</th>
+                    <th>وزن</th>
+                    <th>کاربر ثبت کننده</th>
+                    <th>مشتری</th>
+                    <th>تاریخ ثبت</th>
+                    <th>تاریخ تحویل به پست</th>
+                    <th>کد رهگیری</th>
+                    <th class="icon-col text-center">افزودن کد رهگیری</th>
+                    <th class="icon-col text-center">چاپ</th>
+                    @if (User.IsInRole("admin") || User.IsInRole("post-edit"))
+                    {
+                        <th class="icon-col text-center">ویرایش</th>
+                        <th class="icon-col text-center">حذف</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <th><input type="checkbox" class="post-item" value="{{:id}}" /></th>
+                    <td>{{:cityName}}</td>
+                    <td>{{:invoiceNo}}</td>
+                    <td>{{:count}}</td>
+                    <td>{{:weight}}</td>
+                    <td>{{:submitUser}}</td>
+                    <td>{{:customer}}</td>
+                    <td>{{:submitDate}}</td>
+                    <td>{{:postDate}}</td>
+                    <td>{{:trackingCode}}</td>
+
+                    <td class="addRefId" data-id="{{:id}}"><span class="btn btn-primary btn-xs"><i class=" fa fa-plus"></i></span></td>
+                    <td class="txt-al-c">
+                        <a href="/post/print/{{:id}}" class="btn btn-primary btn-xs" data-title="چاپ"><i class="fa fa-print" aria-hidden="true"></i></a>
+                    </td>
+                    @if (User.IsInRole("admin") || User.IsInRole("post-edit"))
+                    {
+                        <td class="txt-al-c">
+                            <a href="/post/edit/{{:id}}" class="btn btn-primary btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                        </td>
+                        <td class="txt-al-c">
+                            <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                        </td>
+                    }
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+}

@@ -1,0 +1,1177 @@
+﻿
+@{
+    ViewBag.Title = "مدیریت عکس";
+}
+
+<h4>مدیریت عکس ها</h4>
+
+<link href="~/Content/ios-switch-rtl.css" rel="stylesheet" />
+<link href="~/content/order-page.css" rel="stylesheet" />
+
+<style>
+    .download-button {
+        color: green;
+        margin-top: 30px
+    }
+
+    th {
+        text-align: center;
+    }
+
+    td {
+        text-align: center
+    }
+
+    .product-item .small-font .fa {
+        width: 25px;
+        color: #555;
+        text-align: center;
+    }
+
+    .site-label {
+        margin: 0 7px;
+    }
+
+        .site-label .chk {
+            margin: 0;
+            vertical-align: middle;
+            margin-left: 3px;
+        }
+    /*#filter-list {
+        width: 100% !important;
+    }*/
+    .related {
+        left: 35px !important;
+    }
+
+    .set {
+        left: 60px !important;
+    }
+
+    @@media only screen and (min-width : 992px) {
+        #menu-holder {
+            width: calc(75% - 112px);
+        }
+    }
+    /*.chkType-group{
+        display:none;
+    }*/
+    .fixed-filter {
+        position: fixed;
+        z-index: 10;
+        height: 100%;
+        overflow-x: hidden;
+        padding-left: 15px;
+    }
+
+    .open-chkType {
+        cursor: pointer;
+    }
+
+    .photography {
+        color: gray;
+        cursor: pointer
+    }
+
+    .green-check {
+        color: green !important
+    }
+
+    .red-close {
+        color: red !important
+    }
+
+    .grayscale {
+        -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+        filter: grayscale(100%);
+    }
+
+    #imageCount {
+        width: 25%;
+        display: inline-block;
+        border: 1px solid red;
+        text-align: center;
+        border-radius: 13px;
+        margin-right: 83px;
+        color: red;
+        font-weight: bold
+    }
+</style>
+
+<div class="row" style="min-height: 85vh">
+    <div class="col-md-3 " style="">
+        <div id="filter-list" class="fixed-filter navbar-search hidden-xs  hidden-sm">
+            <div><input class="form-control txtCode" type="text" placeholder="جستجو..." name="code" /></div>
+            <br />
+            <label> فیلتر مدیریت عکس ها</label>
+
+            <span id="imageCount"></span>
+
+            <div class="">
+                @*<div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkFirstPhoto" name="firstPhoto" value=""><span>رجبی</span></label></div></div>*@
+                @*<div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkSecondPhoto" name="secondPhoto" value=""><span>هدیه نیلوفر</span></label></div></div>*@
+
+                <div>
+                    <span> کد سایت</span>
+                    <select class="form-control chkHasNotCode">
+                        <option value="">...</option>
+                        <option value="true">دارد</option>
+                        <option value="false">ندارد</option>
+                    </select>
+                </div>
+                <div>
+                    <span>عکس مدل</span>
+                    <select class="form-control chkModelImage">
+                        <option value="">...</option>
+                        <option value="true">دارد</option>
+                        <option value="false">ندارد</option>
+                    </select>
+                </div>
+                <div>
+                    <span>عکس زمینه سفید</span>
+                    <select class="form-control chkWhiteBack">
+                        <option value="">...</option>
+                        <option value="true">دارد</option>
+                        <option value="false">ندارد</option>
+                    </select>
+                </div>
+                <div>
+                    <span>عکس سایت</span>
+                    <select class="form-control chkSiteImage">
+                        <option value="">...</option>
+                        <option value="true">دارد</option>
+                        <option value="false">ندارد</option>
+                    </select>
+                </div>
+                <div>
+                    <span>عکس سفارش</span>
+                    <select class="form-control chkOrderImage">
+                        <option value="">...</option>
+                        <option value="true">دارد</option>
+                        <option value="false">ندارد</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label>فیلتر محصولات</label>
+                <div class="chkType-group">
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="0"><span>دستبند زنجير طلا</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="11"><span>دستبند چرمی</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="12"><span>دستبند ریلی</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="13"><span>دستبند سنگی</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="9"><span>النگو</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="1"><span>گردنبند</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="8"><span>آویز</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="3"><span>انگشتر</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="2"><span>گوشواره</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="4"><span>آویز ساعت</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="7"><span>پابند</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="6"><span>ست</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="5"><span>سنجاق سینه</span></label></div></div>
+                    @*<div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="type" value="10"><span>خرج کار</span></label></div></div>*@
+                </div>
+
+                @*<div class="chkType-group-other">
+                        <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkSex" type="checkbox" name="sex" value="1"><span>مردانه</span></label></div></div>
+                        <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkSex" type="checkbox" name="sex" value="2"><span>زنانه</span></label></div></div>
+                        <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkSex" type="checkbox" name="sex" value="3"><span>کودک</span></label></div></div>
+                    </div>*@
+
+                @*<h5>جدید</h5>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkNew" type="checkbox" name="isNew" value="true"><span>جدید</span></label></div></div>
+
+                    <h5>موارد مرتبط دارد</h5>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkRelated" type="checkbox" name="related" value="true"><span>موارد مرتبط دارد</span></label></div></div>
+                    <h5>موارد ست دارد</h5>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkSet" type="checkbox" name="set" value="true"><span>موارد ست دارد</span></label></div></div>
+
+
+                    <h5>جنسیت</h5>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkSex" type="checkbox" name="sex" value="1"><span>مردانه</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkSex" type="checkbox" name="sex" value="2"><span>زنانه</span></label></div></div>
+                    <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkSex" type="checkbox" name="sex" value="3"><span>کودک</span></label></div></div>*@
+
+                @*<div class="filter-item">
+                        <button class="btn btn-default clear-params" style="width: 100%;"><i class="fa fa-filter" aria-hidden="true"></i> حذف فیلتر ها</button>
+                    </div>*@
+                <br />
+                <br />
+                <br />
+                <br />
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-9 col-md-offset-3">
+        <div id="menu-holder" class="affix" style="top:50px">
+            <div id="menu">
+                <ul>
+                    <li><a id="all-workshop" href="#">همه</a></li>
+                    @foreach (KiaGallery.Model.Context.Workshop item in ViewBag.Workshop)
+                    {
+                        if (string.IsNullOrEmpty(item.Color))
+                        {
+                            <li><a href="#!" class="workshop-item ltr" data-id="@item.Id">@item.Name</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="#!" class="workshop-item ltr" data-id="@item.Id" style="color: #@(item.Color);">@item.Name</a></li>
+                        }
+                    }
+                    <li><a id="fav" href="#"><span class="fa fa-heart v-top red"></span></a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="productList" class="col-xs-12">
+        </div>
+        <div class="col-xs-12">
+            <h6 class="more txt-al-c">
+                <span class="icon mdi-set mdi-chevron-double-down"></span><span>بیشتر...</span>
+            </h6>
+        </div>
+    </div>
+</div>
+
+
+<div id="modalUploadFile" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">تصویر جدید</h4>
+            </div>
+            <div class="modal-body">
+                <div id="screenshot" class="form-group txt-al-c">
+                    <div class="form-group txt-al-c circle" id="clear">
+                        <div>
+                            <img id="screenshot-img" style="display:none;width:348px;height:349px;object-fit:cover;">
+                        </div>
+                        <img id="imgUserImage" src="~/content/image/kia-gallery-logo-square.png" style="height:350px;max-width: 350px;" />
+                        <video class="videostream" autoplay style="display:none;max-width: 348px;height:349px;object-fit:cover;"></video>
+                    </div>
+                    <p><button class="hidden" id="screenshot-button" disabled>Take screenshot</button></p>
+                    <div class="progress hidden">
+                        <div id="progressBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                            <span class="sr-only">45%</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input id="file" type="file" class="hidden" />
+                        <select id="cmbFileType" class="form-control">
+                            <option value="4">مدل</option>
+                            <option value="2">ربات و سایت</option>
+                        </select>
+                    </div>
+                    <div class="form-group txt-al-c">
+                        <i id="openFile" class="fa fa-upload btn btn-success btn-icon" aria-hidden="true"></i>
+
+                        <i class="capture-button btn btn-info fa fa-camera" style="display: none;"></i>
+                        <i style="display:none;" id="btnSubmitImage" class="btn btn-success fa fa-check"></i>
+                    </div>
+                    <div class="form-group txt-al-c">
+                        <input type="submit" value="ذخیره" id="btnSave" class="btn btn-success" />
+                    </div>
+                    <input type="hidden" id="camreImageName" />
+                    <input type="hidden" id="hiddenFileName" />
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="downloadModal" class="modal">
+    <div class="modal-dialog" id="form">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">دانلود عکس</h4>
+            </div>
+            <div class="modal-body col-md-12">
+                <div id="content-modal"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hidden-sm hidden-md hidden-lg fab-filter">
+    <span class="fa fa-filter fab-filter-icon"></span>
+</div>
+
+<input type="hidden" id="hiddenProductId" />
+
+@section Scripts {
+    <script type="text/javascript">
+        console.log($("#hiddenProductId").val())
+        $(window).on('hashchange', function () {
+            getList();
+        });
+       $(document).ready(function () {
+            //$(document).on("click", ".secondphotography", function () {
+            //    var productId = $(this).attr("data-product-id");
+            //    if (!$(this).hasClass("grayscale")) {
+            //        confirmMessage("آیا از تغییر وضعیت به تحویل از هدیه نیلوفر اطمینان دارید؟", function () {
+            //            changeStatus(false, 1, productId)
+            //            if ($(".chkSecondPhoto").prop("checked")) {
+            //                location.reload()
+            //            }
+            //        });
+            //    }
+            //    else {
+            //        confirmMessage("آیا از ارسال  به هدیه نیلوفر اطمینان دارید؟", function () {
+            //            changeStatus(true, 1, productId)
+            //        });
+            //    }
+            //});
+            //$(document).on("click",".firstphotography", function () {
+            //    var productId = $(this).attr("data-product-id");
+            //    if (!$(this).hasClass("grayscale")) {
+            //        confirmMessage("آیا از تغییر وضعیت به تحویل از عکاسی رجبی اطمینان دارید؟", function () {
+            //            changeStatus(false, 0, productId)
+            //            if ($(".chkFirstPhoto").prop("checked")) {
+            //                location.reload()
+            //            }
+            //        });
+            //    }
+            //    else {
+
+            //        confirmMessage("آیا از ارسال  به عکاسی رجبی اطمینان دارید؟", function () {
+            //            changeStatus(true, 0, productId)
+            //        });
+            //    }
+
+            //});
+             $("#file").on("change", function () {
+                save()
+            });
+            $("#btnUploadNewImage").on("click", function (event) {
+                event.preventDefault();
+                $("#hiddenProductId").val($(this).attr("data-product-id"))
+                $("#cmbFileType").val("");
+                $('.progress .progress-bar').css('width', '0%');
+
+                $("#modalUploadFile").modal('show');
+            });
+
+            $("#openFile").on("click", function () {
+                if ($("#cmbFileType").val() != "") {
+
+                    $("#file").click();
+                }
+                else {
+                    alert("ابتدا نوع فایل را مشخص کنید.");
+                }
+            });
+
+            //$('#file').fileupload({
+            //    dataType: 'json',
+            //    url: "/base/upload?path=Product",
+            //    autoUpload: true,
+            //    done: function (e, data) {
+            //        var response = data.result;
+            //        if (response.status == 200) {
+            //            addFile($("#cmbFileType").val(), response.data.name);
+            //            $("#hiddenFileName").val(response.data.name);
+            //            console.log(response.data.name)
+
+            //            //$("#modalUploadFile").modal('hide');
+
+            //        }
+            //        alert(response.message);
+            //        loader(false);
+            //    }
+            //}).on('fileuploadprogressall', function (e, data) {
+            //    var progress = parseInt(data.loaded / data.total * 100, 10);
+            //    $('.progress .progress-bar').css('width', progress + '%');
+            //});
+
+
+
+            //$("#firstpic").on("click", function () {
+            //    var productId = $("#hiddenProductId").val();
+
+            //    changeStatus(true, 0, productId)
+            //});
+            //$("#secondpic").on("click", function () {
+            //    var productId = $("#hiddenProductId").val();
+
+            //    changeStatus(true, 1, productId)
+            //});
+
+
+            $(".open-chkType").on("click", function (event) {
+                event.preventDefault();
+                $(".chkType-group").slideToggle("slow");
+                $(this).toggleClass("fa-plus").toggleClass("fa-minus");
+            });
+
+            var page = getParam()["page"];
+            if (page)
+                removeParam(["page"]);
+            else
+                getList();
+
+            var flag = true;
+            $(window).scroll(function () {
+                var isElementInView = Utils.isElementInView($('.more'), false);
+
+                if (flag && !$('.more').hasClass("hide") && isElementInView) {
+                    flag = false;
+                    setTimeout(function () {
+                        flag = true;
+                    }, 500);
+
+                    var page = getParam()["page"];
+                    if (page)
+                        setParam("page", ++page);
+                    else
+                        setParam("page", 1);
+                }
+            });
+
+            $("#all-workshop").on("click", function (event) {
+                event.preventDefault();
+                removeParam(["fav", "workshopId", "page"]);
+            });
+
+            $("#fav").on("click", function (event) {
+                event.preventDefault();
+                manipulateParam({ fav: true }, ["workshopId", "page"]);
+            });
+
+            $(document).on("change", ".chkType", function (event) {
+                var value = $(document).find("input[type=checkbox][name=type]:checked").map(function () {
+                    return $(this).val();
+                }).get();
+
+                if (value.length > 0) {
+                    var param = { type: value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["type", "page"]);
+                }
+            });
+
+            $(document).on("change", ".chkSex", function (event) {
+                var value = $(document).find("input[type=checkbox][name=sex]:checked").map(function () {
+                    return $(this).val();
+                }).get();
+
+                if (value.length > 0) {
+                    var param = { sex: value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["sex", "page"]);
+                }
+            });
+
+            $(document).on("keyup", ".txtCode", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    if ($(this).val()) {
+                        var param = { term: $(this).val() }
+                        manipulateParam(param, "page");
+                    }
+                    else
+                        removeParam("term");
+                }
+            });
+
+            $(document).on("change", ".chkNew", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { isNew: true }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["isNew", "page"]);
+                }
+            });
+
+            //$(document).on("change", ".chkFirstPhoto", function (event) {
+            //    if ($(this).prop("checked")) {
+            //        var param = { firstPhoto: true }
+            //        manipulateParam(param, "page");
+            //    }
+            //    else {
+            //        removeParam(["firstPhoto", "page"]);
+            //    }
+            //});
+            //$(document).on("change", ".chkSecondPhoto", function (event) {
+            //    if ($(this).prop("checked")) {
+            //        var param = { secondPhoto: true }
+            //        manipulateParam(param, "page");
+            //    }
+            //    else {
+            //        removeParam(["secondPhoto", "page"]);
+            //    }
+            //});
+
+
+            $(document).on("change", ".chkHasNotCode", function (event) {
+                if ($(this).val()) {
+                    var param = { hasNotCode: $(this).val() }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["hasNotCode", "page"]);
+                }
+            });
+
+
+            $(document).on("change", ".chkModelImage", function (event) {
+                if ($(this).val()) {
+                    var param = { modelImage: $(this).val() }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["modelImage", "page"]);
+                }
+            });
+
+            $(document).on("change", ".chkWhiteBack", function (event) {
+                if ($(this).val()) {
+                    var param = { whiteBack: $(this).val() }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["whiteBack", "page"]);
+                }
+            });
+
+            $(document).on("change", ".chkSiteImage", function (event) {
+                if ($(this).val()) {
+                    var param = { siteImage: $(this).val() }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["siteImage", "page"]);
+                }
+            });
+
+            $(document).on("change", ".chkOrderImage", function (event) {
+                if ($(this).val()) {
+                    var param = { orderImage: $(this).val() }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["orderImage", "page"]);
+                }
+            });
+
+            $(".fab-filter").on("click", function () {
+                $("#modal-filter .modal-body").html($("#filter-list").html());
+                $("#modal-filter").modal("show");
+
+                updateForm();
+            });
+
+            $(document).on("click", ".workshop-item", function (event) {
+                event.preventDefault();
+                var entity = {
+                    workshopId: $(this).attr("data-id")
+                };
+                $("#productList").empty();
+                manipulateParam(entity, ["fav", "page"]);
+            });
+
+
+        });
+
+    function save() {
+
+        var params = { id:$("#hiddenProductId").val(), type: $("#cmbFileType").val() };
+        var filesList = $("#file").prop("files");
+        $("#file").fileupload({
+            dataType: 'json',
+            url: "/product/uploadFile",
+            formData: params,
+            autoUpload: false,
+            start: function () {
+                $("#progressBar").closest(".progress").removeClass("hidden");
+            },
+            success: function (response, textStatus, jqXHR) {
+                $("#fileModal").find("button").prop("disabled", false);
+                $("#fileModal").find("input").prop("disabled", false);
+                $("#fileModal").find("textarea").prop("disabled", false);
+                $("#fileModal").find("select").prop("disabled", false);
+                $("#file").fileupload("destroy");
+
+                if (response.status === 403 || response.status === 401) {
+                    document.location.href = "/login?redirect=" + document.location.pathname;
+                }
+                else if (response.status === 200) {
+                   addFile($("#cmbFileType").val(), response.data.name);
+                   $("#hiddenFileName").val(response.data.name);
+                     console.log(response.data.name)
+
+                }
+                else {
+                    alert(response.message);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $("#file").fileupload("destroy");
+                $("#progressBar").closest(".progress").removeClass("hidden");
+            },
+            complete: function (result, textStatus, jqXHR) {
+                $("#file").fileupload("destroy");
+                $("#progressBar").closest(".progress").addClass("hidden");
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                console.log(progress)
+                $('#progressBar').css({ 'width': progress + "%" });
+                $('#progressBar').find(".sr-only").html(progress + "%");
+                if (progress == 100) {
+                    $('#progressBar').css({ 'background-color': 'green' });
+                }
+            }
+        });
+
+        $("#file").fileupload('send', { files: filesList });
+    }
+        function getImage(id) {
+            loader(true)
+            $.get("/PhotographyManage/getImage/" + id, function (response) {
+                loader(false)
+                if (response.status == 200) {
+                    var data = response.data;
+                    var modalTemplate = $.templates("#template-modal");
+                    var htmlOutput = modalTemplate.render(data);
+                    $("#content-modal").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false)
+            });
+            loader(false)
+
+        }
+
+        function changeStatus(status, photography, productId) {
+
+            var params = {
+                status: status,
+                photography: photography,
+                productId: productId,
+            };
+
+            loader(true);
+            $.post("/PhotographyManage/ChangeStatus", params, function (response) {
+                loader(false);
+                if (response.status == 200) {
+
+                    if (photography == 0) {
+                        if (!status)
+                            $(".firstphotography[data-product-id=" + productId + "]").addClass("grayscale");
+                        else
+                            $(".firstphotography[data-product-id=" + productId + "]").removeClass("grayscale");
+                    }
+                    else {
+                        if (!status)
+                            $(".secondphotography[data-product-id=" + productId + "]").addClass("grayscale");
+                        else
+                            $(".secondphotography[data-product-id=" + productId + "]").removeClass("grayscale");
+                    }
+
+                }
+            });
+        }
+
+        function addFile(type, fileName) {
+            $(".no-image").hide();
+            $(".table-image").removeClass("hidden");
+
+            var fileTypeTitle = "";
+            switch (parseInt(type)) {
+                case 0:
+                    fileTypeTitle = "زمینه سفید";
+                    break;
+                case 1:
+                    fileTypeTitle = "سفارش";
+                    break;
+                case 2:
+                    fileTypeTitle = "ربات و سایت";
+                    break;
+                case 3:
+                    fileTypeTitle = "سایر";
+                    break;
+                case 4:
+                    fileTypeTitle = "مدل";
+                    break;
+                case 5:
+                    fileTypeTitle = "دوربین";
+                    break;
+            }
+
+            var row =
+                "<tr class=\"file-list\" data-file-name=\"{{fileName}}\" data-file-type=\"{{fileType}}\">" +
+                "<td class=\"hidden-xs\">{{fileTypeTitle}}</td>" +
+                "<td> <img src=\"/image/product/500x500/{{fileName}}\" style=\"max-width:100px;height:100px;\" \></td>" +
+                "<td class=\"txt-al-c\">" +
+                "<select id=\"cmbPaddingImg\" class=\"form-control\"><option value=\"\">...</option><option value=\"0\">0</option><option value=\"12.5\">12.5</option><option value=\"25\">25</option><option value=\"37.5\">37.5</option><option value=\"50\">50</option><option value=\"62.5\">62.5</option><option value=\"75\">75</option><option value=\"87.5\">87.5</option><option value=\"100\">100</option></select>" +
+                "</td>" +
+                "<td class=\"txt-al-c\">" +
+                "<button class=\"delete-file btn btn-danger btn-xs\" data-title=\"حذف\"><i class=\"fa fa-times\" aria-hidden=\"true\"></i></button>" +
+                "</td>" +
+                "</tr>";
+
+            row = row.replaceAll("{{fileName}}", fileName).replaceAll("{{fileType}}", type).replaceAll("{{fileTypeTitle}}", fileTypeTitle)
+
+            if (type == 1) {
+                $("#orderFileName").attr("src", "/upload/product/" + fileName).show();
+            }
+
+            $(".table-body-image").append(row);
+        }
+
+        function getList() {
+            updateForm();
+
+            var entity = {
+                page: 0,
+                count: 24,
+                workshopId: null,
+                term: null,
+                type: [],
+                sex: [],
+                leatherBracelet: null,
+                isNew: null,
+                active: true,
+                firstPhoto: null,
+                secondPhoto: null,
+                siteImage: null,
+                whiteBack: null,
+                modelImage: null,
+                orderImage: null,
+                hasNotCode:null
+
+            };
+
+            var urlParams = getParam();
+            var params = $.extend(entity, urlParams);
+
+            if (params.page == 0) {
+                $("#productList").empty();
+            }
+
+            loader(true);
+            $('.more').addClass("hide");
+            $.post("/photographyManage/search", params, function (response) {
+                if (response.status == 200) {
+
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#productList").append(htmlOutput);
+                    $(".more").removeClass("hide");
+                    $("#imageCount").html(data.imageCount)
+                    if (response.data.pageCount == 0 || response.data.page == response.data.pageCount) {
+                        $(".more").addClass("hide");
+                    }
+                    else {
+                        $(".more").removeClass("hide");
+                    }
+
+                    $('[data-toggle="tooltip"]').tooltip();
+                    $(document).on('mouseenter', '.firstshow', 'fadeOut', function (event) {
+                        var src = $(this).attr("data-hover-file-name");
+                        if (src != undefined && src != "" && src != null) {
+                            $(this).attr("src", "/image/product/500x500/" + src);
+                            $(this).parent(".relative").css("padding" , "0px")
+
+                        }
+                    }).on('mouseleave', '.firstshow', function (event) {
+                        var src = $(this).attr("data-file-name");
+                        $(this).attr("src", "/image/product/500x500/" + src);
+                    });
+
+                    //$(".photography").on("click", function () {
+                    //    var productId = $(this).attr("data-product-id");
+
+                    //    $("#hiddenProductId").val(productId);
+
+                    //});
+
+                    $(".download").on("click", function () {
+                        var id = $(this).attr("data-product-id");
+                        getImage(id)
+                        $("#downloadModal").modal("show")
+
+                    });
+                    $(".btnUploadNewImage").on("click", function (event) {
+                        var productId = $(this).attr("data-product-id");
+                        $("#hiddenProductId").val(productId)
+                        event.preventDefault();
+
+                        $("#cmbFileType").val("");
+                        $('.progress .progress-bar').css('width', '0%');
+
+                        $("#modalUploadFile").modal('show');
+                        $("#btnSave").on("click", function (event) {
+                            event.preventDefault();
+
+                            var entity = {
+                                productId: productId,
+                                fileName: $("#hiddenFileName").val(),
+                                fileType: $("#cmbFileType").val()
+                            };
+                            loader(true);
+                            $.post("/photographymanage/SaveProductImage", entity, function (response) {
+                                loader(false);
+                                if (response.status == 200) {
+
+                                    document.location = "/photographymanage";
+
+                                }
+                                else {
+                                    alert(response.message);
+                                }
+                            });
+
+
+                        });
+
+                    });
+
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+
+
+        }
+
+        function updateForm() {
+            var params = getParam();
+
+            if (params["fav"]) {
+                $("#menu li").removeClass("active");
+                $("#fav").closest("li").addClass("active");
+            }
+            else {
+                // workshop id
+                $("#menu li").removeClass("active");
+                if (params["workshopId"] && params["workshopId"] >= 0)
+                    $("#menu li a[data-id=" + params["workshopId"] + "]").closest("li").addClass("active");
+                else
+                    $("#menu li:first").addClass("active");
+            }
+
+            // term
+            if (params["term"]) {
+                $(".txtCode").val(params["term"]);
+            }
+            else {
+                $(".txtCode").val("");
+            }
+
+            // type
+            if (params["type"]) {
+                var typeList = params["type"];
+                $(".chkType").each(function (index, element) {
+                    if (typeList.indexOf($(this).val()) >= 0) {
+                        $(this).prop("checked", true);
+                    }
+                    else {
+                        $(this).prop("checked", false);
+                    }
+                });
+            }
+            else {
+                $(".chkType").prop("checked", false);
+            }
+            //sex
+            if (params["sex"]) {
+                var typeList = params["sex"];
+                $(".chkSex").each(function (index, element) {
+                    if (typeList.indexOf($(this).val()) >= 0) {
+                        $(this).prop("checked", true);
+                    }
+                    else {
+                        $(this).prop("checked", false);
+                    }
+                });
+            }
+            else {
+                $(".chkSex").prop("checked", false);
+            }
+
+            //is New
+            if (params["isNew"]) {
+                $(".chkNew").prop("checked", true);
+            }
+            else {
+                $(".chkNew").prop("checked", false);
+            }
+
+            // is related
+            if (params["related"]) {
+                $(".chkRelated").prop("checked", true);
+            }
+            else {
+                $(".chkRelated").prop("checked", false);
+            }
+
+            // is set
+            if (params["set"]) {
+                $(".chkSet").prop("checked", true);
+            }
+            else {
+                $(".chkSet").prop("checked", false);
+            }
+
+            // is firstphoto
+            if (params["firstPhoto"]) {
+                $(".chkFirstPhoto").prop("checked", true);
+            }
+            else {
+                $(".chkFirstPhoto").prop("checked", false);
+            }
+
+            // is secondphoto
+            if (params["secondPhoto"]) {
+                $(".chkSecondPhoto").prop("checked", true);
+            }
+            else {
+                $(".chkSecondPhoto").prop("checked", false);
+            }
+             if (params["hasNotCode"]) {
+                $(".chkHasNotCode").prop("checked", true);
+            }
+            else {
+                $(".chkHasNotCode").prop("checked", false);
+            }
+            //  modelImage
+            if (params["modelImage"]) {
+                $(".chkModelImage").prop("checked", true);
+            }
+            else {
+                $(".chkModelImage").prop("checked", false);
+            }
+
+            //  whiteBack
+            if (params["whiteBack"]) {
+                $(".chkWhiteBack").prop("checked", true);
+            }
+            else {
+                $(".chkWhiteBack").prop("checked", false);
+            }
+
+            //  siteImage
+            if (params["siteImage"]) {
+                $(".chkSiteImage").prop("checked", true);
+            }
+            else {
+                $(".chkSiteImage").prop("checked", false);
+            }
+
+              //  siteImage
+            if (params["orderImage"]) {
+                $(".chkOrderImage").prop("checked", true);
+            }
+            else {
+                $(".chkOrderImage").prop("checked", false);
+            }
+
+            // leather Bracelet
+            if (params["leatherBracelet"]) {
+                $("#chkLeatherBracelet").prop("checked", true);
+            }
+            else {
+                $("#chkLeatherBracelet").prop("checked", false);
+            }
+
+            $("#modal-filter").css({ "overflow-y": "scroll" });
+
+        }
+
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <div class="row">
+            {{for list}}
+            <div class="product-item col-sm-6 col-md-4 col-lg-3 pull-right">
+                <div style="background-color: white;@*{{if !modelImage}}border:1px solid red{{/if}}*@">
+                    <div class="relative" style="{{if !modelImage}}border:1px solid red{{/if}};padding:{{:paddingImg}}px;">
+
+                        {{if fileName}}
+                        {{if !modelImage}}
+                        <img class="" style="width:100%;" src="/image/product/500x500/{{:fileName}}" />
+                        {{else}}
+                        <img class="firstshow" style="width: 100%;" src="/image/product/500x500/{{:fileName}}" data-file-name="{{:fileName}}" data-hover-file-name="{{:modelImage}}" />
+                        {{/if}}
+                        {{else}}
+                        @*<img style="width: 100%;" src="/content/image/kia-gallery-logo-square.png" />*@
+                        <img class="" style="width:100%;" src="/image/product/500x500/{{:modelImage}}" />
+                        {{/if}}
+                        {{if code}}
+                        @*<img class="ribbon-image" src="/content/image/newicon.png" />*@
+                        <img class="ribbon-image" style="width:30px;height:30px" src="/content/image/ig-logo-email.png" />
+                        {{/if}}
+                        {{if productType == 10}}
+                        <img class="special-type" src="/content/image/kharje-kar.png" />
+                        {{/if}}
+
+                        @*<div class="photography-icon">
+                                <span style="cursor:pointer" data-product-id="{{:id}}" class="firstphotography {{if !firstPhoto}}grayscale{{/if}}"><img style="width:25px" src="/Content/Image/R.png" /></span>
+                                <span style="margin-left:5px;cursor:pointer;margin-top:10px" data-product-id="{{:id}}" class="secondphotography {{if !secondPhoto}}grayscale{{/if}}"><img style="width:25px" src="/Content/Image/HN (2).png" /></span>
+                            </div>*@
+
+                    </div>
+                    <div class="relative" style="padding: 10px 3px 3px 0;">
+                        {{if title}}
+                        <span class="block small-font" style="white-space: nowrap; overflow: hidden;">
+                            <i class="fa fa-file-text-o v-middle" aria-hidden="true"></i> {{:title}}
+                        </span>
+                        <span class="pull-left">
+                            {{if fileName}}
+                            زمینه سفید
+                            <i class="fa fa-check green-check"></i>
+                            {{else}}
+                            زمینه سفید
+                            <i class="fa fa-close red-close"></i>
+                            {{/if}}
+                        </span>
+                        {{else}}
+                        <span class="block small-font">
+                            <i class="fa fa-file-text-o v-middle" aria-hidden="true"></i> -
+
+                        </span>
+                        <span class="pull-left">
+                            {{if fileName}}
+                            زمینه سفید
+                            <i class="fa fa-check green-check"></i>
+                            {{else}}
+                            زمینه سفید
+                            <i class="fa fa-close red-close"></i>
+                            {{/if}}
+                        </span>
+                        {{/if}}
+                        {{if code}}
+                        <span class="block small-font">
+                            <i class="fa fa-list-alt v-middle" aria-hidden="true"></i> کد: {{:code}}
+
+                        </span>
+                        <span class="pull-left">
+                            {{if siteImage}}
+                            سایت
+                            <i class="fa fa-check green-check"></i>
+                            {{else}}
+                            سایت
+                            <i class="fa fa-close red-close"></i>
+                            {{/if}}
+                        </span>
+                        {{else}}
+                        <span class="block small-font">
+                            <i class="fa fa-list-alt v-middle" aria-hidden="true"></i> کد: -
+
+                        </span>
+                        <span class="pull-left">
+                            {{if siteImage}}
+                            سایت
+                            <i class="fa fa-check green-check"></i>
+                            {{else}}
+                            سایت
+                            <i class="fa fa-close red-close"></i>
+                            {{/if}}
+                        </span>
+                        {{/if}}
+                        {{if bookCode}}
+                        <span class="block small-font">
+                            <i class="fa fa-barcode v-middle" aria-hidden="true"></i> کد کارگاه: {{:bookCode}}
+
+                        </span>
+                        <span class="pull-left">
+                            {{if modelImage}}
+                            مدل
+                            <i class="fa fa-check green-check"></i>
+                            {{else}}
+                            مدل
+                            <i class="fa fa-close red-close"></i>
+                            {{/if}}
+                        </span>
+                        {{else}}
+                        <span class="block small-font">
+                            <i class="fa fa-barcode v-middle" aria-hidden="true"></i> کد کارگاه: -
+
+                        </span>
+                        <span class="pull-left">
+                            {{if modelImage}}
+                            مدل
+                            <i class="fa fa-check green-check"></i>
+                            {{else}}
+                            مدل
+                            <i class="fa fa-close red-close"></i>
+                            {{/if}}
+                        </span>
+                        {{/if}}
+                        {{if weight >= 0}}
+                        <span class="block small-font">
+                            <span class="block small-font">
+                                <i class="fa fa-balance-scale v-middle" aria-hidden="true"></i> وزن: {{:weight}}~
+                                {{if silverWeight}}
+                                <i class="fa fa-balance-scale v-middle" aria-hidden="true"></i>  وزن نقره: {{:silverWeight}}~
+                                {{/if}}
+                            </span>
+                            <span data-toggle="tooltip" title="دانلود عکس" style="margin-left:5px" data-product-id="{{:id}}" class="download pull-left"><span class="fa fa-arrow-circle-down fa-20px" style="color:gray;cursor:pointer"></span></span>
+                            <span data-toggle="tooltip" title="آپلود عکس" style="margin-left:5px" data-product-id="{{:id}}" class="btnUploadNewImage upload pull-left"><span class="fa fa-arrow-circle-up fa-20px" style="color:gray;cursor:pointer"></span></span>
+                        </span>
+                        {{else}}
+                        <span class="block small-font">
+                            <i class="fa fa-balance-scale v-middle" aria-hidden="true"></i> وزن: 0-
+                        </span>
+                        <span data-toggle="tooltip" title="دانلود عکس" style="margin-left:5px" data-product-id="{{:id}}" class="download"><span class="fa fa-arrow-circle-down fa-20px" style="color:gray;cursor:pointer"></span></span>
+                        <span data-toggle="tooltip" title="آپلود عکس" style="margin-left:5px" data-product-id="{{:id}}" class="btnUploadNewImage upload pull-left"><span class="fa fa-arrow-circle-up fa-20px" style="color:gray;cursor:pointer"></span></span>
+                        {{/if}}
+                        <hr style="margin: 3px 0 0 0;" />
+                    </div>
+                </div>
+            </div>
+            {{/for}}
+        </div>
+    </script>
+
+    <script id="template-modal" type="text/x-jsrender">
+        {{if list != null && list.length > 0}}
+        <div class="row">
+            <div>
+                {{for list}}
+                <div style="border-top: solid 1px silver">
+                    {{if whiteBack}}
+                    <div class="col-md-4 text-center">
+                        <img class="" style="width:100%;" src="/image/product/500x500/{{:whiteBack}}" />
+                        <a href="/upload/product/{{:whiteBack}}"><i class="fa fa-download fa-22px download-button"></i></a>
+                    </div>
+                    {{/if}}
+                    {{if modelImage}}
+                    <div class="col-md-4 text-center">
+                        <img class="" style="width:100%;" src="/image/product/500x500/{{:modelImage}}" />
+                        <a href="/upload/product/{{:modelImage}}"><i class="fa fa-download fa-22px download-button"></i></a>
+                    </div>
+                    {{/if}}
+                    {{if siteImage}}
+                    <div class="col-md-4 text-center">
+                        <img style="width:100%;" src="/image/product/500x500/{{:siteImage}}" />
+                        <br />
+                        <a href="/upload/product/{{:siteImage}}"><i class="fa fa-download fa-22px download-button"></i></a>
+                    </div>
+                    {{/if}}
+                </div>
+                {{/for}}
+            </div>
+        </div>
+        {{else}}
+        <h5>عکسی یافت نشد</h5>
+        {{/if}}
+    </script>
+}

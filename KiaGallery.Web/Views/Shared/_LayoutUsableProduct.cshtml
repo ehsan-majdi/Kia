@@ -1,0 +1,791 @@
+﻿<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/ios-switch-rtl.css" rel="stylesheet" />
+    <link href="~/content/internal-order-page.css" rel="stylesheet" />
+    <link href="~/content/fonts/fontawsome/font-awesome.css" rel="stylesheet" />
+    <link href="~/content/fonts/sans/fontiran.css" rel="stylesheet" />
+    <link href="~/content/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="~/content/chosen/chosen.css" rel="stylesheet" />
+    <link href="~/content/chosen/imageSelect.css" rel="stylesheet" />
+    <link href="~/Content/persian-datepicker.css" rel="stylesheet" />
+    <link href="~/content/general.css" rel="stylesheet" />
+    <link href="~/Content/froala/css/froala_style.css" rel="stylesheet" />
+    <link href="~/Content/froala/css/froala_editor.css" rel="stylesheet" />
+    <link href="~/content/site.css" rel="stylesheet" type="text/css" />
+    <script src="~/scripts/modernizr-2.8.3.js"></script>
+    <link href="~/Content/jqueryui/jquery-ui.css" rel="stylesheet" />
+
+</head>
+
+<body>
+    @{
+        var user = BaseController.GetAuthenticatedUser();
+        var PersianDate = KiaGallery.Common.DateUtility.GetPersianDate(DateTime.Now);
+    }
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-header pull-right">
+            <i id="btnShowNav" class="fa fa-bars" aria-hidden="true" onclick="openNav()" style="padding-right:22px"></i>
+            <div class="dropdown inline-block pull-right">
+                <span class="dropdown-toggle pointer" type="button" data-toggle="dropdown" style="padding: 5px; margin: 10px 14px 0 8px; color: #C4C4C4; display: inline-block;">
+                    <i class="fa fa-info-circle fa-18px v-middle" aria-hidden="true"></i>
+                    <span class="hidden-xs">راهنما</span>
+                </span>
+
+                @if (user.BranchId != null && user.BranchType == KiaGallery.Model.BranchType.Branch && User.IsInRole("phoneBook") || User.IsInRole("admin"))
+                {
+                    <a href="/home/phonebook" style="cursor:pointer;text-decoration:none"> <span class="hidden-xs" style="color:white"><i class="fa fa-book"></i> <i class="fa fa-phone"></i><span style="color:white;margin-right:5px;">&nbsp;</span></span></a>
+                }
+
+                <span class="hidden-xs" style="color:white;margin-right:70px;"><i class="fa fa-calendar"></i>&nbsp; @PersianDate </span>
+                <span class="hidden-xs"><i class="fa fa-clock-o" style="color:white;margin-right:70px"></i><span class="header-time" style="color:white;margin-right:5px;">&nbsp;</span></span>
+
+                <ul class="dropdown-menu help-dropdown">
+                    <li>
+                        <a>
+                            <img style="display:none" src="~/content/image/انگشتر.jpg" />
+                            <i class="v-nav-item fa fa-hand-pointer-o fa-16px" aria-hidden="true"></i>
+                            <span class="v-middle pop">راهنمای سایز انگشتر</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            <img style="display:none" src="~/content/image/دستبند.jpg" />
+                            <i class="v-nav-item fa fa-hand-grab-o fa-16px" aria-hidden="true"></i>
+                            <span class="v-middle pop">راهنمای سایز دستبند</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img style="display:none" src="" />
+                            <i class="v-nav-item fa fa-hand-grab-o fa-16px" aria-hidden="true"></i>
+                            <span class="v-middle pop">راهنمای سایز النگو</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/stone/catalog" target="_blank">
+                            <i class="v-nav-item fa fa-diamond fa-16px" aria-hidden="true"></i>
+                            <span class="v-middle">کاتالوگ سنگ</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/leather/catalog" target="_blank">
+                            <i class="v-nav-item fa fa-road fa-16px" aria-hidden="true"></i>
+                            <span class="v-middle">کاتالوگ چرم</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="~/Content/راهنمای_استفاده_از_سیستم_کارت_هدیه.pdf" target="_blank">
+                            <i class="v-nav-item fa fa-gift fa-16px" aria-hidden="true"></i>
+                            <span class="v-middle">کارت هدیه و بن خرید</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="~/Content/راهنمای سیستم سفارشات گالری کیا.pdf" target="_blank">
+                            <i class="v-nav-item fa fa-question-circle fa-16px" aria-hidden="true"></i>
+                            <span class="v-middle">راهنمای سایت</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="inline-block absolute" style="left: calc(50% - 35px)"><a href="/"><img src="~/Content/Image/Logo.png" style="max-height: 45px;" /></a></div>
+        <div class="pull-left" style="margin-left:100px">
+            <ul class="header-nav-bar nav navbar-nav">
+                <li>
+                    <a href="/faxcart/index" class="btn-orderDetail">
+                        <span class="order-cart hidden"></span>
+                        <i class="fa fa-shopping-cart ">
+                        </i>
+                    </a>
+                </li>
+                <li style="display:inline-block">
+                    <a href="/account/logout">
+                        <i class="fa fa-power-off" aria-hidden="true"></i>&nbsp;
+                        <span class="hidden-sm hidden-md hidden-lg"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="dropdown inline-block pull-right">
+    </div>
+    <div class="container-fluid body-content relative">
+        @if (Request.IsAuthenticated)
+        {
+            <div id="sidenav" class="sidenav">
+                <div class="relative">
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    <div class="user">
+                        @if (!string.IsNullOrEmpty(user.FileName))
+                        {
+                            <img src="~/upload/user/@user.FileName" />
+                        }
+                        else
+                        {
+                            <img src="~/content/image/user.png" />
+                        }
+                        <h5 class="white single-line inline-block">
+                            @user.FullName
+                            <br />
+                            @user.UserPlace
+                        </h5>
+                    </div>
+                    <hr />
+                </div>
+                <div>
+                    <nav>
+                        <ul class="nav nav-stacked">
+                            @if (User.IsInRole("admin") || User.IsInRole("admin-order") || User.IsInRole("order") || User.IsInRole("order-workshop") || User.IsInRole("orderOuterWerk") || User.IsInRole("OuterWerkPlacement"))
+                            {
+                                <li>
+                                    <a class="nav-head" href="#" data-child="order">
+                                        <span class="bold v-middle">سفارشات</span>
+                                        <i class="v-nav-item fa fa-caret-down fa-18px pull-left" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            }
+                            <li class="nav-sub-list submenu order hidden" style="display: none;">
+                                @if (User.IsInRole("admin") || User.IsInRole("admin-order"))
+                                {
+                                    <a href="/order">
+                                        <i class="v-nav-item fa fa-diamond fa-18px" aria-hidden="true"></i>
+                                        <span class="v-middle">محصولات</span>
+                                    </a>
+                                    <a href="/order/manage">
+                                        <i class="v-nav-item fa fa-list fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">مدیریت سفارشات</span>
+                                    </a>
+                                    <a href="/order/archive">
+                                        <i class="v-nav-item fa fa-file-archive-o fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">مدیریت سفارشات آرشیو</span>
+                                    </a>
+                                    <a href="/order/deleted">
+                                        <i class="v-nav-item fa fa-trash fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">مدیریت سفارشات حذف شده</span>
+                                    </a>
+                                }
+                                @if (user.BranchId > 0 && (User.IsInRole("order")))
+                                {
+                                    <a href="/order">
+                                        <i class="v-nav-item fa fa-diamond fa-18px" aria-hidden="true"></i>
+                                        <span class="v-middle">محصولات</span>
+                                    </a>
+                                }
+
+                                @if (User.IsInRole("orderOuterWerk") || User.IsInRole("admin"))
+                                {
+                                    <a href="/order/outerWerk">
+                                        <i class="v-nav-item fa fa-wrench fa-18px" aria-hidden="true"></i>
+                                        <span class="v-middle">محصولات خرج کار</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("OuterWerkPlacement") || User.IsInRole("admin"))
+                                {
+                                    <a href="/order/OuterWerkPlacement">
+                                        <i class="v-nav-item fa fa-briefcase fa-18px" aria-hidden="true"></i>
+                                        <span class="v-middle">جایگاه خرج کار</span>
+                                    </a>
+                                }
+                                @if ((user.BranchId > 0 && (User.IsInRole("admin") || User.IsInRole("order")) || User.IsInRole("orderOuterWerk")))
+                                {
+
+                                    <a href="/cart">
+                                        <i class="v-nav-item fa fa-shopping-cart fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">سبد سفارش</span>
+                                    </a>
+                                    <a href="/order/history">
+                                        <i class="v-nav-item fa fa-paste fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">سوابق سفارش</span>
+                                    </a>
+                                }
+                                @if (user.WorkshopId > 0 && (User.IsInRole("admin") || User.IsInRole("order-workshop")))
+                                {
+                                    <a href="/order/workshop">
+                                        <i class="v-nav-item fa fa-shopping-cart fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">سبد سفارش</span>
+                                    </a>
+                                    <a href="/order/workshopHistory">
+                                        <i class="v-nav-item fa fa-paste fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">سوابق سفارش</span>
+                                    </a>
+                                    <a href="/order/workshopArchive">
+                                        <i class="v-nav-item fa fa-file-archive-o fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">آرشیو سفارش</span>
+                                    </a>
+                                }
+                            </li>
+                            @if (User.IsInRole("admin") || User.IsInRole("orderUsableProduct"))
+                            {
+                                <li>
+                                    <a class="nav-head" href="#" data-child="orderUsableProduct">
+                                        <span class="bold v-middle">چاپخانه</span>
+                                        <i class="v-nav-item fa fa-caret-down fa-18px pull-left" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            }
+                            <li class="nav-sub-list submenu orderUsableProduct hidden" style="display: none;">
+                                @if (User.IsInRole("admin") || User.IsInRole("orderUsableProductManager"))
+                                {
+                                    <a href="/fax/manage">
+                                        <i class="v-nav-item fa fa-file-archive-o fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">مدیریت سفارشات</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("createUsableProduct"))
+                                {
+                                    <a href="/usableproduct/index">
+                                        <i class="v-nav-item fa fa-list fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">ایجاد محصولات چاپخانه</span>
+                                    </a>
+                                    <a href="/categoryusableproduct/index">
+                                        <i class="v-nav-item fa fa-list fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">دسته بندی محصولات چاپخانه</span>
+                                    </a>
+                                }
+
+                                @if (User.IsInRole("admin") || User.IsInRole("orderUsableProduct"))
+                                {
+                                    <a href="/fax/index">
+                                        <i class="v-nav-item fa fa-file-archive-o fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">ثبت سفارش</span>
+                                    </a>
+                                }
+
+                                @if (User.IsInRole("admin") || User.IsInRole("printingHouse"))
+                                {
+                                    <a href="/printingHouse/index">
+                                        <i class="v-nav-item fa fa-home fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">ایجاد چاپخانه</span>
+                                    </a>
+                                }
+                            </li>
+
+                            @if (User.IsInRole("admin") || User.IsInRole("sendSms") || User.IsInRole("createSms"))
+                            {
+                                <li>
+                                    <a class="nav-head" href="#" data-child="smsCategory">
+                                        <span class="bold v-middle">پیام</span>
+                                        <i class="v-nav-item fa fa-caret-down fa-18px pull-left" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                                <li class="nav-sub-list submenu smsCategory hidden" style="display: none;">
+
+                                    @if (User.IsInRole("admin") || User.IsInRole("createSms"))
+                                    {
+                                        <a href="/smsCategory/index">
+                                            <i class="v-nav-item fa fa-bars fa-16px"></i>
+                                            <span class="v-middle"> دسته بندی پیام ها </span>
+                                        </a>
+                                    }
+                                    @if (User.IsInRole("admin") || User.IsInRole("sendSms"))
+                                    {
+                                        <a href="/smsCategory/Send">
+                                            <i class="v-nav-item fa fa-send fa-16px"></i>
+                                            <span class="v-middle">ارسال پیام</span>
+                                        </a>
+                                    }
+                                </li>
+                            }
+
+                            @if (User.IsInRole("admin") || User.IsInRole("foodCensus"))
+                            {
+                                <li>
+                                    <a class="nav-head" href="#" data-child="foodCensus">
+                                        <span class="bold v-middle">ثبت اطلاعات غذا</span>
+                                        <i class="v-nav-item fa fa-caret-down fa-18px pull-left" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                                <li class="nav-sub-list submenu foodCensus hidden" style="display: none;">
+                                    @if (User.IsInRole("admin") || User.IsInRole("foodCensus"))
+                                    {
+                                        <a href="/foodCensus/calendar">
+                                            <i class="v-nav-item fa fa-edit fa-16px"></i>
+                                            <span class="v-middle"> ثبت اطلاعات </span>
+                                        </a>
+                                    }
+                                </li>
+                            }
+
+                            @if (User.IsInRole("admin") || User.IsInRole("dailyReport") || User.IsInRole("dailyReportManage"))
+                            {
+                                <li>
+                                    <a class="nav-head" href="#" data-child="dailyReport">
+                                        <span class="bold v-middle">گزارش فروش روزانه</span>
+                                        <i class="v-nav-item fa fa-caret-down fa-18px pull-left" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            }
+
+
+                            <li class="nav-sub-list submenu dailyReport hidden" style="display: none;">
+                                @if (User.IsInRole("admin") || User.IsInRole("dailyReport") || User.IsInRole("inventoryReport"))
+                                {
+                                    <a href="/dailyReport/archive">
+                                        <i class="v-nav-item fa fa-file fa-16px"></i>
+                                        <span class="v-middle">ثبت گزارش روزانه</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("dailyReportManage"))
+                                {
+                                    <a href="/dailyReport">
+                                        <i class="v-nav-item fa fa-pie-chart fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">آمار</span>
+                                    </a>
+                                    <a href="/dailyReport/calendar">
+                                        <i class="v-nav-item fa fa-calendar-check-o fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">تقویم</span>
+                                    </a>
+                                    <a href="/BotDailyReportUserData/index">
+                                        <i class="v-nav-item fa fa-list fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">کاربران ربات گزارشات شعب</span>
+                                    </a>
+                                    <a href="/BotDailyGoldReportUserData/index">
+                                        <i class="v-nav-item fa fa-list fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">کاربران ربات گزارشات طلای شعب</span>
+                                    </a>
+                                    <a href="/dailyReport/settings">
+                                        <i class="v-nav-item fa fa-gear fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">تنظیمات</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("inventoryReport"))
+                                {
+                                    <a href="/inventoryReportMember/archive">
+                                        <i class="v-nav-item fa fa-file-archive-o fa-16px"></i>
+                                        <span class="v-middle"> ثبت جزئیات موجودی طلا </span>
+                                    </a>
+                                    <a href="/inventoryReportMember/ListDailyInventory">
+                                        <i class="v-nav-item fa fa-file-archive-o fa-16px"></i>
+                                        <span class="v-middle">مدیریت دسته بندی موجودی طلا</span>
+                                    </a>
+                                }
+                            </li>
+                            @if (User.IsInRole("admin") || User.IsInRole("post"))
+                            {
+                                <li>
+                                    <a class="nav-head" href="#" data-child="post">
+                                        <span class="bold v-middle">سیستم پست</span>
+                                        <i class="v-nav-item fa fa-caret-down fa-18px pull-left" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            }
+                            <li class="nav-sub-list submenu post hidden" style="display: none;">
+                                @if (User.IsInRole("admin") || User.IsInRole("post"))
+                                {
+                                    <a href="/post">
+                                        <i class="v-nav-item fa fa-envelope fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">پست</span>
+                                    </a>
+                                    <a href="/post/settings">
+                                        <i class="v-nav-item fa fa-gear fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">تنظیمات</span>
+                                    </a>
+                                }
+                            </li>
+                            @if (User.IsInRole("admin") || User.IsInRole("report") || User.IsInRole("singleReport"))
+                            {
+                                <li>
+                                    <a class="nav-head" href="#" data-child="report">
+                                        <span class="bold v-middle">گزارشات</span>
+                                        <i class="v-nav-item fa fa-caret-down fa-18px pull-left" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            }
+                            <li class="nav-sub-list submenu report hidden" style="display: none;">
+                                @if (User.IsInRole("admin") || User.IsInRole("report"))
+                                {
+                                    <a href="/report/product">
+                                        <i class="v-nav-item fa fa-braille fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">گزارش محصولات</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("singleReport"))
+                                {
+                                    <a href="/report/productSingle">
+                                        <i class="v-nav-item fa fa-braille fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">گزارش انتخابی محصول</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin"))
+                                {
+                                    <a href="/licencedProduct">
+                                        <i class="v-nav-item fa fa-braille fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">چاپ محصولات خارجی</span>
+                                    </a>
+                                }
+
+                            </li>
+                            @if (User.IsInRole("admin") || User.IsInRole("product") || User.IsInRole("size") || User.IsInRole("branch") || User.IsInRole("workshop") || User.IsInRole("stone") || User.IsInRole("leather") || User.IsInRole("admin-user") || User.IsInRole("reason") || User.IsInRole("stoneTable"))
+                            {
+                                <li>
+                                    <a class="nav-head" href="#" data-child="base-information">
+                                        <span class="bold v-middle">اطلاعات پایه</span>
+                                        <i class="v-nav-item fa fa-caret-down fa-18px pull-left" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            }
+                            <li class="nav-sub-list submenu base-information hidden" style="display: none;">
+                                @if (User.IsInRole("admin") || User.IsInRole("stoneTable"))
+                                {
+                                    <a href="/stoneTable">
+                                        <i class="v-nav-item fa fa-diamond fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">میز سنگ</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("product"))
+                                {
+                                    <a href="/product">
+                                        <i class="v-nav-item fa fa-tags fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">محصولات</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("product"))
+                                {
+                                    <a href="/productCollection">
+                                        <i class="v-nav-item fa fa-tags fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">کالکشن</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("size"))
+                                {
+                                    <a href="/size">
+                                        <i class="v-nav-item fa fa-expand fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">سایز</span>
+                                    </a>
+                                    <a href="/shapeSize">
+                                        <i class="v-nav-item fa fa-expand fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">سایز شکل سنگ</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("branch"))
+                                {
+                                    <a href="/branch">
+                                        <i class="v-nav-item fa fa-building fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">شعب</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("company"))
+                                {
+                                    <a href="/company">
+                                        <i class="v-nav-item fa fa-building-o fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">شرکت</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("workshop"))
+                                {
+                                    <a href="/workshop">
+                                        <i class="v-nav-item fa fa-bitbucket fa-18px" aria-hidden="true"></i>
+                                        <span class="v-middle">کارگاه</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("stone"))
+                                {
+                                    <a href="/stone">
+                                        <i class="v-nav-item fa fa-diamond fa-18px" aria-hidden="true"></i>
+                                        <span class="v-middle">سنگ</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("leather"))
+                                {
+                                    <a href="/leather">
+                                        <i class="v-nav-item fa fa-road fa-18px" aria-hidden="true"></i>
+                                        <span class="v-middle">چرم</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("admin-user"))
+                                {
+                                    <a href="/account#!active=true">
+                                        <i class="v-nav-item fa fa-user fa-18px" aria-hidden="true"></i>
+                                        <span class="v-middle">کاربران</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("reason"))
+                                {
+                                    <a href="/order/orderDetailReason">
+                                        <i class="v-nav-item fa fa-exclamation fa-18px" aria-hidden="true"></i>
+                                        <span class="v-middle">علت های کسری و لغو</span>
+                                    </a>
+                                }
+
+                            </li>
+
+                            @if (User.IsInRole("admin") || User.IsInRole("gift") || User.IsInRole("giftRegistration"))
+                            {
+                                <li>
+                                    <a class="nav-head" href="#" data-child="giftCart">
+                                        <span class="bold v-middle">گیفت</span>
+                                        <i class="v-nav-item fa fa-caret-down fa-18px pull-left" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            }
+                            <li class="nav-sub-list submenu giftCart hidden" style="display: none;">
+                                @if (User.IsInRole("admin") || User.IsInRole("gift"))
+                                {
+                                    <a href="/gift">
+                                        <i class="v-nav-item fa fa-gift fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">مدیریت گیفت</span>
+                                    </a>
+                                    <a href="/gift/usedgiftfactor">
+                                        <i class="v-nav-item fa fa-gift fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">گزارش گیفت</span>
+                                    </a>
+                                    <a href="/gift/expiredGift">
+                                        <i class="v-nav-item fa fa-gift fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">گزارش گیفت های منقضی ثبت شده</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("giftRegistration"))
+                                {
+                                    <a href="/gift/manage">
+                                        <i class="v-nav-item fa fa-gift fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">مدیریت گیفت شعب</span>
+                                    </a>
+                                    <a href="/gift/registration">
+                                        <i class="v-nav-item fa fa-gift fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">ثبت کارت</span>
+                                    </a>
+                                }
+                            </li>
+                            <li>
+                                @if (User.IsInRole("solicitorshipGift"))
+                                {
+                                    <a href="/gift/SolicitorshipGift">
+                                        <i class="v-nav-item fa fa-gift fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">ثبت کارت نمایندگی</span>
+                                    </a>
+                                }
+                            </li>
+                            <li>
+                                @if (User.IsInRole("admin"))
+                                {
+                                    <a class="nav-head" href="#" data-child="survey">
+                                        <span class="bold v-middle"> نظر سنجی</span>
+                                        <i class="v-nav-item fa fa-caret-down fa-18px pull-left" aria-hidden="true"></i>
+                                    </a>
+                                }
+                            </li>
+                            <li class="nav-sub-list submenu survey hidden" style="display: none;">
+                                @if (User.IsInRole("admin"))
+                                {
+                                    <a href="/survey">
+                                        <i class="v-nav-item fa fa-list-ol fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">سوالات نظر سنجی</span>
+                                    </a>
+                                    <a href="/survey/add">
+                                        <i class="v-nav-item fa fa-question fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">ایجاد سوال</span>
+                                    </a>
+                                    <a href="/survey/answeredCustomerlist">
+                                        <i class="v-nav-item fa fa-users fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">مشاهده مشتریان</span>
+                                    </a>
+                                    <a href="/survey/answerReportList">
+                                        <i class="v-nav-item fa fa-bar-chart fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">گزارش کلی</span>
+                                    </a>
+                                }
+                            </li>
+
+                            @if (User.IsInRole("admin") || User.IsInRole("branchesPaymentsDifferentGoldReturns") || User.IsInRole("branchesPaymentsDifferentSale") || User.IsInRole("branchesPaymentsDifferentReturns") || User.IsInRole("branchesPaymentsSale") || User.IsInRole("branchesPaymentsReturned") || User.IsInRole("branchesPaymentsDeposits") || User.IsInRole("financialBranch") || User.IsInRole("branchesPayments") || User.IsInRole("userData"))
+                            {
+                                <li>
+                                    <a class="nav-head" href="#" data-child="financialBranch">
+                                        <span class="bold v-middle">مالی شعب</span>
+                                        <i class="v-nav-item fa fa-caret-down fa-18px pull-left" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            }
+                            <li class="nav-sub-list submenu financialBranch hidden" style="display: none;">
+                                @if (User.IsInRole("admin") || User.IsInRole("financialBranch"))
+                                {
+                                    <a href="/financialBranch">
+                                        <i class="v-nav-item fa fa-money fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">مدیریت مالی شعب</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("branchesPayments"))
+                                {
+                                    <a href="/branchesPayments">
+                                        <i class="v-nav-item fa fa-file fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">ثبت و صدور فاکتور پرداختی</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("userData"))
+                                {
+                                    <a href="/userData">
+                                        <i class="v-nav-item fa fa-user-circle fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">مدیریت کاربران ربات</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("branchesPaymentsDeposits"))
+                                {
+                                    <a href="/branchesPayments/deposits">
+                                        <i class="v-nav-item fa fa-money fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">واریزی شعب</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("branchesPaymentsReturned"))
+                                {
+                                    <a href="/branchesPayments/returned">
+                                        <i class="v-nav-item fa fa-arrow-circle-down fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">مرجوعی شعب</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("branchesPaymentsSale"))
+                                {
+                                    <a href="/branchesPayments/Sale">
+                                        <i class="v-nav-item fa fa-arrow-circle-up  fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">فروش شعب</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("branchesPaymentsDifferentReturns"))
+                                {
+                                    <a href="/branchesPayments/differentReturns">
+                                        <i class="v-nav-item fa fa-arrow-circle-down fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">مرجوعی متفرقه شعب</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("branchesPaymentsDifferentSale"))
+                                {
+                                    <a href="/branchesPayments/differentSale">
+                                        <i class="v-nav-item fa fa-arrow-circle-up  fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">فروش متفرقه شعب</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("branchesPaymentsDifferentGoldReturns"))
+                                {
+                                    <a href="/branchesPayments/differentGoldReturns">
+                                        <i class="v-nav-item fa fa-arrow-circle-down fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">مرجوعی طلا متفرقه شعب</span>
+                                    </a>
+                                }
+                            </li>
+
+                            @if (User.IsInRole("admin") || User.IsInRole("salary") || User.IsInRole("person") || User.IsInRole("settings"))
+                            {
+                                <li>
+                                    <a class="nav-head" href="#" data-child="salary">
+                                        <span class="bold v-middle">منابع انسانی</span>
+                                        <i class="v-nav-item fa fa-caret-down fa-18px pull-left" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            }
+                            <li class="nav-sub-list submenu salary hidden" style="display: none;">
+                                @if (User.IsInRole("admin") || User.IsInRole("settings"))
+                                {
+                                    <a href="/settings">
+                                        <i class="v-nav-item fa fa-cogs fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">مصوبات</span>
+                                    </a>
+                                }
+
+                                @if (User.IsInRole("admin") || User.IsInRole("person"))
+                                {
+                                    <a href="/personJobdescriptiontemplate/index">
+                                        <i class="v-nav-item fa fa-users fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">شرح وظایف و مشاغل</span>
+                                    </a>
+                                }
+
+                                @if (User.IsInRole("admin") || User.IsInRole("person"))
+                                {
+                                    <a href="/person">
+                                        <i class="v-nav-item fa fa-users fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle"> اطلاعات پرسنل</span>
+                                    </a>
+                                }
+
+                                @if (User.IsInRole("admin") || User.IsInRole("salary"))
+                                {
+                                    <a href="/salary">
+                                        <i class="v-nav-item fa fa-money fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">حقوق و دستمزد </span>
+                                    </a>
+                                }
+                            </li>
+                            @if (User.IsInRole("admin") || User.IsInRole("marquisFileUpload") || User.IsInRole("marquisFileDownload"))
+                            {
+                                <li>
+                                    <a class="nav-head" href="#" data-child="fileManagement">
+                                        <span class="bold v-middle">مدیریت فایل</span>
+                                        <i class="v-nav-item fa fa-caret-down fa-18px pull-left" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            }
+                            <li class="nav-sub-list submenu fileManagement hidden" style="display: none;">
+                                @if (User.IsInRole("admin") || User.IsInRole("marquisFileUpload"))
+                                {
+                                    <a href="/marquisFile/upload">
+                                        <i class="v-nav-item fa fa-upload fa-16px"></i>
+                                        <span class="v-middle">آپلود فایل مارکیز</span>
+                                    </a>
+                                }
+                                @if (User.IsInRole("admin") || User.IsInRole("marquisFileDownload"))
+                                {
+                                    <a href="/marquisFile/download">
+                                        <i class="v-nav-item fa fa-download fa-16px" aria-hidden="true"></i>
+                                        <span class="v-middle">دانلود فایل مارکیز</span>
+                                    </a>
+                                }
+                            </li>
+                            <li>
+                                <a class="nav-head" href="#" data-child="settings">
+                                    <span class="bold v-middle">تنطیمات کاربری</span>
+                                    <i class="v-nav-item fa fa-caret-down fa-18px pull-left" aria-hidden="true"></i>
+                                </a>
+                            </li>
+                            <li class="nav-sub-list submenu settings hidden" style="display: none;">
+                                <a href="/account/userProfile">
+                                    <i class="fa fa-user" aria-hidden="true"></i>&nbsp;
+                                    <span class="v-middle">ویرایش اطلاعات شخصی</span>
+                                </a>
+                                <a href="/account/changePassword">
+                                    <i class="fa fa-key" aria-hidden="true"></i>&nbsp;
+                                    <span class="v-middle">تغییر گذرواژه</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        }
+        <div>
+            @RenderBody()
+        </div>
+
+    </div>
+    <script src="~/scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/scripts/bootstrap.min.js"></script>
+    <script src="~/scripts/jsrender.js"></script>
+    <script src="~/Scripts/fileupload/jquery.ui.widget.js"></script>
+    <script src="~/Scripts/fileupload/jquery.fileupload.js"></script>
+    <script src="~/scripts/chosen/chosen.jquery.js"></script>
+    <script src="~/scripts/chosen/imageSelect.jquery.js"></script>
+    <script src="~/Scripts/persianDate/persian-date.js"></script>
+    <script src="~/Scripts/persianDate/persian-datepicker-0.4.5.js"></script>
+    <script src="~/scripts/general.js"></script>
+    <script src="~/scripts/validate.js"></script>
+    <script src="~/scripts/numberOnly.js"></script>
+    <script src="~/scripts/entity.js"></script>
+    <script src="~/Scripts/froala/js/froala_editor.min.js"></script>
+    <script src="~/Scripts/jqueryui/jquery-ui.js"></script>
+    <script src="~/Scripts/jquery.elevatezoom.js"></script>
+
+    <script type="text/javascript">
+        var interval = setInterval(timer, 100);
+
+        function timer() {
+            var d = new Date();
+            var t = d.toLocaleTimeString();
+            $(".header-time").html(t);
+        }
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,455 @@
+﻿
+@{
+    ViewBag.Title = "مشاهده سبد خرید";
+    Layout = "~/Views/Shared/_LayoutUsableProduct.cshtml";
+}
+
+
+<style>
+    .border-left {
+        border-left: solid 1px silver;
+    }
+
+    td span {
+        line-height: 29px;
+    }
+
+    td i {
+        width: 25px;
+        text-align: center;
+    }
+
+    .specification-type {
+        display: flex;
+        position: absolute;
+        right: 9%;
+        left: 0;
+        width: 50%;
+        bottom: 11px;
+    }
+</style>
+
+
+<div class="form-inline">
+    <div style="margin-top: 20px;">
+        <label>
+            <input id="all" class="no-margin v-middle" type="checkbox" />&nbsp;
+            انتخاب همه
+        </label>
+
+        <div id="totalCount" class="btn btn-default small-font hidden">
+            <span>تعداد انتخاب شده: </span>
+            <strong id="count"></strong>
+        </div>
+        @if (User.IsInRole("admin") || User.IsInRole("orderUsableProduct"))
+        {
+            <a id="make-order" href="#" class="btn btn-success" style="width: 250px">ثبت سفارش و ارسال به چاپخانه</a>
+        }
+
+        <button class="pull-left btn btn-danger btnDeleteBatch hidden">
+            <span class="fa fa-trash"></span>
+            حذف
+        </button>
+    </div>
+</div>
+<div class="row" style="margin:10px 0">
+    <div class="form-inline">
+        <div class="col-md-3">
+            <label for="cmbCategory">دسته بندی های پدر</label>
+            <select id="cmbCategory" class="form-control" name="categoryId" style="width:100%">
+                <option value="">...</option>
+                @foreach (var item in ViewBag.ParentCategory)
+                {
+                    <option value="@item.Id">@item.Title</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="cmbCategoryChild">دسته بندی های فرزند</label>
+            <select id="cmbCategoryChild" class="form-control" name="childId" style="width:100%">
+                <option value="">...</option>
+            </select>
+        </div>
+    </div>
+</div>
+<div id="content">
+
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(window).on('hashchange', function () {
+            getList();
+        });
+        $(document).ready(function () {
+            getList();
+            checkCount();
+            countAll();
+
+            $("#all").on("click", function (event) {
+                if ($(this).prop("checked") && $(".cart-item").not(":checked").length > 0) {
+                    $(".cart-item").prop("checked", true).change();
+                }
+                else {
+                    $(".cart-item").prop("checked", false).change();
+                }
+            });
+
+            $("#cmbCategoryChild").attr("disabled", true);
+
+            $(document).on("change", "#cmbCategory", function (event) {
+                event.preventDefault();
+                loadRemoteSelect("#cmbCategoryChild", "/usableProduct/GetAllChild/", { id: $(this).val() }, "id", "title", "...", function () {
+                    $("#cmbCategoryChild").attr("disabled", false);
+                });
+            });
+
+            $(document).on("change", "#cmbCategoryChild", function (event) {
+                event.preventDefault();
+                if ($(this).val()) {
+                    setParam("childId", $(this).val())
+                }
+                else {
+                    removeParam("childId");
+                }
+            });
+
+            $(document).on("click", ".delete", function (event) {
+                var id = $(this).attr("data-id");
+
+                var entity = {
+                    id: id
+                }
+
+                confirmMessage("آیا از حذف این محصول اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/faxcart/removeCartItem", entity, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            getList();
+                        }
+                        if (typeof updateCart == 'function')
+                            updateCart()
+                    });
+                });
+            });
+            $(document).on("click", ".btnDeleteBatch", function () {
+                var cartIdList = new Array();
+
+                $(".cart-item:checked").each(function (index, element) {
+                    cartIdList.push($(this).val());
+                    $(".btnDeleteBatch, #totalCount").addClass("hidden");
+                })
+
+                var entity = {
+                    id: cartIdList.join("-")
+                }
+
+                confirmMessage("آیا از حذف این محصول اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/faxcart/removeCartItem", entity, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            getList();
+                            $(".order-cart").addClass("hidden");
+                        }
+                        if (typeof updateCart == 'function')
+                            updateCart()
+                    });
+                });
+            });
+            $(document).on("click", ".btnRemoveCount", function (event) {
+                event.preventDefault();
+
+                if ($(this).hasClass("disabled"))
+                    return;
+
+                var id = $(this).attr("data-id");
+                var entity = {
+                    id: id
+                };
+                loader(true);
+                $.ajax({
+                    url: "/faxCart/decrement",
+                    method: "POST",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status != 200)
+                            alert(response.message);
+                        else
+                            getList();
+                        countAll()
+
+                        loader(false);
+                        if (typeof updateCart == 'function')
+                            updateCart();
+
+                    }
+                });
+            });
+            $(document).on("click", "#make-order", function (event) {
+                event.preventDefault();
+                var model = {};
+                if ($(".cart-item:checked").length == 0) {
+                    alert("حداقل یکی از سفارشات را انتخاب کنید.")
+                }
+                if ($(".cart-item:checked").length > 0) {
+                    confirmMessage("آیا از ارسال اطلاعات اطمینان دارید؟", function () {
+                        loader(true);
+                        model.id = new Array();
+                        model.specification = new Array();
+                        $(".cart-item:checked").each(function (index, element) {
+                            var id = $(element).val();
+                            var specification = $(this).parents("tr").find(".specification").val();
+                            model.id.push(id)
+                            model.specification.push(specification)
+                        });
+                        $.post("/faxcart/makeOrder", model, function (response) {
+                            loader(false);
+                            if (response.status == 200) {
+                                console.log(response.data.description);
+                                callbackAlert("ارسال اطلاعات با موفقیت انجام شد.", function () {
+                                    document.location = "/fax/manage";
+                                });
+                            }
+                            else if (response.status == 501) {
+                                $("#warningModal").modal('show');
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                        });
+                    });
+                }
+            });
+
+            $(document).on("click", ".specification-save", function (event) {
+                event.preventDefault();
+                var entity = {
+                    usableProductId: $(this).attr("data-order-id"),
+                    id: $(this).closest(".specification-type").find(".hidden-specification").val(),
+                    specification: $(this).parent(".specification-type").find(".specification").val(),
+                };
+                loader(true);
+                $.post("/faxcart/SpecificationSave", entity, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        alert(response.message);
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+            $(document).on("click", ".btnAddCount", function (event) {
+                event.preventDefault();
+
+                if ($(this).hasClass("disabled"))
+                    return;
+
+                var id = $(this).attr("data-id");
+                var usableProductId = $(this).attr("data-usableProduct-id");
+                var entity = {
+                    id: id,
+                    usableProductId: usableProductId
+                };
+                loader(true);
+                $.ajax({
+                    url: "/faxcart/increment",
+                    method: "POST",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status != 200)
+                            alert(response.message);
+                        else
+                            getList();
+                        countAll()
+
+                        loader(false);
+                        if (typeof updateCart == 'function')
+                            updateCart();
+                    }
+                });
+            });
+        });
+
+        function countAll() {
+            $.get("/fax/GetCartCount", function (response) {
+                if (response.status == 200) {
+                    if (response.data.count > 0) {
+                        $(".order-cart").removeClass("hidden");
+                        $(".order-cart").html(response.data.count)
+                    }
+                    else {
+                        $(".order-cart").addClass("hidden");
+                    }
+                }
+            });
+        }
+        function checkCount() {
+            $(document).on("change", ".cart-item", function () {
+                if ($(".cart-item:checked").length > 0) {
+                    var totalCount = 0;
+                    $(".cart-item:checked").each(function (index, element) {
+                        var count = parseInt($(this).attr("data-count"));
+                        totalCount += count;
+                    });
+                    $("#count").html(totalCount);
+                    $(".btnDeleteBatch, #totalCount").removeClass("hidden");
+                }
+                else {
+                    $(".btnDeleteBatch, #totalCount").addClass("hidden");
+                }
+            });
+        };
+        function getList() {
+            updateForm();
+            var entity = {
+                page: 0,
+                count: 24,
+                productCount: null,
+                childId: null,
+                categoryId: null,
+            };
+            var urlParams = getParam();
+            var params = $.extend(entity, urlParams);
+            loader(true);
+            $.post("/faxcart/GetOrderUsableProductCartList", params, function (response) {
+                if (response.status == 200) {
+                    if (response.data.list.length > 0) {
+                        var data = response.data;
+                        var template = $.templates("#template");
+                        var htmlOutput = template.render(data);
+                        $("#content").html(htmlOutput);
+                        $('[data-toggle="tooltip"]').tooltip();
+                        countAll()
+                    }
+                    else {
+                        $("#content").html("<br /><h5 class='txt-al-c'>سبد سفارش شما خالی است.</h5>");
+                    }
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+        function updateForm() {
+            var params = getParam();
+
+            // workshopId
+            if (params["cartType"]) {
+                $("#cmbCartTypeFilter").val(params["cartType"]);
+            }
+            else {
+                $("#cmbCartTypeFilter").val("");
+            }
+
+            // workshopId
+            if (params["childId"]) {
+                $("#cmbChildList").val(params["childId"]);
+            }
+            else {
+                $("#cmbChildList").val("");
+            }
+
+            // productType
+            if (params["productType"]) {
+                $("#cmbProductType").val(params["productType"]);
+            }
+            else {
+                $("#cmbProductType").val("");
+            }
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <tbody>
+                {{for list}}
+                <tr @*class="{{if orderType == 1 && customer}}bg-customer{{/if}} {{if orderType == 1 && !customer}}bg-vitrin{{/if}}*@ class="relative" ">
+                    <td style="width: 20px; vertical-align: middle;">
+                        <input class="cart-item" type="checkbox" value="{{:id}}" data-count="{{:productCount}} " data-order-id="{{:usableProductId}}" />
+                    </td>
+                    <td class="txt-al-c" style="width: 120px;">
+                        <span class="v-middle">
+                            {{if image}}
+                            <img class="product-image" style="height: 110px;" src="/image/usableProduct/500x500/{{:image}}" />
+                            {{else}}
+                            <img class="product-image" style="height: 110px;" src="/content/image/kia-gallery-logo-square.png" />
+                            {{/if}}
+                        </span>
+                    </td>
+                    <td>
+                        <i class="fa fa-calendar v-middle" aria-hidden="true" data-toggle="tooltip" title="تاریخ ثبت"></i>
+                        <span>
+                            {{:persianDate}}
+                        </span>
+
+                    </td>
+                    <td>
+                        <i class="fa fa-bars v-middle" aria-hidden="true" data-toggle="tooltip" title="دسته بندی"></i>
+                        <span>
+                            {{:category}}
+                        </span>
+                    </td>
+                    <td>
+                        <i class="fa fa-file-text-o v-middle" aria-hidden="true" data-toggle="tooltip" title="عنوان"></i>
+                        <span>
+                            {{if name}}
+                            {{:name}}
+                            {{else}}
+                            -
+                            {{/if}}
+                        </span>
+                        <br />
+                    </td>
+                    <td class="hidden-xs hidden-sm text-center">
+                        <div>
+                            <i class="fa fa-sort-numeric-asc v-middle" aria-hidden="true" data-toggle="tooltip" title="تعداد"></i>
+                            <span>{{:productCount}} ({{:unit}})</span>
+                        </div>
+                        {{if branchLabel}}
+                        <div>
+                            <i class="fa fa-building v-middle" aria-hidden="true" data-toggle="tooltip" title="شعبه"></i>
+                            <span>{{:branchLabel}}</span>
+                        </div>
+                        {{/if}}
+                        {{if description}}
+                        <div>
+                            <i class="fa fa-comment-o v-middle description" aria-hidden="true" data-toggle="tooltip" title="توضیحات"></i>
+                            <span>{{:description}}</span>
+                        </div>
+                        {{/if}}
+                        <div>
+                            <i class="fa fa-user-o v-middle" aria-hidden="true" data-toggle="tooltip" title="کاربر ثبت کننده"></i>
+                            <span data-title="کاربر ثبت کننده" data-placement="bottom" data-html="true" data-toggle="tooltip">{{:createUser}}</span>
+                        </div>
+                    </td>
+                    <td class="order-detail" style="width: 140px;vertical-align: middle;text-align: center;">
+                        <div style="border: solid 1px silver; display: inline-block">
+                            <div class="table-cell border-left"><i class="details fa fa-plus pointer btnAddCount" aria-hidden="true" title="اضافه کردن" data-id="{{:id}}" data-usableProduct-id="{{:usableProductId}}" style="color: green; margin-top: 5px;"></i></div>
+                            <div class="table-cell border-left"><i class="details fa fa-minus pointer btnRemoveCount" aria-hidden="true" title="کم کردن" data-id="{{:id}}" data-product-id="{{:productId}}" style="color: red; margin-top: 5px;"></i></div>
+                            {{if orderType == 1}}
+                            <div class="table-cell border-left"><i class="details fa fa-pencil pointer btnEdit" aria-hidden="true" title="ویرایش" data-id="{{:id}}" data-product-id="{{:productId}}" style="color: green; margin-top: 5px;"></i></div>
+                            {{/if}}
+                            <div class="table-cell"><i class="delete fa fa-trash pointer" aria-hidden="true" title="حذف" data-id="{{:id}}" data-product-id="{{:productId}}" style="color: tomato; padding-top: 5px;"></i></div>
+                        </div>
+                        <div class="specification-type">
+                            <input type="hidden" class="hidden-specification" value="{{:id}}" />
+                            <input class="specification form-control" placeholder="توضیحات" maxlength="100" value="{{:specification}}" />
+                            <span class="btn btn-success specification-save" style="margin-right:10px" data-order-id="{{:usableProductId}}"><i class="fa fa-save"></i></span>
+                        </div>
+
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+    </script>
+}
+
+
+
+

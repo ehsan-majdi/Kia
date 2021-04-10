@@ -1,0 +1,252 @@
+﻿@{
+    ViewBag.Title = "مدیریت سفارشات";
+}
+<link href="~/Content/order-page.css" rel="stylesheet" />
+<style>
+
+    #main {
+        padding: 20px;
+        margin-top: 20px;
+    }
+</style>
+<div class="row">
+    <div class="col-xs-12">
+        <a id="workshopManipulateAll" href="/order/workshopManipulateAll#!status=2/order=DateAscending" class="btn btn-success">مشاهده همه سفارشات</a>
+        <input type="button" class="btn btn-primary btn-batch-print" value="چاپ گروهی" />
+        <label>
+            &nbsp;&nbsp;
+            <input type="checkbox" id="chkArchive" class="v-middle" />
+            به همراه آرشیو
+        </label>
+    </div>
+</div>
+<div class="row" style="margin-top: 10px;">
+    <div class="col-xs-6 col-md-3">
+        <input id="txtTerm" type="text" class="form-control" placeholder="عبارت جستجو" />
+    </div>
+</div>
+<br />
+<div id="menu">
+    <ul>
+        <li><a href="#" class="branchType relative" data-id="[0,1,2]"> شعبه و نمایندگی</a><span style="font-size:18px;display: flex;justify-content: center;align-items: end;width:20px;height:20px;border-radius:50px;top:1px;left:0;text-align:center;color:white;z-index:9" class="branchesCount absolute"></span></li>
+        @foreach (var item in ViewBag.CoWorkerList)
+        {
+            <li><a href="#" class="coWorker relative" data-id="@item.id">@item.name</a><span style="font-size:18px;width:20px;height:20px;display: flex;justify-content: center;align-items: end;border-radius:50px;top:1px;left:0;text-align:center;color:white;z-index:9" class="coWorkerCount absolute"></span></li>
+        }
+        <li><a href="#" class="all" data-id="">همه</a></li>
+    </ul>
+</div>
+<br />
+
+<div id="content">
+
+</div>
+
+<div id="statusDetailModal" class="modal fade" role="dialog" style="overflow-y: auto;">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="background-color: #222;">
+            <div id="status-content" class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+
+
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(document).ready(function () {
+           
+            getList(function () {
+                $("#content").empty();
+            });
+            $("#btManipulateAll").hide()
+
+            $(document).on("click", ".branchType", function (event) {
+                event.preventDefault();
+                $("#workshopManipulateAll").show()
+                $("#workshopManipulateAll").html("مشاهده همه سفارشات شعب و نمایندگی")
+
+                $("#workshopManipulateAll").attr("href", "/order/workshopManipulateAll/#!branchTypeList=[0-1-2]")
+                var entity = {
+                    branchType: [0, 1, 2]
+                };
+                manipulateParam(entity, ["page", "coWorker"]);
+            });
+            $(document).on("click", ".coWorker", function (event) {
+                event.preventDefault();
+                $("#workshopManipulateAll").show()
+                $("#workshopManipulateAll").html("مشاهده سفارشات همکار")
+                $("#workshopManipulateAll").attr("href", "/order/workshopManipulateCoWorker/" + $(this).attr("data-id"))
+                var entity = {
+                    coWorker: $(this).attr("data-id")
+                };
+                manipulateParam(entity, ["page", "branchType"]);
+            });
+            $(document).on("click", ".all", function (event) {
+                //event.preventDefault();
+                $("#workshopManipulateAll").hide()
+                $("#workshopManipulateAll").attr("href", "/order/manipulateAll")
+            });
+
+            $("#txtTerm").on("keyup", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    if ($("#txtTerm").val()) {
+                        var param = { term: $("#txtTerm").val() }
+                        manipulateParam(param, "page");
+                    }
+                    else
+                        removeParam("term");
+                }
+            });
+            $("#chkArchive").on("change", function () {
+                if ($(this).prop("checked")) {
+                    manipulateParam({ archive: true }, "page");
+                }
+                else {
+                    manipulateParam({ archive: false }, "page");
+                }
+            });
+            $(document).on("click", ".btn-batch-print", function (event) {
+                event.preventDefault();
+
+                var idList = new Array();
+                $(".workshop-item:checked").each(function (index, element) {
+                    idList.push($(this).val());
+                });
+
+                if (idList.length > 0)
+                    document.location = "/order/printWorkshopReplica/" + idList.join("-");
+                else
+                    alert("برای چاپ گزارش حداقل می بایست یک گزینه انتخاب شود.");
+            });
+
+            $(document).on("click", ".btnOrderDetailStatus", function () {
+                var data = $(this).attr("data-title");
+                $("#status-content").html(data);
+                $("#statusDetailModal").modal("show");
+            });
+
+        });
+
+        function getList(callback) {
+            updateForm()
+            var defaultEntity = {
+                page: 0,
+                count: 50
+            }
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+            console.log(params)
+
+            loader(true);
+            $.post("/order/getAllWorkshopHistoryOrder", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                    if (response.data.branchCount > 0) {
+                        $(".branchesCount").html(response.data.branchCount);
+                        $(".branchesCount").css({ "background-color": "red" })
+                    }
+                    if (response.data.coWorkerCount > 0) {
+                        $(".coWorkerCount").html(response.data.coWorkerCount);
+                        $(".coWorkerCount").css({ "background-color": "red" })
+                    }
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+        function updateForm() {
+            var params = getParam();
+            $("#menu li").removeClass("active");
+            if (params["branchType"])
+                $("#menu li a[data-id='[0,1,2]' ]").closest("li").addClass("active");
+
+            if (params["coWorker"] && params["coWorker"] >= 0)
+                $("#menu li a[data-id=" + params["coWorker"] + "]").closest("li").addClass("active");
+
+            if (!params["coWorker"] && !params["branchType"])
+                $("#menu li:last").addClass("active");
+            // term
+            if (params["term"]) {
+                $("#txtTerm").val(params["term"]);
+            }
+            else {
+                $("#txtTerm").val("");
+            }
+            //archive
+            if (params["archive"]) {
+                $("#chkArchive").prop("checked", true);
+            }
+            else {
+                $("#chkArchive").prop("checked", false);
+            }
+        }
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th style="width: 40px;"></th>
+                    <th>شماره سفارش مرجع</th>
+                    <th>سریال سفارش</th>
+                    <th class="hidden-xs">تعداد</th>
+                    <th class="hidden-xs">تعداد نیم ست</th>
+                    <th class="hidden-xs">وزن</th>
+                    <th class="hidden-xs hidden-sm">کاربر ثبت کننده</th>
+                    <th class="hidden-xs hidden-sm text-center" style="width: 110px;">تاریخ ثبت</th>
+                    <th class="icon-col text-center">وضعیت</th>
+                    <th class="icon-col text-center">جزئیات</th>
+                    <th class="icon-col text-center">چاپ باعکس</th>
+                    <th class="icon-col text-center">چاپ بدون عکس</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr class="{{:bgColor}}">
+                    <td class="txt-al-c"><input type="checkbox" value="{{:id}}" class="workshop-item no-margin" /></td>
+                    <td>{{:orderNumber}}</td>
+                    <td>{{:orderSerial}}</td>
+                    <td class="hidden-xs">{{:sumCount}}</td>
+                    <td class="hidden-xs">{{:sumCountSet}}</td>
+                    <td class="hidden-xs">{{:sumWeight}} گرم</td>
+                    <td class="hidden-xs hidden-sm">{{:createUser}}</td>
+                    <td class="hidden-xs hidden-sm text-center">{{:createDate}}</td>
+                    <td class="txt-al-c">
+                        <span class="btn btn-primary btn-xs btnOrderDetailStatus" data-title='@Html.Partial("_OrderDetailStatus")'><i class="fa fa-navicon" aria-hidden="true"></i></span>
+                    </td>
+                    <td class="txt-al-c">
+                        <a href="/order/workshopManipulate/{{:id}}#!status=2/order=DateAscending" class="btn btn-primary btn-xs" data-title="جزئیات"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <a href="/order/printWorkshopReplica/{{:id}}" class="btn btn-primary btn-xs" data-title="چاپ باعکس"><i class="fa fa-print" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <a href="/order/printWorkshopReplicaMin/{{:id}}" class="btn btn-primary btn-xs" data-title="چاپ بدون عکس"><i class="fa fa-print" aria-hidden="true"></i></a>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+}

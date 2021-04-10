@@ -1,0 +1,341 @@
+﻿
+@{
+    ViewBag.Title = "News";
+}
+
+<h2>@ViewBag.Title</h2>
+<style type="text/css">
+    .btnAdd {
+        background-color: #009688;
+    }
+
+    .btnFiles {
+        color: #0088cc;
+        margin: 5px;
+        cursor: pointer;
+    }
+
+    table {
+        width: 100%;
+        border: 1px solid gray;
+        margin: 10px 0px;
+    }
+
+    th {
+        background-color: whitesmoke;
+    }
+
+    tr:not(:last-child) td, th {
+        border-bottom: 1px solid gray;
+    }
+
+    td, th {
+        padding: 4px 20px;
+    }
+</style>
+<button class="btnAdd">
+    <i class="fa fa-plus" aria-hidden="true"></i>
+    Add
+</button>
+<div id="content">
+
+</div>
+
+<div id="form" style="display: none;">
+    <form id="frmData">
+        <input id="hiddenId" type="hidden" value="" name="id" />
+        <div>
+            <span class="header">Type:</span>
+            <select id="cmbType" name="type">
+                <option value="0">Text</option>
+                <option value="1">Image</option>
+                <option value="2">Video</option>
+            </select>
+        </div>
+        <div>
+            <span class="header">Text:</span>
+            <textarea id="txtText" cols="60" rows="3" name="text"></textarea>
+        </div>
+        <div>
+            <span class="header">Persian Text:</span>
+            <textarea id="txtTextFa" cols="60" rows="3" name="textFa"></textarea>
+        </div>
+        <div id="fileUploadContainer">
+            <span class="header">File:</span>
+            <input id="txtFileName" type="text" name="fileName" readonly />
+            <input id="hiddenFileId" type="hidden" name="fileId" />
+            <input id="fileUpload" type="file" class="gone" />
+            <div style="display: inline-block; padding-top: 16px;">
+                <i id="imgBrowser" class="fa fa-folder btnFiles" aria-hidden="true"></i>
+                <i id="imgDownload" class="fa fa-download btnFiles" aria-hidden="true"></i>
+            </div>
+        </div>
+        <div class="controlBox" style="padding: 5px;">
+            <span class="header"></span>
+            <button id="btnSave" class="btnForm">
+                <i class="fa fa-check" aria-hidden="true"></i>
+                Save
+            </button>
+            <button id="btnCancel" class="btnForm">
+                <i class="fa fa-remove" aria-hidden="true"></i>
+                Cancel
+            </button>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#cmbType").change(function () {
+            if ($(this).val() == 0) {
+                $("#fileUploadContainer").slideUp();
+            }
+            else {
+                $("#fileUploadContainer").slideDown();
+            }
+        });
+
+        $("#imgBrowser").click(function () {
+            $("#fileUpload").click();
+        });
+
+        $("#imgDownload").click(function () {
+            download($("#txtFileName").val(), 'News');
+        });
+
+        $('#fileUpload').fileupload({
+            dataType: 'json',
+            url: '/File/Upload?path=News',
+            autoUpload: true,
+            done: function (e, data) {
+                var response = data.result;
+                if (response.status == 200) {
+                    $('#txtFileName').val(response.data.name);
+                    $('#hiddenFileId').val("");
+                    $(this).removeClass("textError");
+                }
+                alert(response.message);
+            }
+        }).on('fileuploadprogressall', function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('.progress .progress-bar').css('width', progress + '%');
+        });
+
+        $("#btnSave").click(function (event) {
+            event.preventDefault();
+            var entity = getEntity("#frmData");
+
+            //validate
+            var flagValid = true;
+
+            if (!entity.text) {
+                $("#txtText").addClass("textError");
+                flagValid = false;
+            }
+
+
+            if (!entity.textFa) {
+                $("#txtTextFa").addClass("textError");
+                flagValid = false;
+            }
+
+            if (entity.type > 0 && !entity.fileName) {
+                $("#txtFileName").addClass("textError");
+                flagValid = false;
+            }
+
+            if (!flagValid) return;
+            //end validate
+            loader(true);
+            $.post("/News/Save", entity, function (response) {
+                if (response.status == 200) {
+                    closeModal($("#form"));
+                    getList();
+                }
+                alert(response.message);
+                loader(false);
+            });
+        });
+
+        $("#txtText, #txtTextFa").keypress(function () {
+            $(this).removeClass("textError");
+        });
+
+        $("#txtFileName").change(function () {
+            $(this).removeClass("textError");
+        });
+
+        $("#btnCancel").click(function (event) {
+            event.preventDefault();
+            closeModal($("#form"));
+        });
+
+        $(".btnAdd").click(function (event) {
+            event.preventDefault();
+            newNews();
+        });
+
+        getList();
+    });
+
+    var _totalPage = 0;
+    var _page = 0;
+    var _count = 10;
+    var _listData = [];
+    function getList() {
+        var data = {
+            page: _page,
+            count: _count
+        };
+        loader(true);
+        $.get("/bot/News/GetData", data, function (response) {
+            if (response.status == 200) {
+                var data = response.data;
+                var template = $.templates("#tmplNews");
+                var htmlOutput = template.render(data);
+                $("#content").html(htmlOutput);
+
+                if (_page == 0)
+                    $("#previewsPage").css({ 'visibility': 'hidden' });
+                else
+                    $("#previewsPage").css({ 'visibility': 'visible' });
+
+                if (response.data.pageCount == 0 || _page + 1 == response.data.pageCount)
+                    $("#nextPage").css({ 'visibility': 'hidden' });
+                else
+                    $("#nextPage").css({ 'visibility': 'visible' });
+
+                _listData = response.data.list;
+                _totalPage = response.data.pageCount;
+            }
+            else {
+                alert(response.message);
+            }
+            loader(false);
+        });
+
+    }
+
+    function newNews() {
+        $(".textError").removeClass("textError");
+        $("#frmData").get(0).reset();
+        $("#hiddenId").val("");
+        $("#hiddenFileId").val("");
+        $("#fileUploadContainer").hide();
+        showModal($("#form"));
+    }
+
+    function editData(id) {
+        loader(true);
+        $.get("/bot/News/Load", { id: id }, function (response) {
+            $(".textError").removeClass("textError");
+            if (response.status == 200) {
+                setEntity(response.data, "#form");
+                if (response.data.type == 0)
+                    $("#fileUploadContainer").hide();
+                else
+                    $("#fileUploadContainer").show();
+
+                showModal($("#form"));
+            }
+            else {
+                alert(response.message);
+            }
+            loader(false);
+        });
+
+    }
+
+    function deleteData(id) {
+        appConfirm("Are you sure want to delete this node?", function () {
+            var parameter = { id: id };
+            $.post("/bot/News/Delete", parameter, function (response) {
+                if (response.status == 200) {
+                    getList();
+                }
+                alert(response.message);
+            });
+        });
+    }
+
+    function setPageNo() {
+        var pageNo = $("#txtPageNo").val();
+        if (pageNo <= 0 || pageNo > _totalPage) {
+            alert("Your selected page is invalid.");
+            return;
+        }
+
+        _page = pageNo - 1;
+        getList();
+    }
+
+    function previewsPage() {
+        _page--;
+        getList();
+    }
+
+    function nextPage() {
+        _page++;
+        getList();
+    }
+
+    function openGoto() {
+        $("#goto").slideToggle();
+    }
+
+</script>
+
+<script type="text/x-jsrender" id="tmplNews">
+    <table>
+        <tr>
+            <th>
+                Type
+            </th>
+            <th>
+                Text
+            </th>
+            <th>
+                Persian Text
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+        {{for list}}
+        <tr>
+            <td>
+                {{:type}}
+            </td>
+            <td>
+                {{:text}}
+            </td>
+            <td>
+                {{:textFa}}
+            </td>
+            <td style="width: 10px;">
+                {{if fileName}}
+                <i class="fa fa-download linkIcon" aria-hidden="true" onclick="download('{{:fileName}}', 'News')"></i>
+                {{/if}}
+            </td>
+            <td style="width: 35px; text-align: center;">
+                <i class="fa fa-edit linkIcon" aria-hidden="true" onclick="editData({{:id}})"></i>
+                <i class="fa fa-remove linkIcon" aria-hidden="true" onclick="deleteData({{:id}})"></i>
+            </td>
+        </tr>
+        {{/for}}
+    </table>
+    <div>
+        <i id="previewsPage" class="fa fa-angle-double-left linkIcon" aria-hidden="true" onclick="previewsPage()"></i>
+        <span id="pageNo">{{:pageNo}}</span>
+        <i id="nextPage" class="fa fa-angle-double-right linkIcon" aria-hidden="true" onclick="nextPage()"></i>
+        <div class="relative inline-block">
+            <i class="fa fa-exchange linkIcon" aria-hidden="true" onclick="openGoto()" style="padding: 6px;"></i>
+            <div id="goto" class="absolute gone">
+                <input id="txtPageNo" type="text" style="width: 30px;" />
+                <i class="fa fa-chevron-circle-right linkIcon" aria-hidden="true" onclick="setPageNo()" style="font-size: 1.25em; margin: 10px 0px 0 10px;"></i>
+            </div>
+        </div>
+        <i class="fa fa-refresh linkIcon" aria-hidden="true" onclick="getList()" style="padding: 6px;"></i>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <i class="fa fa-list-ul linkIcon" aria-hidden="true" style="padding: 6px;"></i>{{:count}}
+    </div>
+</script>

@@ -1,0 +1,132 @@
+﻿<div id="form" class="container">
+    <div class="row form-group">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-2 formPayments">
+                <input id="txtHiddenId" type="hidden" class="form-control" name="id" value="@ViewBag.Id">
+                <input id="txtHiddenTypePayments" type="hidden" class="form-control" name="typePayments" value="0">
+                <div id="parent-section" class="form-group relative">
+                    <label for="txtGoldDebt">مانده بدهی طلایی</label>
+                    <input id="txtGoldDebt" type="text" class="form-control" name="goldDebt" data-validate="required" dir="ltr" style="text-align:right" placeholder="گرم">
+                </div>
+                <div id="parent-section" class="form-group relative">
+                    <label for="txtRialDebt">مانده بدهی ریالی</label>
+                    <input id="txtRialDebt" type="text" class="form-control money-separator" name="rialDebt" data-validate="required" dir="ltr" style="text-align:right" placeholder="ریال">
+                </div>
+                
+            </div>
+            <div class="col-md-4 formPayments">
+                <div id="parent-section" class="form-group relative">
+                    <label for="cmbBranch">شعبه</label>
+                    <select id="cmbBranch" class="form-control" name="branchId">
+                        <option value="">...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtDescription">توضیحات</label>
+                    <textarea id="txtDescription" type="text" rows="4" class="form-control" name="description"></textarea>
+                </div>
+            </div>
+            <div class="typePayments typePayments0 formPayments col-md-4 col-md-offset-2">
+                <div class="form-group">
+                    <label for="txtDeposits">مبلغ واریزی</label>
+                    <input id="txtDeposits" type="text" class="form-control money-separator" name="deposits" data-validate="required, number" placeholder="ریال">
+                </div>
+                <div class="form-group">
+                    <label for="txtGoldAmount">مبلغ طلا</label>
+                    <input id="txtGoldAmount" type="text" class="form-control money-separator" name="goldAmount" data-validate="required, number" placeholder="ریال">
+                </div>
+            </div>
+            <div class="typePayments typePayments0 formPayments col-md-4">
+
+                <div class="form-group">
+                    <label for="txtGoldFee">(قیمت هر گرم طلا)مظنه طلا </label>
+                    <input id="txtGoldFee" type="text" class="form-control money-separator" name="goldFee" data-validate="required, number" placeholder="ریال">
+                </div>
+                <div class="form-group">
+                    <label for="txtGoldWage">اجرت طلا</label>
+                    <input id="txtGoldWage" type="text" class="form-control money-separator" name="goldWage" data-validate="required, number" placeholder="ریال">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success btnSave" data-type="typePayments0">
+                        <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                        ذخیره
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+    var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+    $(document).ready(function () {
+        loadRemoteSelect("#cmbBranch", "/branchesPayments/getAllBranch", null, "id", "name", "...", function () {
+            load();
+        });
+        $(document).on("click", ".delete", function (event) {
+            $(this).parent().parent().remove();
+        });
+        $("#cmbDifferentType").on("change", function (event) {
+            $("#txtDifferentType").val($(this).val());
+        });
+        $("#cmbGoldWage").on("change", function (event) {
+            $(".typePayments1 #txtGoldWage").val($(this).val());
+        });
+
+        $(".btnDetails").on("click", function (event) {
+            $("#tlbDetails tbody").append($("#table1 tbody").html());
+        });
+        $(".btnDetails2").on("click", function (event) {
+            $("#tlbDetails2 tbody").append($("#table2 tbody").html());
+        });
+        $(".btnSave").on("click", function (event) {
+            event.preventDefault();
+            if (checkForm(".formPayments")) {
+                var entity = getEntity(".formPayments:not(.details)");
+                entity.branchesPaymentsDetails = new Array();
+                loader(true);
+                $.ajax({
+                    method: "POST",
+                    url: "/branchesPayments/save",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                document.location = "/branchesPayments/Deposits";
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                        loader(false);
+                    }
+                });
+            }
+        });
+        $("#cmbTypePayments").on("change", function (event) {
+            var classShow = $(this).val();
+            $(".typePayments").slideUp();
+            $(".typePayments").removeClass("formPayments");
+            $(".typePayments" + classShow).addClass("formPayments");
+            $(".typePayments" + classShow).slideDown();
+        });
+    });
+    function load() {
+        if (id > 0) {
+            $("#btnSave").slideUp();
+            loader(true);
+            $.get("/branchesPayments/load/" + id, function (response) {
+                if (response.status == 200) {
+                    $(".typePayments" + response.data.typePayments).addClass("formPayments");
+                    $(".typePayments" + response.data.typePayments).slideDown();
+                    setEntity(response.data, ".formPayments");
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    }
+    </script>
+}

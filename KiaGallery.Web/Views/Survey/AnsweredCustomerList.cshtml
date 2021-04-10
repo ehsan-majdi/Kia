@@ -1,0 +1,137 @@
+﻿
+@{
+    ViewBag.Title = "AnswerList";
+}
+
+<style>
+
+  
+</style>
+<h2>لیست مشتریان</h2>
+<div class="container">
+    <div id="content">
+
+    </div>
+</div>
+
+<div id="modal-detail" class="modal" style="overflow-y: hidden;">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span class="username"></span></h4><span class="typetitle"></span>
+            </div>
+            <div class="row">
+                <div class="modal-body text-center">
+                   <div id="detail-content">
+
+                   </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 50,
+        }
+        $(document).on("click",".detail", function () {
+
+            var id = $(this).attr("data-id");
+            console.log(id)
+            $("#modal-detail").modal("show")
+            getCustomerAnswerList(id)
+        });
+        $(document).ready(function () {
+            getAmsweredCustomerList()
+        })
+        function getAmsweredCustomerList() {
+            loader(true);
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+            $.get("/survey/getAnsweredCustomerList", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+        function getCustomerAnswerList(id) {
+            loader(true);
+           
+            $.get("/survey/getCustomerAnswer/"+id, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#detail-template");
+                    var htmlOutput = template.render(data);
+                    $("#detail-content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>نام</th>
+                    <th>نام خانوادگی</th>
+                    <th>کد</th>
+                    <th>تلفن همراه</th>
+                    <th>تاریخ</th>
+                    <th>مشاهده</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td>{{:#index + 1}}</td>
+                    <td>{{:firstName}}</td>
+                    <td>{{:lastName}}</td>
+                    <td>{{:code}}</td>
+                    <td>{{:phoneNumber}}</td>
+                    <td>{{:persianDate}}</td>
+                    <td class="detail" data-id="{{:id}}"><button class="btn btn-success btn-xs"><i class="fa fa-eye"></i></button></td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+
+    <script id="detail-template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th class="txt-al-c">ردیف</th>
+                    <th class="txt-al-c">سوال</th>
+                    <th class="txt-al-c">جواب</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td class="txt-al-c">{{:#index + 1}}</td>
+                    <td class="txt-al-c">{{:question}}</td>
+                    <td class="txt-al-c">{{:typeTitle}}</td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}

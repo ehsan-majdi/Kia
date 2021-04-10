@@ -1,0 +1,550 @@
+﻿@{
+    ViewBag.Title = "جزئیات سفارش";
+}
+
+<link href="~/Content/ios-switch-rtl.css" rel="stylesheet" />
+<link href="~/content/order-page.css" rel="stylesheet" />
+
+<style>
+    #main {
+        min-height: 85vh;
+    }
+
+    .product-item .small-font .fa {
+        width: 25px;
+        color: #555;
+        text-align: center;
+    }
+
+    #filter-list {
+        width: 15%;
+        padding-left: 0;
+        padding-right: 0px;
+        padding-top: 25px;
+    }
+
+    #menu-holder {
+        width: calc(83.33333333% - 112px);
+    }
+
+    td span {
+        line-height: 29px;
+    }
+
+    td i {
+        width: 25px;
+        text-align: center;
+    }
+
+    .border-left {
+        border-left: solid 1px silver;
+    }
+
+    .table-head {
+        padding-bottom: 5px;
+    }
+
+    .table-cell {
+        padding: 5px 0;
+        border-top: solid 1px silver;
+    }
+
+    td {
+        vertical-align: middle !important;
+    }
+
+    #button-bar {
+        margin-top: 8px;
+        padding-bottom: 8px;
+        border-bottom: solid 1px silver;
+    }
+</style>
+
+
+
+<div class="row">
+    <div class="col-md-2">
+        <div id="filter-list" class="navbar-search navbar-collapse collapse" style="width: 100%">
+            <h4>KIA-@ViewBag.WorkshopOrder.WorkshopOrderSerial</h4>
+
+            <div><input id="txtTerm" class="form-control" type="text" placeholder="جستجو..." name="term" /></div>
+
+            <h5>مرتب سازی</h5>
+            <div class="filter-item">
+                <select id="cmbOrder" name="order" class="form-control combo-chosen chosen-rtl">
+                    <option value="">پیشفرض</option>
+                    <option value="Vitrin">ویترین</option>
+                    <option value="OrderVitrin">ویترین سفارشی</option>
+                    <option value="Customer">برای مشتری</option>
+                    <option value="ForceOrder">عجله ای</option>
+                    <option value="productType">نوع محصول</option>
+                    <option value="SetNumber">شماره نیم ست</option>
+                    <option value="DateAscending">تاریخ صعودی</option>
+                </select>
+            </div>
+
+            <h5>نوع</h5>
+            <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="typeList" value="0"><span>دستبند زنجير طلا</span></label></div></div>
+            <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="typeList" value="11"><span>دستبند چرمی</span></label></div></div>
+            <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="typeList" value="12"><span>دستبند ریلی</span></label></div></div>
+            <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="typeList" value="13"><span>دستبند سنگی</span></label></div></div>
+            <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="typeList" value="9"><span>النگو</span></label></div></div>
+            <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="typeList" value="1"><span>گردنبند</span></label></div></div>
+            <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="typeList" value="8"><span>آویز</span></label></div></div>
+            <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="typeList" value="3"><span>انگشتر</span></label></div></div>
+            <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="typeList" value="2"><span>گوشواره</span></label></div></div>
+            <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="typeList" value="4"><span>آویز ساعت</span></label></div></div>
+            <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="typeList" value="7"><span>پابند</span></label></div></div>
+            <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="typeList" value="6"><span>ست</span></label></div></div>
+            <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="typeList" value="5"><span>سنجاق بچگانه</span></label></div></div>
+            <div class="filter-item"><div class="checkbox ios-switch"><label><input type="checkbox" class="chkType" name="typeList" value="10"><span>خرج کار</span></label></div></div>
+            
+            <div class="form-group"><button class="btn btn-default clear-params" style="width: 100%;"><i class="fa fa-filter" aria-hidden="true"></i> حذف فیلتر ها</button></div>
+        </div>
+    </div>
+    <div class="col-md-10">
+        <div>
+            <div id="content">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="logDetailModal" class="modal fade" role="dialog" style="overflow-y: auto;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">سوابق سفارش</h4>
+            </div>
+            <div id="log-content" class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            term: null,
+            typeList: [],
+            workshopList: [],
+            status: null,
+            order: null
+        }
+
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(document).ready(function () {
+            getList();
+
+            $("#all").on("click", function (event) {
+                event.preventDefault();
+                removeParam(["status", "page"]);
+            })
+
+            $("#cmbWorkshop").on("change", function (event) {
+                var value = $("#cmbWorkshop").val();
+
+                if (value != null && value.length > 0) {
+                    var param = { workshopList: value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["workshopList", "page"]);
+                }
+            });
+
+            $("#cmbOrder").on("change", function (event) {
+                var value = $("#cmbOrder").val();
+
+                if (value.length > 0) {
+                    var param = { order: value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["order", "page"]);
+                }
+            });
+
+            $("#txtTerm").on("keyup", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    if ($("#txtTerm").val()) {
+                        var param = { term: $("#txtTerm").val() }
+                        manipulateParam(param, "page");
+                    }
+                    else
+                        removeParam("term");
+                }
+            });
+
+            $(".combo-chosen").chosen({ width: "100%", placeholder_text_single: 'یک مورد را انتخاب کنید.', search_contains: true });
+
+            $(".chkType").on("change", function (event) {
+                var value = $(document).find("input[type=checkbox][name=typeList]:checked").map(function () {
+                    return $(this).val();
+                }).get();
+
+                if (value.length > 0) {
+                    var param = { typeList: value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["typeList", "page"]);
+                }
+            });
+
+            $(document).on("click", ".showLog", function () {
+                var id = $(this).attr("data-id");
+                loader(true);
+                $.get("/order/getlogdetail/" + id, function (response) {
+                    loader(false);
+                    var data = response.data;
+                    var template = $.templates("#template-log");
+                    var htmlOutput = template.render(data);
+                    $("#log-content").html(htmlOutput);
+                    $("#logDetailModal").modal('show');
+                });
+            });
+        });
+
+        function getList() {
+            updateForm();
+            var newParams = getParam();
+
+            var params = $.extend(defaultEntity, newParams);
+            loader(true);
+            $.post("/order/workshopDetailList/" + "@ViewBag.WorkshopOrder.Id", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+
+                    $('[data-toggle="tooltip"]').tooltip();
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+
+            $(document).on("click", ".showLog", function () {
+                var id = $(this).attr("data-id");
+                loader(true);
+                $.get("/order/getlogdetail/" + id, function (response) {
+                    loader(false);
+                    var data = response.data;
+                    var template = $.templates("#template-log");
+                    var htmlOutput = template.render(data);
+                    $("#log-content").html(htmlOutput);
+                    $("#logDetailModal").modal('show');
+                });
+            });
+        }
+
+        function updateForm() {
+            var params = getParam();
+
+            // term
+            if (params["term"]) {
+                $("#txtTerm").val(params["term"]);
+            }
+            else {
+                $("#txtTerm").val("");
+                defaultEntity.term = null;
+            }
+
+            // type
+            if (params["typeList"]) {
+                var typeList = params["typeList"];
+                $(".chkType").each(function (index, element) {
+                    if (typeList.indexOf($(this).val()) >= 0) {
+                        $(this).prop("checked", true);
+                    }
+                    else {
+                        $(this).prop("checked", false);
+                    }
+                });
+            }
+            else {
+                $(".chkType").prop("checked", false);
+                defaultEntity.typeList = [];
+            }
+
+            // workshop
+            if (params["workshopList"]) {
+                $("#cmbWorkshop").val(params["workshopList"]);
+            }
+            else {
+                $("#cmbWorkshop").val("");
+                defaultEntity.workshopList = []
+            }
+
+            // order
+            if (params["order"]) {
+                $("#cmbOrder").val(params["order"]);
+            }
+            else {
+                $("#cmbOrder").val("");
+                defaultEntity.order = null
+            }
+
+            $(".combo-chosen").trigger("chosen:updated");
+        }
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <tbody>
+                {{for list}}
+                <tr class="{{if orderType == 1 && customer}}bg-customer{{/if}} {{if orderType == 1 && !customer}}bg-vitrin{{/if}}">
+                    <td class="v-middle">
+                        {{:#index + 1}}
+                    </td>
+                    <td class="txt-al-c" style="width: 120px;">
+                        <span class="v-middle">
+                            {{if fileName}}
+                            <img style="width: 110px;" src="/image/product/500x500/{{:fileName}}" />
+                            {{else}}
+                            <img style="width: 110px;" src="/content/image/kia-gallery-logo-square.png" />
+                            {{/if}}
+                        </span>
+                    </td>
+                    <td>
+                        <i class="fa fa-bitbucket v-middle" aria-hidden="true" data-toggle="tooltip" title="کارگاه"></i>
+                        <span>
+                            {{:workshopName}}
+                        </span>
+                        {{if workshopName2 != null}}
+                        <br />
+                        <i class="fa fa-bitbucket v-middle" aria-hidden="true" data-toggle="tooltip" title="کارگاه دوم/مونتاژ"></i>
+                        <span>
+                            {{:workshopName2}}
+                        </span>
+                        {{/if}}
+                        <br />
+                        <i class="fa fa-calendar v-middle" aria-hidden="true" data-toggle="tooltip" title="تاریخ ثبت"></i>
+                        <span>
+                            {{:createDate}}
+                        </span>
+                        {{if relatedOrderDetailSerial && relatedOrderDetailSerial != 'KIA-'}}
+                        <br />
+                        <i class="fa fa-shield v-middle" aria-hidden="true" data-toggle="tooltip" title="سریال سفارش کسری"></i>
+                        <span>{{:relatedOrderDetailSerial}}</span>
+                        {{/if}}
+                        {{if forceOrder}}
+                        <br />
+                        <i class="fa fa-rocket v-middle red" aria-hidden="true" data-toggle="tooltip" title="عجله ای"></i>
+                        <span>عجله ای</span>
+                        {{/if}}
+                        {{if returned > 0}}
+                        <br />
+                        <i class="fa fa-recycle v-middle red" aria-hidden="true" data-toggle="tooltip" title="مرجوعی"></i>
+                        <span>مرجوعی</span>
+                        {{/if}}
+                    </td>
+                    <td>
+                        <i class="fa fa-file-text-o v-middle" aria-hidden="true" data-toggle="tooltip" title="عنوان"></i>
+                        <span>
+                            {{if title}}
+                            {{:title}}
+                            {{else}}
+                            -
+                            {{/if}}
+                        </span>
+                        <br />
+                        <i class="fa fa-list-alt v-middle" aria-hidden="true" data-toggle="tooltip" title="کد"></i>
+                        <span>
+                            {{if code}}
+                            {{:code}}
+                            {{else}}
+                            -
+                            {{/if}}
+                        </span>
+                        <br />
+                        <i class="fa fa-barcode v-middle" aria-hidden="true" data-toggle="tooltip" title="کد کتاب کد"></i>
+                        <span>
+                            {{if bookCode}}
+                            {{:bookCode}}
+                            {{else}}
+                            -
+                            {{/if}}
+                        </span>
+                        {{if setNumber}}
+                        <br />
+                        <a>
+                            <i class="fa fa-cogs v-middle green" aria-hidden="true" data-toggle="tooltip" title="کد نیم ست" style="font-size:22px"></i>
+                            <span class="green">{{:setNumber}}</span>
+                        </a>
+                        {{/if}}
+                    </td>
+                    <td class="hidden-xs hidden-sm">
+                        <div>
+                            <i class="fa fa-sort-numeric-asc v-middle" aria-hidden="true" data-toggle="tooltip" title="تعداد"></i>
+                            <span>{{:count}}</span>
+                        </div>
+                        <div>
+                            <i class="fa fa-balance-scale v-middle" aria-hidden="true" data-toggle="tooltip" title="وزن"></i>
+                            <span>{{:weight}} گرم</span>
+                        </div>
+                        <div>
+                            {{if size}}
+                            <i class="fa fa-expand v-middle" aria-hidden="true" data-toggle="tooltip" title="اندازه"></i>
+                            <span>{{:size}}</span>
+                            {{else}}
+                            {{if productSizeId != null}}
+                            <i class="fa fa-expand v-middle" aria-hidden="true" data-toggle="tooltip" title="اندازه"></i>
+                            <span>سلیقه ای</span>
+                            {{/if}}
+                            {{/if}}
+                            {{if size2}}
+                            <i class="fa fa-expand v-middle" aria-hidden="true" data-toggle="tooltip" title="اندازه2"></i>
+                            <span>{{:size2}}</span>
+
+                            {{/if}}
+                        </div>
+                        {{if goldType}}
+                        <div>
+                            <i class="fa fa-certificate v-middle" aria-hidden="true" data-toggle="tooltip" title="براقیت"></i>
+                            <span>{{:goldTypeTitle}}</span>
+                        </div>
+                        {{/if}}
+                        {{if outerWerkTypeTitle}}
+                        <div>
+                            <i class="fa fa-wrench  v-middle" aria-hidden="true" data-toggle="tooltip" title="نوع خرج کار"></i>
+                            <span>{{:outerWerkTypeTitle}}</span>
+                        </div>
+                        {{/if}}
+                    </td>
+                    <td>
+                        {{if stoneList && stoneList.length > 0}}
+                        {{for stoneList ~array=stoneList}}
+                        <div>
+                            <i class="fa fa-diamond v-middle" aria-hidden="true" data-toggle="tooltip" title="سنگ"></i>
+                            <span>
+                                {{:order}}: {{if stoneName}}{{:stoneName}}{{else}}سلیقه ای{{/if}}
+                            </span>
+                        </div>
+                        {{/for}}
+                        {{/if}}
+                        {{if leatherList && leatherList.length > 0}}
+                        {{for leatherList ~array=leatherList}}
+                        <div>
+                            <i class="fa fa-road v-middle" aria-hidden="true" data-toggle="tooltip" title="چرم"></i>
+                            <span>
+                                {{:order}}: {{if leatherName}}{{:leatherName}}{{else}}سلیقه ای{{/if}}
+                            </span>
+                        </div>
+                        {{/for}}
+                        {{/if}}
+                        {{if leatherLoop}}
+                        <div>
+                            <i class="fa fa-refresh v-middle" aria-hidden="true" data-toggle="tooltip" title="تعداد دور چرم"></i>
+                            <span>{{:leatherLoop}}</span>
+                        </div>
+                        {{/if}}
+                        {{if productColor != null}}
+                        <div>
+                            <i class="fa fa-circle v-middle" aria-hidden="true" data-toggle="tooltip" title="رنگ"></i>
+                            <span>{{:productColorTitle}}</span>
+                        </div>
+                        {{/if}}
+                    </td>
+                    <td>
+                        {{if customer}}
+                        <div>
+                            <i class="fa fa-user v-middle" aria-hidden="true" data-toggle="tooltip" title="مشتری"></i>
+                            <span>{{:customer}}</span>
+                        </div>
+                        {{/if}}
+                        {{if phoneNumber}}
+                        <div>
+                            <i class="fa fa-phone v-middle" aria-hidden="true" data-toggle="tooltip" title="تلفن"></i>
+                            <span>{{:phoneNumber}}</span>
+                        </div>
+                        {{/if}}
+                        {{if branchLabel}}
+                        <div>
+                            <i class="fa fa-building v-middle" aria-hidden="true" data-toggle="tooltip" title="شعبه"></i>
+                            <span>{{:branchLabel}}</span>
+                        </div>
+                        {{/if}}
+
+                        {{if description}}
+                        <div>
+                            <i class="fa fa-comment-o v-middle" aria-hidden="true" data-toggle="tooltip" title="توضیحات"></i>
+                            <span>{{:description}}</span>
+                        </div>
+                        {{/if}}
+                      
+                        <div>
+                            <i class="fa fa-user-o v-middle" aria-hidden="true" data-toggle="tooltip" title="کاربر ثبت کننده"></i>
+                            <span>{{:createdUser}}</span>
+                        </div>
+                        <div class="showLog pointer" data-id="{{:id}}">
+                            {{if orderDetailStatus == 7 || orderDetailStatus == 8 || orderDetailStatus == 9}}
+                            <i class="fa fa-line-chart v-middle red" aria-hidden="true" data-toggle="tooltip" title="وضعیت"></i>
+                            <span class="red">{{:orderDetailStatusTitle}}</span>
+                            {{else}}
+                            <i class="fa fa-line-chart v-middle" aria-hidden="true" data-toggle="tooltip" title="وضعیت"></i>
+                            <span>{{:orderDetailStatusTitle}}</span>
+                            {{/if}}
+                        </div>
+                    </td>
+                </tr>
+                {{if description2}}
+                <tr>
+                    <td colspan="7">
+                        <p style="display:inline;color:red" id="description2{{:id}}">{{:description2}}</p>
+                    </td>
+                </tr>
+                {{/if}}
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+
+    <script id="template-log" type="text/x-jsrender">
+        <div class="table row column no-padding w100">
+            <div class="table-heading text-center">
+                <div class="table-head">
+                    کاربر
+                </div>
+                <div class="table-head">
+                    تاریخ
+                </div>
+                <div class="table-head">
+                    وضعیت
+                </div>
+                <div class="table-head">
+
+                </div>
+            </div>
+            {{for list}}
+            <div class="table-row text-center">
+                <div class="table-cell ltr">
+                    {{:createUser}}
+                </div>
+                <div class="table-cell ltr">
+                    {{:createdDate}}
+                </div>
+                <div class="table-cell">
+                    {{:statusText}}
+                </div>
+                <div class="table-cell">
+                    {{:reasonText}}
+                </div>
+            </div>
+            {{/for}}
+        </div>
+    </script>
+
+}

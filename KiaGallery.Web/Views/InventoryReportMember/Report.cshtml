@@ -1,0 +1,275 @@
+﻿
+@{
+    ViewBag.Title = "گزارش";
+    var user = BaseController.GetAuthenticatedUser();
+}
+
+<style type="text/css">
+    table th, table td {
+        border: solid 1px silver;
+        padding: 5px;
+    }
+
+    table input[type=text] {
+        display: inline-block;
+        height: 30px;
+    }
+
+        table input[type=text].little {
+            width: 66px;
+            display: inline-block;
+            text-align: center;
+            height: 30px;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+    .container *:not(i) {
+        font-family: 'IRANSans(FaNum)';
+    }
+
+    .td50 {
+        text-align: center;
+    }
+
+    .td100 {
+        text-align: right;
+    }
+
+    .td160 {
+        text-align: center;
+    }
+
+    .medium {
+        width: 105px !important;
+    }
+
+    .total {
+        direction: ltr;
+        text-align: left;
+    }
+
+    .header {
+        padding: 30px 10px;
+        margin: 0;
+    }
+
+        .header span {
+            float: left;
+        }
+
+    #form tbody tr:nth-child(odd) {
+        background-color: #@(ViewBag.Branch.Color)22;
+    }
+
+</style>
+
+<div class="container">
+
+    <h4 class="header" style="background-color: #@ViewBag.Branch.Color">
+        <i class="v-nav-item fa fa-building fa-16px" aria-hidden="true"></i> شعبه @user.UserPlace
+        <span>@ViewBag.Date&nbsp;&nbsp;<i class="fa fa-calendar-o fa-20px v-middle" aria-hidden="true"></i></span>
+        <input type="hidden" id="txtDate" value="@ViewBag.Date" />
+    </h4>
+    <table id="form" style="width: 100%">
+        <thead>
+            <tr>
+                <th>ردیف</th>
+                <th colspan="3">شرح</th>
+                <th>خروج <sub>(ریال)</sub></th>
+                <th>ورود <sub>(ریال)</sub></th>
+                <th>مانده <sub>(ریال)</sub></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="td50">1</td>
+                <td>فروش</td>
+                <td class="td100">
+                    <input type="text" class="form-control little number-only" name="numberSaleFactor" value="0" /> فاکتور
+                </td>
+                <td class="td100">
+                    <input type="text" class="form-control little" name="saleWeight" value="0" /> گرم
+                </td>
+                <td class="td160">
+                    <input id="txtSaleExit" type="text" class="form-control money-separator number-only item exit" name="saleExit" value="0" />
+                </td>
+                <td class="td160">
+                    <input id="txtSaleEntry" type="text" class="form-control money-separator number-only item entry" name="saleEntry" value="0" />
+                </td>
+                <td class="td160">
+                    <input id="txtSale" type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+            <tr>
+                <td class="td50">2</td>
+                <td>مرجوعی</td>
+                <td class="td100"></td>
+                <td class="td100">
+                    <input type="text" class="form-control little" name="returnedWeight" value="0" /> گرم
+                </td>
+                <td class="td160">
+                    <input id="txtReturnedExit" type="text" class="form-control money-separator number-only item exit" name="returnedExit" value="0" />
+                </td>
+                <td class="td160">
+                    <input id="txtReturnedEntry" type="text" class="form-control money-separator number-only item entry" name="returnedEntry" value="0" />
+                </td>
+                <td class="td160">
+                    <input id="txtReturned" type="text" class="form-control money-separator total" disabled value="0" />
+                </td>
+            </tr>
+            @{
+                var bankList = (List<KiaGallery.Model.Context.DailyReportFinancial.Bank>)ViewBag.BankList;
+            }
+        </tbody>
+    </table>
+    <br />
+    <button id="btnSave" class="btn btn-success" style="width: 120px;">
+        ذخیره
+    </button>
+
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("input:text").focus(function () { $(this).select(); });
+
+            calculateReport();
+            $(".item").on("keyup", function () {
+                calculateReport();
+            });
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $("#btnShowSave").on("click", function () {
+                $("#btnSave").removeClass("hide");
+                $(this).addClass("hide");
+            });
+
+            $("#btnSave").on("click", function () {
+                var formEntity = getEntity("#form");
+
+                formEntity.dailyReportBankList = [];
+                $(".bank").each(function (index, element) {
+                    var item = {
+                        bankId: $(element).find(".id").val(),
+                        exit: removeSeparator($(element).find(".exit").val()),
+                        entry: removeSeparator($(element).find(".entry").val()),
+                    }
+
+                    formEntity.dailyReportBankList.push(item);
+                });
+
+                formEntity.dailyReportCurrencyList = [];
+                $(".currency").each(function (index, element) {
+                    var item = {
+                        currencyId: $(element).find(".id").val(),
+                        value: removeSeparator($(element).find(".value").val()),
+                        rialValue: removeSeparator($(element).find(".rial-value").val()),
+                        rialExit: removeSeparator($(element).find(".exit").val()),
+                        rialEntry: removeSeparator($(element).find(".entry").val()),
+                    }
+
+                    formEntity.dailyReportCurrencyList.push(item);
+                });
+
+                var params = {
+                    date: $("#txtDate").val(),
+                    report: formEntity
+                }
+                loader(true);
+                $.post("/dailyReport/save", params, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        callbackAlert(response.message, function () {
+                            document.location.href = "/dailyReport/archive";
+                        });
+                    }
+                    else if (response.status != 201) {
+                        alert(response.message);
+                    }
+                });
+            });
+
+            load();
+
+        });
+
+        function load() {
+            var params = { date: $("#txtDate").val() };
+            loader(true);
+            $.get("/dailyReport/load", params, function (response) {
+                if (response.status == 200) {
+                    setEntity(response.data);
+
+                    $(".bank").each(function (index, element) {
+                        var id = $(element).find(".id").val();
+                        var bankList = response.data.dailyReportBankList;
+                        for (var i = 0; i < bankList.length; i++) {
+                            if (bankList[i].bankId == id) {
+                                $(element).find(".exit").val(bankList[i].exit);
+                                $(element).find(".entry").val(bankList[i].entry);
+                            }
+                        }
+                    });
+
+                    $(".currency").each(function (index, element) {
+                        var id = $(element).find(".id").val();
+                        var currencyList = response.data.dailyReportCurrencyList;
+                        for (var i = 0; i < currencyList.length; i++) {
+                            console.log(currencyList[i]);
+                            if (currencyList[i].currencyId == id) {
+                                $(element).find(".value").val(currencyList[i].value);
+                                $(element).find(".rial-value").val(currencyList[i].rialValue);
+                                $(element).find(".exit").val(currencyList[i].rialExit);
+                                $(element).find(".entry").val(currencyList[i].rialEntry);
+                            }
+                        }
+                    });
+                    calculateReport();
+                }
+                else if (response.status != 201) {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+        function calculateReport() {
+            $("tr").each(function (index, element) {
+                if ($(element).find(".exit").length > 0) {
+                    var total = 0;
+                    if ($(element).prev().find(".total").length > 0) {
+                        total = parseInt($(element).prev().find(".total").val().replaceAll(",", ""));
+                    }
+
+                    var exit = 0;
+                    if (!$(element).find(".exit").hasClass("useless"))
+                        exit = parseInt($(element).find(".exit").val().replaceAll(",", "")) || 0;
+
+                    var entry = 0;
+                    if (!$(element).find(".entry").hasClass("useless"))
+                        entry = parseInt($(element).find(".entry").val().replaceAll(",", "")) || 0;
+
+                    $(element).find(".total").val(toSeparator(total + (exit - entry)));
+                }
+            });
+
+            $(".totalProfit").val(toSeparator(parseInt($("[name=saleExit]").val().replaceAll(",", "")) / 1000 * 59));
+            $(".totalValue").val(toSeparator(parseInt($("[name=saleExit]").val().replaceAll(",", "")) / 10000 * 818));
+
+            if (parseInt($(".total:last").val()) == 0) {
+                $("#alertIncomplete").addClass("hide");
+                $("#btnSave").removeClass("hide");
+            }
+            else {
+                $("#alertIncomplete, #btnShowSave").removeClass("hide");
+                $("#btnSave").addClass("hide");
+            }
+        }
+
+    </script>
+}
+

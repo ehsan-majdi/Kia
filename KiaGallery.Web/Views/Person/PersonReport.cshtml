@@ -1,0 +1,66 @@
+﻿
+@{
+    ViewBag.Title = "گزارش پرسنل";
+}
+
+
+
+<style type="text/css">
+    input[type=radio] {
+        vertical-align: middle;
+        margin-left: 10px;
+        padding: 0;
+    }
+</style>
+
+<div class="row" id="option-content">
+    <div class="col-sm-4">
+        <div><label><input type="radio" name="type" value="0" checked><span>پرینت با جزئیات</span></label></div>
+  
+    </div>
+    <div class="col-sm-4">
+        @foreach (var item in ViewBag.BranchList)
+        {
+            <div><label><input class="branch" type="radio" name="branchId" value="@item.Id" />@item.Name</label></div>
+        }
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label for="cmbInsurance">بیمه</label>
+            <select id="cmbInsurance" class="form-control" data-validate="required" name="insurance">
+                <option value="">...</option>
+                <option value="true">دارد</option>
+                <option value="false">ندارد</option>
+            </select>
+        </div>
+       @*<div><label><input type="radio" name="persons"><span>پرسنل</span></label></div>*@
+        <div class="form-group">
+            <label for="cmbInsurance">وضعیت</label>
+            <select id="cmbInsurance" class="form-control" data-validate="required" name="active">
+                <option value="">...</option>
+                <option value="true">فعال</option>
+                <option value="false">غیر فعال</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <br />
+    <div class="col-xs-12">
+        <button id="btn-print" class="btn btn-success">چاپ گزارش</button>
+    </div>
+</div>
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(document).on("click", "#btn-print", function (event) {
+                event.preventDefault();
+
+                var entity = getEntity("#option-content");
+                document.location = "/report/MakePersonReport" + "?model=" + JSON.stringify(entity);
+            });
+        });
+    </script>
+}

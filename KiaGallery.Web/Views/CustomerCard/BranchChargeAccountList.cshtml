@@ -1,0 +1,366 @@
+﻿
+@{
+    ViewBag.Title = " لیست شارژ ";
+}
+
+
+
+    <div class="container">
+        <div class=" col-md-2">
+            <input type="search" id="txtSearch" class="form-control" name="word" placeholder="جستجو..." />
+        </div>
+        <div class="col-md-2 col-lg-2">
+            <select class="form-control" id="cmbDescriptionType">
+                <option value="-1">نوع شارژ</option>
+                <option value="2">غیر پوز</option>
+                <option value="0">مرجوعی</option>
+                <option value="1">روابط عمومی</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <input type="text" autocomplete="off" id="txtDate" class="form-control date" name="persianCreateDate" placeholder="تاریخ" />
+        </div>
+        <br />
+        <br />
+        <ul class="nav nav-tabs ">
+            <li><a class="status" style="color:orange" data-toggle="tab" href="#menu1" data-status="1">تایید نشده</a></li>
+            <li><a class="status" style="color:deepskyblue" data-toggle="tab" href="#menu4" data-status="4">بازبینی</a></li>
+            <li><a class="status" style="color:#5cb85c" data-toggle="tab" href="#menu2" data-status="2">تایید شده</a></li>
+            <li><a class="status" style="color:#d9534f" data-toggle="tab" href="#menu3" data-status="3">رد شده</a></li>
+            <li class="active"><a class="status" data-toggle="tab" href="#home" data-status="0">همه</a></li>
+        </ul>
+        <div id="content"></div>
+    </div>
+<div class="modal fade" id="modal-charge" tabindex="-1" role="dialog" aria-hidden="true" style="        overflow: auto">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="exampleModalLabel">شارژ کردن حساب</h5>
+            </div>
+            <div class="modal-body">
+                <form id="form-charge">
+                    <input id="" type="hidden" class="txtDebitPointPercent" name="pointPercent" />
+                    <div class="margin-top">
+                        <label>شماره مشتری:</label>
+                        <input type="text" class="form-control hidden-cariorCode" name="cariorCode" data-validate="" readonly />
+                        <input type="hidden" name="id" />
+                    </div>
+                    <div class="margin-top">
+                        <label>مبلغ (ریال):</label>
+                        <input id="txtChargeAmount" type="text" class="form-control  money-separator number-only" name="amount" />
+                        <input id="hiddenUserInfoId" type="hidden" name="userInfoId" />
+                    </div>
+                    <div class="margin-top">
+                        <label>نوع شارژ:</label>
+                        <div class="">
+                            <div>
+                                <span>غیر پوز: (پول نقد ، واریز به حساب، کارت به کارت، سکه، ارز ، طلای متفرقه ،تبدیل به حساب طلایی، طلا کیا):</span>
+                                <input type="radio" class="form-control w15" name="descriptionType" value="2" />
+                            </div>
+                            <hr />
+                            <div>
+                                <span>بازگشت اعتبار استفاده شده در فاکتور مرجوعی:</span>
+                                <input type="radio" class="form-control w15 ss" name="descriptionType" value="0" />
+                            </div>
+                            <hr />
+                            <div>
+                                <span>خدمات مدیریت روابط مشتری:</span>
+                                <input type="radio" class="form-control w15" name="descriptionType" value="1" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="margin-top factor-number">
+                        <label>شماره فاکتور</label>
+                        <input id="txtFactorNumber" type="text" class="form-control" name="factorNumber" />
+                    </div>
+                    <div class="margin-top">
+                        <label>توضیحات</label>
+                        <textarea id="txtDescription" type="text" class="form-control" name="description"></textarea>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">بستن</button>
+                <button id="btnSaveCharge" class="btn btn-success">
+                    ذخیره
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        var defaultEntity = {
+            page: "0",
+            count: "50"
+        }
+        $(document).ready(function () {
+            $(".date").pDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true,
+            });
+            getList();
+            $("#cmbDescriptionType").on("change", function () {
+                var entity = {
+                    descriptionType: $(this).val()
+                };
+                manipulateParam(entity, "page");
+            });
+            $(window).on('hashchange', function () {
+                getList();
+            });
+            $(".status").on("click", function () {
+
+                var status = $(this).attr("data-status");
+
+                var entity = {
+                    status: status
+                };
+                manipulateParam(entity, "page");
+            });
+            $("#txtSearch").on("keydown", function (e) {
+                var word = $(this).val();
+                var entity = {
+                    word: word
+                };
+                if (e.which == 13) {
+                    manipulateParam(entity, "page");
+                }
+            });
+            $("#txtDate").on("keydown", function (e) {
+                var date = $(this).val();
+                var entity = {
+                    persianCreateDate: date
+                };
+                if (e.which == 13) {
+                    manipulateParam(entity, "page");
+                }
+            });
+            $("#btnSaveCharge").on("click", function () {
+                confirmMessage("آیا از اطلاعات وارد شده اطمینان دارید؟", function () {
+                    saveCharge();
+                });
+            });
+            $("input[name='descriptionType']").change(function () {
+                var id = $(this).val();
+                if (id == 0 || id == 2) {
+                    $(".factor-number").show();
+                }
+                else {
+                    $(".factor-number").hide();
+
+                }
+                console.log(id)
+
+            });
+            $(document).on("click", ".btnEdit", function () {
+                var id = $(this).attr("data-id");
+                load(id)
+            });
+            $(document).on("click", ".btnDelete", function () {
+                var id = $(this).attr("data-id");
+                deleteItem(id)
+            });
+        });
+        function getList() {
+            updateForm();
+            var newParams = getParam();
+            var param = $.extend(defaultEntity, newParams);
+            loader(true)
+            $.get("/customerCard/branchCardChargeList", param, function (response) {
+                if (response.status == 200) {
+                    if (response.data) {
+                        var data = response.data;
+                        var template = $.templates("#template");
+                        var htmlOutput = template.render(data);
+                        $("#content").html(htmlOutput);
+                        if (param["status"] && param["status"] == 1 || param["status"] == 4) {
+                            $(document).find(".operation").removeClass("hidden");
+                        }
+                        else {
+
+                            $(document).find(".operation").addClass("hidden");
+                        }
+                    }
+                }
+                else {
+                    alert(response.message)
+                }
+                loader(false)
+
+            });
+        }
+        function saveCharge() {
+            var entity = getEntity("#form-charge");
+            console.log(entity.pointPercent)
+
+            if (!entity.amount) {
+                alert("مبلغ وارد نشده است.");
+                return;
+            }
+            if (!entity.cariorCode) {
+                alert("شماره مشتری وارد نشده است.");
+                return;
+            }
+
+            if (!entity.descriptionType) {
+                alert("نوع شارژ وارد نشده است.");
+                return;
+            }
+            if (entity.descriptionType == 0 || entity.descriptionType == 2) {
+
+                if (!entity.factorNumber) {
+                    alert("شماره فاکتور وارد نشده است.");
+                    return;
+                }
+            }
+            else {
+                if (!entity.description) {
+                    alert("توضیحات وارد نشده است.");
+                    return;
+                }
+            }
+            loader(true);
+            $.get("/customerCard/cardChargeTransaction", entity, function (response) {
+                if (response.status == 200) {
+                    $("#modal-charge").modal("hide");
+                    getList()
+                    $(".factor-number").hide();
+                }
+                else {
+                    alert(response.message)
+                }
+                loader(false);
+            });
+        }
+        function load(id) {
+            loader(true)
+            $.get("/customerCard/cardChargeLoad/" + id, function (response) {
+                if (response.status == 200) {
+                    setEntity(response.data, "#form-charge")
+                    //if (response.data.productCode) {
+                    //    if (data.productCode != "") {
+
+                    //        var productCode = data.productCode.split("-");
+                    //        console.log(productCode)
+                    //        for (var i = 0; i < productCode.length; i++) {
+                    //            var ss = "<span class=\" parent \" >" + productCode[i] + "<i class=\" delete-code fa fa-close \" ></i><input type=\"hidden\" name=\"productCode\" value=\"" + productCode[i] + "\" /></span>";
+
+                    //            console.log(i);
+                    //            $("#appendTo").append(ss);
+                    //        }
+
+                    //        //$(".parent").find("i").remove()
+                    //    } else {
+                    //        $("#productCode").prop("disabled", true)
+
+                    //    }
+                    //}
+                    console.log(response.data)
+                    $("#modal-charge").modal("show")
+
+                }
+                else {
+                    alert(response.message)
+                }
+                loader(false)
+            });
+        }
+        function deleteItem(id) {
+            loader(true)
+            $.get("/customerCard/cardChargeDelete/" + id, function (response) {
+                if (response.status == 200) {
+                    getList();
+                }
+                else {
+                    alert(response.message)
+                }
+                loader(false)
+            });
+        }
+        function updateForm() {
+            var params = getParam();
+            $("ul li").removeClass("active");
+            console.log(params)
+            if (params["status"] && params["status"] >= 0)
+                $("ul li a[data-status=" + params["status"] + "]").closest("li").addClass("active");
+            else {
+                $("ul li:last").addClass("active");
+                defaultEntity.status = null;
+            }
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+
+        {{if list.length > 0}}
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th class="txt-al-c">ردیف</th>
+                    <th class="txt-al-c">تاریخ</th>
+                    <th class="txt-al-c">شعبه</th>
+                    <th class="txt-al-c">نوع شارژ</th>
+                    <th class="txt-al-c">کد مشتری</th>
+                    <th class="txt-al-c">موبایل</th>
+                    <th class="txt-al-c">نام</th>
+                    <th class="txt-al-c">نوع کارت</th>
+                    <th class="txt-al-c">شماره فاکتور</th>
+                    <th class="txt-al-c">مبلغ درخواست</th>
+                    <th class="txt-al-c">مبلغ شارژ</th>
+                    <th class="txt-al-c">کاربر ثبت کننده</th>
+                    <th class="txt-al-c operation hidden">عملیات</th>
+                </tr>
+                <tr></tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td class="txt-al-c">{{:#index + 1}}</td>
+                    <td class="txt-al-c">{{:persianCreateDate}}</td>
+                    <td class="txt-al-c">{{:createUser}}</td>
+                    <td class="txt-al-c">{{:descriptionTypeTitle}}</td>
+                    <td class="txt-al-c">{{:cariorCode}}</td>
+                    <td class="txt-al-c">{{:mobile}}</td>
+                    <td class="txt-al-c">{{:fullName}}</td>
+                    <td class="txt-al-c">{{:pointPercent}}%</td>
+                    <td class="txt-al-c"> {{if factorNumber}} {{:factorNumber}}{{else}} <i class="fa fa-times" style="color:red"></i> {{/if}}</td>
+                    <td class="txt-al-c">{{:requestAmountSeparator}}</td>
+                    <td class="txt-al-c">{{:amountSeparator}}</td>
+                    <td class="txt-al-c">{{:createPerson}}</td>
+                    <td class="txt-al-c operation hidden">
+                        <button class="btn btn-success btn-xs btnEdit" data-id="{{:id}}"><i class="fa fa-edit"></i></button>
+                        <button class="btn btn-danger btn-xs btnDelete" data-id="{{:id}}"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>
+                <tr style="border:none !important">
+                    <td colspan="7" style="border:none !important">
+                        <p style="display:inline;color:#ff4800">
+                            <span style="color:black"> توضیحات:</span> {{:description}}
+                        </p>
+                    </td>
+                </tr>
+                <tr style="border:none !important">
+                    <td colspan="7" style="border:none !important">
+                        <p style="display:inline;color:#ff4800">
+                            <span style="color:black">  توضیحات حسابداری: </span> {{:checkoutDescription}}
+                        </p>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+        {{else}}
+        <h4 class="txt-al-c">موردی یافت نشد</h4>
+        {{/if}}
+    </script>
+}

@@ -1,0 +1,99 @@
+﻿
+@{
+    ViewBag.Title = "گزارش فاکتور های وفادار";
+}
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        height: 600px
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: right;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>
+<div class="col-md-12">
+    <div class="col-md-6" id="content"></div>
+    <div class="col-md-6" id="content1"></div>
+</div>
+
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var newParams = getParam();
+            var params = newParams;
+
+            console.log()
+            $.post("/customerLoyality/getBranchFactorReport", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                    var template1 = $.templates("#template1");
+                    var htmlOutput1 = template1.render(data);
+                    $("#content1").html(htmlOutput1);
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+
+        });
+
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                کل
+                <tr>
+                    <th>شعبه</th>
+                    <th>تعداد خرید</th>
+                    <th>تعداد مرجوعی</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td>{{:branchName}}</td>
+                    <td>{{:count}}</td>
+                    <td>{{:returnCount}}</td>
+                </tr>
+                {{/for}}
+
+            </tbody>
+        </table>
+    </script>
+    <script id="template1" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                دیروز
+                <tr>
+                    <th>شعبه</th>
+                    <th>تعداد خرید</th>
+                    <th>تعداد مرجوعی</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for yesterdayList}}
+                <tr>
+                    <td>{{:branchName}}</td>
+                    <td>{{:count}}</td>
+                    <td>{{:returnCount}}</td>
+                </tr>
+                {{/for}}
+
+            </tbody>
+        </table>
+    </script>
+}

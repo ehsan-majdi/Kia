@@ -1,0 +1,107 @@
+﻿
+@{
+    ViewBag.Title = "CreateQuestion";
+}
+
+<div>
+    <a href="/crm/AddQuestion" class="button-new btn btn-success">
+        <span class="fa fa-plus"></span>
+        سوال جدید
+    </a>
+</div>
+
+
+<h2>لیست سوالات ایجاد شده</h2>
+
+<div>
+    <div id="content"></div>
+</div>
+@section Scripts {
+
+
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 200,
+            term: null,
+            branchId: null
+        }
+        //$(window).on('hashchange', function () {
+        //    getList();
+        //});
+        $(document).ready(function () {
+            getList();
+
+        });
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+
+            loader(true);
+            $.get("/crm/search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف سوال اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/crm/DeleteQuestion/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th>ترتیب</th>
+                    <th>عنوان</th>
+                    <th>نوع سوال</th>
+                    <th>دسته بندی</th>
+                    <th class="icon-col text-center">ویرایش</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td>{{:order}}</td>
+                    <td>{{:title}}</td>
+                    <td>{{:questionType}}</td>
+                    <td>{{:categoryQuestionTitle}}</td>
+                    <td class="txt-al-c">
+                        <a href="/crm/editQuestion/{{:id}}" class="btn btn-primary btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c v-middle">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+}
+

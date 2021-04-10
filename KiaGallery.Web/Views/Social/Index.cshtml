@@ -1,0 +1,121 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Scripts/bootstrap-rtl.min.js"></script>
+    <link href="~/Content/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="~/Content/fonts/fontawsome/font-awesome.min.css" rel="stylesheet" />
+    <title>Page Title</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .full-height {
+            height: 100%;
+            position: fixed;
+            display: grid;
+            width: 100%
+        }
+
+
+        .object1 {
+            background-color: #36ade1;
+        }
+
+        .object2 {
+            background-color: #e51a97;
+        }
+
+        .object3 {
+            background-color: #3b5998
+        }
+
+        .object4 {
+            background-color: #FFC107;
+        }
+
+        .object {
+            padding: 10px;
+            font-size: 15px;
+        }
+
+        p {
+            font-weight: 600;
+            color: white;
+            padding: 25px
+        }
+
+        span {
+            margin-left: 30px;
+            color: white
+        }
+
+        .tt {
+            height: 100%;
+            background-color: red !important;
+            position: absolute;
+            z-index: 99999
+        }
+    </style>
+
+</head>
+<body>
+    <div class="form-inline">
+        <div class="full-height">
+            <div class="col-md-12 object hh object1 " color="red">
+                <p>Telegram</p>
+                <span class="fa fa-plus bb"> مشاهده </span>
+            </div>
+            <div class="col-md-12 object hh object2 " color="black">
+                <p>Instagram</p>
+                <span class="fa fa-plus bb "> مشاهده </span>
+            </div>
+            <div class="col-md-12 object hh object3 " color="deepskyblue">
+                <p>Facebook</p>
+                <span class="fa fa-plus bb "> مشاهده </span>
+            </div>
+            <div class="col-md-12 object hh object4 " color="deeppink">
+                <p>WebSite</p>
+                <span class="fa bb fa-plus ">مشاهده</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="~/Scripts/jquery.vibrate.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        console.log(123)
+        $(".object").vibrate({
+            duration: 2000,
+            trigger: "touchstart"
+        });
+        $(".bb").on("click", function () {
+            if ($(this).hasClass("bb")) {
+                console.log(456)
+                $(this).removeClass("bb")
+                $(this).addClass("remove")
+            }
+            $(this).closest(".hh").addClass("tt")
+            $(this).prevAll(".hh").removeClass("tt")
+            $(this).nextAll(".hh").removeClass("tt")
+        });
+        $(document).on("click", ".remove", function () {
+            if ($(this).hasClass("remove")) {
+                console.log(888)
+                $(this).parents(".hh").removeClass("tt")
+                $(this).nextAll(".hh").removeClass("tt")
+            }
+        });
+    });
+
+</script>
+

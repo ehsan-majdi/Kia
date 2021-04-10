@@ -1,0 +1,188 @@
+﻿
+@{
+    ViewBag.Title = "Edit";
+}
+<style>
+    /*.input-hide{
+        display:none;
+    }*/
+</style>
+<div class="container ">
+    <form>
+        <div id="form">
+            <input type="hidden" name="id" />
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="form-group">
+                        <label for="cmbPostType">نوع پست</label>
+                        <select id="cmbPostType" class="form-control" data-validate="required" name="instagramPostType">
+                            <option value="">...</option>
+                            <option value="0">پست برای محصول</option>
+                            <option value="1">پست برای اینستاگرام</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="form-group input-hide hide">
+                        <label for="txtTitle">عنوان </label>
+                        <input id="txtTitle" class="form-control" name="title" placeholder="عنوان " data-validate="required" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="form-group relative input-hide hide">
+                        <label for="txtFileName">تصویر</label>
+                        <input id="txtFileName" type="text" name="fileName" class="file form-control" disabled data-validate="required" />
+                        <input id="file" type="file" class="hidden" />
+                        <i id="openFile" class="fa fa-upload fa-20px file-icon" aria-hidden="true" style="left: 13px; top: 32px;"></i>
+                        <i id="deleteFile" class="fa fa-remove fa-20px file-icon" aria-hidden="true" style="left: 45px; top: 32px;"></i>
+                    </div>
+                    <img id="img-Upload" />
+                    <br />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="form-group product hide">
+                        <label for="txtDayCount">تعداد روز جهت ساخت محصول </label>
+                        <input id="txtDayCount" class="form-control" name="dayCounter" placeholder="" required />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="form-group input-hide hide">
+                        <label for="txtPosting">تاریخ انتشار پست</label>
+                        <input id="txtPosting" class="form-control date returnDate" name="publishDate" autocomplete="off" placeholder="" required />
+                        <div class="text-center">
+                            <span class="displayDate"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-md-offset-4 text-center">
+                <button class="btn btn-success" type="submit" id="btnSave" style="">ثبت </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+         var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+
+        $(document).ready(function () {
+            load();
+            //$("#cmbPostType").val("");
+            //$(".input-hide").hide();
+            setupUpload("instagram", function (response) {
+                $("#img-Upload").attr("src", "/image/instagram/300x300/" + response)
+            });
+
+            $(".date").pDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true,
+            });
+
+            $("#cmbPostType").change(function () {
+                if ($(this).val() == 0) {
+                    $(".product").removeClass("hide")
+                    $(".input-hide").removeClass("hide");
+                }
+                if ($(this).val() == 1) {
+                    $(".product").addClass("hide")
+                    $(".input-hide").removeClass("hide");
+                    $(".displayDate").hide();
+                }
+                if ($(this).val() == "") {
+                    $(".input-hide").addClass("hide");
+                    $(".product").addClass("hide")
+                }
+            });
+
+            $(document).on("change", ".date", function () {
+                if (checkForm("#form")) {
+                    var entity = getEntity("#form");
+                    loader(true);
+                    $.ajax({
+                        method: "POST",
+                        url: "/instagramPost/returnDate",
+                        data: entity,
+                        success: function (response) {
+                            if (response.status == 200) {
+                                var displayDateValue = "<br/><div class='btn btn-danger'><span>" + " تاریخ انتشار :" + "</span>" + response.data.finalPersianPublishDate + "</div>"
+                                $(".displayDate").html(displayDateValue);
+
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                            loader(false);
+                        }
+                    })
+                }
+            });
+
+            $(document).on("click", "#btnSave", function (event) {
+                event.preventDefault();
+                if (checkForm("#form")) {
+                    var entity = getEntity("#form");
+                    loader(true);
+                    $.ajax({
+                        method: "POST",
+                        url: "/instagramPost/save",
+                        data: entity,
+                        success: function (response) {
+                            if (response.status == 200) {
+                                callbackAlert(response.message, function () {
+                                    document.location = "/instagramPost/list/";
+                                });
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                            loader(false);
+                        }
+                    });
+                }
+            });
+        });
+
+        function load() {
+            if (id > 0) {
+                loader(true);
+                $.get("/instagramPost/load/" + id, function (response) {
+                    if (response.status == 200) {
+                        setEntity(response.data, "#form");
+
+                        if (response.data.instagramPostType == 0) {
+                            $(".product").removeClass("hide")
+                            $(".input-hide").removeClass("hide");
+                        }
+                        if (response.data.instagramPostType == 1) {
+                            $(".product").addClass("hide")
+                            $(".input-hide").removeClass("hide");
+                            $(".displayDate").hide();
+                        }
+                        if (response.data.instagramPostType = "") {
+                            $(".input-hide").addClass("hide");
+                            $(".product").addClass("hide")
+                        }
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            }
+        }
+    </script>
+}

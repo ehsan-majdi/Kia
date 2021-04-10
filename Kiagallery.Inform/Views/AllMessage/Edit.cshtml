@@ -1,0 +1,69 @@
+﻿
+@{
+    ViewBag.Title = "Edit";
+}
+
+<div class="container">
+    <div class="row">
+        <form>
+            <div id="form">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <input id="hiddenId" type="hidden" name="id" value="@ViewBag.Id" />
+                        <label for="txtTitle">عنوان پیام</label>
+                        <input id="txtTilte" class="form-control" name="title" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="txtText">متن پیام</label>
+                        <textarea id="txtText" class="form-control" name="text">متن را اینجا وارد کنید</textarea>
+                    </div>
+                </div>
+                <div>
+                    <button id="btnSave" class="btn btn-success">ثبت</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+
+        $(document).ready(function () {
+            $("#btnSave").click(function(){
+                event.preventDefault();
+                var entity = getEntity("#form");
+            if (checkForm("#form")) {
+                loader(true);
+                $.post("/AllMessage/save", entity, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        callbackAlert(response.message, function () {
+                            document.location = "/allmessage/index/";
+                        })
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+                }
+            });
+        });
+        function load() {
+            if (id > 0) {
+                loader(true);
+                $.get("/allmessage/load/" + id , function (response) {
+                    if (response.status == 200) {
+                        setEntity(response.data, "#form");
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            }
+        }
+    </script>
+}

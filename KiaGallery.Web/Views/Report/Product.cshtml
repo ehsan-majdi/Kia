@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "گزارش محصولات";
+}
+
+<style type="text/css">
+    input[type=radio] {
+        vertical-align: middle;
+        margin-left: 10px;
+        padding: 0;
+    }
+</style>
+
+<div class="row" id="option-content">
+    <div class="col-sm-4">
+        <div><label><input type="radio" name="type" value="0" checked><span>پرینت با جزئیات</span></label></div>
+        <div><label><input type="radio" name="type" value="1"><span>پرینت</span></label></div>
+    </div>
+    <div class="col-sm-4">
+        @foreach (var item in ViewBag.Workshop)
+        {
+            <div><label><input class="workshop" type="radio" name="workshop" value="@item.Id" />@item.Name</label></div>
+        }
+    </div>
+    <div class="col-sm-4">
+        <input type="button" class="select-all btn btn-default" value="انتخاب همه" />
+        <br />
+        <br />
+        <div><label><input class="productType" type="checkbox" value="0"><span> دستبند زنجير طلا</span></label></div>
+        <div><label><input class="productType" type="checkbox" value="11"><span> دستبند چرمی </span></label></div>
+        <div><label><input class="productType" type="checkbox" value="12"><span> دستبند ریلی</span></label></div>
+        <div><label><input class="productType" type="checkbox" value="13"><span> دستبند سنگی</span></label></div>
+        <div><label><input class="productType" type="checkbox" value="9"><span> النگو </span></label></div>
+        <div><label><input class="productType" type="checkbox" value="1"><span> گردنبند</span></label></div>
+        <div><label><input class="productType" type="checkbox" value="8"><span> آویز</span></label></div>
+        <div><label><input class="productType" type="checkbox" value="3"><span> انگشتر</span></label></div>
+        <div><label><input class="productType" type="checkbox" value="2"><span> گوشواره  </span></label></div>
+        <div><label><input class="productType" type="checkbox" value="4"><span> آویز ساعت  </span></label></div>
+        <div><label><input class="productType" type="checkbox" value="7"><span> پابند</span></label></div>
+        <div><label><input class="productType" type="checkbox" value="6"><span> ست</span></label></div>
+        <div><label><input class="productType" type="checkbox" value="5"><span> سنجاق بچگانه</span></label></div>
+        <div><label><input class="productType" type="checkbox" value="10"><span> خرج کار </span></label></div>
+    </div>
+</div>
+
+<div class="row">
+    <br />
+    <div class="col-xs-12">
+        <button id="btn-print" class="btn btn-success">چاپ گزارش</button>
+    </div>
+</div>
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(document).on("click", ".select-all", function (event) {
+                if ($(".productType").not(":checked").length > 0) {
+                    $(".productType").prop("checked", true);
+                }
+                else {
+                    $(".productType").prop("checked", false);
+                }
+            });
+            $(document).on("click", "#btn-print", function (event) {
+                event.preventDefault();
+                var idList = new Array();
+                $('.productType:checked').each(function () {
+                    idList.push(this.value);
+                });
+                console.log(idList)
+               
+                var entity = getEntity("#option-content");
+                entity.idList = []
+                entity.idList = idList;
+                console.log(entity)
+                document.location = "/report/makeProductReport" + "?model=" + JSON.stringify(entity);
+            });
+        });
+    </script>
+}

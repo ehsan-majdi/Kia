@@ -1,0 +1,596 @@
+﻿@{
+    ViewBag.Title = "مدیریت سفارشات";
+}
+<link href="~/content/order-page.css" rel="stylesheet" />
+<style type="text/css">
+    .circle-help {
+        width: 25px;
+        height: 25px;
+        display: inline-block;
+        vertical-align: middle;
+        border-radius: 50%;
+    }
+
+    .site-label {
+        margin: 7px;
+        display: block;
+    }
+
+        .site-label .chk {
+            margin: 0;
+            vertical-align: middle;
+            margin-left: 3px;
+        }
+
+    #allStatus, .status, #allWorkshop, .workshop {
+        padding: 0 !important;
+        margin-left: 8px !important;
+        vertical-align: middle;
+    }
+
+    #main {
+        padding: 20px;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-xs-12">
+        <a href="/order/manipulateAll/" id="btManipulateAll" class="btn btn-success"> </a>
+        <label>
+            &nbsp;&nbsp;
+            <input type="checkbox" id="chkArchive" class="v-middle" />
+            به همراه آرشیو
+        </label>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 10px;">
+    <div class="col-xs-6 col-md-3">
+        <input id="txtTerm" type="text" class="form-control" placeholder="عبارت جستجو" />
+    </div>
+    <div class="col-xs-6 col-md-3">
+        <select id="cmbDate" class="form-control combo-chosen chosen-rtl" data-placeholder="تاریخ">
+            @*<option value="">تاریخ</option>
+            @foreach (KiaGallery.Web.Models.OrderDateViewModel item in ViewBag.DateList)
+            {
+                <option value="@item.Date">@item.Date (@item.Count)</option>
+            }*@
+        </select>
+    </div>
+    <div class="col-xs-12 col-md-6 branches">
+        <select id="cmbBranch" class="form-control combo-chosen chosen-rtl" multiple data-placeholder="شعبه">
+            @foreach (var item in ViewBag.BranchList)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+    </div>
+</div>
+<br />
+<div id="menu">
+    <ul>
+
+        <li><a href="#" class="branchType relative" data-id="[0,1,2]"> شعبه و نمایندگی</a><span style="font-size:18px;display: flex;justify-content: center;align-items: end;width:20px;height:20px;border-radius:50px;top:1px;left:0;text-align:center;color:white;z-index:9" class="branchesCount absolute"></span></li>
+  
+        @foreach (var item in ViewBag.CoWorkerList)
+        {
+            <li><a href="#" class="coWorker relative" data-id="@item.id">@item.name</a><span style="font-size:18px;width:20px;height:20px;display: flex;justify-content: center;align-items: end;border-radius:50px;top:1px;left:0;text-align:center;color:white;z-index:9" class="coWorkerCount absolute"></span></li>
+        }
+        <li><a href="#" class="all" data-id="">همه</a></li>
+    </ul>
+</div>
+<br />
+<div id="content" style="margin-top: 15px;">
+
+</div>
+
+<div class="hidden-xs hidden-sm">
+    <div class="help-block">
+        <div class="circle-help bg-new-order"></div> سفارش جدید است و به هیچ موردی از آن رسیدگی نشده است
+    </div>
+    <div class="help-block">
+        <div class="circle-help bg-open-order"></div> سفارش هنوز باز است و تمام موارد داخل آن رفع تکلیف نشده است
+    </div>
+    <div class="help-block">
+        <div class="circle-help bg-open-shortage-order"></div> سفارش تمام شده است . موارد آن رسیدگی شده است، ولی برخی محصولات داخل سفارش کسری شده اند و برای سفارش کسری، سفارش ثبت نشده است.
+    </div>
+    <div class="help-block">
+        <div class="circle-help bg-done-order"></div> وقتی تمام موارد به درستی رفع تکلیف شده اند
+    </div>
+</div>
+
+<div id="modalPrint" class="modal fade" role="dialog" style="overflow-y: auto;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">تنظیمات ارسال سفارش</h4>
+            </div>
+            <div id="print-content" class="modal-body">
+                <input type="hidden" id="hiddenPrintId" value="" />
+                <input type="hidden" id="branchType" name="branchType" />
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div>
+                            <label>
+                                نحوه سفارشات
+                                <select id="cmbOrderType" name="orderType" class="form-control">
+                                    <option value="0">سفارشات ویترین و مشتری</option>
+                                    <option value="1">فقط سفارشات ویترین</option>
+                                    <option value="2">فقط سفارشات مشتری</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div><label><input id="allWorkshop" type="checkbox" checked />همه</label></div>
+                        @foreach (var item in ViewBag.Workshop)
+                        {
+                            <div><label><input class="workshop" type="checkbox" name="workshopList" value="@item.Id" checked />@item.Name</label></div>
+                        }
+                    </div>
+                    <div id="statusList" class="col-sm-4 ">
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <a id="btn-print" href="#" class="btn btn-success" style="width: 250px">چاپ گزارش با عکس</a>
+                    <a id="btn-print-min" href="#" class="btn btn-success" style="width: 250px">چاپ گزارش بدون عکس</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="statusDetailModal" class="modal fade" role="dialog" style="overflow-y: auto;">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: #222;">
+            <div id="status-content" class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(document).ready(function () {
+            getList(function () {
+                $("#content").empty();
+            });
+            $("#btManipulateAll").hide()
+            console.log($(".branchType").attr("data-id"))
+
+            $(document).on("click", ".branchType", function (event) {
+                event.preventDefault();
+                $("#btManipulateAll").show()
+                $("#btManipulateAll").html("مشاهده همه سفارشات شعب و نمایندگی")
+                $("#btManipulateAll").attr("href", "/order/manipulateAll/#!branchTypeList=[0-1-2]")
+                var entity = {
+                    branchType: [0,1,2]
+                };
+                loadRemoteSelect("#cmbDate", "/order/getManageDateList/", entity, "Date", "CountString", "تاریخ", function () {
+                    $(".combo-chosen").trigger("chosen:updated");
+                })
+                manipulateParam(entity, [ "page","coWorker"]);
+            });
+            $(document).on("click", ".coWorker", function (event) {
+                event.preventDefault();
+                $("#btManipulateAll").show()
+                $("#btManipulateAll").html("مشاهده سفارشات همکار")
+                $("#btManipulateAll").attr("href", "/order/manipulateCoWorker/" + $(this).attr("data-id"))
+                var entity = {
+                    coWorker: $(this).attr("data-id")
+                };
+                loadRemoteSelect("#cmbDate", "/order/getManageDateList/", entity, "Date", "CountString", "تاریخ", function () {
+                    $(".combo-chosen").trigger("chosen:updated");
+                })
+                manipulateParam(entity, [ "page","branchType","branchId","date"]);
+            });
+               $(document).on("click", ".all", function (event) {
+                //event.preventDefault();
+                $("#btManipulateAll").hide()
+                   $("#btManipulateAll").attr("href", "/order/manipulateAll")
+                   loadRemoteSelect("#cmbDate", "/order/getManageDateList/", null, "Date", "CountString", "تاریخ", function () {
+                       $(".combo-chosen").trigger("chosen:updated");
+                   })
+            });
+            $(".combo-chosen").chosen({ width: "100%", placeholder_text_single: 'یک مورد را انتخاب کنید.', search_contains: true });
+
+            $("#cmbBranch").on("change", function () {
+                var branchList = $("#cmbBranch").val();
+                if (branchList && branchList.length)
+                    manipulateParam({ branchId: branchList }, "page")
+                else
+                    removeParam(["branchId", "page"])
+            });
+
+            $("#cmbDate").on("change", function () {
+                if ($("#cmbDate").val())
+                    manipulateParam({ date: $("#cmbDate").val() }, "page")
+                else
+                    removeParam(["date", "page"])
+            });
+
+            $("#txtTerm").on("keyup", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    if ($("#txtTerm").val()) {
+                        var param = { term: $("#txtTerm").val() }
+                        manipulateParam(param, "page");
+                    }
+                    else
+                        removeParam("term");
+                }
+            });
+
+            $("#chkArchive").on("change", function () {
+                if ($(this).prop("checked")) {
+                    manipulateParam({ archive: true }, "page");
+                }
+                else {
+                    removeParam(["archive", "page"]);
+                }
+            });
+
+            $(document).on("click", "#allWorkshop", function (event) {
+                if ($(this).prop("checked"))
+                    $(".workshop").prop("checked", true);
+                else
+                    $(".workshop").prop("checked", false);
+            });
+
+            $(document).on("click", "#allStatus", function (event) {
+                if ($(this).prop("checked"))
+                    $(".status").prop("checked", true);
+                else
+                    $(".status").prop("checked", false);
+            });
+
+            $(document).on("click", ".btn-print-modal", function (event) {
+                event.preventDefault();
+                $("#cmbOrderType").val("0");
+                $("#allStatus, #allWorkshop, .workshop, .status").prop("checked", true);
+                $("#hiddenPrintId").val($(this).attr("data-id"));
+                $("#branchType").val($(this).attr("data-branchType"));
+                  var id = $(this).attr("data-id");
+                $.post("/order/getStatusDetail/" + id, function (response) {
+                    var data = response.data;
+                    var template = $.templates("#statusList-template");
+                    var htmlOutput = template.render(data);
+                    $("#statusList").html(htmlOutput);
+
+                })
+                $("#modalPrint").modal("show");
+            });
+
+            $(document).on("click", "#btn-print", function (event) {
+                event.preventDefault();
+                var id = $("#hiddenPrintId").val();
+                var entity = getEntity("#print-content");
+                document.location = "/order/print/" + id + "?model=" + JSON.stringify(entity);
+            });
+
+             $(document).on("click", "#btn-print-min", function (event) {
+                event.preventDefault();
+                var id = $("#hiddenPrintId").val();
+                var entity = getEntity("#print-content");
+                 document.location = "/order/printMin/" + id + "?model=" + JSON.stringify(entity);
+            });
+
+            $(document).on("click", ".btnOrderDetailStatus", function () {
+                var data = $(this).attr("data-title");
+                $("#status-content").html(data);
+                $("#statusDetailModal").modal("show");
+            });
+            $(document).on("click", ".btnOrderDetailStatus", function () {
+                  var id = $(this).attr("data-id");
+                 $.post("/order/getStatusDetail/" + id, function (response) {
+                     var data = response.data;
+                     var template = $.templates("#statusDetail-template");
+                     var htmlOutput = template.render(data);
+                     $("#status-content").html(htmlOutput);
+                     $("#statusDetailModal").modal("show");
+                 })
+            });
+
+            @if (User.IsInRole("admin") || User.IsInRole("admin-order-delete"))
+            {
+                <text>
+                $(document).on("click", ".delete", function (event) {
+                    event.preventDefault();
+                    var id = $(this).attr("data-id");
+                    confirmMessage("آیا از حذف سفارش اطمینان دارید؟", function () {
+                        loader(true);
+                        $.post("/order/delete/" + id, function (response) {
+                            loader(false);
+                            if (response.status == 200) {
+                                callbackAlert(response.message, function () {
+                                    getList();
+                                });
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                        })
+                    });
+                });
+
+                $(document).on("click", ".reset", function (event) {
+                    event.preventDefault();
+                    var id = $(this).attr("data-id");
+                    confirmMessage("آیا از ریست سفارش اطمینان دارید؟", function () {
+                        loader(true);
+                        $.post("/order/reset/" + id, function (response) {
+                            loader(false);
+                            if (response.status == 200) {
+                                callbackAlert(response.message, function () {
+                                    getList();
+                                });
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                        })
+                    });
+                });
+
+                </text>
+            }
+
+        });
+
+        function getList(callback) {
+            updateForm();
+
+            var defaultEntity = {
+                page: 0,
+                count: 50,
+                branchId: []
+            }
+
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+
+            loader(true);
+            $.post("/order/getAll", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                    $('[data-toggle="tooltip"]').tooltip();
+                    if (response.data.coWorkerCount > 0) {
+                        $(".coWorkerCount").html(response.data.coWorkerCount);
+                        $(".coWorkerCount").css({"background-color":"red"})
+                    }
+                    if (response.data.branchesCount > 0) {
+                        $(".branchesCount").html(response.data.branchesCount);
+                        $(".branchesCount").css({ "background-color": "red" })
+
+                    }
+
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+
+        }
+
+        function updateForm() {
+            var params = getParam();
+            console.log(params["branchType"])
+            // branch id
+            if (params["branchId"] && params["branchId"].length > 0)
+                $("#cmbBranch").val(params["branchId"]);
+            else
+                $("#cmbBranch").val("");
+
+            // date
+            if (params["date"] && params["date"].length > 0)
+                $("#cmbDate").val(params["date"]);
+            else
+                $("#cmbDate").val("");
+
+            // term
+            if (params["term"]) {
+                $("#txtTerm").val(params["term"]);
+            }
+            else {
+                $("#txtTerm").val("");
+            }
+
+            //archive
+            if (params["archive"]) {
+                $("#chkArchive").prop("checked", true);
+            }
+            else {
+                $("#chkArchive").prop("checked", false);
+            }
+            console.log(params)
+
+            $("#menu li").removeClass("active");
+            if (params["branchType"]) {
+                $(".branches").show()
+                $("#menu li a[data-id='[0,1,2]' ]").closest("li").addClass("active");
+            }
+
+            if (params["coWorker"] && params["coWorker"] >= 0) {
+                $(".branches").hide()
+                $("#menu li a[data-id=" + params["coWorker"] + "]").closest("li").addClass("active");
+            }
+
+            if (!params["coWorker"] && !params["branchType"]) {
+                $(".branches").show()
+                $("#menu li:last").addClass("active");
+            }
+        }
+
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th>شماره سفارش مرجع</th>
+                    <th>سریال سفارش</th>
+                    <th class="hidden-xs">تعداد</th>
+                    <th class="hidden-xs">تعداد نیم ست</th>
+                    <th class="hidden-xs">وزن</th>
+                    <th class="hidden-xs hidden-sm">شعبه</th>
+                    <th class="hidden-xs hidden-sm">کاربر ثبت کننده</th>
+                    <th class="hidden-xs hidden-sm text-center" style="width: 110px;">تاریخ ثبت</th>
+                    <th class="icon-col text-center">وضعیت</th>
+                    <th class="icon-col text-center">جزئیات</th>
+                    <th class="icon-col text-center">چاپ</th>
+                    @if (User.IsInRole("admin") || User.IsInRole("admin-order-delete"))
+                    {
+                        <th class="icon-col text-center">ریست</th>
+                        <th class="icon-col text-center">حذف</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr class="{{:bgColor}}">
+                    <td>KIA-{{:id}}</td>
+                    <td>{{:orderSerial}}</td>
+                    <td class="hidden-xs">{{:sumCount}}</td>
+                    <td class="hidden-xs">{{:sumCountSet}}</td>
+                    <td class="hidden-xs">{{:sumWeight}} گرم</td>
+                    <td class="hidden-xs hidden-sm">{{:createBranch}}</td>
+                    <td class="hidden-xs hidden-sm">{{:createUser}}</td>
+                    <td class="hidden-xs hidden-sm text-center">{{:createDate}}</td>
+                    <td class="txt-al-c">
+                        <span class="btn btn-primary btn-xs btnOrderDetailStatus" @*data-title='@Html.Partial("_OrderDetailStatus")'*@ data-id="{{:id}}"><i class="fa fa-navicon" aria-hidden="true"></i></span>
+                    </td>
+                    <td class="txt-al-c">
+                        <a href="/order/manipulate/{{:id}}#!status=0" class="btn btn-primary btn-xs" data-title="جزئیات"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <a href="#" class="btn-print-modal btn btn-success btn-xs" data-title="چاپ" @*data-statuslist='@Html.Partial("_Statuslist")'*@ data-id="{{:id}}" data-branchType="{{:branchType}}"><i class="fa fa-print" aria-hidden="true"></i></a>
+                    </td>
+                    @if (User.IsInRole("admin") || User.IsInRole("admin-order-delete"))
+                    {
+                        <td class="txt-al-c">
+                            <a href="#" class="btn btn-danger btn-xs reset" data-title="ریست کردن سفارش" data-id="{{:id}}"><i class="fa fa-refresh" aria-hidden="true"></i></a>
+                        </td>
+                        <td class="txt-al-c">
+                            <a href="#" class="btn btn-danger btn-xs delete" data-title="حذف" data-id="{{:id}}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                        </td>
+                    }
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+    <script id="statusDetail-template" type="text/x-jsrender">
+        <div>
+            <table class="table table-bordered" style="width: 100%; background-color: #333; color: white; margin-top: 15px;">
+                <tr>
+                    <td>تعداد کل</td>
+                    <td><strong>{{:sumCount}}</strong></td>
+                    <td class="nowrap"><strong>{{:sumWeight}} گرم</strong></td>
+                </tr>
+                <tr>
+                    <td>ثبت شده</td>
+                    <td><strong>{{:registered}}</strong></td>
+                    <td class="nowrap"><strong>{{:registeredWeight}} گرم</strong></td>
+                </tr>
+                <tr>
+                    <td>ارسال شده به کارگاه</td>
+                    <td><strong>{{:inWorkshop}}</strong></td>
+                    <td class="nowrap"><strong>{{:inWorkshopWeight}} گرم</strong></td>
+                </tr>
+                <tr>
+                    <td>در حال ساخت</td>
+                    <td><strong>{{:underConstruction}}</strong></td>
+                    <td class="nowrap"><strong>{{:underConstructionWeight}} گرم</strong></td>
+                </tr>
+                <tr>
+                    <td>اتمام ساخت</td>
+                    <td><strong>{{:outOfConstruction}}</strong></td>
+                    <td class="nowrap"><strong>{{:outOfConstructionWeight}} گرم</strong></td>
+                </tr>
+                <tr>
+                    <td>ارسال شده به کارگاه دوم</td>
+                    <td><strong>{{:inWorkshop2}}</strong></td>
+                    <td class="nowrap"><strong>{{:inWorkshopWeight2}} گرم</strong></td>
+                </tr>
+                <tr>
+                    <td>در حال ساخت در کارگاه دوم</td>
+                    <td><strong>{{:underConstruction2}}</strong></td>
+                    <td class="nowrap"><strong>{{:underConstructionWeight2}} گرم</strong></td>
+                </tr>
+                <tr>
+                    <td>اتمام ساخت در کارگاه دوم</td>
+                    <td><strong>{{:outOfConstruction2}}</strong></td>
+                    <td class="nowrap"><strong>{{:outOfConstructionWeight2}} گرم</strong></td>
+                </tr>
+                <tr>
+                    <td>در حال آماده سازی</td>
+                    <td><strong>{{:inPreparation}}</strong></td>
+                    <td class="nowrap"><strong>{{:inPreparationWeight}} گرم</strong></td>
+                </tr>
+                <tr>
+                    <td>آماده تحویل</td>
+                    <td><strong>{{:readyForDelivery}}</strong></td>
+                    <td class="nowrap"><strong>{{:readyForDeliveryWeight}} گرم</strong></td>
+                </tr>
+                <tr>
+                    <td>ارسال شده</td>
+                    <td><strong>{{:sent}}</strong></td>
+                    <td class="nowrap"><strong>{{:sentWeight}} گرم</strong></td>
+                </tr>
+                <tr>
+                    <td>کسری</td>
+                    <td><strong>{{:shortage}}</strong></td>
+                    <td class="nowrap"><strong>{{:shortageWeight}} گرم</strong></td>
+                </tr>
+                <tr>
+                    <td>سفارش مجدد</td>
+                    <td><strong>{{:shortageOrder}}</strong></td>
+                    <td class="nowrap"><strong>{{:shortageOrderWeight}} گرم</strong></td>
+                </tr>
+                <tr>
+                    <td>لغو شده</td>
+                    <td><strong>{{:cancel}}</strong></td>
+                    <td class="nowrap"><strong>{{:cancelWeight}} گرم</strong></td>
+                </tr>
+            </table>
+        </div>
+    </script>
+    <script id="statusList-template" type="text/x-jsrender">
+
+        <div><label><input id="allStatus" type="checkbox" checked />همه</label></div>
+        <div><label><input class="status" type="checkbox" name="statusList" value="0" checked />ثبت شده <sub id="registeredWeight">({{:registeredWeight}} گرم)</sub></label></div>
+        <div><label><input class="status" type="checkbox" name="statusList" value="1" checked />ارسال شده به کارگاه <sub id="inWorkshopWeight">({{:inWorkshopWeight}} گرم)</sub></label></div>
+        <div><label><input class="status" type="checkbox" name="statusList" value="2" checked />در حال ساخت <sub id="underConstructionWeight">({{:underConstructionWeight}} گرم)</sub></label></div>
+        <div><label><input class="status" type="checkbox" name="statusList" value="3" checked />اتمام ساخت <sub id="outOfConstructionWeight">({{:outOfConstructionWeight}} گرم)</sub></label></div>
+        <div><label><input class="status" type="checkbox" name="statusList" value="10" checked />ارسال شده به کارگاه دوم/مونتاژ <sub id="inWorkshopWeight2">({{:inWorkshopWeight2}} گرم)</sub></label></div>
+        <div><label><input class="status" type="checkbox" name="statusList" value="11" checked />در حال ساخت در کارگاه دوم/مونتاژ <sub id="underConstructionWeight2">({{:underConstructionWeight2}} گرم)</sub></label></div>
+        <div><label><input class="status" type="checkbox" name="statusList" value="12" checked />اتمام ساخت در کارگاه دوم/مونتاژ <sub id="outOfConstructionWeight2">({{:outOfConstructionWeight2}} گرم)</sub></label></div>
+        <div><label><input class="status" type="checkbox" name="statusList" value="4" checked />در حال آماده سازی <sub id="inPreparationWeight">({{:inPreparationWeight}} گرم)</sub></label></div>
+        <div><label><input class="status" type="checkbox" name="statusList" value="5" checked />آماده تحویل <sub id="readyForDeliveryWeight">({{:readyForDeliveryWeight}} گرم)</sub></label></div>
+        <div><label><input class="status" type="checkbox" name="statusList" value="6" checked />ارسال شده <sub id="sentWeight">({{:sentWeight}} گرم)</sub></label></div>
+        <div><label><input class="status" type="checkbox" name="statusList" value="7" checked />کسری <sub id="shortageWeight">({{:shortageWeight}} گرم)</sub></label></div>
+        <div><label><input class="status" type="checkbox" name="statusList" value="8" checked />سفارش مجدد <sub id="shortageOrderWeight">({{:shortageOrderWeight}} گرم)</sub></label></div>
+        <div><label><input class="status" type="checkbox" name="statusList" value="9" checked />لغو شده <sub id="cancelWeight">({{:cancelWeight}} گرم)</sub></label></div>
+
+
+    </script>
+}

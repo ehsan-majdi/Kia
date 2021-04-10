@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="KiaGalleryMainContextModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="FoodCensus">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="FoodName" Type="nvarchar(max)" />
+          <Property Name="Count" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" />
+          <Property Name="Holiday" Type="bit" Nullable="false" />
+          <Property Name="TypeFood" Type="bit" Nullable="false" />
+          <Property Name="CreateUserId" Type="int" Nullable="false" />
+          <Property Name="ModifyUserId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifyDate" Type="datetime" Nullable="false" />
+          <Property Name="Ip" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="FoodRegistrations">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FoodCensusId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="FoodStatus" Type="int" />
+          <Property Name="Date" Type="datetime" />
+          <Property Name="Appertizer" Type="bit" Nullable="false" />
+          <Property Name="Food" Type="bit" Nullable="false" />
+          <Property Name="FoodWithoutRice" Type="bit" Nullable="false" />
+          <Property Name="CreateUserId" Type="int" Nullable="false" />
+          <Property Name="ModifyUserId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifyDate" Type="datetime" Nullable="false" />
+          <Property Name="Ip" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="FoodSettings">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Key" Type="nvarchar" MaxLength="150" />
+          <Property Name="Value" Type="nvarchar(max)" />
+          <Property Name="CreateUserId" Type="int" Nullable="false" />
+          <Property Name="ModifyUserId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifyDate" Type="datetime" Nullable="false" />
+          <Property Name="Ip" Type="nvarchar" MaxLength="45" />
+        </EntityType>
+        <Association Name="FK_dbo_FoodRegistrations_dbo_FoodCensus_FoodCensusId">
+          <End Role="FoodCensus" Type="Self.FoodCensus" Multiplicity="1" />
+          <End Role="FoodRegistrations" Type="Self.FoodRegistrations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FoodCensus">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FoodRegistrations">
+              <PropertyRef Name="FoodCensusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="KiaGalleryMainContextModelStoreContainer">
+          <EntitySet Name="FoodCensus" EntityType="Self.FoodCensus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FoodRegistrations" EntityType="Self.FoodRegistrations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FoodSettings" EntityType="Self.FoodSettings" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_dbo_FoodRegistrations_dbo_FoodCensus_FoodCensusId" Association="Self.FK_dbo_FoodRegistrations_dbo_FoodCensus_FoodCensusId">
+            <End Role="FoodCensus" EntitySet="FoodCensus" />
+            <End Role="FoodRegistrations" EntitySet="FoodRegistrations" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="KiaGalleryMainContextModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="FoodCensus">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="FoodName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Count" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="Holiday" Type="Boolean" Nullable="false" />
+          <Property Name="TypeFood" Type="Boolean" Nullable="false" />
+          <Property Name="CreateUserId" Type="Int32" Nullable="false" />
+          <Property Name="ModifyUserId" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifyDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Ip" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="FoodRegistrations" Relationship="Self.FK_dbo_FoodRegistrations_dbo_FoodCensus_FoodCensusId" FromRole="FoodCensus" ToRole="FoodRegistrations" />
+        </EntityType>
+        <EntityType Name="FoodRegistrations">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FoodCensusId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="FoodStatus" Type="Int32" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="Appertizer" Type="Boolean" Nullable="false" />
+          <Property Name="Food" Type="Boolean" Nullable="false" />
+          <Property Name="FoodWithoutRice" Type="Boolean" Nullable="false" />
+          <Property Name="CreateUserId" Type="Int32" Nullable="false" />
+          <Property Name="ModifyUserId" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifyDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Ip" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="FoodCensus" Relationship="Self.FK_dbo_FoodRegistrations_dbo_FoodCensus_FoodCensusId" FromRole="FoodRegistrations" ToRole="FoodCensus" />
+        </EntityType>
+        <EntityType Name="FoodSettings">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Key" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateUserId" Type="Int32" Nullable="false" />
+          <Property Name="ModifyUserId" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifyDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Ip" Type="String" MaxLength="45" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_dbo_FoodRegistrations_dbo_FoodCensus_FoodCensusId">
+          <End Role="FoodCensus" Type="Self.FoodCensus" Multiplicity="1" />
+          <End Role="FoodRegistrations" Type="Self.FoodRegistrations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FoodCensus">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FoodRegistrations">
+              <PropertyRef Name="FoodCensusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="KiaGalleryMainContextEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="FoodCensus" EntityType="Self.FoodCensus" />
+          <EntitySet Name="FoodRegistrations" EntityType="Self.FoodRegistrations" />
+          <EntitySet Name="FoodSettings" EntityType="Self.FoodSettings" />
+          <AssociationSet Name="FK_dbo_FoodRegistrations_dbo_FoodCensus_FoodCensusId" Association="Self.FK_dbo_FoodRegistrations_dbo_FoodCensus_FoodCensusId">
+            <End Role="FoodCensus" EntitySet="FoodCensus" />
+            <End Role="FoodRegistrations" EntitySet="FoodRegistrations" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="KiaGalleryMainContextModelStoreContainer" CdmEntityContainer="KiaGalleryMainContextEntities">
+          <EntitySetMapping Name="FoodCensus">
+            <EntityTypeMapping TypeName="KiaGalleryMainContextModel.FoodCensus">
+              <MappingFragment StoreEntitySet="FoodCensus">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="FoodName" ColumnName="FoodName" />
+                <ScalarProperty Name="Count" ColumnName="Count" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Holiday" ColumnName="Holiday" />
+                <ScalarProperty Name="TypeFood" ColumnName="TypeFood" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="ModifyUserId" ColumnName="ModifyUserId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="Ip" ColumnName="Ip" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FoodRegistrations">
+            <EntityTypeMapping TypeName="KiaGalleryMainContextModel.FoodRegistrations">
+              <MappingFragment StoreEntitySet="FoodRegistrations">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FoodCensusId" ColumnName="FoodCensusId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="FoodStatus" ColumnName="FoodStatus" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Appertizer" ColumnName="Appertizer" />
+                <ScalarProperty Name="Food" ColumnName="Food" />
+                <ScalarProperty Name="FoodWithoutRice" ColumnName="FoodWithoutRice" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="ModifyUserId" ColumnName="ModifyUserId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="Ip" ColumnName="Ip" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FoodSettings">
+            <EntityTypeMapping TypeName="KiaGalleryMainContextModel.FoodSettings">
+              <MappingFragment StoreEntitySet="FoodSettings">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="ModifyUserId" ColumnName="ModifyUserId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="Ip" ColumnName="Ip" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

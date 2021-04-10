@@ -1,0 +1,87 @@
+﻿<Controls:MetroWindow x:Class="KiaGallery.DailyReport.Forms.FrmMain"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KiaGallery.DailyReport.Forms"
+        xmlns:UC="clr-namespace:KiaGallery.DailyReport.Forms.UserControl"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"        
+        mc:Ignorable="d" FontFamily="IRANSans"
+        MinWidth="800" MinHeight="600" FlowDirection="RightToLeft"
+     WindowStartupLocation="CenterScreen"  Title="گزارش روزانه کیا گالری" Loaded="MetroWindow_Loaded">
+    <Controls:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Controls:MetroWindow.Resources>
+
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands>
+                    <TextBlock Margin="4 0 8 0" x:Name="txtUserTitle" 
+                   VerticalAlignment="Center"
+                   Text="deploy cupcakes" />
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
+
+    <MD:DialogHost Identifier="RootDialog" SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}">
+        <MD:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
+            <MD:DrawerHost.LeftDrawerContent>
+                <DockPanel MinWidth="212">
+                    <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
+                                    DockPanel.Dock="Top"
+                                    HorizontalAlignment="Right" Margin="16"
+                                    IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}" />
+                    <ListBox x:Name="DemoItemsListBox" Margin="0 16 0 16" SelectedIndex="0"                         
+                             ItemsSource="{Binding DemoItems}"
+                             PreviewMouseLeftButtonUp="UIElement_OnPreviewMouseLeftButtonUp">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="domain:DemoItem">
+                                <TextBlock Text="{Binding Name}" Margin="32 0 32 0" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </MD:DrawerHost.LeftDrawerContent>
+            <DockPanel>
+                <MD:ColorZone Padding="16" MD:ShadowAssist.ShadowDepth="Depth2"
+                                            Mode="PrimaryMid" DockPanel.Dock="Top">
+                    <DockPanel>
+                        <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" IsChecked="False"
+                                        x:Name="MenuToggleButton"/>
+                        <!--<MD:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
+                            <StackPanel>
+                                <Button Content="Hello World" Click="MenuPopupButton_OnClick"/>
+                                <Button Content="Nice Popup" Click="MenuPopupButton_OnClick"/>
+                                <Button Content="Can't Touch This" IsEnabled="False" />
+                                <Separator/>
+                                <Button Content="Goodbye" Click="MenuPopupButton_OnClick"/>
+                            </StackPanel>
+                        </MD:PopupBox>-->
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22">کیا گالری</TextBlock>
+                    </DockPanel>
+                </MD:ColorZone>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!--<domain1:DocumentationLinks DataContext="{Binding ElementName=DemoItemsListBox, Path=SelectedItem}" Margin="0 0 0 16" />-->
+                    <!--<ScrollViewer Grid.Row="1" 
+                                  HorizontalScrollBarVisibility="{Binding ElementName=DemoItemsListBox, Path=SelectedItem.HorizontalScrollBarVisibilityRequirement}"
+                                  VerticalScrollBarVisibility="{Binding ElementName=DemoItemsListBox, Path=SelectedItem.VerticalScrollBarVisibilityRequirement}" 
+                                  Padding="{Binding ElementName=DemoItemsListBox, Path=SelectedItem.MarginRequirement}">
+                        <ContentControl Content="{Binding ElementName=DemoItemsListBox, Path=SelectedItem.Content}" />
+                    </ScrollViewer>-->
+
+                    <UC:Calendar></UC:Calendar>
+                    
+                    <MD:Snackbar MessageQueue="{MD:MessageQueue}" x:Name="MainSnackbar" Grid.Row="1" />
+                </Grid>
+            </DockPanel>
+        </MD:DrawerHost>
+    </MD:DialogHost>
+
+</Controls:MetroWindow>

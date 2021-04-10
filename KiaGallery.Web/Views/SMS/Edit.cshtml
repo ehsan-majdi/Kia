@@ -1,0 +1,293 @@
+﻿
+@{
+    ViewBag.Title = "پنل ارسال پیام";
+}
+<style>
+    .form-item {
+        margin: 10px auto;
+        width: 30%;
+    }
+</style>
+
+
+<div class="container " id="form">
+    <div style="margin:0 auto">
+        <div class="form-group form-item">
+            <label for="cmbType">نوع</label>
+            <select id="cmbType" class="form-control" name="sendingTimeMethod" data-validate="required">
+                <option value="">...</option>
+                <option value="0">روزانه</option>
+                <option value="1">هفتگی</option>
+                <option value="2">ماهانه</option>
+                <option value="3">تاریخ</option>
+            </select>
+        </div>
+        <div class="form-group form-item dayOfWeek">
+            <label for="cmbDayOfWeek">انتخاب روزهای هفته</label>
+            <select id="cmbDayOfWeek" class="form-control combo-chosen chosen-rtl" multiple name="dayOfWeek" data-placeholder="روز">
+                <option value="Saturday">شنبه</option>
+                <option value="Sunday">یکشنبه</option>
+                <option value="Monday">دوشنبه</option>
+                <option value="Tuesday">سه شنبه</option>
+                <option value="Wednesday">چهارشنبه</option>
+                <option value="Thursday">پنجشنبه</option>
+                <option value="Friday">جمعه</option>
+            </select>
+        </div>
+
+        <div class="form-group form-item dayOfMonth">
+            <label for="cmbDayOfMonth">انتخاب روزهای ماه</label>
+            <select id="cmbDayOfMonth" class="form-control combo-chosen chosen-rtl" multiple name="dayOfMonth" data-placeholder="روز">
+                <option value="01">01</option>
+                <option value="02">02</option>
+                <option value="03">03</option>
+                <option value="04">04</option>
+                <option value="05">05</option>
+                <option value="06">06</option>
+                <option value="07">07</option>
+                <option value="08">08</option>
+                <option value="09">09</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+                <option value="31">31</option>
+            </select>
+        </div>
+        <div class="form-group form-item branch">
+            <label for="cmbBranch">شعبه</label>
+            <select id="cmbBranch" class="form-control combo-chosen chosen-rtl" multiple name="branchId" data-placeholder="شعبه">
+                @foreach (var branch in ViewBag.BranchList)
+                {
+                    <option value="@branch.id">@branch.name</option>
+                }
+            </select>
+        </div>
+        <div class="form-group form-item user">
+            <label for="cmbUser">کاربر</label>
+            <select id="cmbUser" class="form-control combo-chosen chosen-rtl" multiple name="userId" data-placeholder="کاربر">
+                @foreach (var item in ViewBag.UserList)
+                {
+                    <option value="@item.id">@item.firstName @item.lastName</option>
+                }
+            </select>
+        </div>
+        <input type="hidden" id="hiddenBranchId" />
+        <input type="hidden" id="hiddenUserId" />
+        <input type="hidden" id="hiddenId" name="id" value="@ViewBag.Id" />
+        <div class="form-group form-item phoneNumber">
+            <label>ارسال به شماره/شماره های:</label>
+            <input id="txtPhoneNumber" type="text" name="phoneNumber" class="form-control" data-validate="" />
+        </div>
+        <div class="form-group form-item">
+            <label>زمان:</label>
+            <input class="form-control" type="time" name="time" id="myTime" value="">
+        </div>
+        <div class="form-group form-item hideDate">
+            <label>تاریخ</label>
+            <input id="date" class="form-control date" autocomplete="off" type="text" name="persianDate">
+        </div>
+        <div class="form-item">
+            <div class="form-group">
+                <label>متن ارسالی:</label>
+                <textarea id="txtMessageText" style="resize:none" class="form-control" name="text" data-validate="required" rows="10"></textarea>
+            </div>
+        </div>
+        <div class="form-item text-center">
+            <button id="btnSendSms" class="btn btn-success">
+                ذخیره
+            </button>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+         var id = @(ViewBag.Id != null ? ViewBag.Id : 0)
+
+        $(document).ready(function () {
+            var dt = new Date();
+            var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+            console.log(time);
+            $("#myTime").val(time);
+            $("#txtPhoneNumber").val(null);
+            $(".date").pDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true,
+            });
+            if (id > 0) {
+                load();
+            }
+            $(".combo-chosen").chosen({ width: "100%", placeholder_text_single: 'یک مورد را انتخاب کنید.', search_contains: true });
+            $(document).on("change", "#cmbType", function (event) {
+                var value = $(this).val();
+                if (value == 3 && value != "") {
+                    $(".hideDate").show();
+                }
+                else {
+                    $(".hideDate").hide();
+                }
+                if (value == 1 && value != "") {
+                    $(".dayOfWeek").show();
+                }
+                else {
+                    $(".dayOfWeek").hide();
+                }
+                if (value == 2 && value != "") {
+                    $(".dayOfMonth").show();
+                }
+                else {
+                    $(".dayOfMonth").hide();
+                }
+
+
+            });
+            $(document).on("change", "#cmbBranch", function (event) {
+                if ($(this).val() != null) {
+                    $(".phoneNumber").hide();
+                    $("#txtPhoneNumber").val(null);
+                    $(".user").hide();
+                    $("#cmbUser").val(null);
+                }
+                else {
+                    $(".phoneNumber").show();
+                    $(".user").show();
+                    $("#cmbUser").val(null);
+
+                }
+            });
+            $(document).on("change", "#cmbUser", function (event) {
+                if ($(this).val() != null) {
+                    $(".phoneNumber").hide();
+                    $("#txtPhoneNumber").val(null);
+                    $(".branch").hide();
+                    $("#cmbBranch").val(null);
+                }
+                else {
+                    $(".phoneNumber").show();
+                    $(".branch").show();
+                    $("#cmbBranch").val(null);
+                }
+            });
+            $(document).on("keyup", "#txtPhoneNumber", function (event) {
+                if ($(this).val()) {
+                    $(".branch").hide();
+                    $(".branch").val(null);
+                    $(".user").hide();
+                    $(".user").val(null);
+
+                }
+                else {
+                    $(".branch").show();
+                    $(".branch").val(null);
+                    $(".user").show();
+                    $(".user").val(null);
+                }
+            });
+            $("#btnSendSms").click(function () {
+                save()
+            });
+        })
+
+        function save() {
+            var entity = getEntity("#form")
+            if (checkForm("#form")) {
+                if ($("#cmbBranch").val()) {
+                    entity.branchId = $("#cmbBranch").val().join("-");
+                }
+                if ($("#cmbUser").val()) {
+                    entity.userId = $("#cmbUser").val().join("-");
+                }
+                if ($("#cmbDayOfWeek").val()) {
+                    entity.dayOfWeek = $("#cmbDayOfWeek").val().join("-");
+                }
+                if ($("#cmbDayOfMonth").val()) {
+                    entity.dayOfMonth = $("#cmbDayOfMonth").val().join("-");
+                }
+                loader(true);
+                $.get("/sms/save", entity, function (response) {
+                    if (response.status == 200) {
+                        callbackAlert(response.message, function () {
+                            location.href = "/sms/list"
+                        })
+                    }
+                    else {
+                        alert(response.message)
+                    }
+                    loader(false);
+                });
+            }
+
+        }
+        function load() {
+            loader(true);
+            $.get("/sms/load/" + id, function (response) {
+                if (response.status == 200) {
+                    setEntity(response.data, "#form")
+                    if (response.data.userId != null && response.data.userId != "") {
+                        var user = response.data.userId.split("-")
+                        $("#cmbUser").val(user)
+                        $(".user").show();
+                        $(".phoneNumber").hide();
+                        $("#txtPhoneNumber").val(null);
+                    }
+                    else {
+                        $(".user").hide();
+                    }
+                    if (response.data.branchId != null && response.data.branchId != "") {
+                        var branch = response.data.branchId.split("-")
+                        $("#cmbBranch").val(branch)
+                        $(".branch").show();
+                        $(".phoneNumber").hide();
+                        $("#txtPhoneNumber").val(null);
+                    }
+                    else {
+                        $(".branch").hide();
+                    }
+                    if (response.data.dayOfMonth != null && response.data.dayOfMonth != "") {
+                        var dayOfMonth = response.data.dayOfMonth.split("-")
+                        $("#cmbDayOfMonth").val(dayOfMonth)
+                        $(".dayOfMonth").show()
+                    }
+                    else {
+                        $(".dayOfMonth").show();
+                    }
+                    if (response.data.dayOfWeek != null && response.data.dayOfWeek != "") {
+                        var dayOfWeek = response.data.dayOfWeek.split("-")
+                        $("#cmbDayOfWeek").val(dayOfWeek)
+                        $(".dayOfWeek").show()
+                    }
+                    else {
+                        $(".dayOfWeek").show();
+                    }
+                    $(".combo-chosen").trigger("chosen:updated");
+
+                }
+                else {
+                    alert(response.message)
+                }
+                loader(false);
+            });
+        }
+
+    </script>
+
+}

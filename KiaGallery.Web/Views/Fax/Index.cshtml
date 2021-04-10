@@ -1,0 +1,584 @@
+﻿
+@{
+    ViewBag.Title = "ثبت سفارش";
+    Layout = "~/Views/Shared/_LayoutUsableProduct.cshtml";
+}
+<link href="~/content/order-page.css" rel="stylesheet" />
+<style>
+
+
+    .element-unit {
+        text-overflow: ellipsis;
+        width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        word-break: break-all;
+    }
+
+        .element-unit:hover {
+            text-overflow: clip;
+            overflow: visible;
+            white-space: normal;
+            position: absolute;
+            height: auto;
+        }
+
+    .color-icon {
+        color: black;
+        transition: all 0.3s;
+    }
+
+        .color-icon:hover {
+            color: orange
+        }
+
+    .height {
+        height: 49px;
+    }
+
+    .product-item .small-font .fa {
+        width: 25px;
+        color: #555;
+        text-align: center;
+        padding-bottom: 0 !important;
+    }
+
+    .icon-down {
+        vertical-align: middle;
+        transition: all 0.3s linear;
+    }
+
+    .rotate {
+        -moz-transition: all 0.3s linear;
+        -webkit-transition: all 0.3s linear;
+        transition: all 0.3s linear;
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+        display: inline-block
+    }
+
+        .rotate.down {
+            -moz-transform: rotate(180deg);
+            -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
+            display: inline-block
+        }
+
+
+    .child {
+        display: none;
+        transition-property: all;
+        transition-duration: .5s;
+        transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+    }
+
+    .product-image {
+        padding: 15px
+    }
+
+    #category-content {
+        margin: 20px 24px 50px;
+    }
+
+    .h-title {
+        display: inline-block;
+        margin: 10px;
+    }
+
+    #removeParams {
+        font-size: 12px;
+        margin: 10px;
+        display: inline-block;
+        float: left;
+    }
+</style>
+
+
+
+<div id="orderModal" class="modal fade" role="dialog">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div id="frmOrder" class="modal-body">
+                <input id="hiddenUsableProductId" type="hidden" name="usableProductId" />
+                <input id="hiddenUsableProductId" type="hidden" name="categoryId" />
+                <input id="hiddenOrderUsableProductId" name="orderUsableProductId" type="hidden" />
+                <input id="hiddenId" name="id" type="hidden" />
+
+                <div id="contentFileDetail">
+                    <div class="form-inline text-center">
+                        <label>تعداد:</label>
+                        <input id="cmbCount" class="form-control" name="count" />
+                    </div>
+                    <div>
+                        <label>توضیحات:</label>
+                        <textarea id="txtDescription" class="form-control" rows="5" name="description" maxlength="100"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button id="btnSave" type="button" class="btn btn-success btn-control">ذخیره</button>
+                    <button type="button" class="btn btn-danger  btn-control" data-dismiss="modal">لغو</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="productImageModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">تصاویر محصول</h4>
+            </div>
+            <div id="frmImage" class="modal-body">
+                <input id="hiddenUsableProductId" type="hidden" name="usableProductId" />
+                <input id="hiddenOrderUsableProductId" name="orderUsableProductId" type="hidden" />
+                <input id="hiddenId" name="id" type="hidden" />
+
+                <div id="contentImage">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+
+    <div class="col-md-3">
+        <div id="filter-list" class="filter">
+            <input id="txtTerm" class="form-control" placeholder="جستجو..." />
+            <div class="border-gray">
+                <h4 class="h-title">فیلتر</h4>
+                <button id="removeParams" class="btn btn-success"><i class="fa fa-eraser"></i></button>
+                <hr class="hr-title" />
+                <div id="category-content"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9 col-md-offset-3">
+        <div id="menu-holder" class="affix" style="padding-top:0">
+            <div id="menu">
+                <ul>
+                    <li><a id="all-category" class="param-item">همه</a></li>
+                    @foreach (var item in ViewBag.ParentCategory)
+                    {
+                        <li><a class="category-item ltr param-item" name="categoryId" data-id="@item.Id">@item.Title</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div id="content" style="padding-top: 47px;"></div>
+    </div>
+    <input type="hidden" class="hiddenCategoryId" value="" />
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        var interval = setInterval(timer, 100);
+
+        function timer() {
+            var d = new Date();
+            var t = d.toLocaleTimeString();
+            $(".header-time").html(t);
+        }
+        $(window).on('hashchange', function () {
+            getList();
+        });
+        $(document).ready(function () {
+            $(document).on("click", ".btnShowUploadModal", function () {
+                $("#hiddenOrderUsableProductId").val($(this).attr("data-order-id"))
+                $("#orderModal").modal({ backdrop: 'static', keyboard: false });
+                $("#orderModal").show();
+                $("#hiddenUsableProductId").val($(this).attr("data-id"));
+                var id = $(this).attr("data-order-id");
+                loadCount(id);
+            });
+            //$("#category-content").find(".accordion:first-child").css("display", "block");
+            //$(".accordion").find(".rotate").children().eq(2).removeClass("down");
+            $(document).on("click", ".category-item", function (event) {
+                var id = $(this).attr("data-id");
+                $.get('/fax/childFilter/' + id, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        var data = response.data;
+                        var template = $.templates("#template-category");
+                        var htmlOutput = template.render(data);
+                        $("#category-content").html(htmlOutput);
+
+                        updateForm();
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+
+            $(document).on("click", ".param-item", function (event) {
+                var entity = {
+                    categoryId: $(this).attr("data-id")
+                };
+                manipulateParam(entity, "page");
+            });
+            $("#all-category").on("click", function (event) {
+                event.preventDefault();
+                removeParam(["categoryId", "page"]);
+                getListCategory();
+            });
+
+            $("#removeParams").on("click", function (event) {
+                event.preventDefault();
+                removeParam(["categoryChildId", "page"]);
+            });
+
+            $(document).on("click", ".viewMorePhotos", function () {
+                getAllImage($(this).attr("data-id"));
+                $("#productImageModal").modal({ backdrop: 'static', keyboard: false });
+                $("#productImageModal").show();
+            });
+            getListCategory();
+            getList();
+
+            $("#btnSave").on("click", function (event) {
+                event.preventDefault();
+                var entity = {
+                    usableProductId: $("#hiddenUsableProductId").val(),
+                    orderUsableProductId: $("#hiddenOrderUsableProductId").val(),
+                    count: $("#cmbCount").val(),
+                    description: $("#txtDescription").val(),
+                }
+                loader(true);
+                $.ajax({
+                    method: "POST",
+                    url: "/fax/save",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                document.location = "/fax/index";
+                            });
+                            $("#cmbCount").val(response.data.count)
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                        loader(false);
+                    }
+                });
+            });
+
+            $("#txtTerm").on("keyup", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    if ($("#txtTerm").val()) {
+                        var param = { term: $("#txtTerm").val() }
+                        manipulateParam(param, "page");
+                    }
+                    else
+                        removeParam("term");
+                }
+            });
+
+            $(document).on("change", ".checkbox", function (event) {
+                var value = $(document).find("input[type=checkbox][name=categoryChildId]:checked").map(function () {
+                    return $(this).val();
+                }).get();
+
+                if (value.length > 0) {
+                    var param = { categoryChildId: value }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["categoryChildId", "page"]);
+                }
+            });
+
+            $(document).on("click", ".minus", function () {
+                var value = $(this).parents(".frame").find(".counter").attr("data-count");
+                if (!value && value < 0) {
+                    return;
+                }
+                else {
+                    var entity = {
+                        orderUsableProductId: $(this).attr("data-order-id"),
+                        usableProductId: $(this).attr("data-id"),
+                    }
+                    loader(true);
+                    $.post("/fax/removeCount", entity, function (response) {
+                        if (response.status == 200) {
+
+                        }
+                        loader(false);
+                    });
+                }
+            });
+
+            $(document).on("click", ".plus", function () {
+                var entity = {
+                    orderUsableProductId: $(this).attr("data-order-id"),
+                    usableProductId: $(this).attr("data-id"),
+                }
+                loader(true);
+                $.post("/fax/addcount", entity, function (response) {
+                    if (response.status == 200) {
+                        getList();
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            });
+
+            $(document).on("click", ".rotate", function () {
+                $(this).toggleClass("down");
+                var id = $(this).attr('data-id');
+                var element = $(".child-" + id);
+                element.toggle("fast");
+            });
+        });
+
+        function getAllImage(id) {
+            $.get("/fax/getAllImage/" + id, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template-Image");
+                    var htmlOutput = template.render(data);
+                    $("#contentImage").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+        function countAll() {
+            $.get("/fax/GetCartCount", function (response) {
+                if (response.status == 200) {
+                    if (response.data.count > 0) {
+                        $(".order-cart").removeClass("hidden");
+                        $(".order-cart").html(response.data.count)
+                    }
+                    else {
+                        $(".order-cart").addClass("hidden");
+                    }
+                }
+            });
+        }
+
+        function loadCount(id) {
+            loader(true);
+            $.get("/fax/getCountModal/" + id, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    $("#cmbCount").val(response.data.count);
+                }
+                else {
+                    callbackAlert(response.message, function () {
+                        document.location = "/fax";
+                    });
+                }
+            });
+        }
+
+        function getList() {
+            var entity = {
+                page: 0,
+                count: 24,
+                categoryChildId: [],
+                categoryId: null
+            };
+            var urlParams = getParam();
+            var params = $.extend(entity, urlParams);
+            updateForm();
+            loader(true);
+            $.post("/fax/getusableproductlist", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                    countAll();
+                    $(document).on('mouseenter', '.firstshow', 'fadeOut', function (event) {
+                        var src = $(this).attr("data-hover-file-name");
+                        if (src != undefined && src != "" && src != null) {
+                            $(this).attr("src", "/image/usableproduct/500x500/" + src);
+                            $(this).parent(".relative").css("padding", "0px")
+                        }
+                    }).on('mouseleave', '.firstshow', function (event) {
+                        var src = $(this).attr("data-file-name");
+                        $(this).attr("src", "/image/usableproduct/500x500/" + src);
+                    });
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+        function getListCategory() {
+            var newParams = getParam();
+            loader(true);
+            $.get("/fax/SearchFilter", newParams, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template-category");
+                    var htmlOutput = template.render(data);
+                    $("#category-content").html(htmlOutput);
+                    $(".chkType-group-other").slideToggle(1);
+                    $(".accordion").first().find(".child").css("display", "block");
+                    $(".accordion").first().next().find(".child").css("display", "block");
+                    $(".accordion").first().find(".rotate").removeClass("down");
+                    $(".accordion").first().next().find(".rotate").removeClass("down");
+
+                    //$(".accordion").find(".child").first().next().css("display", "block");
+                    updateForm();
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+        function updateForm() {
+            var params = getParam();
+
+            $("#menu li").removeClass("active");
+            if (params["categoryId"] && params["categoryId"] >= 0) {
+                $("#menu li a[data-id=" + params["categoryId"] + "]").closest("li").addClass("active");
+            }
+            else {
+                $("#menu li:first").addClass("active");
+            }
+
+            if (params["term"]) {
+                $("#txtTerm").val(params["term"]);
+            }
+            else {
+                $("#txtTerm").val("");
+            }
+
+            // type
+            if (params["categoryChildId"]) {
+                //$("#menu li").removeClass("active");
+                var categoryChildId = params["categoryChildId"];
+                $(".checkbox").each(function (index, element) {
+                    if (categoryChildId.indexOf($(this).val()) >= 0) {
+                        $(this).prop("checked", true);
+                        $(this).parents(".rotate").slideToggle(1);
+                        $(this).parents(".accordion").find(".child").css("display", "block");
+                        $(this).parents(".accordion").find(".rotate").removeClass("down");
+                        //$("#menu li a[data-id=" + categoryChildId + "]").closest("li").addClass("active");
+                    }
+                    else {
+                        $(this).prop("checked", false);
+                        //$("#menu li:first").addClass("active");
+                    }
+                });
+                $(".chkTypeChild").each(function (index, e) {
+                    if (categoryChildId.indexOf($(this).val()) >= 0) {
+                        $(this).prop("checked", true);
+                    }
+                    else {
+                        $(this).prop("checked", false);
+                    }
+                });
+            }
+            else {
+                $(".checkbox").prop("checked", false);
+            }
+        }
+
+    </script>
+    <script id="template" type="text/x-jsrender">
+        {{for list}}
+        <div class="product-item col-md-3">
+            <div class="frame">
+                {{if count>0}}
+                <p class="counter" data-count="{{:count}}">{{:count}}</p>
+                {{/if}}
+                <div class="text-center container-image">
+                    <div class="relative" style="{{if !fileList}}border:1px solid red{{/if}};">
+                        {{if secondFileName}}
+                        <img class="firstshow viewMorePhotos" data-id="{{:id}}" style="width: 100%;" src="/image/usableProduct/500x500/{{:firstFileName}}" data-file-name="{{:firstFileName}}" data-hover-file-name="{{:secondFileName}}" />
+                        {{/if}}
+                    </div>
+                    {{if firstFileName==null}}
+                    <img style="width: 100%;" src="/content/image/kia-gallery-logo-square.png" />
+                    {{/if}}
+                </div>
+                {{if usableProductStatus==1}}
+                <div class="order-button-padding" style="margin: 5px 0 0 0;">
+                    <button class="form-control btnShowUploadModal w100 " disabled style="border-radius:0" data-status="{{:usableProductStatus}}" data-order-id="{{:orderId}}" data-id="{{:id}}"><span class="bold">ناموجود</span></i></button>
+                </div>
+                {{else}}
+                <div class="order-button-padding" style="margin: 5px 0 0 0;">
+                    <button class="btn btn-primary plus w15" style="color:white;border-top-left-radius:0;border-bottom-left-radius:0;" data-id="{{:id}}" data-order-id="{{:orderId}}"><i class="fa fa-plus" aria-hidden="true"></i></button><button class="form-control btnShowUploadModal w70" style="border-radius:0" data-status="{{:usableProductStatus}}" data-order-id="{{:orderId}}" data-id="{{:id}}"><i class="fa fa-shopping-bag v-middle margin-icon white color-icon" aria-hidden="true">&nbsp;<span class="bold">سفارش سریع</span></i></button><button class="btn btn-danger minus w15" style="color:white;border-top-right-radius:0;border-bottom-right-radius:0;" data-id="{{:id}}" data-order-id="{{:orderId}}"><i class="fa fa-minus v-middle white" aria-hidden="true"></i></button>
+                </div>
+                {{/if}}
+                
+                <div class="relative" style="padding: 10px 0 1px 0;">
+                    <span class="block small-font"><i class="fa fa-file-text-o v-middle" aria-hidden="true"></i>{{:name}}</span>
+                    <span class="block small-font"><i class="fa fa-list-alt v-middle" aria-hidden="true"></i>{{:code}}</span>
+                    <span class="block small-font"><i class="fa fa-sort-numeric-desc v-middle" aria-hidden="true"></i>{{:unit}}</span>
+                    {{if description !=null && description != " "}}
+                    <span class="block small-font desc-length" style="display:flex">
+                        <i class="fa fa-file-text v-middle" aria-hidden="true"></i>
+                        {{:description}}
+                    </span>
+                    {{else}}
+                    <span class="block small-font">
+                        <i class="fa fa-file-text v-middle" aria-hidden="true"></i>
+                        -
+                    </span>
+                    {{/if}}
+                    <hr style="margin: 3px 0 0 0;">
+                </div>
+            </div>
+        </div>
+        {{/for}}
+
+    </script>
+
+    <script id="template-category" type="text/x-jsrender">
+        <div>
+            {{for listChild}}
+            <div class="accordion1" data-id="{{:id}}">
+                {{:title}}
+                <div class="child-{{:parentId}}" style="margin:5px 0">
+                    <div class="filter-item"><div class="ios-switch"><label><input type="checkbox" class="checkbox chkTypeChild" name="categoryChildId" data-id="{{:id}}" value="{{:id}}"><span class="marg">{{:childTitle}}</span></label></div></div>
+                </div>
+            </div>
+            {{/for}}
+        </div>
+        {{for list}}
+        <div class="accordion" data-id="{{:id}}">
+            <div class="rotate down" data-id="{{:id}}">
+                <span class="icon-down"><i class="fa fa-angle-down open-chkType" style="font-size: 18px;"></i></span>
+            </div>
+            {{:title}}
+            <br />
+            {{for children}}
+            <div class="child-{{:parentId}} child" data-parentId="{{:parentId}}" style="margin:5px 0">
+                <div class="filter-item"><div class="ios-switch"><label><input type="checkbox" class="checkbox chkType" name="categoryChildId" data-id="{{:id}}" value="{{:id}}"><span class="marg">{{:childTitle}}</span></label></div></div>
+            </div>
+            {{/for}}
+        </div>
+        {{/for}}
+    </script>
+
+    <script id="template-Image" type="text/x-jsrender">
+        <div class="row">
+            {{for list}}
+            <img class="product-image" src="/image/usableProduct/200x200/{{:fileName}}" />
+            {{/for}}
+        </div>
+    </script>
+
+}

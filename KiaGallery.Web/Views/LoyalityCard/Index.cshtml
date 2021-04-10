@@ -1,0 +1,587 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    List<KiaGallery.Web.Models.BranchListViewModel> branchList = ViewBag.BranchList;
+}
+<style>
+    #main {
+        padding: 0;
+        margin-top: 10px
+    }
+
+    body {
+        position: relative
+    }
+
+    .btn-custom {
+        border: none;
+        border-radius: 1px;
+        background-color: white;
+        color: black;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px
+    }
+
+    .primary {
+        color: #007bff;
+        border-color: #007bff;
+    }
+
+        .primary.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .primary.inactive {
+            background-color: none;
+            color: #007bff;
+        }
+
+        .primary:hover {
+            color: white;
+            border-color: #007bff;
+            background-color: #007bff
+        }
+
+    .secondary {
+        color: #6c757d;
+        border-color: #6c757d;
+    }
+
+        .secondary.active {
+            color: white;
+            border-color: #6c757d;
+            background-color: #6c757d
+        }
+
+        .secondary.inactive {
+            color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .secondary:hover {
+            color: white;
+            border-color: #6c757d;
+            background-color: #6c757d
+        }
+
+    /* Green */
+    .success {
+        border-color: #4CAF50;
+        color: green;
+    }
+
+        .success.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .success.inactive {
+            border-color: #4CAF50;
+            color: green;
+        }
+
+        .success:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+    /* Blue */
+    .info {
+        border-color: #2196F3;
+        color: dodgerblue
+    }
+
+        .info.active {
+            background: #2196F3;
+            color: white;
+        }
+
+        .info.inactive {
+            border-color: #2196F3;
+            color: dodgerblue
+        }
+
+        .info:hover {
+            background: #2196F3;
+            color: white;
+        }
+
+    /* Orange */
+    .warning {
+        border-color: #ff9800;
+        color: orange;
+    }
+
+        .warning.active {
+            background: #ff9800;
+            color: white;
+        }
+
+        .warning.inactive {
+            border-color: #ff9800;
+            color: orange;
+        }
+
+        .warning:hover {
+            background: #ff9800;
+            color: white;
+        }
+
+    /* Red */
+    .danger {
+        border-color: #f44336;
+        color: red
+    }
+
+        .danger.active {
+            background: #f44336;
+            color: white;
+        }
+
+        .danger.inactive {
+            border-color: #f44336;
+            color: red
+        }
+
+        .danger:hover {
+            background: #f44336;
+            color: white;
+        }
+
+    /* Gray */
+    .default {
+        border-color: #e7e7e7;
+        color: black;
+    }
+
+        .default:hover {
+            background: #e7e7e7;
+        }
+
+    #notification {
+        background-color: rgba(31, 181, 0, 0.5);
+        position: absolute;
+        top: -50px;
+        margin: 0 auto;
+        right: 0;
+        left: 0;
+        width: 20%;
+        text-align: center
+    }
+</style>
+<div class="tab-border" style="border-bottom:1px solid silver">
+    <button type="button" data-id="0" class="btn-custom status success">ثبت شده</button>
+    <button type="button" data-id="1" class="btn-custom status primary">چاپ شده</button>
+    <button type="button" data-id="2" class="btn-custom status info">ارسال شده به شعبه</button>
+    <button type="button" data-id="3" class="btn-custom status success">تحویل به مشتری</button>
+    @*<button type="button" data-id="4" class="btn-custom status warning">سوخته</button>*@
+    <button type="button" data-id="5" class="btn-custom status danger">باطل شده</button>
+    <button id="all" type="button" @*data-id="-1"*@ class="btn-custom secondary">همه</button>
+    <input id="setting" value="تنظیمات" type="button" @*data-id="-1"*@ class="btn btn-info pull-left" />
+</div>
+<br />
+<div>
+    <a class="btn btn-success" href="/LoyalityCard/add">
+        جدید
+    </a>
+</div>
+<div style="margin:5px 0 5px 0">
+    <div id="operation-list">
+        <button id="publish" type="button" class="changeStatus btn btn-info" data-status="1">چاپ</button>
+        <button id="sendToBranch" type="button" class="btn btn-success">ارسال به شعبه</button>
+        @*<button id="burn" type="button" class="changeStatus btn btn-warning" data-status="4">سوزاندن</button>*@
+        <button id="destroy" type="button" class="changeStatus btn btn-danger" data-status="5">باطل کردن</button>
+    </div>
+</div>
+<input type="button" class="select-all btn btn-default" value="انتخاب همه" />
+<div id="content">
+
+</div>
+<div id="branch-modal" class="modal fade" role="dialog" style="overflow-y: auto;">
+    <div class="modal-dialog  modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">انتخاب شعبه</h4>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <select class="form-control" id="cmbBranch" name="branchId">
+                        <option>...</option>
+                        @foreach (var item in branchList)
+                        {
+                            <option value="@item.id">@item.name</option>
+                        }
+                    </select>
+                    <br />
+                    <button id="sendBranch" class="changeStatus btn btn-success" data-status="2">ارسال</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="log-modal" class="modal fade" role="dialog" style="overflow-y: auto;">
+    <div class="modal-dialog  modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">سوابق</h4>
+            </div>
+            <div class="modal-body">
+                <div id="content-log" class="text-center"> </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="setting-modal" class="modal fade" role="dialog" style="overflow-y: auto;">
+    <div class="modal-dialog  modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">تنظیمات</h4>
+            </div>
+            <div class="modal-body">
+                <form id="settingForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>نقره ای</label>
+                            <input type="text" class="form-control" value="@ViewBag.SilverCardValue" name="silverCardValue" />
+                            <label>طلایی</label>
+                            <input type="text" class="form-control" value="@ViewBag.GoldenCardValue" name="goldenCardValue" />
+                            <label>پلاتینوم</label>
+                            <input type="text" class="form-control" value="@ViewBag.PlatinumCardValue" name="platinumCardValue" />
+                        </div>
+                        <div class="col-md-6">
+                            <label>نقره ای</label>
+                            <input type="text" class="form-control" value="@ViewBag.SilverCardValue" name="silverCardValue" />
+                            <label>طلایی</label>
+                            <input type="text" class="form-control" value="@ViewBag.GoldenCardValue" name="goldenCardValue" />
+                            <label>پلاتینوم</label>
+                            <input type="text" class="form-control" value="@ViewBag.PlatinumCardValue" name="platinumCardValue" />
+                        </div>
+                    </div>
+                </form>
+                <br />
+            </div>
+            <div class="modal-footer">
+                <div>
+                    <button type="button" id="btnSaveSetting" class="btn btn-success">ذخیره</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="notification">
+    <h4>عملیات با موفقیت انجام شد.</h4>
+</div>
+@section scripts{
+
+    <script type="text/javascript">
+
+        var defaultEntity = {
+            count: 50,
+            page: 0,
+            status: null
+        }
+
+        //$("#publish").click(function () {
+        //    var idList = new Array();
+        //    $('.cardItem:checked').each(function () {
+        //        idList.push(this.value);
+        //    });
+        //    if (idList.length > 0) {
+        //        var idList = new Array();
+        //        $('.cardItem:checked').each(function () {
+        //            idList.push(this.value);
+        //        });
+        //        window.open("/loyalityCard/print?id=" + idList, "_blank");
+        //    }
+        //    else {
+        //        alert("حداقل یک مورد را باید انتخاب کنید.");
+        //    }
+        //})
+        $(window).on('hashchange', function () {
+            getList();
+        });
+        $(document).ready(function () {
+            getList()
+
+            $(".select-all").on("click", function (event) {
+                if ($(".cardItem").not(":checked").length > 0) {
+                    $(".cardItem").prop("checked", true);
+                }
+                else {
+                    $(".cardItem").prop("checked", false);
+                }
+                $(".cardItem").change();
+            });
+            $("#setting").click(function () {
+                $("#setting-modal").modal('show');
+            })
+            $("#btnSaveSetting").click(function () {
+                saveSetting()
+            })
+            $("#all").click(function () {
+                $(".changeStatus,#sendToBranch,.select-all").hide();
+                $("#sendBranch").show()
+                manipulateParam({ page: 0 }, "status");
+            })
+            $(document).on("click", ".status", function (event) {
+                event.preventDefault();
+                $(".select-all").show();
+                console.log(45)
+                var entity = {
+                    status: $(this).attr("data-id")
+                };
+                setParam({ status: $(this).attr("data-id"), page: 0 });
+            });
+            $(document).on("click", ".deleteCard", function () {
+                deleteCard($(this).attr("data-id"))
+            });
+            $(document).on("click", ".log", function () {
+                getLog($(this).attr("data-id"))
+                $("#log-modal").modal('show');
+            });
+            $("#sendToBranch").click(function () {
+                $("#branch-modal").modal('show');
+                $("#cmbBranch").val("...")
+            })
+            $('.btn-custom').click(function () {
+                $('.btn-custom').removeClass('active').addClass('inactive');
+                //$(".tab-border").css({ "border-bottom" :"1px solid" })
+                $(this).removeClass('inactive').addClass('active');
+            });
+
+            $(".changeStatus").click(function () {
+                var branchId = $("#cmbBranch").val()
+                var status = $(this).attr("data-status")
+                var idList = new Array();
+                $('.cardItem:checked').each(function () {
+                    idList.push(this.value);
+                });
+                if (idList.length > 0) {
+                    confirmMessage("آیا از تغییر وضعیت اطمینان دارید؟", function () {
+                        var idList = new Array();
+                        $('.cardItem:checked').each(function () {
+                            idList.push(this.value);
+                        });
+                        if (status == 1) {
+                            window.open("/loyalityCard/print?id=" + idList, "_blank");
+                        }
+                        changeStatus(idList, status, branchId);
+                    });
+
+                }
+                else {
+                    alert("حداقل یک مورد را باید انتخاب کنید.");
+                }
+            })
+
+        })
+        function getList() {
+            updateForm()
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+            loader(true)
+            $.get("/loyalityCard/search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                    $(".changeStatus,#sendToBranch").hide();
+                    $("#sendBranch").show()
+                    if (params["status"] && params["status"] >= 0) {
+                        switch (parseInt(params["status"])) {
+                            case 0:
+                                $("#publish").show();
+                                $("#sendToBranch,#burn,#destroy").hide();
+                                break;
+                            case 1:
+                                $("#publish").hide();
+                                $("#sendToBranch").show();
+                                $("#burn,#destroy").hide();
+                                break;
+                            case 2:
+                                $("#sendToBranch,#publish").hide();
+                                $("#burn,#destroy").show();
+
+                                break;
+                            case 3:
+                                $("#publish,#sendToBranch").hide();
+                                $("#burn,#destroy").show();
+                                break;
+                            case 4:
+                                $("#publish,#sendToBranch,#burn").hide();
+                                $("#destroy").show();
+                                break;
+                            case 5:
+                                $("#publish,#sendToBranch,#burn,#destroy").hide();
+                                break;
+                            case -1:
+                                $("#publish,#sendToBranch,#burn,#destroy").hide();
+                                break;
+                            default:
+                                break;
+                        }
+                        $('[data-toggle="tooltip"]').tooltip();
+                    }
+                    loader(false);
+                }
+                else {
+                    alert(response.message);
+                }
+
+            });
+        }
+        function getLog(id) {
+            $.get("/loyalityCard/searchLog/" + id, function (response) {
+
+                loader(false);
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template-log");
+                    var htmlOutput = template.render(data);
+                    $("#content-log").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+
+            });
+        }
+        function changeStatus(idList, status, branchId) {
+            var params = {
+                idList: idList,
+                cardStatus: status,
+                branchId: branchId,
+            };
+            loader(true);
+            $.post("/loyalityCard/changeStatus", params, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    getList();
+                    $("#notification").animate({ "top": "70px" })
+                    setTimeout(function () {
+                        $('#notification').animate({ "top": "-50px" });
+                    }, 2000);
+                    $("#branch-modal").modal('hide');
+                    $("#cmbBranch").val("")
+                }
+                getList();
+            });
+        }
+        function updateForm() {
+            var params = getParam();
+            // workshop id
+            $(".tab-border button").removeClass("active");
+            if (params["status"] && params["status"] >= 0)
+                $(".tab-border button[data-id=" + params["status"] + "]").closest("button").addClass("active");
+            else {
+                $(".tab-border button:last").addClass("active");
+                defaultEntity.status = null;
+            }
+        }
+        function deleteCard(id) {
+            $.post("/loyalityCard/delete/" + id, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    getList();
+                    $("#notification").animate({ "top": "70px" })
+                    setTimeout(function () {
+                        $('#notification').animate({ "top": "-50px" });
+                    }, 2000);
+                }
+            });
+        }
+        function saveSetting() {
+            var entity = getEntity("#settingForm")
+            $.post("/loyalityCard/saveSetting", entity, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    $("#setting-modal").modal('hide');
+                    getList();
+                    $("#notification").animate({ "top": "70px" })
+                    setTimeout(function () {
+                        $('#notification').animate({ "top": "-50px" });
+                    }, 2000);
+                }
+            });
+        }
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        {{if list != null && list.length > 0}}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>کد</th>
+                    <th>وضعیت</th>
+                    <th>نوع</th>
+                    <th>شعبه</th>
+                    <th>مشتری</th>
+                    <th class="icon-col te">سوابق</th>
+                    <th class="icon-col te">ویرایش</th>
+                    <th class="icon-col te">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td class="v-middle ">
+                        <input style="border:1px solid red" id="chkCard{{:id}}" class="cardItem" name="cardItem" type="checkbox" value="{{:id}}" data-code="{{:code}}" />
+                    </td>
+                    <td>{{:code}}</td>
+                    <td>{{:cardStatusTitle}}</td>
+                    <td>{{:cardTypeTitle}}</td>
+                    {{if branchName}}
+                    <td>{{:branchName}}</td>
+                    {{else}}
+                    <td><span style="color:deepskyblue" class="fa fa-times"></span></td>
+                    {{/if}}
+                    {{if customerName}}
+                    <td>{{:customerName}}</td>
+                    {{else}}
+                    <td><span style="color:deepskyblue" class="fa fa-times"></span></td>
+                    {{/if}}
+                    <td><button class="btn-xs btn btn-info log" data-id="{{:id}}"><span class="fa fa-info"></span></button></td>
+                    <td><a href="/LoyalityCard/edit/{{:id}}" class="btn btn-success btn-xs"><span class="fa fa-edit"></span></a></td>
+                    <td><button data-id="{{:id}}" class="btn btn-danger btn-xs deleteCard"><span class="fa fa-times"></span></button></td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        {{else}}
+        <h5>موردی یافت نشد</h5>
+        {{/if}}
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+    <script id="template-log" type="text/x-jsrender">
+        {{if list != null && list.length > 0}}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="text-center">کاربر</th>
+                    <th class="text-center">تاریخ</th>
+                    <th class="text-center">وضعیت</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td>{{:createUser}}</td>
+                    <td>{{:persianCreateDate}}</td>
+                    <td>{{:cardStatusTitle}}</td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        {{else}}
+        <h5>موردی یافت نشد</h5>
+        {{/if}}
+    </script>
+}

@@ -1,0 +1,54 @@
+﻿
+@{
+    ViewBag.Title = "اطلاعات کاربر";
+}
+<h3>اطلاعات کاربر</h3>
+<div class="container">
+    <form id="form">
+        <div class="col-md-4 col-lg-offset-4">
+            <div class="form-group ">
+                <label for="exampleInputEmail1">شماره کارت/مشتری</label>
+                <input type="email" class="form-control" id="txtCardNumber" name="cariorcard" placeholder="شماره کارت/مشتری">
+            </div>
+            <div class="form-group ">
+                <button id="btnSave" class="btn btn-success" type="button">ارسال اطلاعات</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="content">
+
+</div>
+@section scripts{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#btnSave").on("click", function (event) {
+                event.preventDefault();
+                if (checkForm("#form")) {
+                    var entity = getEntity("#form");
+                    loader(true);
+                    $.ajax({
+                        method: "POST",
+                        url: "/customerCard/getUserInfo",
+                        data: entity,
+                        success: function (response) {
+                            if (response.status == 200) {
+                                callbackAlert(response.message, function () {
+                                });
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                            loader(false);
+                        }
+                    });
+                }
+            });
+
+        });
+
+    </script>
+
+}

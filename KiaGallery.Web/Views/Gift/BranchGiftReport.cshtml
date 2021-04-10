@@ -1,0 +1,214 @@
+﻿@{
+    ViewBag.Title = "BranchGiftReport";
+}
+<style>
+    body{
+        padding:0
+    }
+    .item {
+        cursor:pointer;
+        padding: 1px 5px;
+        margin: 1px 0 10px;
+        border-radius: 5px;
+        color: white !important;
+        text-decoration: none !important;
+        height: 250px;
+    }
+
+        .item a:hover {
+            text-decoration: none;
+        }
+
+        .item p {
+            font-size: 16px;
+            padding: 0 10px;
+        }
+
+        .item .desc {
+            font-size: 12px;
+            color: #EEE;
+        }
+
+    .square {
+        display: block;
+        position: relative;
+        text-align: center;
+        background-color: rgba(0, 0, 0,0.6);
+        top: calc(50% - 90px);
+        max-width: 100%;
+        border-radius: 3px 3px 3px 3px;
+        height: 125px;
+        color: white;
+        /*border: 2px solid white;*/
+        padding: 35px;
+    }
+
+
+
+    .item-opacity:hover {
+        background-color: rgba(0, 0, 0,0.3) !important
+    }
+
+    .faplusposition {
+        margin-top: 40px;
+        display: inline;
+        position: absolute;
+        right: 50px;
+    }
+
+    .carttitleposition {
+        left: calc(50% - 35px);
+        top: 1px;
+        width: 90%;
+        font-size: 13px;
+        position: absolute;
+        right: 15px
+    }
+
+    .cartnumberposition {
+        left: calc(50% - 55px);
+        top: 20px;
+        max-width: 100%;
+        font-size: 30px
+    }
+
+    .flip-box {
+        background-color: transparent;
+        height: 200px;
+        perspective: 1000px;
+    }
+
+    .flip-box-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+        border-radius: 5px
+    }
+
+    .flip-box:hover .flip-box-inner {
+        transform: rotateY(180deg);
+    }
+
+    .flip-box-front, .flip-box-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+    }
+
+    .flip-box-front {
+        background-color: #bbb;
+        color: black;
+        border-radius: 5px
+    }
+
+    .flip-box-back {
+        background-color: #303F9F;
+        border-radius: 3px;
+        color: white;
+        transform: rotateY(180deg);
+        border-radius: 5px
+    }
+</style>
+<div class="col-md-12"style="margin:10px 0 10px 0">
+    <h2>گزارش وضعیت کارت هدیه هر شعبه</h2>
+</div>
+@*<div class="col-md-2">
+
+        <select id="branchId" class="form-control">
+            <option></option>
+            @foreach (var item in ViewBag.branchList)
+            {
+            <option value="@item.id">@item.name</option>
+
+            }
+        </select>
+    </div>
+    <div class="row">his</div>*@
+<div id="content"></div>
+
+
+
+@section Scripts{
+
+    <script type="text/javascript">
+
+        var defaultEntity = {
+            count: 100,
+            page: 0
+        }
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(document).ready(function () {
+            $.get("/gift/BranchGiftReportJson", function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    console.log(data)
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+
+        });
+    </script>
+
+
+    @*<div class="flip-box">
+            <div class="flip-box-inner">
+                <div class="flip-box-front">
+                    <h3>نیاوران</h3>
+                </div>
+                <div class="flip-box-back">
+
+                </div>
+            </div>
+        </div>*@
+
+    <script id="template" type="text/x-jsrender">
+        <div class="row">
+            <div class="container">
+                {{for list}}
+                <div class="col-md-3 flip-box item">
+                    <div class="flip-box-inner">
+                        <div class="flip-box-front block bg-success" style="background-color: deepskyblue;padding:10px">
+                            <div> <h3 class=" square"><span>{{:branchName}}</span></h3><br /> </div>
+                        </div>
+                        <div class="flip-box-back" style="padding-right:20px;padding-left:10px">
+                            {{for data}}
+                            <h5> <span class="fa fa-circle"></span> {{:statusTitle}} : <span style="color:white" class="pull-left">{{:count}}</span></h5>
+                            <h5></h5>
+                            {{/for}}
+                        </div>
+                    </div>
+                </div>
+                {{/for}}
+            </div>
+        </div>
+    </script>
+
+}
+@*<div class="col-md-3 flip-box">
+        <div class="item block bg-success " style="background-color: #8BC34A; ">
+
+            <strong class="square carttitleposition"><span>{{:branchName}}</span></strong><br />
+
+            <div style="padding-right:20px;padding-left:10px">
+
+                {{for data}}
+                <h5> <span class="fa fa-circle"></span> {{:statusTitle}} : <span style="color:darkslategrey" class="pull-left">{{:count}}</span></h5>
+                <h5></h5>
+                {{/for}}
+            </div>
+
+            <br />
+        </div>
+    </div>*@

@@ -1,0 +1,2604 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StiSerializer version="1.02" type="Net" application="StiReport">
+  <Dictionary Ref="1" type="Dictionary" isKey="true">
+    <BusinessObjects isList="true" count="0" />
+    <Databases isList="true" count="0" />
+    <DataSources isList="true" count="2">
+      <BankDataSource Ref="2" type="DataTableSource" isKey="true">
+        <Alias>BankDataSource</Alias>
+        <Columns isList="true" count="4">
+          <value>Name,System.String</value>
+          <value>Exit,System.String</value>
+          <value>Entry,System.String</value>
+          <value>Remaining,System.String</value>
+        </Columns>
+        <Dictionary isRef="1" />
+        <Name>BankDataSource</Name>
+        <NameInSource>BankDataSource</NameInSource>
+      </BankDataSource>
+      <CurrencyDataSource Ref="3" type="DataTableSource" isKey="true">
+        <Alias>CurrencyDataSource</Alias>
+        <Columns isList="true" count="4">
+          <value>Name,System.String</value>
+          <value>Exit,System.String</value>
+          <value>Entry,System.String</value>
+          <value>Remaining,System.String</value>
+        </Columns>
+        <Dictionary isRef="1" />
+        <Name>CurrencyDataSource</Name>
+        <NameInSource>CurrencyDataSource</NameInSource>
+      </CurrencyDataSource>
+    </DataSources>
+    <Relations isList="true" count="0" />
+    <Report isRef="0" />
+    <Variables isList="true" count="82">
+      <value>,Date,Date,System.String,,False,False</value>
+      <value>,Branch,Branch,System.String,,False,False</value>
+      <value>,NumberSaleFactor,NumberSaleFactor,System.String,,False,False</value>
+      <value>,SaleWeight,SaleWeight,System.String,,False,False</value>
+      <value>,SaleExit,SaleExit,System.String,,False,False</value>
+      <value>,SaleEntry,SaleEntry,System.String,,False,False</value>
+      <value>,SaleRemaining,SaleRemaining,System.String,,False,False</value>
+      <value>,ReturnedWeight,ReturnedWeight,System.String,,False,False</value>
+      <value>,ReturnedExit,ReturnedExit,System.String,,False,False</value>
+      <value>,ReturnedEntry,ReturnedEntry,System.String,,False,False</value>
+      <value>,ReturnedRemaining,ReturnedRemaining,System.String,,False,False</value>
+      <value>,BankExit,BankExit,Stimulsoft.Report.StringList,,False,False</value>
+      <value>,BankEntry,BankEntry,System.String,,False,False</value>
+      <value>,BankRemaining,BankRemaining,System.String,,False,False</value>
+      <value>,CashExit,CashExit,System.String,,False,False</value>
+      <value>,CashEntry,CashEntry,System.String,,False,False</value>
+      <value>,CashRemaining,CashRemaining,System.String,,False,False</value>
+      <value>,CurrencyExit,CurrencyExit,System.String,,False,False</value>
+      <value>,CurrencyEntry,CurrencyEntry,System.String,,False,False</value>
+      <value>,CurrencyRemaining,CurrencyRemaining,System.String,,False,False</value>
+      <value>,OtherCurrencyExit,OtherCurrencyExit,System.String,,False,False</value>
+      <value>,OtherCurrencyEntry,OtherCurrencyEntry,System.String,,False,False</value>
+      <value>,OtherCurrencyRemaining,OtherCurrencyRemaining,System.String,,False,False</value>
+      <value>,GoldDeficitWeight,GoldDeficitWeight,System.String,,False,False</value>
+      <value>,GoldDeficitExit,GoldDeficitExit,System.String,,False,False</value>
+      <value>,GoldDeficitEntry,GoldDeficitEntry,System.String,,False,False</value>
+      <value>,GoldDeficitRemaining,GoldDeficitRemaining,System.String,,False,False</value>
+      <value>,GiftNumberExit,GiftNumberExit,System.String,,False,False</value>
+      <value>,GiftExit,GiftExit,System.String,,False,False</value>
+      <value>,GiftEntry,GiftEntry,System.String,,False,False</value>
+      <value>,GiftRemaining,GiftRemaining,System.String,,False,False</value>
+      <value>,CheckNumber,CheckNumber,System.String,,False,False</value>
+      <value>,CheckExit,CheckExit,System.String,,False,False</value>
+      <value>,CheckEntry,CheckEntry,System.String,,False,False</value>
+      <value>,CheckRemaining,CheckRemaining,System.String,,False,False</value>
+      <value>,LeatherStoneExit,LeatherStoneExit,System.String,,False,False</value>
+      <value>,LeatherStoneEntry,LeatherStoneEntry,System.String,,False,False</value>
+      <value>,LeatherStoneRemaining,LeatherStoneRemaining,System.String,,False,False</value>
+      <value>,CoinNumber,CoinNumber,System.String,,False,False</value>
+      <value>,CoinExit,CoinExit,System.String,,False,False</value>
+      <value>,CoinEntry,CoinEntry,System.String,,False,False</value>
+      <value>,CoinRemaining,CoinRemaining,System.String,,False,False</value>
+      <value>,OtherKiaGoldWeight,OtherKiaGoldWeight,System.String,,False,False</value>
+      <value>,OtherKiaGoldExit,OtherKiaGoldExit,System.String,,False,False</value>
+      <value>,OtherKiaGoldEntry,OtherKiaGoldEntry,System.String,,False,False</value>
+      <value>,OtherKiaGoldRemaining,OtherKiaGoldRemaining,System.String,,False,False</value>
+      <value>,OtherGoldWeight,OtherGoldWeight,System.String,,False,False</value>
+      <value>,OtherGoldExit,OtherGoldExit,System.String,,False,False</value>
+      <value>,OtherGoldEntry,OtherGoldEntry,System.String,,False,False</value>
+      <value>,OtherGoldRemaining,OtherGoldRemaining,System.String,,False,False</value>
+      <value>,CreditorCustomerExit,CreditorCustomerExit,System.String,,False,False</value>
+      <value>,CreditorCustomerEntry,CreditorCustomerEntry,System.String,,False,False</value>
+      <value>,CreditorCustomerRemaining,CreditorCustomerRemaining,System.String,,False,False</value>
+      <value>,DebtorCustomerExit,DebtorCustomerExit,System.String,,False,False</value>
+      <value>,DebtorCustomerEntry,DebtorCustomerEntry,System.String,,False,False</value>
+      <value>,DebtorCustomerRemaining,DebtorCustomerRemaining,System.String,,False,False</value>
+      <value>,DepositBeforeCount,DepositBeforeCount,System.String,,False,False</value>
+      <value>,DepositBeforeExit,DepositBeforeExit,System.String,,False,False</value>
+      <value>,DepositBeforeEntry,DepositBeforeEntry,System.String,,False,False</value>
+      <value>,DepositBeforeRemaining,DepositBeforeRemaining,System.String,,False,False</value>
+      <value>,DepositNewCount,DepositNewCount,System.String,,False,False</value>
+      <value>,DepositNewExit,DepositNewExit,System.String,,False,False</value>
+      <value>,DepositNewEntry,DepositNewEntry,System.String,,False,False</value>
+      <value>,DepositNewRemaining,DepositNewRemaining,System.String,,False,False</value>
+      <value>,DiscountExit,DiscountExit,System.String,,False,False</value>
+      <value>,DiscountEntry,DiscountEntry,System.String,,False,False</value>
+      <value>,DiscountRemaining,DiscountRemaining,System.String,,False,False</value>
+      <value>,CostCourierPostExit,CostCourierPostExit,System.String,,False,False</value>
+      <value>,CostCourierPostEntry,CostCourierPostEntry,System.String,,False,False</value>
+      <value>,CostCourierPostRemaining,CostCourierPostRemaining,System.String,,False,False</value>
+      <value>,OtherCash,OtherCash,System.String,,False,False</value>
+      <value>,TotalProfit,TotalProfit,System.String,,False,False</value>
+      <value>,TotalValue,TotalValue,System.String,,False,False</value>
+      <value>,LeatherStoneDescExit,LeatherStoneDescExit,System.String,,False,False</value>
+      <value>,InventoryCash,InventoryCash,System.String,,False,False</value>
+      <value>,SaleWeightPercent,SaleWeightPercent,System.String,,False,False</value>
+      <value>,ReturnWeightPercent,ReturnWeightPercent,System.String,,False,False</value>
+      <value>,GiftNumberEntry,GiftNumberEntry,System.String,,False,False</value>
+      <value>,LeatherStoneDescEntry,LeatherStoneDescEntry,System.String,,False,False</value>
+      <value>,LoyalityEntry,LoyalityEntry,System.String,,False,False</value>
+      <value>,LoyalityExit,LoyalityExit,System.String,,False,False</value>
+      <value>,LoyalityRemaining,LoyalityRemaining,System.String,,False,False</value>
+    </Variables>
+  </Dictionary>
+  <EngineVersion>EngineV2</EngineVersion>
+  <GlobalizationStrings isList="true" count="0" />
+  <MetaTags isList="true" count="0" />
+  <Pages isList="true" count="3">
+    <Page1 Ref="4" type="Page" isKey="true">
+      <Border>All;Black;1;Solid;False;3;Black</Border>
+      <Brush>White</Brush>
+      <Components isList="true" count="11">
+        <Text115 Ref="5" type="Text" isKey="true">
+          <Border>All;Black;1;Solid;False;4;Black</Border>
+          <Brush>[165:165:165]</Brush>
+          <ClientRectangle>0,8.4,7.5,0.3</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>Microsoft Sans Serif,10</Font>
+          <Margins>5,5,5,5</Margins>
+          <Name>Text115</Name>
+          <Page isRef="4" />
+          <Parent isRef="4" />
+          <Text>{TotalValue}</Text>
+          <TextBrush>Black</TextBrush>
+          <Type>Expression</Type>
+          <VertAlignment>Center</VertAlignment>
+        </Text115>
+        <Text126 Ref="6" type="Text" isKey="true">
+          <Border>All;Black;1;Solid;False;4;Black</Border>
+          <Brush>[165:165:165]</Brush>
+          <ClientRectangle>1.5,8.4,6,0.3</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>Microsoft Sans Serif,10</Font>
+          <Guid>e68470af5908410ca0c3a003a1340409</Guid>
+          <Margins>5,5,5,5</Margins>
+          <Name>Text126</Name>
+          <Page isRef="4" />
+          <Parent isRef="4" />
+          <Text>ارزش</Text>
+          <TextBrush>Black</TextBrush>
+          <Type>Expression</Type>
+          <VertAlignment>Center</VertAlignment>
+        </Text126>
+        <Text114 Ref="7" type="Text" isKey="true">
+          <Border>All;Black;1;Solid;False;4;Black</Border>
+          <Brush>[165:165:165]</Brush>
+          <ClientRectangle>0,8.1,1.5,0.3</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>Microsoft Sans Serif,10</Font>
+          <Margins>5,5,5,5</Margins>
+          <Name>Text114</Name>
+          <Page isRef="4" />
+          <Parent isRef="4" />
+          <Text>{TotalProfit}</Text>
+          <TextBrush>Black</TextBrush>
+          <Type>Expression</Type>
+          <VertAlignment>Center</VertAlignment>
+        </Text114>
+        <Text122 Ref="8" type="Text" isKey="true">
+          <Border>All;Black;1;Solid;False;4;Black</Border>
+          <Brush>[165:165:165]</Brush>
+          <ClientRectangle>1.5,8.1,6,0.3</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>Microsoft Sans Serif,10</Font>
+          <Guid>d56c50535e3a46bab1d800893b849ab3</Guid>
+          <Margins>5,5,5,5</Margins>
+          <Name>Text122</Name>
+          <Page isRef="4" />
+          <Parent isRef="4" />
+          <Text>سود</Text>
+          <TextBrush>Black</TextBrush>
+          <Type>Expression</Type>
+          <VertAlignment>Center</VertAlignment>
+        </Text122>
+        <ReportTitleBand1 Ref="9" type="ReportTitleBand" isKey="true">
+          <Border>Bottom;Black;1;Double;False;4;Black</Border>
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,0.2,7.49,7.8</ClientRectangle>
+          <Components isList="true" count="143">
+            <Text28 Ref="10" type="Text" isKey="true">
+              <Border>Top, Left, Right;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>5.9,2.2,1.1,2.7</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text28</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>بانک</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text28>
+            <Image1 Ref="11" type="Image" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0,0,0.7,0.7</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <HorAlignment>Center</HorAlignment>
+              <Image>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</Image>
+              <Name>Image1</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Stretch>True</Stretch>
+              <VertAlignment>Center</VertAlignment>
+            </Image1>
+            <Text5 Ref="12" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>2.7,0,2,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text5</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>گزارش روزانه</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text5>
+            <Text2 Ref="13" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>7,0.05,0.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text2</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>:تاریخ</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text2>
+            <Text4 Ref="14" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>7,0.35,0.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>a774294ca65c4efaa82d786e2695f243</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text4</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>:شعبه</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text4>
+            <Text1 Ref="15" type="Text" isKey="true">
+              <Brush>White</Brush>
+              <ClientRectangle>4.9,0.35,2.1,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text1</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{Branch}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text1>
+            <Text3 Ref="16" type="Text" isKey="true">
+              <Brush>White</Brush>
+              <ClientRectangle>4.9,0.05,2.1,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text3</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{Date}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text3>
+            <Text6 Ref="17" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>[165:165:165]</Brush>
+              <ClientRectangle>7,0.7,0.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text6</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>ردیف</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text6>
+            <Text7 Ref="18" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>[165:165:165]</Brush>
+              <ClientRectangle>4.5,0.7,2.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text7</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>شرح</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text7>
+            <Text8 Ref="19" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>[165:165:165]</Brush>
+              <ClientRectangle>3,0.7,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text8</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>خروج</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text8>
+            <Text9 Ref="20" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>[165:165:165]</Brush>
+              <ClientRectangle>1.5,0.7,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text9</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>ورود</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text9>
+            <Text10 Ref="21" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>[165:165:165]</Brush>
+              <ClientRectangle>0,0.7,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text10</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>مانده</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text10>
+            <Text11 Ref="22" type="Text" isKey="true">
+              <Border>Top, Left, Bottom;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>7,1,0.5,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text11</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>1</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text11>
+            <Text12 Ref="23" type="Text" isKey="true">
+              <Border>Top, Left, Bottom;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>7,1.6,0.5,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text12</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>2</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text12>
+            <Text13 Ref="24" type="Text" isKey="true">
+              <Border>Top, Left;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>7,2.2,0.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text13</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>3</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text13>
+            <Text14 Ref="25" type="Text" isKey="true">
+              <Border>Top, Left;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>7,2.5,0.5,1.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>8,8,8,8</Margins>
+              <Name>Text14</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>4</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text14>
+            <Text15 Ref="26" type="Text" isKey="true">
+              <Border>Top, Left, Bottom;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>7,3.7,0.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text15</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>5</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text15>
+            <Text16 Ref="27" type="Text" isKey="true">
+              <Border>Top, Left, Bottom;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>7,4,0.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text16</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>6</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text16>
+            <Text17 Ref="28" type="Text" isKey="true">
+              <Border>Top, Left, Bottom;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>7,4.3,0.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text17</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>7</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text17>
+            <Text18 Ref="29" type="Text" isKey="true">
+              <Border>Top, Left, Bottom;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>7,4.6,0.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text18</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>8</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text18>
+            <Text19 Ref="30" type="Text" isKey="true">
+              <Border>Top, Left, Bottom;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>7,4.9,0.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text19</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>9</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text19>
+            <Text23 Ref="31" type="Text" isKey="true">
+              <Border>Top, Left, Bottom;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>7,5.2,0.5,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>c776873a210e4199ba4775dc40ffaebc</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>8,5,5,5</Margins>
+              <Name>Text23</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>10</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text23>
+            <Text24 Ref="32" type="Text" isKey="true">
+              <Border>Top, Left, Bottom;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>7,5.8,0.5,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>18a2586ba66743438976e383041acfd8</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>8,5,5,5</Margins>
+              <Name>Text24</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>11</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text24>
+            <Text25 Ref="33" type="Text" isKey="true">
+              <Border>Top, Left, Bottom;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>7,6.4,0.5,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>74c038bad0c343ea97800ffb7b7aa8c3</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>8,5,5,5</Margins>
+              <Name>Text25</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>12</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text25>
+            <Text26 Ref="34" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>5.9,1,1.1,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text26</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>فروش</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text26>
+            <Text27 Ref="35" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>5.9,1.6,1.1,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text27</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>مرجوعی</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text27>
+            <Text29 Ref="36" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>5.9,2.5,1.1,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text29</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>اسکناس</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text29>
+            <Text30 Ref="37" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>5.9,3.7,1.1,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text30</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>کسری طلا</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text30>
+            <Text31 Ref="38" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>5.9,4.3,1.1,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text31</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>بن خرید</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text31>
+            <Text32 Ref="39" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>5.9,4.6,1.1,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text32</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>چرم و سنگ</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text32>
+            <Text33 Ref="40" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>5.9,4.9,1.1,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text33</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>سکه</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text33>
+            <Text34 Ref="41" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>5.9,5.2,1.1,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>8,5,5,5</Margins>
+              <Name>Text34</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>طلای متفرقه</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text34>
+            <Text35 Ref="42" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>5.9,5.8,1.1,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>8,5,5,5</Margins>
+              <Name>Text35</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>مانده مشتری</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text35>
+            <Text36 Ref="43" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>5.9,6.4,1.1,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>8,5,5,5</Margins>
+              <Name>Text36</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>بیعانه</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text36>
+            <Text37 Ref="44" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>4.5,7.3,2.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text37</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>تخفیف</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text37>
+            <Text38 Ref="45" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>4.5,7.6,2.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text38</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>هزینه</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text38>
+            <Text39 Ref="46" type="Text" isKey="true">
+              <Border>Top, Left, Bottom;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>7,7.3,0.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text39</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>14</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text39>
+            <Text20 Ref="47" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>5.3,1,0.6,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,9</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text20</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{NumberSaleFactor}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=True, Trimming=None, WordWrap=False, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text20>
+            <Text21 Ref="48" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>4.5,1,0.8,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,9</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text21</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{SaleWeight}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=True, Trimming=None, WordWrap=False, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <VertAlignment>Center</VertAlignment>
+            </Text21>
+            <Text22 Ref="49" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>1.5,1,1.5,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text22</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{SaleEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text22>
+            <Text41 Ref="50" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>0,1,1.5,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text41</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{SaleRemaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text41>
+            <Text43 Ref="51" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>4.5,1.9,0.8,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,9</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text43</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{ReturnWeightPercent}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=True, Trimming=None, WordWrap=False, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text43>
+            <Text44 Ref="52" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>1.5,1.6,1.5,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text44</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{ReturnedEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text44>
+            <Text45 Ref="53" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>3,1.6,1.5,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text45</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{ReturnedExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text45>
+            <Text46 Ref="54" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>0,1.6,1.5,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text46</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{ReturnedRemaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text46>
+            <Text47 Ref="55" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>1.5,2.5,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text47</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{CashEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text47>
+            <Text48 Ref="56" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>4.5,2.5,1.4,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text48</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{OtherCash}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text48>
+            <Text57 Ref="57" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>3,2.5,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text57</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{CashExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text57>
+            <Text58 Ref="58" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>0,2.5,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text58</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{CashRemaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text58>
+            <Text61 Ref="59" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>4.5,3.7,1.4,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text61</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{GoldDeficitWeight}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text61>
+            <Text62 Ref="60" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>1.5,3.7,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text62</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{GoldDeficitEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text62>
+            <Text63 Ref="61" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>3,3.7,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text63</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{GoldDeficitExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text63>
+            <Text64 Ref="62" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>0,3.7,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text64</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{GoldDeficitRemaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text64>
+            <Text65 Ref="63" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>4.5,4.3,1.4,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text65</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{CheckNumber}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text65>
+            <Text66 Ref="64" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>1.5,4.3,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text66</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{CheckEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text66>
+            <Text67 Ref="65" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>3,4.3,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text67</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{CheckExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text67>
+            <Text68 Ref="66" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>0,4.3,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text68</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{CheckRemaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text68>
+            <Text40 Ref="67" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>3,1,1.5,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text40</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{SaleExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text40>
+            <Text70 Ref="68" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>1.5,4.6,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text70</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{LeatherStoneEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text70>
+            <Text71 Ref="69" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>3,4.6,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text71</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{LeatherStoneExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text71>
+            <Text72 Ref="70" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>0,4.6,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text72</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{LeatherStoneRemaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text72>
+            <Text73 Ref="71" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>4.5,4.9,1.4,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text73</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{CoinNumber}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text73>
+            <Text74 Ref="72" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>1.5,4.9,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text74</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{CoinEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text74>
+            <Text75 Ref="73" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>3,4.9,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text75</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{CoinExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text75>
+            <Text76 Ref="74" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>0,4.9,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text76</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{CoinRemaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text76>
+            <Text77 Ref="75" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>5.3,5.2,0.6,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text77</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>طلاکیا</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text77>
+            <Text78 Ref="76" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>5.3,5.5,0.6,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text78</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>متفرقه</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text78>
+            <Text79 Ref="77" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>4.5,5.2,0.8,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text79</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{OtherKiaGoldWeight}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text79>
+            <Text80 Ref="78" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>1.5,5.2,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text80</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{OtherKiaGoldEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text80>
+            <Text81 Ref="79" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>3,5.2,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text81</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{OtherKiaGoldExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text81>
+            <Text82 Ref="80" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>0,5.2,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text82</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{OtherKiaGoldRemaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text82>
+            <Text83 Ref="81" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>4.5,5.5,0.8,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text83</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{OtherGoldWeight}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text83>
+            <Text84 Ref="82" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>1.5,5.5,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text84</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{OtherGoldEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text84>
+            <Text85 Ref="83" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>3,5.5,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text85</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{OtherGoldExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text85>
+            <Text86 Ref="84" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>0,5.5,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text86</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{OtherGoldRemaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text86>
+            <Text87 Ref="85" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>4.5,5.8,1.4,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text87</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>بستانکاری</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text87>
+            <Text88 Ref="86" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>4.5,6.1,1.4,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text88</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>بدهکاری</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text88>
+            <Text89 Ref="87" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>1.5,5.8,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text89</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{CreditorCustomerEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text89>
+            <Text90 Ref="88" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>3,5.8,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text90</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{CreditorCustomerExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text90>
+            <Text91 Ref="89" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>0,5.8,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text91</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{CreditorCustomerRemaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text91>
+            <Text92 Ref="90" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>1.5,6.1,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text92</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{DebtorCustomerEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text92>
+            <Text93 Ref="91" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>3,6.1,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text93</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{DebtorCustomerExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text93>
+            <Text94 Ref="92" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>0,6.1,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text94</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{DebtorCustomerRemaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text94>
+            <Text95 Ref="93" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>5.3,6.4,0.6,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text95</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>از قبل</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text95>
+            <Text96 Ref="94" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>5.3,6.7,0.6,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text96</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>جدید</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text96>
+            <Text97 Ref="95" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>4.5,6.4,0.8,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text97</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{DepositBeforeCount}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text97>
+            <Text98 Ref="96" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>0,6.4,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text98</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{DepositBeforeRemaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text98>
+            <Text99 Ref="97" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>3,6.4,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text99</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{DepositBeforeExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text99>
+            <Text100 Ref="98" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>1.5,6.4,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text100</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{DepositBeforeEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text100>
+            <Text101 Ref="99" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>4.5,6.7,0.8,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text101</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{DepositNewCount}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text101>
+            <Text102 Ref="100" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>1.5,6.7,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text102</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{DepositNewEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text102>
+            <Text103 Ref="101" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>3,6.7,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text103</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{DepositNewExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text103>
+            <Text104 Ref="102" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>0,6.7,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text104</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{DepositNewRemaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text104>
+            <Text105 Ref="103" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>1.5,7.3,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text105</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{DiscountEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text105>
+            <Text106 Ref="104" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>3,7.3,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text106</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{DiscountExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text106>
+            <Text107 Ref="105" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>0,7.3,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text107</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{DiscountRemaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text107>
+            <Text108 Ref="106" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>1.5,7.6,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text108</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{CostCourierPostEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text108>
+            <Text109 Ref="107" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>3,7.6,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text109</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{CostCourierPostExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text109>
+            <Text110 Ref="108" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>0,7.6,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text110</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{CostCourierPostRemaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text110>
+            <Text123 Ref="109" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>1.5,3.1,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text123</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{OtherCurrencyEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text123>
+            <Text124 Ref="110" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>3,3.1,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text124</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{OtherCurrencyExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text124>
+            <Text125 Ref="111" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>0,3.1,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text125</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{OtherCurrencyRemaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text125>
+            <Text53 Ref="112" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>5.9,3.1,1.1,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>9956b894a3c64c33837fa39cfd37e257</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text53</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>سایر ارز</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text53>
+            <Text55 Ref="113" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>5.9,2.8,1.1,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>e2f699e233434b4a873ff8e1eeefe565</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text55</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>ارز</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text55>
+            <Text56 Ref="114" type="Text" isKey="true">
+              <Border>Top, Left, Bottom;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>7,7.6,0.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>d924ad86151f4ce9b130cf32b98e943f</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text56</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>15</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text56>
+            <Text59 Ref="115" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>5.9,4,1.1,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>11062aa03c5c4354b5744866deb560bc</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text59</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>گیفت کارت کیا</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text59>
+            <Text60 Ref="116" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>5.2,4,0.7,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>5ac2dcf28487412b8d8aa2c9fd4a1b49</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text60</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{GiftNumberExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text60>
+            <Text118 Ref="117" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>1.5,4,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>945f2f577ec449e6ae38d562a4d4e305</Guid>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text118</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{GiftEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text118>
+            <Text119 Ref="118" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>3,4,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>bb461f43ded64d0e87fff7bd9f1d7549</Guid>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text119</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{GiftExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text119>
+            <Text120 Ref="119" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>0,4,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>81f1c5568f494d68aec2ed379e30521b</Guid>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text120</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{GiftRemaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text120>
+            <Text49 Ref="120" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>4.5,3.1,1.4,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>7d9c5970ad784f9b8284b3836f2ed7b4</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text49</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text49>
+            <Text50 Ref="121" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0,2.2,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text50</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>0</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text50>
+            <Text52 Ref="122" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>1.5,2.2,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>e17487a75f2a469cb990045fd97204c9</Guid>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text52</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>0</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text52>
+            <Text54 Ref="123" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>3,2.2,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>bb423d0360734d0ab8c721cb055acf78</Guid>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text54</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>0</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text54>
+            <SubReport1 Ref="124" type="SubReport" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0,2.2,5.9,0.3</ClientRectangle>
+              <Components isList="true" count="0" />
+              <Name>SubReport1</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <SubReportPageGuid>abf48e995b0c4fad888be15379f63269</SubReportPageGuid>
+            </SubReport1>
+            <SubReport2 Ref="125" type="SubReport" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0,2.8,5.9,0.3</ClientRectangle>
+              <Components isList="true" count="0" />
+              <Name>SubReport2</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <SubReportPageGuid>fd11315841374f48b80a0ae4af2d69ad</SubReportPageGuid>
+            </SubReport2>
+            <Text69 Ref="126" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>5.2,4.6,0.7,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>03573f427d754a2c85e5fb13437a5f1f</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text69</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{LeatherStoneDescExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text69>
+            <Text116 Ref="127" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>5.9,3.4,1.1,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>cfd14a50ac824975a80bf772e53bebf9</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text116</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>موجودی صندوق</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text116>
+            <Text117 Ref="128" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>0,3.4,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>c6bb350f85c24f8f8910480735a6ab8b</Guid>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text117</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{OtherCurrencyRemaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text117>
+            <Text121 Ref="129" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>4.5,3.4,1.4,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>f0162713a499461e946777df4bf8ea14</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text121</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{InventoryCash}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text121>
+            <Text127 Ref="130" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>3,3.4,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>cc765a4774694df887e17e163c4bd4bf</Guid>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text127</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>۰</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text127>
+            <Text128 Ref="131" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>1.5,3.4,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>c6e9a9ad1a7b41fcbf25dd6a54635231</Guid>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text128</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>۰</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text128>
+            <Text129 Ref="132" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>4.5,1.3,0.8,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,9</Font>
+              <Guid>9a7671f2d6654b93a9fc3e23e6aba7bc</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text129</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{SaleWeightPercent}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=True, Trimming=None, WordWrap=False, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text129>
+            <Text130 Ref="133" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>WhiteSmoke</Brush>
+              <ClientRectangle>4.5,1.6,0.8,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,9</Font>
+              <Guid>3079a0345aef4ec78e2ef2eedfc64350</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text130</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{ReturnedWeight}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=True, Trimming=None, WordWrap=False, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <VertAlignment>Center</VertAlignment>
+            </Text130>
+            <Text131 Ref="134" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>4.5,4,0.7,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>fade7bcda88044e1a1c5781a8989017f</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text131</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{GiftNumberEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text131>
+            <Text132 Ref="135" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>4.5,4.6,0.7,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>0695bb1afd1641eca65757ac2046b38c</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text132</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{LeatherStoneDescEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text132>
+            <Text134 Ref="136" type="Text" isKey="true">
+              <Border>Top, Left, Bottom;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>7,7,0.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>f49b1825f49f4ab5837f5d60745eb165</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text134</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>13</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text134>
+            <Text137 Ref="137" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>1.5,7,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>34b9dcbbd3214882b50b9f8aa6702ed2</Guid>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text137</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{LoyalityEntry}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text137>
+            <Text138 Ref="138" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>3,7,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>94ac7563d2e745b9aca013817f9f74ae</Guid>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text138</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{LoyalityExit}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text138>
+            <Text139 Ref="139" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>0,7,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>2ea726697d6d4c3aad966baa08f7f1c3</Guid>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text139</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>{LoyalityRemaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text139>
+            <Text133 Ref="140" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>4.5,7,2.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>a3353848b9eb4c7c8d91c59f69368273</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text133</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <Text>تخفیف باشگاه مشتریان</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text133>
+            <StartPointPrimitive1 Ref="141" type="Stimulsoft.Report.Components.StiStartPointPrimitive" isKey="true">
+              <ClientRectangle>1.5,2.2,0,0</ClientRectangle>
+              <Name>StartPointPrimitive1</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <ReferenceToGuid>918aea0d7dc34da8afacf67ea7215e58</ReferenceToGuid>
+            </StartPointPrimitive1>
+            <EndPointPrimitive1 Ref="142" type="Stimulsoft.Report.Components.StiEndPointPrimitive" isKey="true">
+              <ClientRectangle>1.5,2.5,0,0</ClientRectangle>
+              <Name>EndPointPrimitive1</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <ReferenceToGuid>918aea0d7dc34da8afacf67ea7215e58</ReferenceToGuid>
+            </EndPointPrimitive1>
+            <StartPointPrimitive2 Ref="143" type="Stimulsoft.Report.Components.StiStartPointPrimitive" isKey="true">
+              <ClientRectangle>3,2.2,0,0</ClientRectangle>
+              <Name>StartPointPrimitive2</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <ReferenceToGuid>9ce869ca1b7d470a8423ebae665f133c</ReferenceToGuid>
+            </StartPointPrimitive2>
+            <EndPointPrimitive2 Ref="144" type="Stimulsoft.Report.Components.StiEndPointPrimitive" isKey="true">
+              <ClientRectangle>3,2.5,0,0</ClientRectangle>
+              <Name>EndPointPrimitive2</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <ReferenceToGuid>9ce869ca1b7d470a8423ebae665f133c</ReferenceToGuid>
+            </EndPointPrimitive2>
+            <StartPointPrimitive3 Ref="145" type="Stimulsoft.Report.Components.StiStartPointPrimitive" isKey="true">
+              <ClientRectangle>4.5,2.2,0,0</ClientRectangle>
+              <Name>StartPointPrimitive3</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <ReferenceToGuid>feca91de0195456fbe12195e8e46112a</ReferenceToGuid>
+            </StartPointPrimitive3>
+            <EndPointPrimitive3 Ref="146" type="Stimulsoft.Report.Components.StiEndPointPrimitive" isKey="true">
+              <ClientRectangle>4.5,2.5,0,0</ClientRectangle>
+              <Name>EndPointPrimitive3</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <ReferenceToGuid>feca91de0195456fbe12195e8e46112a</ReferenceToGuid>
+            </EndPointPrimitive3>
+            <StartPointPrimitive4 Ref="147" type="Stimulsoft.Report.Components.StiStartPointPrimitive" isKey="true">
+              <ClientRectangle>1.5,2.8,0,0</ClientRectangle>
+              <Name>StartPointPrimitive4</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <ReferenceToGuid>9b1a3a38b9904223a61e9bae171c37cd</ReferenceToGuid>
+            </StartPointPrimitive4>
+            <EndPointPrimitive4 Ref="148" type="Stimulsoft.Report.Components.StiEndPointPrimitive" isKey="true">
+              <ClientRectangle>1.5,3.1,0,0</ClientRectangle>
+              <Name>EndPointPrimitive4</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <ReferenceToGuid>9b1a3a38b9904223a61e9bae171c37cd</ReferenceToGuid>
+            </EndPointPrimitive4>
+            <StartPointPrimitive5 Ref="149" type="Stimulsoft.Report.Components.StiStartPointPrimitive" isKey="true">
+              <ClientRectangle>3,2.8,0,0</ClientRectangle>
+              <Name>StartPointPrimitive5</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <ReferenceToGuid>d05a6de2c6194aa1a5dedaa4ecbddfcf</ReferenceToGuid>
+            </StartPointPrimitive5>
+            <EndPointPrimitive5 Ref="150" type="Stimulsoft.Report.Components.StiEndPointPrimitive" isKey="true">
+              <ClientRectangle>3,3.1,0,0</ClientRectangle>
+              <Name>EndPointPrimitive5</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <ReferenceToGuid>d05a6de2c6194aa1a5dedaa4ecbddfcf</ReferenceToGuid>
+            </EndPointPrimitive5>
+            <StartPointPrimitive6 Ref="151" type="Stimulsoft.Report.Components.StiStartPointPrimitive" isKey="true">
+              <ClientRectangle>4.5,2.8,0,0</ClientRectangle>
+              <Name>StartPointPrimitive6</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <ReferenceToGuid>ed0cf96830b94de29fd54ad772be2617</ReferenceToGuid>
+            </StartPointPrimitive6>
+            <EndPointPrimitive6 Ref="152" type="Stimulsoft.Report.Components.StiEndPointPrimitive" isKey="true">
+              <ClientRectangle>4.5,3.1,0,0</ClientRectangle>
+              <Name>EndPointPrimitive6</Name>
+              <Page isRef="4" />
+              <Parent isRef="9" />
+              <ReferenceToGuid>ed0cf96830b94de29fd54ad772be2617</ReferenceToGuid>
+            </EndPointPrimitive6>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>ReportTitleBand1</Name>
+          <Page isRef="4" />
+          <Parent isRef="4" />
+        </ReportTitleBand1>
+        <VerticalLinePrimitive1 Ref="153" type="VerticalLinePrimitive" isKey="true">
+          <ClientRectangle>1.5,2.4,0.01,0.3</ClientRectangle>
+          <Color>Black</Color>
+          <EndCap Ref="154" type="Cap" isKey="true">
+            <Color>Black</Color>
+          </EndCap>
+          <Guid>918aea0d7dc34da8afacf67ea7215e58</Guid>
+          <Name>VerticalLinePrimitive1</Name>
+          <Page isRef="4" />
+          <Parent isRef="4" />
+          <StartCap Ref="155" type="Cap" isKey="true">
+            <Color>Black</Color>
+          </StartCap>
+        </VerticalLinePrimitive1>
+        <VerticalLinePrimitive2 Ref="156" type="VerticalLinePrimitive" isKey="true">
+          <ClientRectangle>3,2.4,0.01,0.3</ClientRectangle>
+          <Color>Black</Color>
+          <EndCap Ref="157" type="Cap" isKey="true">
+            <Color>Black</Color>
+          </EndCap>
+          <Guid>9ce869ca1b7d470a8423ebae665f133c</Guid>
+          <Name>VerticalLinePrimitive2</Name>
+          <Page isRef="4" />
+          <Parent isRef="4" />
+          <StartCap Ref="158" type="Cap" isKey="true">
+            <Color>Black</Color>
+          </StartCap>
+        </VerticalLinePrimitive2>
+        <VerticalLinePrimitive3 Ref="159" type="VerticalLinePrimitive" isKey="true">
+          <ClientRectangle>4.5,2.4,0.01,0.3</ClientRectangle>
+          <Color>Black</Color>
+          <EndCap Ref="160" type="Cap" isKey="true">
+            <Color>Black</Color>
+          </EndCap>
+          <Guid>feca91de0195456fbe12195e8e46112a</Guid>
+          <Name>VerticalLinePrimitive3</Name>
+          <Page isRef="4" />
+          <Parent isRef="4" />
+          <StartCap Ref="161" type="Cap" isKey="true">
+            <Color>Black</Color>
+          </StartCap>
+        </VerticalLinePrimitive3>
+        <VerticalLinePrimitive4 Ref="162" type="VerticalLinePrimitive" isKey="true">
+          <ClientRectangle>1.5,3,0.01,0.3</ClientRectangle>
+          <Color>Black</Color>
+          <EndCap Ref="163" type="Cap" isKey="true">
+            <Color>Black</Color>
+          </EndCap>
+          <Guid>9b1a3a38b9904223a61e9bae171c37cd</Guid>
+          <Name>VerticalLinePrimitive4</Name>
+          <Page isRef="4" />
+          <Parent isRef="4" />
+          <StartCap Ref="164" type="Cap" isKey="true">
+            <Color>Black</Color>
+          </StartCap>
+        </VerticalLinePrimitive4>
+        <VerticalLinePrimitive5 Ref="165" type="VerticalLinePrimitive" isKey="true">
+          <ClientRectangle>3,3,0.01,0.3</ClientRectangle>
+          <Color>Black</Color>
+          <EndCap Ref="166" type="Cap" isKey="true">
+            <Color>Black</Color>
+          </EndCap>
+          <Guid>d05a6de2c6194aa1a5dedaa4ecbddfcf</Guid>
+          <Name>VerticalLinePrimitive5</Name>
+          <Page isRef="4" />
+          <Parent isRef="4" />
+          <StartCap Ref="167" type="Cap" isKey="true">
+            <Color>Black</Color>
+          </StartCap>
+        </VerticalLinePrimitive5>
+        <VerticalLinePrimitive6 Ref="168" type="VerticalLinePrimitive" isKey="true">
+          <ClientRectangle>4.5,3,0.01,0.3</ClientRectangle>
+          <Color>Black</Color>
+          <EndCap Ref="169" type="Cap" isKey="true">
+            <Color>Black</Color>
+          </EndCap>
+          <Guid>ed0cf96830b94de29fd54ad772be2617</Guid>
+          <Name>VerticalLinePrimitive6</Name>
+          <Page isRef="4" />
+          <Parent isRef="4" />
+          <StartCap Ref="170" type="Cap" isKey="true">
+            <Color>Black</Color>
+          </StartCap>
+        </VerticalLinePrimitive6>
+      </Components>
+      <Conditions isList="true" count="0" />
+      <Guid>f2496da156904789a3c8b4f524996a6b</Guid>
+      <Margins>0.39,0.39,0.39,0.39</Margins>
+      <Name>Page1</Name>
+      <PageHeight>11.69</PageHeight>
+      <PageWidth>8.27</PageWidth>
+      <PaperSize>A4</PaperSize>
+      <Report isRef="0" />
+      <RightToLeft>True</RightToLeft>
+      <Watermark Ref="171" type="Stimulsoft.Report.Components.StiWatermark" isKey="true">
+        <Font>Arial,100</Font>
+        <TextBrush>[50:0:0:0]</TextBrush>
+      </Watermark>
+    </Page1>
+    <subReport_1 Ref="172" type="Page" isKey="true">
+      <Border>None;Black;2;Solid;False;4;Black</Border>
+      <Brush>Transparent</Brush>
+      <Components isList="true" count="1">
+        <DataBankDataSource Ref="173" type="DataBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <BusinessObjectGuid isNull="true" />
+          <ClientRectangle>0,0.2,5.9,0.3</ClientRectangle>
+          <Components isList="true" count="4">
+            <DataBankDataSource_Exit Ref="174" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>3,0,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>DataBankDataSource_Exit</Name>
+              <Page isRef="172" />
+              <Parent isRef="173" />
+              <Text>{BankDataSource.Exit}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <VertAlignment>Center</VertAlignment>
+            </DataBankDataSource_Exit>
+            <DataBankDataSource_Entry Ref="175" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>1.5,0,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>DataBankDataSource_Entry</Name>
+              <Page isRef="172" />
+              <Parent isRef="173" />
+              <Text>{BankDataSource.Entry}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <VertAlignment>Center</VertAlignment>
+            </DataBankDataSource_Entry>
+            <DataBankDataSource_Name Ref="176" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>4.5,0,1.4,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>DataBankDataSource_Name</Name>
+              <Page isRef="172" />
+              <Parent isRef="173" />
+              <Text>{BankDataSource.Name}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <VertAlignment>Center</VertAlignment>
+            </DataBankDataSource_Name>
+            <Text113 Ref="177" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>0,0,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text113</Name>
+              <Page isRef="172" />
+              <Parent isRef="173" />
+              <Text>{BankDataSource.Remaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text113>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <DataSourceName>BankDataSource</DataSourceName>
+          <Filters isList="true" count="0" />
+          <Name>DataBankDataSource</Name>
+          <Page isRef="172" />
+          <Parent isRef="172" />
+          <Sort isList="true" count="0" />
+        </DataBankDataSource>
+      </Components>
+      <Conditions isList="true" count="0" />
+      <Guid>abf48e995b0c4fad888be15379f63269</Guid>
+      <Margins>0.39,0.39,0.39,0.39</Margins>
+      <Name>subReport_1</Name>
+      <PageHeight>11.69</PageHeight>
+      <PageWidth>6.68</PageWidth>
+      <Report isRef="0" />
+      <Watermark Ref="178" type="Stimulsoft.Report.Components.StiWatermark" isKey="true">
+        <Font>Arial,100</Font>
+        <TextBrush>[50:0:0:0]</TextBrush>
+      </Watermark>
+    </subReport_1>
+    <subReport_2 Ref="179" type="Page" isKey="true">
+      <Border>None;Black;2;Solid;False;4;Black</Border>
+      <Brush>Transparent</Brush>
+      <Components isList="true" count="1">
+        <DataCurrencyDataSource Ref="180" type="DataBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <BusinessObjectGuid isNull="true" />
+          <ClientRectangle>0,0.2,5.9,0.3</ClientRectangle>
+          <Components isList="true" count="4">
+            <Text42 Ref="181" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>3,0,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>114b291a08fb4912b1622d4946f889d3</Guid>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text42</Name>
+              <Page isRef="179" />
+              <Parent isRef="180" />
+              <Text>{CurrencyDataSource.Exit}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <Type>DataColumn</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text42>
+            <Text51 Ref="182" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>1.5,0,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>e987dadb5d2b4b97bc97d54e0e95c292</Guid>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text51</Name>
+              <Page isRef="179" />
+              <Parent isRef="180" />
+              <Text>{CurrencyDataSource.Entry}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <Type>DataColumn</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text51>
+            <Text111 Ref="183" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>4.5,0,1.4,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>b61f419863924bf0950528806f1399cb</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text111</Name>
+              <Page isRef="179" />
+              <Parent isRef="180" />
+              <Text>{CurrencyDataSource.Name}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <Type>DataColumn</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text111>
+            <Text112 Ref="184" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>White</Brush>
+              <ClientRectangle>0,0,1.5,0.3</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Microsoft Sans Serif,10</Font>
+              <Guid>502a2d805fe7450e9702e0e40f99ed57</Guid>
+              <Margins>5,5,5,5</Margins>
+              <Name>Text112</Name>
+              <Page isRef="179" />
+              <Parent isRef="180" />
+              <Text>{CurrencyDataSource.Remaining}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>DataColumn</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text112>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <DataRelationName isNull="true" />
+          <DataSourceName>CurrencyDataSource</DataSourceName>
+          <Filters isList="true" count="0" />
+          <Guid>1df389ecf079466898f5c838810307a0</Guid>
+          <Name>DataCurrencyDataSource</Name>
+          <Page isRef="179" />
+          <Parent isRef="179" />
+          <Sort isList="true" count="0" />
+        </DataCurrencyDataSource>
+      </Components>
+      <Conditions isList="true" count="0" />
+      <Guid>fd11315841374f48b80a0ae4af2d69ad</Guid>
+      <Margins>0.39,0.39,0.39,0.39</Margins>
+      <Name>subReport_2</Name>
+      <PageHeight>11.69</PageHeight>
+      <PageWidth>6.68</PageWidth>
+      <Report isRef="0" />
+      <Watermark Ref="185" type="Stimulsoft.Report.Components.StiWatermark" isKey="true">
+        <Font>Arial,100</Font>
+        <TextBrush>[50:0:0:0]</TextBrush>
+      </Watermark>
+    </subReport_2>
+  </Pages>
+  <PrinterSettings Ref="186" type="Stimulsoft.Report.Print.StiPrinterSettings" isKey="true" />
+  <ReferencedAssemblies isList="true" count="8">
+    <value>System.Dll</value>
+    <value>System.Drawing.Dll</value>
+    <value>System.Windows.Forms.Dll</value>
+    <value>System.Data.Dll</value>
+    <value>System.Xml.Dll</value>
+    <value>Stimulsoft.Controls.Dll</value>
+    <value>Stimulsoft.Base.Dll</value>
+    <value>Stimulsoft.Report.Dll</value>
+  </ReferencedAssemblies>
+  <ReportAlias>Report</ReportAlias>
+  <ReportChanged>10/23/2020 11:32:53 PM</ReportChanged>
+  <ReportCreated>5/28/2016 9:54:38 PM</ReportCreated>
+  <ReportFile>C:\Users\Erfanium\Source\Repos\kiagallery\KiaGallery.Web\Report\DailyReport\BranchDailyReport.mrt</ReportFile>
+  <ReportGuid>192260fcad0b4976a14f7633ec1824d6</ReportGuid>
+  <ReportName>Report</ReportName>
+  <ReportUnit>Inches</ReportUnit>
+  <ReportVersion>2012.2.1304</ReportVersion>
+  <Script>using System;
+using System.Drawing;
+using System.Windows.Forms;
+using System.Data;
+using Stimulsoft.Controls;
+using Stimulsoft.Base.Drawing;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Dialogs;
+using Stimulsoft.Report.Components;
+
+namespace Reports
+{
+    public class Report : Stimulsoft.Report.StiReport
+    {
+        public Report()        {
+            this.InitializeComponent();
+        }
+
+        #region StiReport Designer generated code - do not modify
+		#endregion StiReport Designer generated code - do not modify
+    }
+}
+</Script>
+  <ScriptLanguage>CSharp</ScriptLanguage>
+  <Styles isList="true" count="0" />
+</StiSerializer>

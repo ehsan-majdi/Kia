@@ -1,0 +1,151 @@
+﻿<div id="form" class="container">
+    <div class="row form-group">
+
+        <div class="row">
+            <div class="col-md-4">
+                <button class="btn btn-primary next pull-left">
+                    <i class="fa fa-forward v-middle" aria-hidden="true"></i>&nbsp;
+                    <span>بعدی</span>
+                </button>
+            </div>
+            <div class="col-md-4">
+                <input id="hiddenId" type="hidden" value="" name="id" />
+                <div class="form-group">
+                    <label for="txtMonthCalculated">ماه مورد محاسبه</label>
+                    <input id="txtMonthCalculated" type="text" class="form-control" name="monthCalculated" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="txtBranch">شعبه</label>
+                    <input id="txtBranch" type="text" class="form-control" name="branch" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="txtFullName">نام، نام خانوادگی</label>
+                    <input id="txtFullName" type="text" class="form-control" name="fullName" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="txtPersonNumber">شماره پرسنلی</label>
+                    <input id="txtPersonNumber" type="text" class="form-control" name="personNumber" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="cmbInsurance">بیمه</label>
+                    <select id="cmbInsurance" class="form-control" data-validate="required" name="insurance">
+                        <option value="">...</option>
+                        <option value="true">دارد</option>
+                        <option value="false">ندارد</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtWorkHours">ساعت کارکرد</label>
+                    <input id="txtWorkHours" type="text" class="form-control" name="workHours">
+                </div>
+                <div class="form-group">
+                    <label for="txtMission">ماموریت</label>
+                    <input id="txtMission" type="text" class="form-control money-separator" name="mission">
+                </div>
+                <div class="form-group">
+                    <label for="txtReward">عیدی</label>
+                    <input id="txtReward" type="text" class="form-control money-separator" name="reward">
+                </div>
+                <div class="form-group">
+                    <label for="txtRemuneration">پاداش</label>
+                    <input id="txtRemuneration" type="text" class="form-control money-separator" name="remuneration">
+                </div>
+                <div class="form-group">
+                    <label for="txtOthers">سایر</label>
+                    <input id="txtOthers" type="text" class="form-control money-separator" name="others">
+                </div>
+                <div class="form-group">
+                    <label for="txtLoanInstallment">قسط وام</label>
+                    <input id="txtLoanInstallment" type="text" class="form-control money-separator" name="loanInstallment">
+                </div>
+                <div class="form-group">
+                    <label for="txtImprest">مساعده</label>
+                    <input id="txtImprest" type="text" class="form-control money-separator" name="imprest">
+                </div>
+                <div class="form-group">
+                    <label for="txtCommodityItem">قسط کالا</label>
+                    <input id="txtCommodityItem" type="text" class="form-control money-separator" name="commodityItem">
+                </div>
+                <div class="form-group">
+                    <button id="btnSave" type="submit" class="btn btn-success">
+                        <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                        ذخیره
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary prev">
+                    <i class="fa fa-backward v-middle" aria-hidden="true"></i>&nbsp;
+                    <span>قبلی</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script type="text/javascript">
+    var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+    var nextId = 0;
+    var prevId = 0;
+    $(document).ready(function () {
+        load(id);
+        $("#btnSave").on("click", function (event) {
+            event.preventDefault();
+            if (checkForm("#form")) {
+                var entity = getEntity("#form");
+                loader(true);
+                $.ajax({
+                    method: "POST",
+                    url: "/salary/save",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status == 200) {
+                            alert(response.message);
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                        loader(false);
+                    }
+                });
+            }
+        });
+        $(".next:not(.disabled)").on("click", function (event) {
+            event.preventDefault();
+            if (nextId > 0)
+                load(nextId);
+        });
+        $(".prev:not(.disabled)").on("click", function (event) {
+            event.preventDefault();
+            if (prevId > 0)
+                load(prevId);
+        });
+    });
+
+    function load(loadId) {
+        if (id > 0) {
+            loader(true);
+            $.get("/salary/load/" + loadId, function (response) {
+                if (response.status == 200) {
+                    setEntity(response.data, "#form");
+                    nextId = response.data.nextId;
+                    prevId = response.data.prevId;
+                    if (nextId > 0)
+                        $(".next").removeClass("disabled");
+                    else
+                        $(".next").addClass("disabled");
+                    if (prevId > 0)
+                        $(".prev").removeClass("disabled");
+                    else
+                        $(".prev").addClass("disabled");
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    }
+</script>
+}

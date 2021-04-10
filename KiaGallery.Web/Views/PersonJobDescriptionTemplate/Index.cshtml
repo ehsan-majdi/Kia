@@ -1,0 +1,93 @@
+﻿
+@{
+    ViewBag.Title = "شرح وظایف";
+}
+
+    <div class="container">
+        <div>
+            <a class="btn btn-success" href="/personJobdescriptiontemplate/add">جدید</a>
+        </div>
+        <br />
+        <div id="content"></div>
+
+    </div>
+@section Scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 200,
+
+        }
+
+        $(document).ready(function () {
+            getList();
+
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف شرح وظایف اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/personJobDescriptionTemplate/delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+        });
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+
+            loader(true);
+            $.get("/personJobDescriptionTemplate/search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>عنوان</th>
+                    <th>وضعیت</th>
+                    <th class="icon-col text-center">ویرایش</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td>{{:title}}</td>
+                    {{if status}}
+                    <td>فعال</td>
+                    {{else}}
+                    <td>غیر فعال</td>
+                    {{/if}}
+                    <td class="txt-al-c v-middle">
+                        <a href="/personJobDescriptionTemplate/edit/{{:id}}" class="btn btn-info btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c v-middle">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}

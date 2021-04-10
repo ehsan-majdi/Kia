@@ -1,0 +1,331 @@
+﻿
+@{
+    ViewBag.Title = "لیست محصولات چاپخانه";
+    Layout = "~/Views/Shared/_LayoutUsableProduct.cshtml";
+}
+
+<style>
+    .product {
+        width: 60px;
+        padding: 23px 0;
+        border-radius: 50%;
+        position: relative;
+        display: inline-block;
+        text-align: center;
+        height: 60px;
+        background: rgb(16,8,133);
+        background: linear-gradient(90deg, rgba(16,8,133,1) 0%, rgba(7,28,162,1) 50%, rgba(16,8,133,1) 100%);
+        z-index: 1;
+    }
+
+    .addParent:hover {
+        color: white;
+    }
+
+    hr.line {
+        border: 0;
+        height: 1px;
+        border-radius: 15px;
+        background-image: -moz-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+        position: relative;
+        top: -50px;
+    }
+</style>
+
+<div>
+    <h3>لیست محصولات چاپخانه</h3>
+    <a href="/usableproduct/Add/" class="product">
+        <span class="fa fa-plus"></span>
+    </a>
+
+
+    <hr class="line" />
+    @*<div id="insurancefilter" class="pull-left text-center">
+        <h5 id="active">فعال </h5>
+        <h5 id="deactive" class="hidden ">غیر فعال </h5>
+        <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkActive" type="checkbox" name="printigHouseStatus"> value="true" style="position:absolute"><span id="insurancefilter-title"></span></label></div></div>
+    </div>*@
+    <div class="col-md-3">
+        <input id="txtTerm" class="form-control" placeholder="جستجو..." />
+    </div>
+</div>
+
+<div id="modalUploadFile" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">تصویر جدید</h4>
+            </div>
+            <div class="modal-body">
+
+                <div id="screenshot" class="form-group txt-al-c">
+
+                    <p><button class="hidden" id="screenshot-button" disabled>Take screenshot</button></p>
+                    <div class="form-group">
+                        <input id="file" type="file" class="hidden" />
+                        <input id="txtFileName" type="text" class="form-control hidden" name="fileName" readonly>
+                        <input id="hiddenTypeTitle" type="hidden" />
+                        <div class="progress hidden">
+                            <div id="progressBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                <span class="sr-only">45%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group txt-al-c">
+                        <i id="openFile" class="fa fa-upload btn btn-success btn-icon" aria-hidden="true"></i>
+                        <i id="btnSave" class="btn btn-info fa fa-save"></i>
+                        <i style="display:none;" id="btnSubmitImage" class="btn btn-success fa fa-check"></i>
+                    </div>
+                    <div id="contentFiles" class="table-data table-responsive">
+                        <h4 class="txt-al-c no-image">تصویری یافت نشد</h4>
+
+                        <table class="table-image table hidden">
+                            <thead>
+                                <tr>
+
+                                    <th class="icon-col text-center">عنوان</th>
+                                    <th class="icon-col text-center">تصویر</th>
+                                    <th class="icon-col text-center">حذف</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-body-image"></tbody>
+                        </table>
+                    </div>
+                    <input type="hidden" id="camreImageName" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="content">
+
+</div>
+<input type="hidden" id="hiddenId" />
+@section Scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 200,
+            printigHouseStatus:null,
+        }
+
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(document).ready(function () {
+            getList();
+            setupUpload("usableproduct", function (fileName) {
+                addFile(fileName)
+            });
+            $(document).on("click", ".btnUploadNewImage", function (event) {
+                event.preventDefault();
+                $(".table-body-image").empty();
+                loadFile($(this).attr("data-id"))
+                $("#hiddenId").val($(this).attr("data-id"));
+                $('.progress .progress-bar').css('width', '0%');
+                $("#modalUploadFile").modal('show');
+            });
+
+            $("#txtTerm").on("keyup", function (e) {
+                var code = e.which;
+                if (code == 13) e.preventDefault();
+                if (code == 13) {
+                    if ($("#txtTerm").val()) {
+                        var param = { term: $("#txtTerm").val() }
+                        manipulateParam(param, "page");
+                    }
+                    else
+                        removeParam("term");
+                }
+            });
+
+            $(document).on("change", ".chkActive", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { printigHouseStatus: true }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    var param = { printigHouseStatus: false }
+                    removeParam(["printigHouseStatus", "page"]);
+                }
+            });
+
+            $("#btnSave").on("click", function () {
+                save()
+            })
+
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف محصول اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/usableproduct/Delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+
+            $(document).on("click", ".delete-file", function (event) {
+            $(this).closest(".file-list").remove();
+            if ($(".file-list").length == 0) {
+               $(".no-image").show();
+               $(".table-image").addClass("hidden");
+            }
+
+            });
+        });
+
+        function save() {
+            var entity = {
+                id: $("#hiddenId").val(),
+            }
+            var fileList = new Array();
+            $(".file-list").each(function (index, element) {
+                fileList.push({
+                    fileName: $(this).attr("data-file-name"),
+                });
+            });
+            entity.fileList = fileList;
+            $.post("/usableProduct/saveFile", entity, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    callbackAlert(response.message, function () {
+                        document.location = "/usableProduct";
+                    });
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        }
+        function loadFile(id) {
+            loader(true);
+            $.get("/usableproduct/loadFile/" + id, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    setEntity(response.data, "#form");
+
+                    for (var i = 0; i < response.data.fileList.length; i++) {
+                        var item = response.data.fileList[i];
+                        addFile(item.fileName);
+                    }
+                }
+                else {
+                    callbackAlert(response.message, function () {
+                        document.location = "/usableproduct";
+                    });
+                }
+            });
+        }
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+            loader(true);
+            updateForm();
+            $.get("/usableproduct/Search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                    $(".zoomImage").elevateZoom({ zoomWindowPosition: 1, zoomWindowWidth: 250, zoomWindowHeight: 250 });
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+        function updateForm() {
+            var params = getParam();
+            if (params["term"]) {
+                $("#txtTerm").val(params["term"]);
+            }
+            else {
+                $("#txtTerm").val("");
+            }
+
+            if (params["printigHouseStatus"]) {
+                $(".chkActive").prop("checked", true);
+                $("#active").addClass("hidden");
+                $("#deactive").removeClass("hidden");
+            }
+            else {
+                $(".chkActive").prop("checked", false);
+                $("#active").removeClass("hidden");
+                $("#deactive").addClass("hidden");
+
+            }
+        }
+
+        function addFile(fileName) {
+            $(".no-image").hide();
+            $(".table-image").removeClass("hidden");
+
+            var row =
+                "<tr class=\"file-list\" data-file-name=\"{{fileName}}\">" +
+                "<td>{{fileName}}</td>"+
+                "<td> <img src=\"/upload/usableProduct/{{fileName}}\" style=\"max-width:100px;height:100px;\" \></td>" +
+                "<td class=\"txt-al-c\">" +
+                "<button class=\"delete-file btn btn-danger btn-xs\" data-title=\"حذف\"><i class=\"fa fa-times\" aria-hidden=\"true\"></i></button>" +
+                "</td>" +
+                "</tr>";
+
+            row = row.replaceAll("{{fileName}}", fileName);
+            $(".table-body-image").append(row);
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ترتیب</th>
+                    <th>نام محصول </th>
+                    <th>دسته بندی محصول </th>
+                    <th>کد </th>
+                    <th class="text-center">وضعیت </th>
+                    <th class="text-center">تصویر </th>
+                    <th class="icon-col text-center">آپلود تصویر </th>
+                    <th class="icon-col text-center">ویرایش</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td>{{:order}}</td>
+                    <td>{{:name}}</td>
+                    <td>{{:parentTitle}} - {{:childTitle}}</td>
+                    <td>{{:code}}</td>
+                    <td class="text-center">{{:usableProductStatusTitle}}</td>
+                    <td class="txt-al-c">
+                        <img class="zoomImage" src="/image/usableProduct/500x500/{{:image}}" width="90px" data-zoom-image="/image/usableProduct/500x500/{{:image}}" />
+                        @*<img height="50px" src="/upload/usableProduct/{{:image}}" />*@
+                    </td>
+                    <td class="btnUploadNewImage txt-al-c v-middle" data-id="{{:id}}">
+                        <i class="fa fa-upload btn btn-success btn-xs" aria-hidden="true"></i>
+                    </td>
+                    <td class="txt-al-c v-middle">
+                        <a href="/usableproduct/Edit/{{:id}}" class="btn btn-info btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c v-middle">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}

@@ -1,0 +1,230 @@
+﻿
+@{
+    Layout = null;
+    var date = "";
+    if (ViewBag.contractDate < ViewBag.firstDayYear)
+    {
+        date = ViewBag.fromDate;
+    }
+    else
+    {
+        date = ViewBag.ContractStartDate;
+    }
+
+}
+<!DOCTYPE html>
+
+<html dir="rtl">
+<head>
+    <link href="~/Content/fonts/fontawsome/font-awesome.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Scripts/bootstrap-rtl.js"></script>
+    <link href="~/Content/bootstrap-rtl.css" rel="stylesheet" />
+    <link href="~/Content/fonts/Bmitra/Bmitra.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width" />
+    <title>قرارداد همکاری</title>
+    <style>
+        * {
+            font-family: BMitra;
+            /*font-size:17px !important*/
+        }
+
+        .container {
+            width: 615px !important
+        }
+
+        ul {
+            line-height: 190%;
+        }
+
+        p {
+            text-align: justify !important
+        }
+
+        li {
+            text-align: justify !important
+        }
+    </style>
+</head>
+<body class="persianNumber" style="margin-top:0px">
+    <div class="container text-center">
+
+        <div class="text-center">
+            <p style="margin-right:460px;">
+                تاریخ :    @date
+            </p>
+            <h4 class=""><b>بسمه تعالی </b></h4>
+            <h4 class=""><b>قرارداد کار </b></h4>
+        </div>
+    </div>
+
+    <div class="container" style="margin-top:0px">
+       
+        <br />
+        <p style="font-size:14px;line-height:29px;text-align:justify" class="">
+            این قرارداد به موجب ماده (10) قانون کار جمهوری اسلامی ایران و تبصره (3) الحاقی به ماده (7) قانون کار موضوع بند الف ماده (8) قانون رفع برخی از موانع تولید و سرمایه گذاری صنعتی – مصوب 1387/8/25 مجمع تشخیص مصلحت نظام بین کارفرما / نماینده قانونی کارفرما و کارمند منعقد می شود.
+        </p>
+
+    </div>
+    <div class="container" style="margin-top:0px;">
+        <h5 class=""><b>1) مشخصات طرفین: </b></h5>
+        <h5 class=""><b>کارفرما / نماینده قانونی کارفرما: </b></h5>
+        <p>آقای <b>@ViewBag.branchOwnerName</b> فرزند  <b>@ViewBag.branchOwnerFatherName</b> به شماره شناسنامه <b>@ViewBag.branchOwnerNationalityNo</b>  و کد ملی <b>@ViewBag.branchOwnerNationalCode</b>  به آدرس : <b>@ViewBag.BranchAddress</b> </p>
+        <h5 class=""><b> مشخصات کارمند: </b></h5>
+        <p>  @ViewBag.Sex <b>@ViewBag.FirstName</b>  فرزند <b>@ViewBag.FatherName</b>  متولد <b>@ViewBag.BirthDate</b>  به شماره شناسنامه   <b>@ViewBag.BirthCertificateNumber</b> شماره ملی <b>@ViewBag.NationalCode</b> با میزان تحصیلات  <b>@ViewBag.Education</b>  به نشانی <b>@ViewBag.Address</b></p>
+        <p style="font-size:14px;line-height:29px;text-align:justify" class="">
+
+            <span class="pull-right"><b>2) نوع قرارداد: </b></span>
+            @if (ViewBag.contractSubject == KiaGallery.Model.ContractSubject.Always)
+            {
+                <span style="margin-right: 80px;"><i class="fa fa-circle"></i></span>
+            }
+            else
+            {
+                <span style="margin-right: 80px;"><i class="fa fa-circle-o"></i></span>
+            }
+            <span> دائم </span>
+
+            @if (ViewBag.contractSubject == KiaGallery.Model.ContractSubject.Temporary)
+            {
+                <span style="margin-right: 80px;"><i class="fa fa-circle"></i></span>
+
+            }
+            else
+            {
+                <span style="margin-right: 80px;"><i class="fa fa-circle-o"></i></span>
+            }
+            <span> موقت </span>
+
+            @if (ViewBag.contractSubject == KiaGallery.Model.ContractSubject.Certain)
+            {
+                <span style="margin-right: 80px;"><i class="fa fa-circle"></i></span>
+            }
+            else
+            {
+                <span style="margin-right: 80px;"><i class="fa fa-circle-o"></i></span>
+
+            }
+            <span>  کار معین </span>
+        </p>
+
+
+
+    </div>
+    <div class="container" style="margin-top:0px">
+        <span class="pull-right"><b>3) نوع کار :  </b> </span>
+        <br />
+        حرفه یا وظیفه ای که کارمند به آن اشتغال می یابد: @ViewBag.JobDescriptionTemplateTitle
+            @Html.Raw(ViewBag.JobDescriptionTemplate)
+    </div>
+    <div class="container" style="margin-top:0px">
+        <span class=""><b>4) محل انجام کار :   </b> @ViewBag.BranchAddress فروشگاه گالری کیا</span>
+    </div>
+    <div class="container" style="margin-top:10px">
+        <span class=""><b>5) تاریخ انعقاد قرارداد: </b>  @date</span>
+    </div>
+    <div class="container" style="margin-top:10px">
+        <span class=""><b>6) مدت قرارداد: </b></span>
+
+        <p style="font-size:14px;line-height:29px;text-align:justify" class="">
+            الف- مدت قرارداد از تاریخ @ViewBag.fromDate لغایت: @ViewBag.todate به مدت @ViewBag.contractTime می باشد که در اجرای ماده (11) قانون کار مدت 1 ماه اول خدمت بعنوان دوره خدمت آزمایشی محسوب میگردد.
+            <br />
+            ب- ساعت کار @ViewBag.WorkHoursValue ساعت در ماه بر طبق مقررات و ضوابط کارفرما می باشد.
+            <br />
+            ج- میزان ساعت کار و ساعت شروع و پایان آن با توافق طرفین می باشد.
+        </p>
+    </div>
+    <div class="container" style="margin-top:0px">
+        <span class=""><b>7) حق السعی : </b></span>
+       
+        <p style="font-size:14px;line-height:29px;text-align:justify" class="">
+
+            الف- دستمزد یک ساعت کار عادی: 83,466 ریال
+            <br />
+            ب- دستمزد روزانه 611,809   ریال
+            <br />
+            ج- دستمزد ماهانه(30 روز) 18,354,270 ریال برای کار تمام وقت (در صورتیکه کارمند 192 ساعت در ماه کارکرد داشته باشد)
+            <br />
+            د- در صورت نوبت کاری (صبح – عصر) مبلغ 10 درصد  حقوق پایه بابت نوبت کاری تعلق می گیرد.
+            <br />
+            (بابت کار تمام وقت یعنی 192 ساعت در ماه  این مبلغ معادل 1,835,427 ریال می باشد)
+            <br />
+            ه- اضافه کار  معادل 40 درصد نرخ کارکرد عادی می باشد.
+            <br />
+            و- حق ماموریت دو برابر نرخ کارکرد عادی محاسبه می شود.
+        </p>
+    </div>
+    <div class="container" style="margin-top:0px">
+        <span class=""><b>8) بیمه :  </b>به موجب ماده (148) قانون کار، کارفرما مکلف است کارمند را نزد سازمان تأمین اجتماعی و یا سایر دستگاههای بیمه گذار بیمه نماید.</span>
+        <br />
+    </div>
+    <div class="container" style="margin-top:10px">
+        <p style="text-align:justify" class=""><b>9) عیدی و پاداش :  </b>به موجب ماده واحده قانون مربوط به تعیین عیدی و پاداش سالانه کارمندان شاغل در کارگاه های مشمول قانون کار – مصوب 1370/06/12 مجلس شورای اسلامی ، به ازای یک سال کار معادل شصت روز مزد ثابت / مبنا ( تا سقف نود روز حداقل مزد روزانه قانونی به کارمند) به عنوان عیدی و پاداش سالانه کارمند پرداخت می شود. برای کار کمتر از یک سال میزان عیدی و پاداش به نسبت کارکرد محاسبه خواهد شد.</p>
+        <br />
+    </div>
+
+    <div class="container" style="margin-top:0px">
+        <span style="" class=""><b>10) حق سنوات یا مزایای پایان کار :  </b></span>
+        <p style="font-size:14px;line-height:29px;text-align:justify" class="">
+            به هنگام فسخ یا خاتمه قرارداد کار حق سنوات مطابق با ماده 24 قانون کار و مصوبه 78/8/25 مجمع تشخیص مصلحت نظام بر اساس نسبت کارکرد پرداخت می شود.
+        </p>
+    </div>
+    <div class="container" style="margin-top:0px">
+        <span style="" class=""><b>11) شرایط فسخ قرارداد:    </b>این قرارداد در موارد ذیل توسط هر یک از طرفین قابل فسخ است.</span>
+        <p style="font-size:14px;line-height:29px;text-align:justify" class="">
+            الف- فسخ قرارداد سی روز قبل به طرف مقابل کتباً اعلام می شود.
+            <br />
+            ب- سایر موضوعات مندرج در قانون کار و مقررات تبعی از جمله مرخصی استحقاقی ، کمک هزینه مسکن ، کمک هزینه عائله‌مندی نسبت به این قرارداد اعمال خواهد شد.
+            <br />
+            ج- هرگونه اختلاس، خرابکاری، خیانت در امانت و یا سرقت در محل کار و سایر ضرر رسانی های مالی به کارفرما
+            <br />
+            د- هرگونه درگیری فیزیکی یا کلامی با همکاران و مشتریان در تمامی واحدها و شعب مجموعه گالری کیا توسط کارمند
+            <br />
+            ه- عدم اجرای صحیح وظایف محوله توسط کارمند
+        </p>
+    </div>
+    <div class="container" style="margin-top:0px">
+        <span style="" class=""><b>12) ضمانت اجرا :</b></span>
+        <p style="font-size:14px;line-height:29px;text-align:justify" class="">
+            الف- فسخ قرارداد سی روز قبل به طرف مقابل کتباً اعلام می شود در صورت تخلف کارمند و انجام جرائم و وارد کردن هر گونه خسارت به شرکت و یا ترک محل کار بدون مجوز خسارتی بر شرکت وارد گردد کارمند مسئول پرداخت خسارت وارده میباشد لذا کارمند در اجرای مواد 184 و 185 قانون کار و نص صریح ماده « 10»  قانون مدنی جمهوری اسلامی ایران مبلغ 600.000.000 ریال طی سفته                  به شماره @ViewBag.promissoryNoteNumber  را بعنوان حسن انجام کار تحویل کارفرما نموده که در صورت خسارتی اعم از منقول  و یا غیر منقول به اموال وارد شود کارفرما مجاز خواهد بود جهت جبران ضرر و زیان خود از محل ضمانت اخذ نماید.
+        </p>
+    </div> 
+    <div class="container" style="margin-top:0px">
+        <span style="" class=""><b>13) حل اختلاف :</b></span>
+        <p style="font-size:14px;line-height:29px;text-align:justify" class="">
+            اختلافات ناشی از اجرای این قرارداد « بدواً » از طریق سازش بین طرفین حل و فصل و در صورت عدم سازش در مراجع حل اختلاف مذکور در قانون کار حل و فصل خواهد شد. سایر موارد که در این قرارداد پیشبینی نشده طبق قانون کار خواهد بود.
+            این قرارداد در 13 ماده و دو نسخه در تاریخ   @date    تنظیم و به امضاء طرفین رسید.
+        </p>
+    </div>
+
+    <div class="container">
+        <div class="col-sm-6 col-lg-6 col-xs-6">
+            <div style="font-size:14px;line-height:29px;text-align:center">
+                <div>
+                    <span>محل امضاء کارفرما </span>
+                    <br />
+                    <span> ایمان کیا</span>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <p style="font-size:14px;line-height:29px;text-align:center !important">
+                <span>محل امضا و اثر انگشت کارمند </span>
+                <br />
+                @ViewBag.FirstName
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('.persianNumber').persiaNumber();
+
+    });
+
+</script>
+
+

@@ -1,0 +1,420 @@
+﻿
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    #openFile {
+        position: absolute;
+        top: 25px;
+        left: 15px;
+    }
+
+    table thead tr th {
+        border: 1px solid black;
+        text-align: center;
+        padding: 5px;
+    }
+
+    tbody tr td {
+        border: 1px solid black;
+        text-align: center;
+        font-family: 'IRANSans(FaNum)';
+    }
+
+    tbody tr input {
+        width: 80px;
+    }
+
+    tbody tr td:last-child input {
+        width: 162px
+    }
+
+    /*.w150px {
+        width: 150px;
+    }*/
+
+    .addTr td {
+        border: 1px solid black;
+    }
+
+    .tbl-specification {
+        margin: 0 auto;
+    }
+
+    .fnl-input {
+        float: left;
+        width: 150px;
+        margin-left: 14px;
+        font-family: 'IRANSans(FaNum)';
+        text-align: center;
+    }
+
+    .appendTr {
+        border-radius: 50%;
+    }
+
+    /* .AcNum {
+        width: 100%;
+        display: inline-block;
+        background-color: #c1c148;
+        text-align: center;
+        bottom: 0;
+        position: relative;
+        color: blue;
+    }*/
+</style>
+<div>
+    <form>
+        <div id="form">
+            <div class="container">
+                <input id="hiddenId" type="hidden" name="id" value="@ViewBag.Id" />
+                <div class="text-center">
+                    <h4>صورتحساب فروش</h4>
+                </div>
+                <div class="row">
+                    <ul class="col-md-3 pull-left">
+                        @*<li class="list-group-item">
+                                <label>شماره</label>
+                                <input type="text" class="form-control" name="number" data-validate="required" />
+                            </li>*@
+                        <li class="list-group-item">
+                            <label>تاریخ</label>
+                            <input type="text" class="form-control date" name="date" data-validate="required" autocomplete="off" />
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="text-center">
+                    <h4>مشخصات خریدار</h4>
+                </div>
+                <div class="list-group-item">
+                    <div class="row">
+                        <div class="form-group col-md-3">
+                            <label>نام شخص حقیقی</label>
+                            <input type="text" class="form-control" name="buyerName" data-validate="required" />
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>شماره اقتصادی</label>
+                            <input type="text" class="form-control" name="buyerEconomicalNumber" data-validate="required" />
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>شماره شناسه / شناسه ملی</label>
+                            <input type="text" class="form-control" name="buyerNationalId" data-validate="required" />
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>کد پستی 10 رقمی</label>
+                            <input type="text" class="form-control" name="buyerPostalCode" data-validate="required" />
+                        </div>
+                        <div class="form-group col-md-9">
+                            <label>نشانی</label>
+                            <input type="text" class="form-control" name="buyerAddress" data-validate="required" />
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>شماره تلفن و نمابر</label>
+                            <input type="text" class="form-control" name="buyerPhone" data-validate="required" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <h4>مشخصات کالا</h4>
+                </div>
+            </div>
+            <div class="factorTB">
+                <div class="tbl-data">
+
+                </div>
+            </div>
+            @*<input value="" name="detailId" class="detailId" />*@
+            <div class="pull-left">
+                <a class="appendTr"><span class="fa fa-plus" style="cursor:pointer"></span></a>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <button id="btnSubmit" class="btn btn-success">ذخیره</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <script src="~/scripts/numberOnly.js"></script>
+    <script type="text/javascript">
+        var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+        $(document).ready(function () {
+            setupUpload("companyInvoice", function (fileName) {
+                $("#showImg").attr("src", "/upload/companyInvoice/" + fileName);
+                $("#txtFileName").val(fileName);
+            });
+
+            $(".date").pDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true,
+            });
+
+            $(document).on("click",".appendTr",function (event) {
+                event.preventDefault();
+                var template = $("#template").text();
+                $(".tbl-data").append(template);
+                $('.table tbody tr').each(function (index, element) {
+                    $(this).children().first().html(index + 1);
+                });
+            });
+            //$(document).on("click", ".removeTable", function () {
+
+            //});
+            //$(".removeTable").click(function () {
+            //    console.log($(this).find("table").last());
+            //})
+            $(document).on("change","td input[type=text]" ,function () {
+                var row = $(this).closest("tr");
+                var whistle = Number(row.find("td:eq(4) input[name='whistle']").val());
+                var gram = Number(row.find("td:eq(5) input[name='gram']").val());
+                var priceGold = Number(row.find("td:eq(6) .priceGold").val().replaceAll(",", ""));
+                var stonePrice = Number(row.find("td:eq(8) input[name='stonePrice']").val().replaceAll(",", ""));
+                var wage = Number(row.find("td:eq(9) input[name='wage']").val().replaceAll(",", ""));
+                var wageprice = parseInt(priceGold) + parseInt(wage);
+                whistle = Number(whistle / 1000);
+                row.find("td:eq(11) .sumVal").val(formatNumber(parseInt(calc(whistle, gram, stonePrice, wageprice))));
+                //اینجا جمع ستون های آخری رو میگیره و در جمع به صورت مجزای کل فاکتور نمایش میدهد
+                var sum = 0;
+                $(this).parents('table').find(".sumVal").each(function () {
+                    sum += Number($(this).val().replaceAll(",", ""));
+                });
+                $(this).parents("table").next().find(".sumPrice").val(formatNumber(sum)).change();
+                //اینجا جمع دو ردیف اولی یعنی جمع + تخفیف و کسورات
+                var sumV2 = 0;
+                $(this).parents("table").next().find(".calcSub").each(function () {
+                    sumV2 += Number($(this).val().replaceAll(",", ""));
+                });
+                $(this).parents("table").next().find(".deductionDiscounts").val(formatNumber(sumV2)).change();
+                var deductionDiscounts = $(this).parents("table").next().find(".deductionDiscounts").val().replaceAll(",", "")
+                var tax = parseInt(deductionDiscounts * 0.06 + deductionDiscounts * 0.03);
+                $(this).parents("table").next().find(".taxation").val(formatNumber(tax)).change();
+                taxation = $(this).parents("table").next().find(".taxation").val().replaceAll(",", "");
+                var result = parseInt(deductionDiscounts) + parseInt(taxation);
+                $(this).parents("table").next().find(".result").val(formatNumber(result)).change();
+            })
+
+            if (id > 0) {
+                loader(true);
+                $.get("/companyInvoice/load/" + id, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        var list = response.data.companyInvoiceDetailViewModel;
+                        setEntity(response.data, "#form");
+                        if (list.length > 0) {
+                            $(".appendTr").hide();
+                            var template = $("#template").html();
+                            for (var i = 0; i < list.length / 4; i++) {
+                                $(".tbl-data").append(template);
+                            }
+                            $(".detailEntity .factor").each(function (index, element) {
+                                console.log($(this).parents());
+                                $(element).find("input[name=rowNum]").val(index + 1)
+                                $(element).find("input[name=detailId]").val(list[index].detailId)
+                                $(element).find("input[name=identificationCode]").val(list[index].identificationCode)
+                                $(element).find("input[name=whistle]").val(list[index].whistle)
+                                $(element).find("input[name=gram]").val(list[index].gram)
+                                $(element).find("input[name=carat]").val(list[index].carat)
+                                $(element).find("input[name=descriptionProduct]").val(list[index].descriptionProduct)
+                                $(element).find("input[name=identificationCode]").val(list[index].identificationCode)
+                                $(element).find("input[name=stoneWeight]").val(list[index].stoneWeight)
+                                $(element).find("input[name=goldPrice]").val(formatNumber(list[index].goldPrice))
+                                $(element).find("input[name=stonePrice]").val(formatNumber(list[index].stonePrice))
+                                $(element).find("input[name=wage]").val(formatNumber(list[index].wage))
+                                var whistle = Number(list[index].whistle / 1000);
+                                var wagePrice = list[index].goldPrice + list[index].wage;
+                                $(element).find("td:eq(11) .sumVal").val(formatNumber(parseInt(calc(whistle, list[index].gram, list[index].stonePrice, wagePrice))));
+                                var sum = 0;
+                                $(this).parents('table').find(".sumVal").each(function () {
+                                    sum += Number($(this).val().replaceAll(",", ""));
+                                });
+                                $(this).parents("table").next().find(".sumPrice").val(formatNumber(sum)).change();
+                                var sumV2 = 0;
+                                $(this).parents("table").next().find(".calcSub").each(function () {
+                                    sumV2 += Number($(this).val().replaceAll(",", ""));
+                                });
+                                $(this).parents("table").next().find(".deductionDiscounts").val(formatNumber(sumV2)).change();
+                                var deductionDiscounts = $(this).parents("table").next().find(".deductionDiscounts").val().replaceAll(",", "")
+                                var tax = parseInt(deductionDiscounts * 0.06 + deductionDiscounts * 0.03);
+                                $(this).parents("table").next().find(".taxation").val(formatNumber(tax)).change();
+                                taxation = $(this).parents("table").next().find(".taxation").val().replaceAll(",", "");
+                                var result = parseInt(deductionDiscounts) + parseInt(taxation);
+                                $(this).parents("table").next().find(".result").val(formatNumber(result)).change();
+                            });
+
+                                //$(".table > tbody").append(templateTR);
+                                //var templateTR = $("#templateTR").html();
+                            //console.log(templatecount);
+
+
+
+                                //    $('.table tbody tr').each(function (index, element) {
+                                //        $(this).children().first().html(index + 1);
+                                //    });
+                                //}
+
+                        }
+                    }
+                });
+            }
+
+            $("#btnSubmit").on("click", function (event) {
+                event.preventDefault();
+                var entity = getEntity("#form");
+                //if (!entity.firstName) {
+                //    alert("نام به درستی وارد نشده است.");
+                //    return;
+                //}
+
+                //if (entity.phoneNumber.length > 11 || entity.phoneNumber.length < 11) {
+                //    alert("شماره همراه به درستی وارد نشده است.");
+                //    return;
+                //}
+
+                entity.companyInvoiceDetailViewModel = [];
+                $(".detailEntity").find('tr').each(function (index, element) {
+                    var detailEntity = getEntity(element);
+                    entity.companyInvoiceDetailViewModel.push(detailEntity);
+                });
+                if (checkForm("#form")) {
+                    loader(true);
+                    $.post("/companyInvoice/save", entity, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                document.location = "/companyInvoice/";
+                            })
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    });
+                }
+            });
+        });
+
+        function calc(whistle, gram, stonePrice, wageprice) {
+            return ((((whistle + gram) * wageprice) + stonePrice) * 0.07 + ((whistle + gram) * wageprice) + stonePrice)
+        }
+
+        function formatNumber(num) {
+            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        }
+
+
+
+    </script>
+    <script id="template" type="text/html">
+        @*<a class="removeTable"><span class="fa fa-close red" style="cursor:pointer"></span></a>*@
+        <table class="table table-data table-responsive">
+            <thead style="border:1px solid black">
+                <tr>
+                    <th>ردیف</th>
+                    <th>کد شناسایی کالا</th>
+                    <th class="w150px">شرح کالا</th>
+                    <th>عیار</th>
+                    <th>سوت</th>
+                    <th>گرم</th>
+                    <th>قیمت طلا</th>
+                    <th>وزن سنگ</th>
+                    <th>قیمت سنگ</th>
+                    <th>اجرت ساخت</th>
+                    <th>سود</th>
+                    <th style="width:180px">جمع کل ارزش کالا</th>
+                </tr>
+            </thead>
+            <tbody class="detailEntity">
+                <tr class="factor">
+                    <td><input name="rowNum" class="text-center" /><input type="hidden" name="detailId" class="detailId" /></td>
+                    <td><input type="text" class="number-only" name="identificationCode" /></td>
+                    <td><input type="text" class="w150px" name="descriptionProduct" /></td>
+                    <td><input type="text" class="number-only" name="carat" maxlength="5" /></td>
+                    <td><input type="text" class="number-only" name="whistle" maxlength="4" /></td>
+                    <td><input type="text" class="number-only" name="gram" maxlength="4" /></td>
+                    <td><input type="text" class="number-only money-separator priceGold" name="goldPrice" maxlength="12" /></td>
+                    <td><input type="text" class="number-only" name="stoneWeight" maxlength="4" /></td>
+                    <td><input type="text" class="number-only money-separator" name="stonePrice" maxlength="9" /></td>
+                    <td><input type="text" class="number-only money-separator txtWage" name="wage" maxlength="9" /></td>
+                    <td><input type="text" class="number-only text-center" value="%7" readonly disabled style="color:blue" /></td>
+                    <td><input type="text" class="number-only w150px money-separator text-center sumVal" disabled /></td>
+                </tr>
+                <tr class="factor">
+                    <td><input name="rowNum" class="text-center" /><input type="hidden" name="detailId" class="detailId" /></td>
+                    <td><input type="text" class="number-only" name="identificationCode" /></td>
+                    <td><input type="text" class="w150px" name="descriptionProduct" /></td>
+                    <td><input type="text" class="number-only" name="carat" maxlength="5" /></td>
+                    <td><input type="text" class="number-only" name="whistle" maxlength="4" /></td>
+                    <td><input type="text" class="number-only" name="gram" maxlength="4" /></td>
+                    <td><input type="text" class="number-only money-separator priceGold" name="goldPrice" maxlength="12" /></td>
+                    <td><input type="text" class="number-only" name="stoneWeight" maxlength="4" /></td>
+                    <td><input type="text" class="number-only money-separator" name="stonePrice" maxlength="9" /></td>
+                    <td><input type="text" class="number-only money-separator txtWage" name="wage" maxlength="9" /></td>
+                    <td><input type="text" class="number-only text-center" value="%7" readonly disabled style="color:blue" /></td>
+                    <td><input type="text" class="number-only w150px money-separator text-center sumVal" disabled /></td>
+                </tr>
+                <tr class="factor">
+                    <td><input name="rowNum" class="text-center" /><input type="hidden" name="detailId" class="detailId" /></td>
+                    <td><input type="text" class="number-only" name="identificationCode" /></td>
+                    <td><input type="text" class="w150px" name="descriptionProduct" /></td>
+                    <td><input type="text" class="number-only" name="carat" maxlength="5" /></td>
+                    <td><input type="text" class="number-only" name="whistle" maxlength="4" /></td>
+                    <td><input type="text" class="number-only" name="gram" maxlength="4" /></td>
+                    <td><input type="text" class="number-only money-separator priceGold" name="goldPrice" maxlength="12" /></td>
+                    <td><input type="text" class="number-only" name="stoneWeight" maxlength="4" /></td>
+                    <td><input type="text" class="number-only money-separator" name="stonePrice" maxlength="9" /></td>
+                    <td><input type="text" class="number-only money-separator txtWage" name="wage" maxlength="9" /></td>
+                    <td><input type="text" class="number-only text-center" value="%7" readonly disabled style="color:blue" /></td>
+                    <td><input type="text" class="number-only w150px money-separator text-center sumVal" disabled /></td>
+                </tr>
+                <tr class="factor">
+                    <td><input name="rowNum" class="text-center" /><input type="hidden" name="detailId" class="detailId" /></td>
+                    <td><input type="text" class="number-only" name="identificationCode" /></td>
+                    <td><input type="text" class="w150px" name="descriptionProduct" /></td>
+                    <td><input type="text" class="number-only" name="carat" maxlength="5" /></td>
+                    <td><input type="text" class="number-only" name="whistle" maxlength="4" /></td>
+                    <td><input type="text" class="number-only" name="gram" maxlength="4" /></td>
+                    <td><input type="text" class="number-only money-separator priceGold" name="goldPrice" maxlength="12" /></td>
+                    <td><input type="text" class="number-only" name="stoneWeight" maxlength="4" /></td>
+                    <td><input type="text" class="number-only money-separator" name="stonePrice" maxlength="9" /></td>
+                    <td><input type="text" class="number-only money-separator txtWage" name="wage" maxlength="9" /></td>
+                    <td><input type="text" class="number-only text-center" value="%7" readonly disabled style="color:blue" /></td>
+                    <td><input type="text" class="number-only w150px money-separator text-center sumVal" disabled /></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="container-fluid ">
+            <div class="col-lg-offset-6" style="margin-top:10px;">
+                <div class="" style="">
+                    <div class="form-group col-md-12 ">
+                        <label>جمع</label>
+                        <input class="fnl-input money-separator sumPrice calcSub" readonly disabled />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label style="color:red;">تخفیفات / کسورات</label>
+                        <input class="fnl-input money-separator reduction calcSub" name="reduction" disabled maxlength="15" style="color:red;" />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>جمع کل ارزش کالا بعد از کسر تخفیفات</label>
+                        <input class="fnl-input money-separator deductionDiscounts" readonly disabled />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>اضافه می شود مالیات و عوارض ارزش افزوده</label>
+                        <input class="fnl-input money-separator taxation" readonly disabled />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>جمع کل ارزش کالا بعلاوه مالیات و عوارض ارزش افزوده</label>
+                        <input class="fnl-input money-separator result" readonly disabled style="font-weight:700" />
+                    </div>
+                    <div class="form-group ">
+                        @*<label class="AcNum">شماره حساب : 4781737607  - به نام ایمان کیا - بانک ملت</label>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+}

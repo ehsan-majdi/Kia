@@ -1,0 +1,294 @@
+﻿
+@{
+    ViewBag.Title = "تیکت";
+}
+
+<style>
+    #main {
+        height: 100%;
+        background: none;
+        margin-top: 0px;
+    }
+
+    html, body, .text-message-fluid, .container-fluid {
+        height: 100%;
+        margin: 0
+    }
+
+    body {
+        background: url(/Content/Image/Background-image.jpg);
+        background-size: cover;
+    }
+
+    .er {
+        height: 100%;
+    }
+
+    .text-message {
+        border: 2px solid #dedede;
+        background-color: #f1f1f1;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 10px 0;
+    }
+
+    .darker {
+        border-color: #ccc;
+        background-color: #ddd;
+    }
+
+    .text-message::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    #content {
+        height: 80%;
+        overflow: auto
+    }
+
+    .time-right {
+        float: right;
+        color: #aaa;
+    }
+
+    .time-left {
+        float: left;
+        color: #999;
+    }
+
+
+
+    .department {
+        margin: 10px;
+        padding: 5px;
+        cursor: pointer;
+        border-bottom: 1px solid silver
+    }
+
+        .department:hover {
+            background-color: #ebebeb8c;
+            transition: 0.3s
+        }
+
+        .department:active {
+            background-color: #ebebeb
+        }
+
+    .member {
+        display: none;
+    }
+
+    .mm:hover {
+        background-color: red;
+        transition: 0.3s;
+    }
+
+    #btnSend {
+        position: absolute;
+        top: 19px;
+        right: 40px;
+        font-size: 30px;
+        color: deepskyblue;
+        cursor: pointer;
+        top: 10px;
+    }
+
+        #btnSend:hover {
+            color: grey;
+        }
+</style>
+
+<div class="" style="height:8%">
+    @*<div id="content-ticket"></div>*@
+    <div style="vertical-align:middle;background-color:#ededed;height:100%" class="col-md-8">
+        <div class="col-md-6">
+            <span style="cursor:pointer;padding: 15px;font-size:30px;transform:rotate(270deg)" class="fa fa-paperclip"></span>
+        </div>
+        <div class="col-md-6">
+            <h4>UserName</h4>
+        </div>
+    </div>
+    <div style="background-color:#ededed;height:100%;padding:0" class="col-md-4">
+        <h4> @BaseController.GetAuthenticatedUser().FirstName @BaseController.GetAuthenticatedUser().LastName</h4>
+    </div>
+</div>
+<div class="" style="height:95%">
+
+    @*<div id="content-ticket"></div>*@
+    <div style="height:95%;padding:0;" class="col-md-8 scroll">
+        <div id="scroll" class="scroll" style="overflow:auto;height:calc(100% - 50px);position:relative">
+            <div class="" dir="ltr" style="height:100%;background-image:url(/Content/Image/image-opa.jpg);filter:blur(7px);background-size:cover;">
+            </div>
+            <div style="position:absolute;top:0;height:100%;" id="content">
+
+            </div>
+        </div>
+        <div style="background-color:#ededed;text-align:left;position:relative">
+            <textarea id="txtText" style="width:90%;border: 1px solid silver;resize:none;height:50px" rows="1" placeholder="Write You're Message"></textarea><span id="btnSend" class="fa fa-arrow-right"></span>
+        </div>
+    </div>
+
+
+    <div style="height:95%">
+        <div style="background-color:#f8f8f8;padding:5px">
+            <input class="form-control" style="width:20%;border-radius:50px;margin:auto" placeholder="جستجو...." />
+        </div>
+        <div id="content-ticket" style="background-color:white;height:calc(100% - 44px);overflow:auto;" class="col-md-4">
+
+            
+        </div>
+
+    </div>
+</div>
+
+<input style="display:none" id="ticketId" value="@(ViewBag.Id > 0? ViewBag.Id:0)" />
+
+@section scripts{
+
+    <script type="text/javascript">
+        var id = @(ViewBag.Id > 0? ViewBag.Id:0);
+        $(document).ready(function () {
+             getListTicket();
+            $(window).load(function () {
+               $("div").animate({ scrollTop: 999999 }, 1000);
+            });
+            var english = /^[A-Za-z0-9]*$/;
+            $("#txtText").on("keydown", function () {
+                if (!english.test($(this).val())) {
+                    $(this).attr("dir", "rtl")
+                    $(this).css("text-align","right")
+                    $(this).attr("placeholder", "متن خود را بنویسید")
+                }
+                else {
+                    $(this).attr("dir", "ltr")
+                    $(this).css("text-align","left")
+                    $(this).attr("placeholder", "Write Youre Message")
+                }
+
+            })
+            $(".acordion").click(function () {
+                $(this).parents(".department").find(".member").slideDown();
+            });
+            $(".btn2").click(function () {
+                $("p").slideDown();
+            });
+            getList()
+            $("#btnSend").click(function () {
+                save()
+            });
+            console.log($("#ticketId").val())
+            if ($("#ticketId").val() == 0) {
+                $("#userId").show()
+            }
+            if ($("#ticketId").val() > 0) {
+                $("#userId").hide()
+            }
+        });
+        function save() {
+            var params = {
+
+                text: $("#txtText").val(),
+                toUserId: 1181,
+                departmentId: 2,
+                ticketId: $("#ticketId").val(),
+            }
+            loader(true);
+            $.get("/ticket/save", params, function (response) {
+                if (response.status == 200) {
+                    if (id > 0) {
+                        getList()
+                    }
+                    else {
+                    location.reload();
+                    }
+                    $("#txtText").val(null)
+                   getList()
+                    $("#ticketId").val(response.data)
+                    $("#contex")
+                    console.log(response.data)
+                     $("div").animate({ scrollTop: 999999 }, 1000);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+        function getList() {
+            var params = {
+                ticketId: $("#ticketId").val(),
+                toUserId: 1181
+            }
+            $.get("/ticket/searchMessage", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+          function getListTicket() {
+            var params = {
+                page: 0,
+                count: 100,
+            }
+            $.get("/ticket/search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template-ticket");
+                    var htmlOutput = template.render(data);
+                    $("#content-ticket").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        {{for list}}
+        <div class="col-md-12" dir="rtl">
+            <div style="background-color:{{if sender}}#f1f1f1 {{else}} #ddd {{/if}};width:300px;float:{{if sender}}right{{else}}left{{/if}}" class="text-message darker">
+                <p class="" style="word-wrap:break-word">{{:text}}</p>
+                <span class="time-left">{{:createTime}}</span>
+                <span class="time-right">{{:userName}}</span>
+            </div>
+        </div>
+        {{/for}}
+    </script>
+    <script id="template-ticket" type="text/x-jsrender">
+        {{for list }}
+        <div class="department">
+            {{:ticketStatusTitle}}
+            <div class="aa" data-id="{{:id}}">
+                <h4>department2</h4>
+                <p>{{:text}}</p>
+                <span class="acordion fa fa-chevron-left">
+                </span>
+            </div>
+            <div class="member">
+                <div class="mm">
+                    <span>member1</span>
+                    <p>ssss</p>
+                </div>
+                <div class="mm">
+                    <span>member1</span>
+                    <p>eee</p>
+                </div>
+                <div class="mm">
+                    <span>member1</span>
+                    <p>asd</p>
+                </div>
+            </div>
+        </div>
+        {{/for}}
+    </script>
+}

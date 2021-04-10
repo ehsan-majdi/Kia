@@ -1,0 +1,234 @@
+﻿<div id="form" class="container">
+    <div class="row form-group">
+
+        <div class="row">
+            <div class="col-md-4 col-md-offset-2">
+                <div id="parent-section" class="form-group relative">
+                    <label for="cmbPersonType">نوع پرسنل</label>
+                    <select id="cmbPersonType" class="form-control" name="personType" disabled>
+                        <option value="">...</option>
+                        <option value="0">دفتر مرکزی</option>
+                        <option value="1">شعبه</option>
+                        <option value="2">کارگاه</option>
+                    </select>
+                </div>
+                <div id="parent-section" class="form-group relative">
+                    <label for="txtBranch">شعبه</label>
+                    <input id="txtBranch" type="text" class="form-control" name="branch" readonly>
+                </div>
+                <div class="form-group">
+                    <input id="hiddenId" type="hidden" value="" name="id" />
+                    <label for="txtFirstName">نام</label>
+                    <input id="txtFirstName" type="text" class="form-control" name="firstName" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="txtLastName">نام خانوادگی</label>
+                    <input id="txtLastName" type="text" class="form-control" name="lastName" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="txtPersonNumber">شماره پرسنلی</label>
+                    <input id="txtPersonNumber" type="text" class="form-control" name="personNumber" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="cmbSupervisor">سرپرست</label>
+                    <select id="cmbSupervisor" class="form-control" data-validate="required" disabled name="supervisor">
+                        <option value="">...</option>
+                        <option value="true">بله</option>
+                        <option value="false">خیر</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtAccountNumber">شماره حساب</label>
+                    <input id="txtAccountNumber" type="text" class="form-control" name="accountNumber" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="txtContractStartDate">تاریخ شروع همکاری</label>
+                    <input id="txtContractStartDate" type="text" class="form-control date" name="contractStartDate" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="txtInsurance">بیمه</label>
+                    <select id="cmbInsurance" class="form-control" name="insurance" disabled>
+                        <option value="">...</option>
+                        <option value="true">دارد</option>
+                        <option value="false">ندارد</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtInsuranceNumber">شماره بیمه</label>
+                    <input id="txtInsuranceNumber" type="text" class="form-control" name="insuranceNumber" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="txtInsuranceExpireDate">تاریخ انقضا بیمه</label>
+                    <input id="txtInsuranceExpireDate" type="text" class="form-control date" name="insuranceExpireDate" , readonly>
+                </div>
+                <div class="form-group">
+                    <label for="txtFatherName">نام پدر</label>
+                    <input id="txtFatherName" type="text" class="form-control" name="fatherName" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="txtCity">صادره از</label>
+                    <input id="txtCity" type="text" class="form-control" name="city" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="txtCity">محل تولد</label>
+                    <input id="txtExCity" type="text" class="form-control" name="city" maxlength="50" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="cmbContractSubject">موضوع قرارداد</label>
+                    <select id="cmbContractSubject" class="form-control" data-validate="required" disabled name="contractSubject">
+                        <option value="">...</option>
+                        <option value="true">قراردادکار موقت</option>
+                        <option value="false">قراردادکار معین</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cmbGender">جنسیت</label>
+                    <select id="cmbGender" class="form-control" data-validate="required" disabled name="gender">
+                        <option value="">...</option>
+                        <option value="true">مرد</option>
+                        <option value="false">زن</option>
+                    </select>
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="txtJob">حرفه</label>
+                    <input id="txtJob" type="text" class="form-control" name="job" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="txtNationalCode">کد ملی</label>
+                    <input id="txtNationalCode" type="text" class="form-control"  name="nationalCode" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="txtBirthCertificateNumbere">شماره شناسنامه</label>
+                    <input id="txtBirthCertificateNumber" type="text" class="form-control" name="birthCertificateNumber" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="txtBirthDate">تاریخ تولد</label>
+                    <input id="txtBirthDate" type="text" class="form-control date" name="birthDate" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="cmbMarried">وضعیت تاهل</label>
+                    <select id="cmbMarried" class="form-control" data-validate="required" disabled name="married">
+                        <option value="">...</option>
+                        <option value="true">متاهل</option>
+                        <option value="false">مجرد</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtPhoneNumber">شماره تلفن</label>
+                    <input id="txtPhoneNumber" type="text" class="form-control" name="phoneNumber" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="txtMobileNumber">شماره همراه</label>
+                    <input id="txtMobileNumber" type="text" class="form-control" name="mobileNumber" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="txtAddress">آدرس</label>
+                    <textarea id="txtAddress" class="form-control" name="address" readonly rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="txtEducation">آخرین مدرک تحصیلی</label>
+                    <select id="cmbEducation" class="form-control" disabled name="education">
+                        <option value="">...</option>
+                        <option value="0">سیگل</option>
+                        <option value="2">دیپلم</option>
+                        <option value="3">کاردانی</option>
+                        <option value="4">کارشناسی</option>
+                        <option value="5">کارشناسی ارشد</option>
+                        <option value="6">دکترا</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtMajor">رشته تحصیلی</label>
+                    <input id="txtMajor" type="text" class="form-control" name="major" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="cmbActive">وضعیت تحصیلی</label>
+                    <select id="cmbActive" class="form-control" name="educationalStatus" disabled>
+                        <option value="">...</option>
+                        <option value="true">فارغ‌التحصیل</option>
+                        <option value="false">دانشجو</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtMajorCurrent">رشته تحصیلی فعلی</label>
+                    <input id="txtMajorCurrent" type="text" class="form-control" name="majorCurrent" readonly />
+                </div>
+                <div class="form-group">
+                    <label for="cmbActive">وضعیت</label>
+                    <select id="cmbActive" class="form-control" data-validate="required" name="active" disabled>
+                        <option value="">...</option>
+                        <option value="true">فعال</option>
+                        <option value="false">غیر فعال</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="fileList"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+    var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+
+    $(document).ready(function () {
+        load();
+    });
+
+    function load() {
+        if (id > 0) {
+            loader(true);
+            $.get("/person/LoadView/" + id, function (response) {
+                if (response.status == 200) {
+                    setEntity(response.data, "#form");
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $(".fileList").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    }
+
+    </script>
+
+<script id="template" type="text/x-jsrender">
+    <table class="table table-data table-responsive">
+        <thead>
+            <tr>
+                <th>ردیف</th>
+                <th>عنوان</th>
+                <th>نوع فایل</th>
+                <th>تصویر</th>
+                <th>دسته بندی</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{for fileList}}
+            <tr>
+                <td>{{:#index + 1}}</td>
+                <td>{{:title}}</td>
+                <td>{{:fileTypeTitle}}</td>
+                <td>
+                    {{if fileType == 0}}
+                    
+                    <a href="/upload/person/{{:fileName}}" target="_blank"><img src="/upload/person/{{:fileName}}" width="150px" /></a>
+                    {{else}}
+                    <a href="/upload/person/{{:fileName}}">pdf</a>
+                    {{/if}}
+                </td>
+                <td>{{:categoryTitle}}</td>
+            </tr>
+            {{/for}}
+        </tbody>
+    </table>
+</script>
+}

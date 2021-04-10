@@ -1,0 +1,289 @@
+﻿
+@{
+    ViewBag.Title = "FinalOrderDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .footer {
+        position: fixed;
+        bottom: 45px;
+        width: 100%;
+        height: 130px;
+        line-height: 60px;
+        background-color: #f5f5f5;
+        left: 0;
+    }
+
+    #btnSubmit {
+        background-color: #3e8047;
+        color: white;
+        font-weight: 700;
+        width: 160px;
+        position: absolute;
+        left: 100px;
+        border: none;
+        -webkit-box-shadow: 0px 0px 6px -1px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 0px 6px -1px rgba(0,0,0,0.75);
+        box-shadow: 0px 0px 6px -1px rgba(0,0,0,0.75);
+        transition: all 0.2s ease-in-out;
+    }
+
+        #btnSubmit:hover {
+            background-color: #11bf5f;
+        }
+
+    #btnPrint {
+        background-color: #3e8047;
+        color: white;
+        font-weight: 700;
+        width: 160px;
+        position: absolute;
+        left: 280px;
+        border: none;
+        -webkit-box-shadow: 0px 0px 6px -1px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 0px 6px -1px rgba(0,0,0,0.75);
+        box-shadow: 0px 0px 6px -1px rgba(0,0,0,0.75);
+        transition: all 0.2s ease-in-out;
+        text-decoration: none;
+        text-align: center
+    }
+
+        #btnPrint:hover {
+            background-color: #11bf5f;
+        }
+
+   /* #btnBack {
+        background-color: #3e8047;
+        color: white;
+        font-weight: 700;
+        width: 160px;
+        position: absolute;
+        left: 460px;
+        border: none;
+        -webkit-box-shadow: 0px 0px 6px -1px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 0px 6px -1px rgba(0,0,0,0.75);
+        box-shadow: 0px 0px 6px -1px rgba(0,0,0,0.75);
+        transition: all 0.2s ease-in-out;
+        text-decoration: none;
+        text-align: center
+    }
+
+        #btnBack:hover {
+            background-color: #11bf5f;
+        }*/
+</style>
+<input id="hiddenOrderUsableProductId" type="hidden" value="@ViewBag.OrderUsableProductId" />
+<form id="form">
+    <div id="content"></div>
+</form>
+
+<div class="footer">
+    <div class="content-footer">
+        <button id="btnSubmit">تایید ارسال</button>
+        @*<a href="/printingHouse/printOrderPage/@ViewBag.OrderUsableProductId" id="btnPrint">چاپ</a>*@
+        @*<a href="/printingHouse/finalOrderPrintinHouse" id="btnBack"><i class="fa fa-undo"></i></a>*@
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        var orderId = @(ViewBag.OrderUsableProductId != null ? ViewBag.OrderUsableProductId : 0);
+        $(document).ready(function () {
+            getList();
+
+            $("#btnSubmit").click(function (event) {
+                event.preventDefault();
+                var entity = { orderId: orderId };
+                var printingHouseInventoryList = new Array();
+                var readyForDeliveryList = new Array();
+                var idListOrder = new Array();
+                var remainFinalOrderList = new Array();
+                var confirmDeliveredList = new Array();
+                $('.tblSavingColl tbody tr').each(function (index, element) {
+                    var printingHouseInventory = $(element).find(".printingHouseInventory").val();
+                    var readyForDelivery = $(element).find(".ready").val();
+                    var remainFinal = $(element).find(".remainVal").val();
+                    var confirmDelivered = $(element).find(".delivered").val();
+                    var idList = $(this).attr("data-id");
+                    printingHouseInventoryList.push(printingHouseInventory);
+                    readyForDeliveryList.push(readyForDelivery);
+                    remainFinalOrderList.push(remainFinal);
+                    confirmDeliveredList.push(confirmDelivered);
+                    idListOrder.push(idList);
+                    entity.printingHouseInventory = printingHouseInventoryList;
+                    entity.readyForDelivery = readyForDeliveryList;
+                    entity.remainFinal = remainFinalOrderList;
+                    entity.confirmDelivered = confirmDeliveredList;
+                    entity.idList = idListOrder;
+                });
+                confirmOrder(entity);
+            });
+
+
+            $(document).on("change", "input[name='delivered']", function () {
+                var printingHouseInventory = Number($(this).parents("tr").find(".printingHouseInventory").val());
+                var remainVal = Number($(this).parents("tr").find(".remainVal").val());
+                var ready = Number($(this).parents("tr").find(".ready").val());
+                var delivered = Number($(this).val());
+                var result;
+                if (delivered >= 0) {
+                var resultPrintingAndReady = printingHouseInventory - ready;
+                var resultReadyDelivered = ready - delivered;
+                $(this).parents("tr").find(".remainVal").val(resultPrintingAndReady + resultReadyDelivered);
+                }
+                if (delivered > printingHouseInventory) {
+                    $(this).parents("tr").find(".remainVal").val(0);
+                    alert("مقدار تحویل داده شده بزرگتر از مقدار قابل ساخت در چاپخانه است");
+                }
+                //if (delivered == remainVal) {
+                //    getList()
+                //}
+                //else if (ready > delivered) {
+                //    result = ready - delivered;
+                //    $(this).parents("tr").find(".remainVal").val(result);
+                //}
+                //else if (ready < delivered) {
+                //    alert("مقدار تحویل داده شده بزرگتر از مقدار آماده تحویل است");
+                //}
+                //if (delivered == 0 || delivered == "") {
+                //    getList()
+                //}
+            });
+        });
+
+        function confirmOrder(entity) {
+            if (checkForm("#form")) {
+                loader(true);
+                $.post("/printingHouse/ConfirmOrder", entity, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        callbackAlert("سفارش برای چاپخانه ارسال گردید.", function () {
+                            $(".footer").addClass("hidden");
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            }
+        }
+
+        function getList() {
+            var defaultEntity = {
+                usableProductId: null,
+                orderUsableProductId: $("#hiddenOrderUsableProductId").val()
+            }
+            var params = defaultEntity;
+            loader(true);
+            $.post("/printingHouse/GetListConfrimOrder", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                    $('[data-toggle="tooltip"]').tooltip();
+                    for (var i = 0; i < data.list.length; i++) {
+                        if (data.list[i].remainFinal > 0) {
+                            $("input[data-id=" + response.data.list[i].id + "][name=delivered]").val(response.data.list[i].remainFinal);
+                        }
+                        //if (data.list[i].readyForDelivery > 0) {
+                        //    $("input[data-id=" + response.data.list[i].id + "][name=ready]").val(response.data.list[i].readyForDelivery);
+                        //    //$("input[data-id=" + response.data.list[i].id + "][name=remainVal]").val(data.list[i].printingHouseInventory - data.list[i].confirmDelivered - data.list[i].delivered);
+                        //}
+                        //else {
+                        //    $("input[data-id=" + response.data.list[i].id + "][name=ready]").val(response.data.list[i].readyForDelivery);
+                        //    $("input[data-id=" + response.data.list[i].id + "][name=remainVal]").val(data.list[i].printingHouseInventory - data.list[i].readyForDelivery - data.list[i].delivered);
+                        //}
+                    }
+                    $(".remain").each(function () {
+                        var officeInventory = Number($(this).parents("tr").find(".officeInventory").text());
+                        var order = Number($(this).parents("tr").find(".order").text());
+                        if (order == 0) {
+                            $(this).parents("tr").find(".printingHouseInventory").val(0);
+                            $(this).parents("tr").find(".ready").val("");
+                            $(this).parents("tr").find(".remainVal").val(0);
+                        }
+                        else if (order >= officeInventory)
+                        {
+                            var result = order - officeInventory;
+                            $(this).parents("tr").find(".printingHouseInventory").val(result);
+                        }
+                    });
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+
+
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <table class="table tblSavingColl">
+            <thead>
+                <tr>
+                    <th class="text-center borderClass">تصویر </th>
+                    <th class="" style="width:100px">کدمحصول </th>
+                    <th class="">نام محصول </th>
+                    <th class="">دسته بندی </th>
+                    <th class="">تاریخ </th>
+                    <th class="text-center borderClass">تعداد درخواستی</th>
+                    <th class="text-center">تحویل داده شده از دفتر مرکزی</th>
+                    <th class="text-center borderClass">قابل ساخت در چاپخانه</th>
+                    <th class="text-center">تعداد آماده تحویل</th>
+                    <th class="text-center">تحویل داده شده</th>
+                    <th class="text-center">مانده</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr data-id="{{:id}}">
+                    {{if image != null}}
+                    <td class="w15 text-center borderClass">
+                        <img style="width:140px;" src="/image/usableProduct/500x500/{{:image}}" />
+                    </td>
+                    {{else}}
+                    <td class="w15 text-center v-middle borderClass">
+                        <img style="width: 140px;" src="/content/image/kia-gallery-logo-square.png" />
+                    </td>
+                    {{/if}}
+                    <td class="v-middle">{{:code}}</td>
+                    <td class="v-middle">{{:name}}<span data-toggle="tooltip" title="واحد">({{:unit}})</span></td>
+                    <td class="v-middle">{{:category}}</td>
+                    <td class="v-middle">{{:persianDate}}</td>
+                    {{if productCount > 0}}
+                    <td class="txt-al-c bold remain order v-middle">{{:productCount}}</td>
+                    {{else}}
+                    <td class="txt-al-c bold remain order v-middle">0</td>
+                    {{/if}}
+                    {{if officeInventory > 0 }}
+                    <td class="txt-al-c bold officeInventory v-middle">{{:officeInventory}}</td>
+                    {{else}}
+                    <td class="txt-al-c bold v-middle">0</td>
+                    {{/if}}
+                    {{if branchType==2}}
+                    <td class="text-center v-middle">
+                        <input class="form-control printingHouseInventory v-middle" name="printingHouseInventory" value="{{:result}}" readonly data-id="{{:id}}" style="width:150px;text-align:center" />
+                    </td>
+                    {{/if}}
+                    {{if branchType==1}}
+                    <td class="text-center v-middle">
+                        <input class="form-control printingHouseInventory v-middle" name="printingHouseInventory" value="{{:result}}" readonly data-id="{{:id}}" style="width:150px;text-align:center" />
+                    </td>
+                    {{/if}}
+                    <td class="text-center v-middle">
+                        <input class="form-control ready" name="ready" readonly value="{{:readyForDelivery}}" data-validate="number" data-id="{{:id}}" style="width:150px;text-align:center" />
+                    </td>
+                    <td class="v-middle">
+                        <input class="form-control delivered" name="delivered" value="{{:confirmDelivered}}" data-validate="number" style="width:150px;text-align:center" />
+                    </td>
+                    <td class="text-center  v-middle">
+                        <input class="form-control remainVal v-middle" name="remainVal" value="{{:remainFinal}}" readonly data-id="{{:id}}" style="width:150px;text-align:center" />
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}

@@ -1,0 +1,58 @@
+﻿
+@{
+    ViewBag.Title = "اضافه کردن اطلاعات مشتری";
+}
+<style>
+    .form-item {
+        margin: 10px auto;
+        width: 30%;
+    }
+</style>
+<div class="container" id="form">
+    <div style="margin:0 auto">
+        <input type="hidden" id="hiddenId" name="id" value="@ViewBag.Id" />
+        <div class="form-group form-item">
+            <label>کد مشتری:</label>
+            <input id="txtCustomerCode" style="resize:none" class="form-control" name="customerCode"  maxlength="7" data-validate="required, maxLength(7)" />
+        </div>
+        <div class="form-group form-item">
+            <label>مبلغ (ریال) :</label>
+            <input id="txtPrice" style="resize:none" class="form-control money-separator" name="price" data-validate="required" />
+        </div>
+        <div class="form-item text-center">
+            <button id="btnSave" class="btn btn-success">
+                ذخیره
+            </button>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btnSave").on("click", function () {
+                save()
+            })
+
+            function save() {
+                var entity = getEntity("#form")
+                if (checkForm("#form")) {
+
+                    loader(true);
+                    $.get("/customerCard/save", entity, function (response) {
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                clearEntity("#form")
+                            })
+                        }
+                        else {
+                            alert(response.message)
+                        }
+                        loader(false);
+                    });
+                }
+
+            }
+        })
+    </script>
+
+}

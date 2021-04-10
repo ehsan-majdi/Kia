@@ -1,0 +1,72 @@
+﻿
+@{
+    ViewBag.Title = "داشبرد ربات اصلی";
+}
+<style type="text/css">
+    .item {
+        background-color: #0088cc;
+        border-radius: 5px;
+        color: white;
+        display: inline-block;
+        padding: 15px;
+    }
+
+    .item-text {
+        display: inline-block;
+        font-size: 1.3em;
+        font-weight: bold;
+        margin-left: 25px;
+    }
+</style>
+
+<h2>کل</h2>
+
+<div class="item">
+    <i class="fa fa-user" aria-hidden="true" style="font-size: 3em; padding: 10px;"></i>
+    <span class="item-text">
+        <span>کاربر</span>
+        <br />
+        <span>@ViewBag.UserCount</span>
+    </span>
+</div>
+
+<div class="item">
+    <i class="fa fa-desktop" aria-hidden="true" style="font-size: 3em; padding: 10px;"></i>
+    <span class="item-text">
+        <span>پیام</span>
+        <br />
+        <span>@ViewBag.MessageCount</span>
+    </span>
+</div>
+
+<br />
+<br />
+
+<h2>امروز</h2>
+
+<div class="item">
+    <i class="fa fa-user" aria-hidden="true" style="font-size: 3em; padding: 10px;"></i>
+    <span class="item-text">
+        <span>کاربر</span>
+        <br />
+        <span>@ViewBag.TodayUserCount</span>
+    </span>
+</div>
+
+<div class="item">
+    <i class="fa fa-desktop" aria-hidden="true" style="font-size: 3em; padding: 10px;"></i>
+    <span class="item-text">
+        <span>پیام</span>
+        <br />
+        <span>@ViewBag.TodayMessageCount</span>
+    </span>
+</div>
+
+<div class="item">
+    <i class="fa fa-bar-chart" aria-hidden="true" style="font-size: 3em; padding: 10px;"></i>
+    <span class="item-text">
+        <span>پیام نا مشخص</span>
+        <br />
+        <span>@ViewBag.TodayUnknownMessageCount</span>
+    </span>
+</div>

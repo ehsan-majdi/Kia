@@ -1,0 +1,192 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<a href="/companyInvoice/Add" class="btn btn-success">جدید</a>
+<div id="content">
+
+</div>
+
+<div id="form">
+    <div id="modalUploadFile" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">فایل جدید</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="screenshot" class="form-group txt-al-c">
+                        <div class="form-group">
+                            <span><i class="fa fa-sticky-note"></i></span>
+                            <img id="imgUserImage" style="max-width: 220px;border-radius: 50%;display:none" />
+                        </div>
+                        <input id="hiddenId" type="hidden" name="id" />
+                        <div class="form-group">
+                            <input id="file" type="file" class="hidden" />
+                            <input id="txtFileName" type="text" class="form-control" name="attachmentFile" readonly>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <i id="openFile" class="fa fa-upload btn btn-success btn-icon" aria-hidden="true"></i>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <i id="deleteFile" class="fa fa-trash btn btn-danger btn-icon" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <button class="btn btn-success" id="btnSave">ذخیره</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/scripts/numberOnly.js"></script>
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 200,
+        }
+
+        setupUpload("companyInvoice", function (fileName) {
+            $(".imgUserImage").attr("attr", "/upload/companyInvoice/" + fileName);
+        });
+
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(document).on("click", ".btnUploadNewFile", function (event) {
+            event.preventDefault();
+            $("#hiddenId").val($(this).attr("data-id"));
+            $("#modalUploadFile").modal('show');
+        });
+
+        $(document).ready(function () {
+            getList();
+        });
+
+        $("#btnSave").click(function () {
+            save()
+        });
+
+        $(document).on("click", ".delete", function (event) {
+            event.preventDefault();
+            var id = $(this).attr("data-id");
+            confirmMessage("آیا از حذف محصول اطمینان دارید؟", function () {
+                loader(true);
+                $.post("/companyInvoice/Delete/" + id, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        callbackAlert(response.message, function () {
+                            getList();
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                })
+            });
+        });
+
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+            loader(true);
+            $.get("/companyInvoice/Search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+
+
+        function save() {
+            if (checkForm("#form")) {
+                var entity = getEntity("#form");
+                loader(true);
+                $.post("/companyInvoice/saveFile", entity, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        callbackAlert(response.message, function () {
+                            document.location = "/companyInvoice";
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            }
+        }
+
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ترتیب</th>
+                    <th class="text-center">نام مشتری </th>
+                    <th class="text-center">کد شناسایی کالا</th>
+                    <th class="text-center">کد اقتصادی</th>
+                    <th class="text-center">اجرت</th>
+                    <th class="text-center">شعبه</th>
+                    <th class="icon-col text-center">آپلود فایل</th>
+                    <th class="icon-col text-center">دانلود فایل</th>
+                    <th class="icon-col text-center">چاپ</th>
+                    <th class="icon-col text-center">ویرایش</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td>{{:#index + 1}}</td>
+                    <td class="text-center">{{:buyerName}}</td>
+                    <td class="text-center">{{:identificationCode}}</td>
+                    <td class="text-center">{{:buyerEconomicalNumber}}</td>
+                    <td class="text-center" style="font-family: 'IRANSans(FaNum)';">{{:wageSeparator}}</td>
+                    <td class="text-center">{{:branchName}}</td>
+                    <td class="btnUploadNewFile txt-al-c v-middle" data-id="{{:id}}">
+                        <i class="fa fa-upload btn btn-success btn-xs" aria-hidden="true"></i>
+                    </td>
+                    {{if attachmentFile != null}}
+                    <td class="btnDownloadFile txt-al-c v-middle" data-id="{{:id}}">
+                        <a href="/upload/companyInvoice/{{:attachmentFile}}" class="getFile fa fa-download"></a>
+                    </td>
+                    {{else}}
+                    <td class="btnDownloadFile txt-al-c v-middle" data-id="{{:id}}">
+                        <a href="#" class="fa fa-close"></a>
+                    </td>
+                    {{/if}}
+                    <td class="txt-al-c v-middle">
+                        <a href="/companyInvoice/printReport/{{:id}}" class="fa fa-sticky-note"></a>
+                    </td>
+                    <td class="txt-al-c v-middle">
+                        <a href="/companyInvoice/Edit/{{:id}}" class="btn btn-info btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c v-middle">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+}

@@ -1,0 +1,519 @@
+﻿<script src="~/Scripts/numToText.js"></script>
+<style type="text/css">
+    .btnCancel, .btnSilentCancel {
+        background-color: red;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        padding: 6px 15px;
+        margin: 0px 10px;
+    }
+
+    #frmData button {
+        margin: 10px;
+    }
+
+    #editContent {
+        background-color: ghostwhite;
+        border-radius: 5px;
+        display: inline-block;
+        padding: 15px;
+    }
+
+    input, button, textarea {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .btnSave {
+        background-color: #009688;
+    }
+
+    .headerDate {
+        display: inline-block;
+        margin: 15px 10px;
+    }
+</style>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $.get("/Data/Load/" + @ViewBag.DataId, null, function(response){
+            if (response.status == 200){
+                setDataItem(response.data);
+            }
+        });
+
+        $("#editContent input").prop("readonly", true);
+
+        $("#cmbPaymentType").val(@ViewBag.PaymentType);
+
+        $("#btnSaveMainInfo").click(function(event){
+            event.preventDefault();
+            saveMainInfo();
+        });
+
+        $("#btnSavePrePayment").click(function(event){
+            event.preventDefault();
+            savePrePayment();
+        });
+
+        $("#txtDeposit").keyup(function (e) {
+            moneySeparator(this);
+            $("#lblDepositText").html(wordifyRials(this.value.replaceAll(",","")));
+        });
+
+        $("#btnBuilt").click(function (event) {
+            event.preventDefault();
+            built();
+        });
+
+        $("#btnSend").click(function (event) {
+            event.preventDefault();
+            send();
+        });
+
+        $("#btnNoAnswer").click(function (event) {
+            event.preventDefault();
+            var data = {
+                id: @ViewBag.id,
+            };
+
+            appConfirm("Are you sure?", function () {
+                loader(true);
+                $.post("/bot/Order/NoAnswer", data, function (response) {
+                    if (response.status == 200) {
+                        location.reload()
+                    }
+                    else {
+                        alert(response.message);
+                        loader(false);
+                    }
+                });
+            });
+        });
+
+        $("#btnPendingCustomer").click(function (event) {
+            event.preventDefault();
+            var data = {
+                id: @ViewBag.id,
+            };
+
+            appConfirm("Are you sure?", function () {
+                loader(true);
+                $.post("/bot/Order/PendingCustomer", data, function (response) {
+                    if (response.status == 200) {
+                        location.reload()
+                    }
+                    else {
+                        alert(response.message);
+                        loader(false);
+                    }
+                });
+            });
+        });
+
+        $("#txtFirstName, #txtLastName, #txtDeposit, #txtCardDetails, #txtAddress").keypress(function () {
+            $(this).removeClass("textError");
+        });
+
+        $("#cmbPaymentType").change(function () {
+            $(this).removeClass("textError");
+        });
+
+        switch(@ViewBag.Status){
+            case 7:
+            case 6:
+                $("#cmbPaymentType").prop("disabled", true);
+                $("#txtAddress").prop("disabled", true);
+            case 5:
+            case 4:
+                $("#txtCardDetails").prop("disabled", true);
+                $("#txtDeposit").prop("disabled", true);
+            case 3:
+                $("#txtDescription").prop("disabled", true);
+                $("#txtLastName").prop("disabled", true);
+                $("#txtFirstName").prop("disabled", true);
+
+        }
+
+        $(".btnCancel").click(function(event){
+            cancelOrder();
+        });
+        $(".btnSilentCancel").click(function(event){
+            silentCancelOrder();
+        });
+
+    });
+
+    function moneySeparator(field) {
+        var price;
+        price = "";
+        while (field.value.indexOf(",") != -1) {
+            field.value = field.value.replace(",", "");
+        }
+        txt_field = document.getElementById("ttd");
+        txt_field = field.value.length;
+        var counter = 0;
+        for ( var i = txt_field - 1; i >= 0; i--) {
+            price = field.value.charAt(i) + price;
+            counter++;
+            if (counter % 3 == 0 && i > 0) {
+                price = "," + price;
+                counter = 0;
+            }
+        }
+        field.value = price;
+    }
+
+    function setDataItem(item) {
+        $("#id").val(item.id);
+        $("#txtCode").val(item.code);
+        $("#txtType").val(item.collectionType);
+        $("#txtCollection").val(item.collectionName);
+        $("#txtWeight").val(item.weight);
+        $("#txtLetherPrice").val(item.letherPrice);
+        $("#txtStonePrice").val(item.stonePrice);
+        $("#txtWage").val(item.wage);
+        $("#imgFile").attr("src", "/File/Download?path=Data&id=" + item.fileName);
+    }
+
+    function saveMainInfo(){
+        var data = {
+            id: @ViewBag.id,
+            firstName: $("#txtFirstName").val(),
+            lastName: $("#txtLastName").val(),
+            description: $("#txtDescription").val()
+        }
+
+        var valid = true;
+        if (!data.firstName){
+            $("#txtFirstName").addClass("textError");
+            valid = false;
+        }
+        if (!data.lastName){
+            $("#txtLastName").addClass("textError");
+            valid = false;
+        }
+
+        if (!valid) return;
+
+        appConfirm("Are you sure?", function () {
+            loader(true);
+            $.post("/bot/Order/SaveMainInfo", data, function (response) {
+                if (response.status == 200) {
+                    location.reload()
+                }
+                else {
+                    alert(response.message);
+                    loader(false);
+                }
+            });
+        });
+    }
+
+    function savePrePayment(){
+        var data = {
+            id: @ViewBag.id,
+            deposit: $("#txtDeposit").val().replaceAll(",",""),
+            cardDetails: $("#txtCardDetails").val()
+        }
+
+        var valid = true;
+        if (!data.deposit){
+            $("#txtDeposit").addClass("textError");
+            valid = false;
+        }
+        if (!data.cardDetails || isNaN(data.cardDetails) || data.cardDetails.length < 4){
+            $("#txtCardDetails").addClass("textError");
+            valid = false;
+        }
+
+        if (!valid) return;
+
+        appConfirm("Are you sure?", function () {
+            loader(true);
+            $.post("/bot/Order/SavePrePayment", data, function (response) {
+                if (response.status == 200) {
+                    location.reload()
+                }
+                else {
+                    alert(response.message);
+                    loader(false);
+                }
+            });
+        });
+    }
+
+    function built(){
+
+        var data = {
+            id: @ViewBag.id,
+        };
+
+        appConfirm("Are you sure?", function () {
+            loader(true);
+            $.post("/bot/Order/Built", data, function (response) {
+                if (response.status == 200) {
+                    location.reload()
+                }
+                else {
+                    alert(response.message);
+                    loader(false);
+                }
+            });
+        });
+    }
+
+    function send(){
+        var data = {
+            id: @ViewBag.id,
+            address: $("#txtAddress").val(),
+            paymentType: $("#cmbPaymentType").val()
+        }
+
+        var valid = true;
+        if (!data.address){
+            $("#txtAddress").addClass("textError");
+            valid = false;
+        }
+        if (isNaN(data.paymentType)){
+            $("#cmbPaymentType").addClass("textError");
+            valid = false;
+        }
+
+        if (!valid) return;
+
+        appConfirm("Are you sure?", function () {
+            loader(true);
+            $.post("/bot/Order/Send", data, function (response) {
+                if (response.status == 200) {
+                    location.reload()
+                }
+                else {
+                    alert(response.message);
+                    loader(false);
+                }
+            });
+        });
+    }
+
+    function cancelOrder(){
+
+        var data = {
+            id: @ViewBag.id
+            };
+
+        appConfirm("Are you sure?", function () {
+            loader(true);
+            $.post("/bot/Order/Cancel", data, function (response) {
+                if (response.status == 200) {
+                    location.reload()
+                }
+                else {
+                    alert(response.message);
+                    loader(false);
+                }
+            });
+        });
+    }
+
+    function silentCancelOrder(){
+
+        var data = {
+            id: @ViewBag.id
+            };
+
+        appConfirm("Are you sure?", function () {
+            loader(true);
+            $.post("/bot/Order/SilentCancel", data, function (response) {
+                if (response.status == 200) {
+                    location.reload()
+                }
+                else {
+                    alert(response.message);
+                    loader(false);
+                }
+            });
+        });
+    }
+
+</script>
+
+<h2 style="display: inline-block;">@ViewBag.StatusText  - @ViewBag.PhoneNumber - @ViewBag.FirstName @ViewBag.LastName</h2>
+@if (ViewBag.Status < 6 || ViewBag.Status == 9)
+{
+    <span class="btnCancel">
+        <i class="fa fa-remove" style="padding-right: 5px;" aria-hidden="true"></i>
+        Cancel Order
+    </span>
+
+    <span class="btnSilentCancel">
+        <i class="fa fa-remove" style="padding-right: 5px;" aria-hidden="true"></i>
+        Silent Cancel Order
+    </span>
+}
+
+<h3>@ViewBag.CreatedDate</h3>
+
+
+<div class="inline-block" style="width: 45%">
+    <div id="editContent">
+        <div class="inline-block" style="margin: 25px; vertical-align: top;">
+            <img id="imgFile" src="#" style="width: 200px" />
+        </div>
+        <div class="inline-block" style="margin: 25px 0px; vertical-align: top;">
+            <div class="bold">Code:</div>
+            <div>
+                <input type="hidden" id="id" />
+                <input type="text" id="txtCode" />
+            </div>
+            <div class="bold">Type: </div>
+            <div>
+                <input type="text" id="txtType" />
+            </div>
+            <div class="bold">Collection: </div>
+            <div>
+                <input type="text" id="txtCollection" />
+            </div>
+            <div class="bold">Weight:</div>
+            <div>
+                <input type="text" id="txtWeight" />
+            </div>
+            <div class="bold">LetherPrice:</div>
+            <div>
+                <input type="text" id="txtLetherPrice" />
+            </div>
+            <div class="bold">StonePrice:</div>
+            <div>
+                <input type="text" id="txtStonePrice" />
+            </div>
+            <div class="bold">Wage:</div>
+            <div>
+                <input type="text" id="txtWage" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="frmData" style="padding: 25px; vertical-align: top; width: 50%; float: right; background-color: ghostwhite;">
+    <span class="header">First Name:</span>
+    <input type="text" id="txtFirstName" value="@ViewBag.FirstName" />
+    <br />
+    <span class="header">Last Name:</span>
+    <input type="text" id="txtLastName" value="@ViewBag.LastName" />
+    <br />
+    <span class="header">Description:</span>
+    <textarea id="txtDescription" cols="50" rows="3" style="resize: none;">@ViewBag.Description</textarea>
+    <br />
+    @if (!string.IsNullOrEmpty(ViewBag.AnswerDate))
+    {
+        <span class="header">Submit Date: </span>
+        <span class="headerDate">@ViewBag.AnswerDate</span>
+    }
+    <br />
+    @if (ViewBag.Status == 1 || ViewBag.Status == 2 || ViewBag.Status == 9)
+    {
+        <text>
+            <span class="header"></span>
+            <button id="btnSaveMainInfo" class="btnSave">
+                <i class="fa fa-check" aria-hidden="true"></i>
+                Save
+            </button>
+
+            <button id="btnPendingCustomer" class="btnSave">
+                <i class="fa fa-check" aria-hidden="true"></i>
+                Pending Customer
+            </button>
+            <button id="btnNoAnswer" class="btnSave">
+                <i class="fa fa-remove" aria-hidden="true"></i>
+                No Answer
+            </button>
+        </text>
+    }
+
+    @if (ViewBag.Status >= 3 && ViewBag.Status != 8 && ViewBag.Status != 9)
+    {
+        <text>
+            <hr />
+            <span class="header">Deposit:</span>
+            <input type="text" id="txtDeposit" value="@ViewBag.Deposit" />
+            <span id="lblDepositText" class="inline-block" style="margin-top: 17px; font-size: 0.8em"></span>
+            <br />
+            <span class="header">Card Details:</span>
+            <input type="text" id="txtCardDetails" value="@ViewBag.CardDetails" />
+            <br />
+            <br />
+            @if (ViewBag.FirstPaymentDate != null)
+            {
+                <span class="header">Payment Date: </span>
+                <span class="headerDate">@ViewBag.FirstPaymentDate</span>
+            }
+        </text>
+    }
+    @if (ViewBag.Status == 3)
+    {
+        <text>
+            <span class="header"></span>
+            <button id="btnSavePrePayment" class="btnSave">
+                <i class="fa fa-check" aria-hidden="true"></i>
+                Save
+            </button>
+            <hr />
+        </text>
+    }
+
+    @if (ViewBag.Status == 4)
+    {
+        <text>
+            <hr />
+            <span class="header"></span>
+            <button id="btnBuilt" class="btnSave">
+                <i class="fa fa-check" aria-hidden="true"></i>
+                Built
+            </button>
+        </text>
+    }
+
+    @if (ViewBag.Status >= 5 && ViewBag.Status != 8 && ViewBag.Status != 9)
+    {
+        <text>
+            @if (ViewBag.BuildDate != null)
+            {
+                <hr />
+                <span class="header">Build Date: </span>
+                <span class="headerDate">@ViewBag.BuildDate</span>
+            }
+            <hr />
+            <span class="header">Address:</span>
+            <textarea id="txtAddress" cols="50" rows="3" style="resize: none;">@ViewBag.Address</textarea>
+            <br />
+            <span class="header">Payment Type:</span>
+            <select id="cmbPaymentType">
+                <option>...</option>
+                <option value="1">Card to Card</option>
+                <option value="2">Pose</option>
+                <option value="3">Cash</option>
+            </select>
+            <br />
+        </text>
+    }
+    @if (ViewBag.Status == 5)
+    {
+        <text>
+            <span class="header"></span>
+            <button id="btnSend" class="btnSave">
+                <i class="fa fa-check" aria-hidden="true"></i>
+                Send
+            </button>
+        </text>
+    }
+    @if (ViewBag.Status > 5 && ViewBag.Status != 8 && ViewBag.Status != 9)
+    {
+        <text>
+            <span class="header">Sent Date: </span>
+            <span class="headerDate">@ViewBag.SendDate</span>
+        </text>
+    }
+</div>

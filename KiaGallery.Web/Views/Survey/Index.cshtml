@@ -1,0 +1,157 @@
+﻿
+@{
+    ViewBag.Title = "سوالات نظرسنجی";
+}
+<style>
+    .w80px{
+        width:80px
+    }
+    .type {
+        text-align: center;
+    }
+
+    table {
+        border-left: 2px solid deepskyblue;
+        border-right: 2px solid deepskyblue;
+        border-collapse: unset
+    }
+
+    .branch-items {
+        background-color: #CFD8DC;
+        border-radius: 10px;
+        padding: 2px 8px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .branch-items .icon {
+            margin-left: 5px;
+            border-radius: 50%;
+            background: #546E7A;
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            justify-content: center;
+            font-size: 11px;
+            color: white;
+            margin-bottom: 5px;
+        }
+</style>
+
+<h4>سوالات نظرسنجی</h4>
+<br />
+<div>
+    <a href="/survey/add" class="button-new btn btn-success">
+        <span class="fa fa-plus"></span>
+        سوال جدید
+    </a>
+</div>
+<br />
+<br />
+<br />
+<div class="container">
+    <div id="content">
+
+    </div>
+</div>
+<div id="modal-changetype" class="modal" style="overflow-y: hidden;">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span class="username"></span></h4><span class="typetitle"></span>
+            </div>
+            <div class="row">
+                <div class="modal-body text-center">
+                    <div>
+                        <input type="hidden" id="hiddenId" />
+                        <button data-type="0" class="type btn btn-danger btn-md text-center" value=""><i class="fa fa-ban"></i> تعریف نشده</button>
+                        <button data-type="2" class="type btn btn-success btn-md text-center" value=""><i class="fa fa-user"></i>  ادمین</button>
+                        <button data-type="1" class="type btn btn-info btn-md text-center" value=""><i class="fa fa-home"></i>  شعبه</button>
+                    </div>
+                    <br />
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script type="text/javascript">
+        var defaultEntity = {
+            page: 0,
+            count: 50,
+        }
+
+        $(document).ready(function () {
+            getList()
+
+            $(document).on("click", ".remove", function () {
+                var id = $(this).attr("data-id");
+
+                confirmMessage("آیا از حذف سوال مورد نظر اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/survey/delete/" + id, function (response) {
+                        if (response.status == 200) {
+                            loader(false);
+                            getList()
+                        }
+                        else {
+                            alert(response.message)
+                        }
+                    });
+                });
+            });
+
+        });
+
+        function getList() {
+
+            loader(true);
+            $.get("/survey/search", function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th>عنوان</th>
+                    <th>ترتیب</th>
+                    <th class="txt-al-c w80px">ویرایش</th>
+                    <th class="txt-al-c w80px">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td>{{:title}}</td>
+                    <td>{{:order}}</td>
+                    <td class="txt-al-c w80px">
+                        <a href="/survey/edit/{{:id}}" class="btn btn-primary btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c v-middle w80px">
+                        <button class="remove btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}

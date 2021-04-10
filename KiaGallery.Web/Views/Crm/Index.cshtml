@@ -1,0 +1,408 @@
+﻿
+@{
+    /**/
+
+    ViewBag.Title = "Index";
+    var user = BaseController.GetAuthenticatedUser();
+
+}
+<style>
+    .setting-span {
+        position: relative;
+        z-index: 5;
+    }
+
+    a.animated-button:link, a.animated-button:visited {
+        position: relative;
+        display: block;
+        margin: 30px auto 0;
+        padding: 14px 15px;
+        color: #fff;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+        text-transform: uppercase;
+        overflow: hidden;
+        letter-spacing: .08em;
+        border-radius: 0;
+        text-shadow: 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 0 rgba(0, 0, 0, 0.2);
+        -webkit-transition: all 1s ease;
+        -moz-transition: all 1s ease;
+        -o-transition: all 1s ease;
+        transition: all 1s ease;
+    }
+
+        a.animated-button:link:before, a.animated-button:visited:before {
+            content: "";
+            position: absolute;
+            height: 0%;
+            left: 50%;
+            top: 50%;
+            width: 150%;
+            z-index: 1;
+            -webkit-transition: all 0.75s ease 0s;
+            -moz-transition: all 0.75s ease 0s;
+            -o-transition: all 0.75s ease 0s;
+            transition: all 0.75s ease 0s;
+        }
+
+        a.animated-button:link:hover, a.animated-button:visited:hover {
+            color: #fff;
+            text-shadow: none;
+        }
+
+            a.animated-button:link:hover:before, a.animated-button:visited:hover:before {
+                height: 450%;
+            }
+
+    a.animated-button:link, a.animated-button:visited {
+        position: relative;
+        display: block;
+        margin: 30px auto 0;
+        padding: 14px 15px;
+        color: #512727;
+        font-size: 14px;
+        border-radius: 30px;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+        text-transform: uppercase;
+        overflow: hidden;
+        letter-spacing: .08em;
+        text-shadow: 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 0 rgba(0, 0, 0, 0.2);
+        -webkit-transition: all 1s ease;
+        -moz-transition: all 1s ease;
+        -o-transition: all 1s ease;
+        transition: all 1s ease;
+    }
+
+    a.animated-button.victoria-one {
+        border: 2px solid #D24D57;
+    }
+
+        a.animated-button.victoria-one:before {
+            background: #D24D57;
+            -moz-transform: translateX(-50%) translateY(-50%) rotate(-25deg);
+            -ms-transform: translateX(-50%) translateY(-50%) rotate(-25deg);
+            -webkit-transform: translateX(-50%) translateY(-50%) rotate(-25deg);
+            transform: translateX(-50%) translateY(-50%) rotate(-25deg);
+        }
+
+    a.animated-button.victoria-two {
+        border: 2px solid #D24D57;
+    }
+
+        a.animated-button.victoria-two:before {
+            background: #D24D57;
+            -moz-transform: translateX(-50%) translateY(-50%) rotate(25deg);
+            -ms-transform: translateX(-50%) translateY(-50%) rotate(25deg);
+            -webkit-transform: translateX(-50%) translateY(-50%) rotate(25deg);
+            transform: translateX(-50%) translateY(-50%) rotate(25deg);
+        }
+
+    a.animated-button.victoria-three {
+        border: 2px solid #D24D57;
+    }
+
+        a.animated-button.victoria-three:before {
+            background: #D24D57;
+            opacity: .5;
+            -moz-transform: translateX(-50%) translateY(-50%);
+            -ms-transform: translateX(-50%) translateY(-50%);
+            -webkit-transform: translateX(-50%) translateY(-50%);
+            transform: translateX(-50%) translateY(-50%);
+        }
+
+        a.animated-button.victoria-three:hover:before {
+            height: 140%;
+            opacity: 1;
+        }
+
+    a.animated-button.victoria-four {
+        border: 2px solid #D24D57;
+    }
+
+        a.animated-button.victoria-four:before {
+            background: #D24D57;
+            opacity: .5;
+            -moz-transform: translateY(-50%) translateX(-50%) rotate(90deg);
+            -ms-transform: translateY(-50%) translateX(-50%) rotate(90deg);
+            -webkit-transform: translateY(-50%) translateX(-50%) rotate(90deg);
+            transform: translateY(-50%) translateX(-50%) rotate(90deg);
+        }
+
+        a.animated-button.victoria-four:hover:before {
+            opacity: 1;
+            height: 600% !important;
+        }
+
+    #presence {
+        border-radius: 31px 31px 31px 31px;
+        -moz-border-radius: 31px 31px 31px 31px;
+        -webkit-border-radius: 31px 31px 31px 31px;
+        border: 0px solid #000000;
+        padding: 5px 5px;
+        display: block;
+        text-align: center;
+        background-color: silver;
+        color: black;
+        margin-top: 25px;
+    }
+
+    #buyOnline {
+        border-radius: 31px 31px 31px 31px;
+        -moz-border-radius: 31px 31px 31px 31px;
+        -webkit-border-radius: 31px 31px 31px 31px;
+        border: 0px solid #000000;
+        padding: 5px 5px;
+        display: block;
+        text-align: center;
+        background-color: silver;
+        color: black;
+        margin-top: 25px;
+    }
+
+    .active {
+        background-color: #D24D57 !important;
+    }
+
+    @@media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+        .container {
+            padding: 0;
+            margin: 0;
+            width: 100%;
+        }
+
+        .animated-button {
+            display: inline-block;
+        }
+    }
+</style>
+@*<div class="container">
+        <ul>
+            <li>
+                <input type="radio" id="f-option" name="selector">
+                <label for="f-option">Pizza</label>
+
+                <div class="check"></div>
+
+            </li>
+            <li>
+                <input type="radio" id="s-option" name="selector">
+                <label for="s-option">Pizza</label>
+
+                <div class="check"></div>
+
+            </li>
+        </ul>
+    </div>*@
+<div class="container-fluid">
+    @if (User.IsInRole("admin"))
+    {
+        <div class="row">
+            <div class="col-md-3 form-inline">
+                <label> شعب:</label>
+                <select id="cmbBranch" class="form-control">
+                    <option>...</option>
+                </select>
+
+            </div>
+        </div>
+    }
+</div>
+<div class="container">
+
+
+
+    @*<a id="btnExport" href="#" class="btn btn-success">
+            <span class="mdi-set mdi-file-excel"></span>
+            خروجی فایل اکسل جزئی
+        </a>
+        <input id="txtFromDateToAc" type="text" name="fromDate" class="form-control date deleteVal" maxlength="10" required placeholder="از تاریخ" />
+        <input id="txtToDateAc" type="text" name="toDate" class="form-control date deleteVal" maxlength="10" required placeholder="تا تاریخ" />*@
+
+
+
+
+    @if (User.IsInRole("branchCrm") || User.IsInRole("admin"))
+    {
+        <h3 class="text-center">شعب</h3>
+        <div class="row">
+
+            <div class="col-md-3 col-sm-3 col-xs-6"> <a href="#" class="btn btn-sm animated-button primaryButton victoria-one btnBuyTypeSubset" data-subset-id="0"><span class="setting-span">سفارشی</span></a></div>
+            <div class="col-md-3 col-sm-3 col-xs-6"> <a href="#" class="btn btn-sm animated-button primaryButton victoria-two btnBuyTypeSubset" data-subset-id="1"><span class="setting-span">تعمیری</span></a> </div>
+            <div class="col-md-3 col-sm-3 col-xs-6"> <a href="#" class="btn btn-sm animated-button secondaryButton victoria-three btnBuyTypeOnline disabled" data-online-id="0"><span class="setting-span">تلفنی</span></a> </div>
+            <div class="col-md-3 col-sm-3 col-xs-6"> <a href="#" class="btn btn-sm animated-button secondaryButton victoria-four btnBuyTypeOnline disabled" data-online-id="2"><span class="setting-span" style="display:block">خرید<span></span> حضوری</span></a> </div>
+        </div>
+    }
+
+
+    @if (User.IsInRole("officeCrm") || User.IsInRole("admin"))
+    {
+        <h3 class="text-center">آنلاین</h3>
+        <div class="row">
+            <div class="col-md-3 col-sm-3 col-xs-6"> <a href="#" class="btn btn-sm animated-button primaryButton victoria-one btnBuyTypeSubset" data-subset-id="0"><span class="setting-span">سفارشی</span></a> </div>
+            <div class="col-md-3 col-sm-3 col-xs-6"> <a href="#" class="btn btn-sm animated-button primaryButton victoria-two btnBuyTypeSubset" data-subset-id="1"><span class="setting-span">تعمیری</span></a> </div>
+            <div class="col-md-3 col-sm-3 col-xs-6"> <a href="#" class="btn btn-sm animated-button secondaryButton victoria-three btnBuyTypeOnline disabled" data-online-id="0"><span class="setting-span">تلفنی</span></a> </div>
+            <div class="col-md-3 col-sm-3 col-xs-6"> <a href="#" class="btn btn-sm animated-button secondaryButton victoria-four btnBuyTypeOnline disabled" data-online-id="1"><span class="setting-span">سایت</span></a> </div>
+        </div>
+        <br />
+    }
+
+
+</div>
+@if (User.IsInRole("branchCrm"))
+{
+    <label id="presence">حضوری</label>
+
+}
+@if (User.IsInRole("officeCrm"))
+{
+    <label id="buyOnline">غیرحضوری</label>
+
+}
+<div id="content">
+
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        @if (User.IsInRole("admin"))
+        {
+           <text> $("#cmbBranch").val(123)</text>
+        }
+    var defaultEntity = {
+            page: 0,
+            count: 200,
+            term: null,
+            branchId: null,
+            buyType: null,
+        }
+        $(document).ready(function () {
+                        getList();
+                        loadRemoteSelect("#cmbBranch", "/crm/GetBranchList", null, "id", "name", "همه", function () {
+                            getList();
+                        });
+            $(document).on("change", "#cmbBranch", function () {
+                            getList();
+                        });
+            $(".date").pDatepicker({
+                            format: 'YYYY/MM/DD',
+                autoClose: true
+            });
+
+            $(".date").val("");
+            var date = new persianDate();
+            date.formatPersian = false;
+
+            $("#btnExport").on("click", function (event) {
+                event.preventDefault();
+                document.location.href = "/crm/export?fromDate=" + $("#txtFromDateToAc").val() + "&toDate=" + $("#txtToDateAc").val()
+            });
+
+            $("#cmbBranch").on("change", function (e) {
+                e.preventDefault();
+                var param = { branchId: $("#cmbBranch").val() }
+            manipulateParam(param, "page")
+            })
+
+            $('.primaryButton').click(function () {
+                $('.primaryButton').removeClass("active");
+                $(this).addClass("active");
+                $(".secondaryButton").removeClass("disabled");
+                $(".secondaryButton").prop("disabled", false);
+        });
+
+            $(".secondaryButton").click(function () {
+                $('.secondaryButton').removeClass("active");
+                $(this).addClass("active");
+        });
+
+            $(".btnBuyTypeSubset").click(function () {
+            var buyTypeSubset = $(this).attr("data-subset-id");
+            setParam("buyTypeSubset", buyTypeSubset);
+            getList();
+        });
+
+            $(".btnBuyTypeOnline").click(function () {
+            var buyTypeOnline = $(this).attr("data-online-id");
+            setParam("buyTypeOnline", buyTypeOnline);
+            getList();
+        });
+        });
+        function getList() {
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+            loader(true);
+            $.get("/crm/searchcustomer", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف مشتری اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/crm/DeleteCustomer/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>نام مشتری</th>
+                    <th>شماره فاکتور</th>
+                    <th>تاریخ خرید</th>
+                    <th>شماره همراه</th>
+                    <th>امتیاز</th>
+                    <th>شعبه</th>
+                    <th class="txt-al-l">ویرایش</th>
+                    <th class="txt-al-l">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td>{{:fullName}}</td>
+                    <td>{{:factorNumber}}</td>
+                    <td>{{:date}}</td>
+                    <td>{{:phoneNumber}}</td>
+                    <td>{{:score}}</td>
+                    <td>
+                        {{:branchName}}
+                    </td>
+                    <td class="txt-al-l">
+                        <a href="/crm/edit/{{:id}}" class="btn btn-info btn-xs " data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-l">
+                        <button class="delete btn btn-danger btn-xs " data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}
+
+

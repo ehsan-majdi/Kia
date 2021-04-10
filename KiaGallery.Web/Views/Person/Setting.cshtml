@@ -1,0 +1,73 @@
+﻿
+@{
+    List<Settings> settingsList = ViewBag.SettingsList;
+
+}
+<div id="form" class="container">
+    <div class="row form-group">
+        
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4 col-md-offset-4 ">
+
+                <div class="form-group">
+                    <label for="txtKeyContractYear">سال جاری</label>
+                    <input id="txtKeyContractYear" class="form-control" name="@KiaGallery.Model.Context.Settings.KeyContractYear" data-validate="required,maxLength(4),number" value="@settingsList.Single(x=> x.Key == KiaGallery.Model.Context.Settings.KeyContractYear).Value"/>
+                </div>
+                <div class="form-group">
+                    <button id="btnSave" type="submit" class="btn btn-success">
+                        <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                        ذخیره
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+    var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+
+    $(document).ready(function () {      
+        $("#btnSave").on("click", function (event) {
+            event.preventDefault();
+            if (checkForm("#form")) {
+                var entity = getEntity("#form");
+                loader(true);
+                $.ajax({
+                    method: "POST",
+                    url: "/person/savesettings",
+                    data: entity,
+                    success: function (response) {
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                document.location = "/person";
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                        loader(false);
+                    }
+                });
+            }
+        });
+    });
+    function load() {
+        if (id > 0) {
+            loader(true);
+            $.get("/person/load/" + id, function (response) {
+                if (response.status == 200) {
+                    setEntity(response.data, "#form");
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    }
+
+    </script>
+}
+

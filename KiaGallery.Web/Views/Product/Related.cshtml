@@ -1,0 +1,181 @@
+﻿@{
+    ViewBag.Title = "محصولات مرتبط";
+}
+<link href="~/Content/jqueryui/jquery-ui.min.css" rel="stylesheet" />
+
+<style type="text/css">
+    .auto-complete-item {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 25px;
+        margin-right: 10px;
+    }
+</style>
+
+<div class="row container" style="margin: auto;">
+    <div class="col-sm-6 col-md-3">
+        @if (!string.IsNullOrEmpty(ViewBag.ProductFileName))
+        {
+            <img style="width: 100%;" src="/image/product/500x500/@ViewBag.ProductFileName" />
+        }
+        else
+        {
+            <img style="width: 100%;" src="/content/image/kia-gallery-logo-square.png" />
+        }
+    </div>
+    <div class="col-sm-6 col-md-9">
+        <h4>عنوان: @ViewBag.ProductTitle</h4>
+        <br />
+        <h5>کد کتاب کد: @ViewBag.ProductBookCode</h5>
+        <br />
+        <h5>کد سایت: @(string.IsNullOrEmpty(ViewBag.ProductCode) ? "-" : ViewBag.ProductCode)</h5>
+        <br />
+        <label for="txtAddText">عنوان / کد کتاب کد / کد سایت: </label>
+        <input id="hiddenId" type="hidden" value="" />
+        <input id="txtAddText" type="text" class="form-control" />
+        <br />
+        <input type="button" id="btnAdd" class="btn btn-success" value="اضافه کردن" />
+    </div>
+</div>
+
+<div class="">
+    <div class="table-data table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="hidden-xs">کد</th>
+                    <th class="hidden-xs">کد کتاب کد</th>
+                    <th>عنوان</th>
+                    <th class="hidden-xs hidden-sm">تصویر</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (KiaGallery.Web.Models.RelatedProductViewModel item in ViewBag.RelatedProduct)
+                    {
+                    <tr>
+                        <td class="hidden-xs v-middle">@item.ProductCode</td>
+                        <td class="hidden-xs v-middle">@item.ProductBookCode</td>
+                        <td class="v-middle">@item.ProductTitle</td>
+                        <td class="hidden-xs hidden-sm v-middle">
+                            @if (!string.IsNullOrEmpty(item.ProductFileName))
+                            {
+                                <img style="width: 55px;" src="/image/product/500x500/@item.ProductFileName" />
+                            }
+                            else
+                            {
+                                <img style="width: 55px;" src="/content/image/kia-gallery-logo-square.png" />
+                            }
+                        </td>
+                        <td class="txt-al-c v-middle">
+                            <button class="remove btn btn-danger btn-xs" data-title="حذف" data-id="@item.Id"><i class="fa fa-times" aria-hidden="true"></i></button>
+                        </td>
+                    </tr>
+                    }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section scripts {
+    <script src="~/Scripts/jqueryui/jquery-ui.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#btnAdd").on("click", function (event) {
+                event.preventDefault();
+
+                if (!$("hiddenId").val()) {
+                    var params = {
+                        id: '@ViewBag.Id',
+                        relatedId: $("#hiddenId").val()
+                    };
+                    console.log(params)
+                    loader(true);
+                    $.post("/product/addRelated", params, function (response) {
+                        loader(false);
+                        $("#hiddenId").val("")
+                        $("#txtAddText").val("")
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                location.reload();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+
+                }
+                else {
+                    alert("محصول مورد نظر به درستی انتخاب نشده است.");
+                }
+            });
+
+
+            $(".remove").on("click", function (event) {
+                event.preventDefault();
+
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف محصول اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/product/removeRelated/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                location.reload();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    });
+                });
+            });
+
+        });
+
+        $("#txtAddText").autocomplete({
+            minLength: 0,
+            focus: function (event, ui) {
+                $("#project").val(ui.item.label);
+                return false;
+            },
+            select: function (event, ui) {
+                $("#txtAddText").val(ui.item.title);
+                $("#hiddenId").val(ui.item.id);
+                return false;
+            },
+            source: function (request, response) {
+                $.ajax({
+                    url: "/product/getProductAutoComplete",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 3,
+            open: function () {
+                $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+            },
+            close: function () {
+                $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+            }
+        })
+        .autocomplete("instance")._renderItem = function (ul, item) {
+            if (item.fileName) {
+                return $("<li>")
+                    .append("<div><img style=\"width: 50px;\" src=\"/image/product/500x500/" + item.fileName + "\" /><span class=\"auto-complete-item\"> " + item.title + " < br > " + item.bookCode + "</span ></div > ")
+                    .appendTo(ul);
+            }
+            else {
+                return $("<li>")
+                    .append("<div><img style=\"width: 60px;\" src=\"/content/image/kia-gallery-logo-square.png\" /><span class=\"auto-complete-item\">" + item.title + "<br>" + item.bookCode + "</span></div>")
+                    .appendTo(ul);
+            }
+        };
+
+    </script>
+}

@@ -1,0 +1,703 @@
+﻿
+@{
+    ViewBag.Title = "معامله طلا";
+}
+<style>
+
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+    }
+
+
+    .text-green {
+        color: green
+    }
+
+    .text-red {
+        color: red
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #f6f6f6
+    }
+
+    .table-style {
+        box-shadow: 4px 11px 35px -3px rgba(120,116,116,0.66);
+        height: 550px;
+        border-radius: 10px;
+        background-color: white
+
+    }
+    .fa-plus{
+        cursor:pointer
+    }
+
+    .title-style {
+        border-radius: 5px;
+        max-width: 100%;
+        height: 40px;
+        vertical-align: middle !important;
+        box-shadow: 6px 3px 9px -3px rgba(120,116,116,0.66);
+        border-radius: 12px;
+    }
+
+    .yellowcircle {
+        background-color: #c5f9ec;
+        width: 230px;
+        height: 110px;
+        margin: 0 auto 8px;
+        border-radius: 0px 0px 200px 200px;
+        -moz-border-radius: 0px 0px 200px 200px;
+        -webkit-border-radius: 0px 0px 200px 200px;
+        border: 0px solid #000000;
+        text-align: center;
+    }
+
+    .bluecircle {
+        background-color: #fef6b5;
+        width: 230px;
+        height: 110px;
+        margin: 0 auto 8px;
+        border-radius: 0px 0px 200px 200px;
+        -moz-border-radius: 0px 0px 200px 200px;
+        -webkit-border-radius: 0px 0px 200px 200px;
+        border: 0px solid #000000;
+        text-align: center;
+    }
+
+    .pinkcircle {
+        background-color: #f9c5d2;
+        width: 230px;
+        height: 110px;
+        margin: 0 auto 8px;
+        border-radius: 0px 0px 200px 200px;
+        -moz-border-radius: 0px 0px 200px 200px;
+        -webkit-border-radius: 0px 0px 200px 200px;
+        border: 0px solid #000000;
+        text-align: center;
+    }
+
+    .abc {
+        border-top: 2px solid black;
+        width: 100px;
+        text-align: center;
+        margin: 0 auto;
+    }
+</style>
+
+<br />
+<div class="col-lg-12 text-center">
+    <h2><b> مدیریت خرید و فروش طلا</b></h2>
+</div>
+
+<div style="margin-top:10px;margin-bottom:20px" class="col-lg-12 text-center">
+    <h4><b><span class="fa fa-balance-scale"></span>&nbsp; تراز :&nbsp;<span id="tare"></span>&nbsp; گرم</b> </h4>
+</div>
+
+<input type="hidden" id="hiddenDate" name="date" />
+<!-- لیست طلای فروخته شده شعب -->
+<div class="col-lg-4 border-table">
+    <br />
+    <label style="margin-top:9px" class="pull-right">&nbsp;<i class="fa fa-arrow-up">&nbsp;</i></label>
+    <div class="table-style">
+        <div class="bluecircle">
+            <p><b>جمع:&nbsp;</b><label class="" id="branchGoldSum">0</label><b> گرم</b></p>
+            <p class="abc"></p>
+            <p>فروش شعب</p>
+        </div>
+        <div id="branchGold-modal"></div>
+    </div>
+    <br />
+    <input type="hidden" id="hiddenBranchGoldSum" />
+</div>
+<!-- لیست طلای خریداری شده و فروخته شده -->
+<div class="col-lg-4">
+    <br />
+
+    <div style="overflow:auto" class="table-style">
+        <label style="margin-top:9px" class="pull-right">&nbsp;<i class="fa fa-arrow-up">&nbsp;</i><i class="fa fa-arrow-down">&nbsp;</i></label>
+        <i style="padding:8px" id="btnAddBoughGold" class="fa fa-plus fa-22px pull-left"></i>
+        <div class="yellowcircle">
+            <p><b>جمع:&nbsp;</b><label class="" id="boughtGoldSum"></label><b> گرم</b></p>
+            <p class="abc"></p>
+            <p>خرید و فروش</p>
+        </div>
+        <div id="boughtGold-modal"></div>
+    </div>
+    <br />
+    <input type="hidden" id="hiddenBoughtGoldSum" />
+</div>
+
+
+<!-- لیست کارگاه ها -->
+<div class="col-lg-4">
+    <br />
+
+    <div class="table-style">
+        <label style="margin-top:9px" class="pull-right">&nbsp<i class="fa fa-exchange">&nbsp;</i></label>
+        <i style="padding:8px" id="btnAddWorkShopGold" class="fa fa-plus fa-22px pull-left"></i>
+        <div class="pinkcircle">
+            <p><b>جمع:&nbsp;</b><label class="" id="workShopgold-sum"></label><b> گرم</b></p>
+            <p class="abc"></p>
+            <p>حواله کارگاه</p>
+        </div>
+        <div id="workShop-content">
+
+        </div>
+    </div>
+    <br />
+</div>
+
+
+<div id="modal-addboughtGold" class="modal fade in" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4> گرم طلا</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group" id="staticParent">
+
+                        <h5>ساعت</h5>
+                        <input class="form-control" type="text" id="tradeTime" />
+
+                        <h5>نوع معامله</h5>
+                        <select class="form-control" id="tradeType">
+                            <option value="0">خرید</option>
+                            <option value="1">فروش</option>
+                        </select>
+                        <div>
+                            <h5>فروشنده/خریدار</h5>
+                            <input class="form-control" type="text" id="dealerName" />
+                            <h5>قیمت طلای خریداری شده</h5>
+                            <input class="form-control deleteVal" type="text" id="boughtGoldPrice" name="" placeholder="0">
+                            <h5>مظنه</h5>
+                            <input class="form-control deleteVal" type="text" id="goldRate" name="" placeholder="0">
+                            <h5>گرم</h5>
+                            <input class="form-control deleteVal" type="text" id="weight" name="" placeholder="0" readonly>
+                            <h5>توضیحات</h5>
+                            <input class="form-control deleteVal" type="text" id="description" name="" placeholder="...">
+                            <br />
+                            <button class="btn btn-info btn-block" id="btnCalculate" type="button">محاسبه&nbsp;<i class="fa fa-check"></i></button>
+                            <button class="btnDeleteVal btn btn-danger btn-block" type="button">پاک کردن&nbsp;<i class="fa fa-trash"></i></button>
+                            <button id="btnSave" class="btn btn-success btn-block" data-dismiss="modal">ذخیره&nbsp;<i class="fa fa-save"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="workShopGold-modal" class="modal fade in" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4>حواله طلا به کارگاه</h4>
+            </div>
+            <div class="modal-body">
+                <label>نوع</label>
+                <select id="cmbRemittanceType" class="form-control" name="remittanceType">
+                    <option value="">...</option>
+                    <option value="0">گرمی</option>
+                    <option value="1">پولی</option>
+                </select>
+                <div id="workShop-select">
+                    <h5>انتخاب کارگاه</h5>
+                    <select id="hiddenWorkShopId" class="form-control">
+                        <option value="">...</option>
+                        @foreach (var item in ViewBag.BranchList)
+                        {
+                            <option value="@item.id">@item.name</option>
+                        }
+                    </select>
+                </div>
+
+
+                <div id="remittanceMoney" style="display:none">
+                    <form>
+                        <div class="form-group" id="staticParent">
+                            <div>
+                                <h5>قیمت طلای خریداری شده</h5>
+                                <input class="form-control deleteVal" type="text" id="workShopBoughtGoldPrice" name="" placeholder="0">
+                                <h5>مظنه</h5>
+                                <input class="form-control deleteVal" type="text" id="workShopGoldRate" name="" placeholder="0">
+
+                                <h5>توضیحات</h5>
+                                <input class="form-control deleteVal" type="text" id="workShopDescription" name="" placeholder="...">
+                                <br />
+                                <button class="btn btn-info btn-block" id="btnCalculateWorkShop" type="button">محاسبه&nbsp;<i class="fa fa-check"></i></button>
+                                <button class="btnDeleteVal btn btn-danger btn-block" type="button">پاک کردن&nbsp;<i class="fa fa-trash"></i></button>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <h5>گرم</h5>
+                <input class="form-control deleteVal goldWeight" type="text" id="" name="" placeholder="0" readonly>
+
+                <br />
+                <input type="hidden" />
+                <button id="btnSaveWorkShopGold" class="btn btn-success btn-block" data-dismiss="modal">ذخیره&nbsp;<i class="fa fa-save"></i></button>
+                <button id="btnEditWorkshopGold" class="btn btn-success btn-block" data-dismiss="modal">ویرایش&nbsp;<i class="fa fa-save"></i></button>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="logDetailModal" class="modal fade in" role="dialog" style="overflow-y: auto;  padding-right: 17px;">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title">سوابق حواله</h4>
+            </div>
+            <div id="log-content" class="modal-body">
+                <div id="workShop-detail"></div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+
+    <script type="text/javascript">
+        var date = "@(ViewBag.Date != null ? ViewBag.Date : 0)";
+        $(document).ready(function () {
+            $("#cmbRemittanceType").on("change", function () {
+                if ($(this).val() == 0) {
+                    $("#remittanceMoney").hide();
+                    $("#workShopBoughtGoldPrice").val("");
+                    $("#workShopGoldRate").val("");
+                    $(".goldWeight").val("");
+
+
+                    $("#remittanceWeight").show();
+                    $(".goldWeight").attr("readonly",false)
+                }
+                if ($(this).val() == 1) {
+                    $("#remittanceWeight").hide();
+
+                    $(".goldWeight").val("");
+
+                    $("#remittanceMoney").show();
+                    $(".goldWeight").attr("readonly", true)
+
+                }
+            });
+            branchGold()
+            search()
+            getWorkShop()
+            $("#btnAddBoughGold").on("click", function () {
+                $("#modal-addboughtGold").modal("show")
+            })
+            $("#btnAddWorkShopGold").on("click", function () {
+                $("#workShopGold-modal").modal("show");
+                $("#btnSaveWorkShopGold").show();
+                $("#hiddenWorkShopId").val("");
+
+                $("#workShop-select").show();
+                $("#btnEditWorkshopGold").hide();
+
+            })
+            $("#btnCalculate").on("click", function () {
+                calculateGoldWeight()
+            });
+            $("#btnCalculateWorkShop").on("click", function () {
+                calculateWorkShopGoldWeight()
+            });
+
+            $("#btnSaveWorkShopGold").on("click", function () {
+                saveWorkShopGold()
+            });
+
+            $("#btnSave").on("click", function () {
+                save();
+
+            });
+
+            $("#btnEditWorkshopGold").on("click", function () {
+                editWorkShopGold()
+            });
+
+        });
+
+
+
+        function save() {
+            var time = new Date();
+            var entity =
+            {
+                date: date,
+                hour: time.getHours(),
+                minute: time.getMinutes(),
+                second: time.getSeconds(),
+                tradeType: $("#tradeType").val(),
+                weight: $("#weight").val(),
+                description: $("#description").val(),
+                tradeTime: $("#tradeTime").val(),
+                dealerName: $("#dealerName").val(),
+            }
+            loader(true);
+            $.post('/goldBalance/save', entity, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    $("#modal-branch").modal("hide");
+                    callbackAlert(response.message, function () {
+                        search();
+                    });
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        }
+        function editWorkShopGold() {
+            var entity = {
+                workShopId: $("#hiddenWorkShopId").val(),
+                weight: $(".goldWeight").val(),
+                tradeType: 1
+            }
+            $.post('/workShopGold/edit', entity, function (response) {
+                loader(false);
+                if (response.status == 200) {
+
+                    $("#workShopGold-modal").modal("hide");
+                    getWorkShop()
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        }
+        function tare() {
+            var branchGoldSum = parseFloat($("#hiddenBranchGoldSum").val())
+            var boughtGoldSum = parseFloat($("#hiddenBoughtGoldSum").val())
+            var tare = boughtGoldSum - branchGoldSum;
+            $("#tare").html(tare)
+            if (tare < 0) {
+                $("#tare").css("color", "red");
+            }
+            else {
+                $("#tare").css("color", "green");
+            }
+        }
+
+        function branchGold() {
+            $.get('/goldBalance/getBranchGold', {date:date}, function (response) {
+                loader(false);
+                if (response.status == 200) {
+
+                    var data = response.data;
+                    var template = $.templates("#template-branchGold");
+                    var htmlOutput = template.render(data);
+                    $("#branchGold-modal").html(htmlOutput);
+                    $("#modal-office").modal("show")
+                    $('[data-toggle="tooltip"]').tooltip();
+                    $("#branchGoldSum").html(data.weightSum)
+                    $("#hiddenBranchGoldSum").val(data.weightSum)
+                    console.log(data.weightSum)
+                    tare()
+                }
+                else
+                {
+                    alert(response.message);
+                }
+            });
+        }
+
+        function search() {
+            $.get('/goldbalance/search', {date:date}, function (response) {
+                loader(false);
+                if (response.status == 200) {
+
+                    var data = response.data;
+                    var template = $.templates("#template-boughtGold");
+                    var htmlOutput = template.render(data);
+                    $("#boughtGold-modal").html(htmlOutput);
+                    $("#modal-office").modal("show")
+                    $("#boughtGoldSum").html(data.weightSum)
+                    console.log(data.weightSum)
+                    $("#hiddenBoughtGoldSum").val(data.weightSum)
+                    tare()
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        }
+
+        function calculateGoldWeight()
+        {
+            var goldPrice = $("#boughtGoldPrice").val();
+            var goldRate = $("#goldRate").val();
+
+            var calculatedWeight = goldPrice / goldRate * 4.3318;
+            calculatedWeight = Math.round(calculatedWeight)
+            $("#weight").val(calculatedWeight)
+        }
+        function calculateWorkShopGoldWeight()
+        {
+            var goldPrice = $("#workShopBoughtGoldPrice").val();
+            var goldRate = $("#workShopGoldRate").val();
+
+            var calculatedWeight = goldPrice / goldRate * 4.3318;
+            calculatedWeight = Math.round(calculatedWeight)
+            $(".goldWeight").val(calculatedWeight)
+        }
+
+        function getWorkShop() {
+            $.get('/workShopGold/getWorkShop', { date: date }, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    $("#workShopgold-sum").html(response.data.goldSum)
+                    var data = response.data;
+                    var template = $.templates("#template-workShop");
+                    var htmlOutput = template.render(data);
+                    $("#workShop-content").html(htmlOutput);
+
+                    $(".sendGold").on("click", function () {
+                        $("#workShopGold-modal").modal("show");
+                        $("#btnEditWorkshopGold").hide();
+                        $("#btnSaveWorkShopGold").show();
+                        $(".goldWeight").val("");
+                        var workShopId = $(this).attr("data-id");
+                        console.log(workShopId)
+                        $("#hiddenWorkShopId").val(workShopId);
+                        $("#workShop-select").hide();
+
+                    });
+
+
+                    $(".edit").on("click", function ()
+                    {
+                        $("#workShopGold-modal").modal("show");
+                        var id = $(this).attr("data-id");
+                        loadWorkShopGold(id)
+                        $("#hiddenWorkShopId").val(id);
+                        $("#btnSaveWorkShopGold").hide();
+                        $("#workShop-select").hide();
+                        $("#btnEditWorkshopGold").show();
+
+                    });
+
+
+
+                    $(".information").on("click", function () {
+                       var id =  $(this).attr("data-id");
+
+
+                        $.get('/workShopGold/getDetail/'+id, function (response) {
+                            loader(false);
+                            if (response.status == 200) {
+
+                                var data = response.data;
+                                var template = $.templates("#template-workShopDetail");
+                                var htmlOutput = template.render(data);
+                                $("#workShop-detail").html(htmlOutput);
+
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                        });
+                        $("#logDetailModal").modal("show");
+
+                    });
+
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        }
+
+        function saveWorkShopGold() {
+            var date = "@(ViewBag.Date != null ? ViewBag.Date : 0)";
+            var entity = {
+                workShopId: $("#hiddenWorkShopId").val(),
+                weight: $(".goldWeight").val(),
+                tradeType: 1,
+                date: date,
+                workShopGoldRate: $("#workShopGoldRate").val(),
+                workShopBoughtGoldPrice: $("#workShopBoughtGoldPrice").val()
+            }
+            $.post('/workShopGold/save', entity, function (response) {
+                loader(false);
+                if (response.status == 200) {
+                    $("#workShopGold-modal").modal("hide");
+                    callbackAlert(response.message, function () {
+                        search();
+                        getWorkShop()
+                    });
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        }
+
+
+        function loadWorkShopGold(id)
+        {
+
+            $.get('/workShopGold/load/'+id , function (response) {
+                loader(false);
+                if (response.status == 200) {
+
+                    $(".goldWeight").val(response.data.weight);
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        }
+
+
+    </script>
+
+    <script id="template-branchGold" type="text/x-jsrender">
+        {{if list != null && list.length > 0}}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="txt-al-r">شعبه</th>
+                    <th>گرم</th>
+                    <th class="txt-al-c">ساعت</th>
+                    <th></th>
+                </tr>
+
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td class="txt-al-r">{{:branchName}}</td>
+                    <td>{{:weight}}</td>
+                    <td class="txt-al-c">{{:stringDate}}</td>
+                    <td data-placement="bottom" data-toggle="tooltip" title="
+                         {{for detail}}
+                        {{:stringDate}}
+                        {{:weight}} گرم
+                         {{/for}}">
+                        <i class="fa fa-info"></i>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        {{else}}
+        @*<h5 class="text-center" style="padding:10px">سوابقی برای این روز یافت نشد</h5>*@
+        {{/if}}
+
+
+    </script>
+    <script id="template-boughtGold" type="text/x-jsrender">
+        {{if list != null && list.length > 0}}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="txt-al-c">ساعت</th>
+                    <th>گرم</th>
+                    <th>نوع</th>
+                    <th>خریدار/فروشنده</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td class="txt-al-c">{{:stringDate}}</td>
+                    <td>{{:weight}}</td>
+                    <td>{{:tradeTypeTitle}}</td>
+                    <td class="txt-al-c">{{:dealerName}}</td>
+                </tr>
+                {{if description}}
+                <tr>
+                    <td class="description pull-right" style="color: green;">
+                        <b>توضیحات:</b> {{:description}}
+                    </td>
+                </tr>
+                {{/if}}
+                {{/for}}
+            </tbody>
+        </table>
+        {{else}}
+        @*<h5 class="text-center" style="padding:10px">سوابقی برای این روز یافت نشد</h5>*@
+        {{/if}}
+    </script>
+    <script id="template-workShop" type="text/x-jsrender">
+        {{if list != null && list.length > 0}}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="txt-al-c">نام</th>
+                    <th>گرم</th>
+                    <th class="txt-al-l"></th>
+                    <th class="txt-al-l"></th>
+                    <th class="txt-al-l"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td class="txt-al-c">{{:name}}</td>
+                    <td>{{:sum}}</td>
+                    <td class="txt-al-l"><span class=" sendGold btn-xs" data-id="{{:id}}"><i style="color:green;cursor:pointer" class="fa fa-plus"></i></span></td>
+                    <td class="txt-al-l"><span class=" edit btn-xs" data-id="{{:id}}"><i style="color:red;cursor:pointer" class="fa fa-pencil"></i></span></td>
+                    <td class="txt-al-l information" data-id="{{:id}}"><i style="color:deepskyblue;cursor:pointer" class="fa fa-info"></i></td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        {{else}}
+        <h5 class="text-center" style="padding:10px">سوابقی برای این روز یافت نشد</h5>
+        {{/if}}
+    </script>
+    <script id="template-workShopDetail" type="text/x-jsrender">
+        {{if list != null && list.length > 0}}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>کارگاه</th>
+                    <th>وزن</th>
+                    <th class="txt-al-c">قیمت طلای خریداری شده</th>
+                    <th class="txt-al-c">مظنه</th>
+                    <th class="txt-al-c">تاریخ</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr style="border-top: solid 1px silver">
+                    <td>{{:name}}</td>
+                    <td>{{:weight}}</td>
+                    <td class="txt-al-c">{{:goldRate}}</td>
+                    <td class="txt-al-c">{{:boughtGoldPrice}}</td>
+                    <td class="txt-al-c">{{:stringDate}}</td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        {{else}}
+        <h5 class="text-center" style="padding:10px">سوابقی برای این کارگاه یافت نشد</h5>
+        {{/if}}
+    </script>
+
+}

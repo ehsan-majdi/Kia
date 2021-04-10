@@ -1,0 +1,74 @@
+﻿
+@{
+    ViewBag.Title = "OrderDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+</style>
+<input id="hiddenOrderUsableProductId" type="hidden" value="@ViewBag.OrderUsableProductId" />
+<div id="content"></div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            getList();
+        });
+        function getList() {
+            var entity = {
+                orderUsableProductId: $("#hiddenOrderUsableProductId").val()
+            }
+            var params = entity;
+            loader(true);
+            $.post("/fax/GetOrderDetail", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                    $('[data-toggle="tooltip"]').tooltip();
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="text-center borderClass">تصویر</th>
+                    <th class="">کدمحصول </th>
+                    <th class="">نام محصول </th>
+                    <th class="">دسته بندی </th>
+                    <th class="">تاریخ </th>
+                    <th class="text-center borderClass">تعداد </th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    {{if image != null}}
+                    <td class="w15 text-center borderClass">
+                        <img style="width: 140px;" src="/image/usableProduct/500x500/{{:image}}" />
+                    </td>
+                    {{else}}
+                    <td class="w15 text-center borderClass">
+                        <img style="width:140px;" src="/content/image/kia-gallery-logo-square.png" />
+                    </td>
+                    {{/if}}
+                    <td>{{:code}}</td>
+                    <td>{{:name}}<span data-toggle="tooltip" title="واحد">({{:unit}})</span></td>
+                    <td>{{:category}}</td>
+                    <td>{{:persianDate}}</td>
+                    <td class="text-center">{{:productCount}}</td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}
+
+

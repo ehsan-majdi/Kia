@@ -1,0 +1,90 @@
+﻿
+@{
+    ViewBag.Title = "ویرایش";
+}
+<style>
+    #notification {
+        background-color: rgba(31, 181, 0, 0.5);
+        position: absolute;
+        top: -50px;
+        margin: 0 auto;
+        right: 0;
+        left: 0;
+        width: 20%;
+        text-align: center
+    }
+</style>
+
+<div id="form" class="container">
+    <div class="row form-group">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4 ">
+                <input type="hidden" name="id" />
+
+                <div class="form-group">
+                    <label>عنوان برچسب</label>
+                    <input id="txtTitle" type="text" class="form-control" name="title" data-validate="required">
+                </div>
+                <div class="form-group">
+                    <label>کارگاه</label>
+                    <select id="cmbWorkShopId" class="form-control" name="workshopId">
+                        <option value="">...</option>
+                        @foreach (var item in ViewBag.WorkshopList)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <button class="btn btn-success" id="btnSave">ذخیره</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="notification">
+    <h4>عملیات با موفقیت انجام شد.</h4>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+         var id = @(ViewBag.Id != null? ViewBag.Id : 0);
+        $(document).ready(function () {
+            $.get("/workshopTag/load/" + id , function (response) {
+                if (response.status == 200) {
+                    setEntity(response.data, "#form");
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        })
+        $("#btnSave").click(function () {
+            save()
+        });
+        function save() {
+            if (checkForm("#form")) {
+                var entity = getEntity("#form");
+                loader(true);
+                $.post("/workshopTag/save", entity, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        $("#notification").animate({ "top": "70px" })
+                        setTimeout(function () {
+                            $('#notification').animate({ "top": "-50px" });
+                        }, 500);
+                        clearEntity("#form")
+                        //callbackAlert(response.message, function () {
+                        //    document.location = "/workshopTag";
+                        //});
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            }
+        }
+    </script>
+}
+

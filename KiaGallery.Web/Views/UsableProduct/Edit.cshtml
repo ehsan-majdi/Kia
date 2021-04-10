@@ -1,0 +1,186 @@
+﻿
+@{
+    ViewBag.Title = "ویرایش محصولات چاپخانه";
+}
+<style>
+    .fa-upload {
+        position: absolute;
+        bottom: 10px;
+        left: 29px;
+        cursor: pointer;
+    }
+</style>
+<input id="hiddenChildId" type="hidden" />
+<div id="form">
+    <div class="container">
+        <input type="hidden" name="id" />
+        <div class="col-md-1">
+            <div class="form-group">
+                <label>ترتیب</label>
+                <input type="text" class="form-control" name="order" data-validate="required" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>نام محصول</label>
+                <input type="text" class="form-control" name="name" data-validate="required" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>کدمحصول</label>
+                <input type="text" class="form-control" name="code" data-validate="required" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>واحد</label>
+                <input type="text" class="form-control" name="unit" data-validate="required" />
+            </div>
+        </div>
+
+        @*<div class="col-md-3">
+                <div class="form-group relative">
+                    <label for="txtFileName">تصویر</label>
+                    <input id="txtFileName" type="text" name="image" class="file form-control" disabled data-validate="required" />
+                    <input id="file" type="file" class="hidden" />
+                    <i id="openFile" class="fa fa-upload fa-20px file-icon" aria-hidden="true" style="left: 13px; top: 32px;"></i>
+                    <i id="deleteFile" class="fa fa-remove fa-20px file-icon" aria-hidden="true" style="left: 45px; top: 32px;"></i>
+                </div>
+            </div>*@
+        @*<div class="form-group">
+                <label for="cmbBranchType">نوع</label>
+                <select id="cmbBranchType" class="form-control" data-validate="required" name="branchType">
+                    <option value="">...</option>
+                    <option value="0">شعب</option>
+                    <option value="1">نمایندگی</option>
+                    <option value="2">سایر</option>
+                </select>
+            </div>*@
+        <div class="form-group col-md-2">
+            <label for="cmbCategory">انتخاب دسته بندی</label>
+            <select id="cmbCategory" class="form-control" name="categoryUsableProductId" data-validate="required">
+                <option value="">...</option>
+            </select>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="cmbCategoryChild">انتخاب زیردسته بندی </label>
+            <select id="cmbCategoryChild" class="form-control" name="categoryChild" data-validate="required">
+                <option value="">...</option>
+            </select>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="cmbPrintingHouse">چاپخانه</label>
+            <select id="cmbPrintingHouse" class="form-control" name="printingHouseId" data-validate="required">
+                <option value="">...</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="cmbActive">وضعیت</label>
+                <select id="cmbActive" class="form-control" name="usableProductStatus" data-validate="required">
+                    <option value="">...</option>
+                    <option value="0">فعال</option>
+                    <option value="1">غیرفعال قابل نمایش</option>
+                    <option value="2">غیرفعال غیر قابل نمایش</option>
+                </select>
+            </div>
+        </div>
+        @*<div class="col-md-2">
+                <div class="form-group">
+                    <label for="cmbAvailable">موجودی</label>
+                    <select id="cmbAvailable" class="form-control" name="available" data-validate="required">
+                        <option value="">...</option>
+                        <option value="true">موجود</option>
+                        <option value="false">ناموجود</option>
+                    </select>
+                </div>
+            </div>*@
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>توضیحات</label>
+                <textarea class="form-control" name="description" placeholder="مشخصات" maxlength="54"></textarea>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group">
+                <button id="btnSave" type="submit" class="btn btn-success">
+                    <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+                    ذخیره
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+    var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+
+        $(document).ready(function () {
+            setupUpload("usableProduct");
+
+            var categoryId = $("#cmbCategory").val()
+
+            $("#btnSave").on("click", function (event) {
+                event.preventDefault();
+                if (checkForm("#form")) {
+                    var entity = getEntity("#form");
+                    loader(true);
+                    $.ajax({
+                        method: "POST",
+                        url: "/usableproduct/save",
+                        data: entity,
+                        success: function (response) {
+                            if (response.status == 200) {
+                                callbackAlert(response.message, function () {
+                                    document.location = "/usableproduct/index";
+                                });
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                            loader(false);
+                        }
+                    });
+                }
+            });
+
+            loadRemoteSelect("#cmbCategory", "/usableProduct/GetAllCategory", null, "id", "title", "...", function (response) {
+                loadRemoteSelect("#cmbPrintingHouse", "/usableProduct/GetAllPrintingHouse", null, "id", "name", "...", function () {
+                        load();
+                });
+            });
+
+            $("#cmbCategory").change(function () {
+                var id = $(this).val()
+                loadRemoteSelect("#cmbCategoryChild", "/usableProduct/GetAllChild/", { id: id }, "id", "title", "...", function () {
+                    $("#cmbCategoryChild").attr("disabled", false);
+                });
+            })
+        });
+        function load() {
+            if (id > 0) {
+                loader(true);
+                $.get("/usableproduct/load/" + id, function (response) {
+                    if (response.status == 200) {
+                        $("#hiddenChildId").val(response.data.categoryUsableProductId)
+
+                        setEntity(response.data, "#form");
+                        loadRemoteSelect("#cmbCategoryChild", "/usableProduct/GetAllChild/", { id: response.data.categoryUsableProductId }, "id", "title", "...", function () {
+                            setEntity(response.data, "#form");
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            }
+        }
+    </script>
+
+}
+
+

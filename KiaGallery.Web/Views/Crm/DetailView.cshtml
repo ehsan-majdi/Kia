@@ -1,0 +1,242 @@
+﻿
+@{
+    ViewBag.Title = "DetailView";
+}
+<style>
+    #buttonCustomer {
+        width: 250px;
+        -webkit-transition: all 500ms ease;
+        -moz-transition: all 500ms ease;
+        -o-transition: all 500ms ease;
+        transition: all 500ms ease;
+        -webkit-box-shadow: 10px 14px 30px 0px rgba(0,0,0,0.32);
+        -moz-box-shadow: 10px 14px 30px 0px rgba(0,0,0,0.32);
+        box-shadow: 10px 14px 30px 0px rgba(0,0,0,0.32);
+    }
+
+    #buttonQuestion {
+        width: 250px;
+        -webkit-transition: all 500ms ease;
+        -moz-transition: all 500ms ease;
+        -o-transition: all 500ms ease;
+        transition: all 500ms ease;
+        -webkit-box-shadow: 10px 14px 30px 0px rgba(0,0,0,0.32);
+        -moz-box-shadow: 10px 14px 30px 0px rgba(0,0,0,0.32);
+        box-shadow: 10px 14px 30px 0px rgba(0,0,0,0.32);
+    }
+
+    #buttonCategory {
+        width: 250px;
+        -webkit-transition: all 500ms ease;
+        -moz-transition: all 500ms ease;
+        -o-transition: all 500ms ease;
+        transition: all 500ms ease;
+        -webkit-box-shadow: 10px 14px 30px 0px rgba(0,0,0,0.32);
+        -moz-box-shadow: 10px 14px 30px 0px rgba(0,0,0,0.32);
+        box-shadow: 10px 14px 30px 0px rgba(0,0,0,0.32);
+    }
+
+    #buttonAddCustomer {
+        width: 250px;
+        -webkit-transition: all 500ms ease;
+        -moz-transition: all 500ms ease;
+        -o-transition: all 500ms ease;
+        transition: all 500ms ease;
+        -webkit-box-shadow: 10px 14px 30px 0px rgba(0,0,0,0.32);
+        -moz-box-shadow: 10px 14px 30px 0px rgba(0,0,0,0.32);
+        box-shadow: 10px 14px 30px 0px rgba(0,0,0,0.32);
+    }
+
+    .* {
+        -webkit-transition-property: all;
+        -webkit-transition-duration: .2s;
+        -moz-transition-timing-function: cubic-bezier(100,50,21,6);
+        -moz-transition-property: all;
+        -moz-transition-duration: .2s;
+        -moz-transition-timing-function: cubic-bezier(100,50,21,6);
+    }
+
+    .Box {
+        font-size: 16px;
+    }
+
+    .circle-logo {
+        background-color: #808080;
+        position: absolute;
+        margin: 0;
+        background-color: #808080;
+        border-radius: 50%;
+        text-align: center;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        left: 0;
+        right: 47%;
+        display: none;
+    }
+
+    #logo {
+        text-align: center;
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100px;
+    }
+
+    .circle-inner {
+        border-radius: 50%;
+        border: solid #c9fe80 9px;
+        opacity: 0.5;
+        width: 200px;
+        height: 200px;
+        position: absolute;
+    }
+
+    .change-position {
+        z-index: 15;
+        opacity: 0.5;
+    }
+</style>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
+
+
+<div class="row">
+
+    <div class="active-logo">
+        <div class="circle-logo ">
+            <div class="circle-inner"></div>
+            <img src="~/Content/Image/logokia.png" id="logo" />
+        </div>
+    </div>
+    @if (User.IsInRole("admin"))
+    {
+        <div class="col-md-12 text-center ">
+            <a href="/crm/QuestionCategory" id="buttonCategory" class="button-new btn btn-info show-logo">
+                <div class="Box">
+                    <span><i id="rotateCategory" class="fa fa-plus"></i></span>
+                    ایجاد دسته بندی برای سوالات
+                </div>
+            </a>
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <div class="col-md-12 text-center ">
+            <a href="/crm/createquestion" id="buttonQuestion" class="button-new btn btn-success show-logo">
+                <div class="Box">
+                    <span><i id="rotateQuestion" class="fa fa-plus"></i></span>
+                    ایجاد سوالات پیش فرض
+                </div>
+            </a>
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+
+    }
+
+    @if (User.IsInRole("officeCrm") || User.IsInRole("branchCrm") || User.IsInRole("admin"))
+    {
+        <div class="col-md-12  text-center">
+            <a href="/crm/index" id="buttonCustomer" class="button-new btn btn-danger show-logo">
+                <div class="Box">
+                    <span><i id="rotateCustomer" class="fa fa-plus"></i></span>
+                    مدیریت مشتریان
+                </div>
+            </a>
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <div class="col-md-12 text-center">
+            <a href="/crm/customerAppend" id="buttonAddCustomer" class="button-new btn btn-warning show-logo">
+                <div class="Box">
+                    <span><i id="rotateAddCustomer" class="fa fa-plus"></i></span>
+                    اضافه کردن مشتری
+                </div>
+            </a>
+        </div>
+    }
+
+</div>
+
+
+
+@section Scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            //$(".circle-logo").hide();
+            $("#buttonCustomer").hover(function () {
+                if ($(window).width() > 600 && $(window).height() < 1340) {
+                    $("#rotateCustomer").addClass('fa-spin');
+                    $(this).css({ "background-color": "d50000 !important", "padding": "20px", "width": "600px" });
+                }
+            }, function () {
+                $("#rotateCustomer").removeClass('fa-spin');
+                $(this).css({ "background-color": "#d9534f !important", "border-color": "#d43f3a;", "padding": "6px 12px", "width": "250px" });
+
+            });
+
+            $("#buttonQuestion").hover(function () {
+                if ($(window).width() > 600) {
+                    $("#rotateQuestion").addClass('fa-spin');
+                    $(this).css({ "background-color": "2E7D32 !important", "padding": "20px", "width": "600px" });
+                }
+            }, function () {
+                $("#rotateQuestion").removeClass('fa-spin');
+                $(this).css({ "background-color": "#5cb85c !important", "border-color": "#4cae4c;", "padding": "6px 12px", "width": "250px" });
+            });
+
+            $("#buttonCategory").hover(function () {
+                if ($(window).width() > 600) {
+                    $("#rotateCategory").addClass('fa-spin');
+                    $(this).css({ "background-color": "0D47A1 !important", "padding": "20px", "width": "600px", "box-shadow": "25px;" });
+                }
+            }, function () {
+                $("#rotateCategory").removeClass('fa-spin');
+                $(this).css({ "background-color": "#283593 !important", "border-color": "#d43f3a;", "padding": "6px 12px", "width": "250px" });
+            });
+
+            $("#buttonAddCustomer").hover(function () {
+                if ($(window).width() > 600) {
+                    $("#rotateAddCustomer").addClass('fa-spin');
+                    $(this).css({ "background-color": "0D47A1 !important", "padding": "20px", "width": "600px", "box-shadow": "25px;" });
+                }
+            }, function () {
+                $("#rotateAddCustomer").removeClass('fa-spin');
+                $(this).css({ "background-color": "#283593 !important", "border-color": "#d43f3a;", "padding": "6px 12px", "width": "250px" });
+            });
+
+            var img = $("#logo");
+            $(".show-logo").click(function (event) {
+                event.preventDefault();
+                var href = $(this).attr('href')
+                $(".show-logo").fadeOut("slow", function () {
+                    $(".circle-logo ").fadeIn("1000", function () {
+                        $(this).addClass('change-position');
+                        img.animate({ width: "200px" }, 1000, function () {
+                            $(".circle-logo").fadeOut(2000, function () {
+                                window.location = href;
+                            });
+                        });
+                    });
+
+                });
+            });
+        });
+
+    </script>
+}
+
+

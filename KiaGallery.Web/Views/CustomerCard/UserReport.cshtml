@@ -1,0 +1,140 @@
+﻿
+@{
+    ViewBag.Title = "گزارش";
+}
+
+<style>
+    .form-item {
+        margin: 10px auto;
+        width: 30%;
+    }
+</style>
+<div class="" id="form">
+    <div style="margin:0 auto" class="row">
+        <div class="form-group form-item">
+            <label>کد مشتری:</label>
+            <input id="txtCustomerCode" type="text" class="form-control" name="mobile" data-validate="required" />
+        </div>
+        <div class="form-group form-item">
+            <label>از تاریخ:</label>
+            <input id="txtFromDate" type="text" class="form-control date" name="fDate" />
+        </div>
+        <div class="form-group form-item">
+            <label>تا تاریخ:</label>
+            <input id="txtToDate" type="text" class="form-control date" name="tDate" />
+        </div>
+        <div class="form-group form-item">
+            <label>از مبلغ:</label>
+            <input id="txtFromAmount" type="text" class="form-control money-separator" name="fromAmount" />
+        </div>
+        <div class="form-group form-item">
+            <label>تا مبلغ:</label>
+            <input id="txtToAmount" type="text" class="form-control money-separator" name="toAmount" />
+        </div>
+        <div class="form-item text-center">
+            <button id="btnSave" class="btn btn-success">
+                گرفتن گزارش
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="overflow:auto">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="exampleModalLabel">گزارش</h5>
+            </div>
+            <div class="modal-body">
+                <div id="content">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        var defaultEntity = {
+            pageNumber: "0",
+            pageSize: "50"
+        }
+        $(document).ready(function () {
+            $(".date").pDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true
+            });
+            $(".date").val("");
+            $("#btnSave").on("click", function () {
+                save()
+            })
+        })
+        function save() {
+            var entity = getEntity("#form");
+            var param = $.extend({}, defaultEntity, entity);
+            if (checkForm("#form")) {
+                console.log(entity);
+                loader(true);
+                $.get("/customerCard/report", param, function (response) {
+                    if (response.status == 200) {
+                        var data = response.data;
+                        var template = $.templates("#template");
+                        var htmlOutput = template.render(data);
+                        $("#content").html(htmlOutput);
+                        $("#modal-report").modal("show")
+                    }
+                    else {
+                        alert(response.message)
+                    }
+                    loader(false);
+                });
+            }
+
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <div class="table table-data table-responsive">
+            <p>نام: {{:fullName}}</p>
+            <p>ایمیل: {{:email}}</p>
+            <p>شماره کارت: {{:cardNo}}</p>
+            <p>شماره مشتری: {{:cariCode}}</p>
+            <p>شماره همراه: {{:mobile}}</p>
+            <p>تاریخ تولد: {{:birthDate}}</p>
+            <p>کد ملی: {{:ntCode}}</p>
+            <p>تعداد تراکنش ها: {{:totalTrnCount}}</p>
+            <p>موجودی: {{:localBalanceSeparator}}</p>
+            
+        </div>
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th class="txt-al-c">مبلغ تراکنش</th>
+                    <th class="txt-al-c">تاریخ</th>
+                    @*<th>زمان</th>*@
+                    <th class="txt-al-c">کسر</th>
+                    <th class="txt-al-c">کد پیگیری</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for lstTransaction}}
+                <tr>
+                    <td class="txt-al-c">{{:creditAmountSeparator}}</td>
+                    <td class="txt-al-c">{{:persianTrnDate}}</td>
+                    @*<td class="hidden-xs">{{:trnTime}}</td>*@
+                    <td class="txt-al-c">{{:debitAmount}}</td>
+                    <td class="txt-al-c">{{:trnBizKey}}</td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}

@@ -1,0 +1,28 @@
+﻿<Window x:Class="KiaGallery.Crm.App.IconWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KiaGallery.Crm.App"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
+        mc:Ignorable="d"
+        Title="IconWindow" Height="10" Width="10" Visibility="Hidden">
+    <Grid>
+        <Grid.Resources>
+            <local:ShowMessageCommand x:Key="MessageCommand" />
+        </Grid.Resources>
+
+        <tb:TaskbarIcon x:Name="NotifyIcon"
+                    Visibility="Visible"
+                    ToolTipText="مدیریت مشتری گالری کیا"
+                    IconSource="/Image/kia_gallery.ico"
+                    LeftClickCommand="{StaticResource MessageCommand}"
+                    DoubleClickCommand="{StaticResource MessageCommand}" >
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="خروج" Click="Exit_Click" />
+                </ContextMenu>
+            </tb:TaskbarIcon.ContextMenu>
+        </tb:TaskbarIcon>
+    </Grid>
+</Window>

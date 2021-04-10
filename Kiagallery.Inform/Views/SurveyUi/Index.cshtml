@@ -1,0 +1,290 @@
+﻿
+@{
+
+    ViewBag.Title = "index";
+}
+<link href="/Content/nouislider.min.css" rel="stylesheet" />
+<style>
+    body {
+    }
+    /* HIDE RADIO */
+    [type=radio] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+        /* IMAGE STYLES */
+        [type=radio] + img {
+            cursor: pointer;
+        }
+
+    .active.yellow {
+        background-color: #f9e8ca;
+        border-radius: 5px;
+    }
+
+    .active.blue {
+        background-color: #d8eff9;
+        border-radius: 5px;
+    }
+
+    .active.pink {
+        background-color: #ffd2d2;
+        border-radius: 5px;
+    }
+
+    .active.bluemild {
+        background-color: #bcebeb;
+        border-radius: 5px;
+    }
+
+    .active.bad {
+        background-color: #d6eef9;
+        border-radius: 5px;
+    }
+
+    #frame {
+        width: 360px;
+        background-color: rgb(243,243,243);
+        margin: 15px auto;
+        right: 50%;
+        left: 50%;
+        border-radius: 15px;
+    }
+
+    .kia-pic {
+        background-image: url(/Content/Image/KiaPic.png);
+        background-repeat: no-repeat;
+        width: 93px;
+        height: 71px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    #border-less {
+        width: 200px;
+        height: 20px;
+        background-color: white;
+        margin: 0 auto;
+        border-bottom-left-radius: 13px;
+        border-bottom-right-radius: 13px;
+    }
+
+    #notification {
+        width: 200px;
+        height: 70px;
+        background-color: white;
+        margin: 0 auto;
+        border-radius: 10px;
+        padding: 5px;
+        box-shadow: 0px 10px 17px -17px rgba(0,0,0,0.75);
+    }
+
+        #notification p {
+            font-size: 11px;
+            margin: 0;
+        }
+
+    #notification-img {
+        background-image: url(/Content/Image/notification.png);
+        background-repeat: no-repeat;
+        width: 56px;
+        height: 72px;
+        margin: 0;
+    }
+
+    #btnSubmit {
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        border-top-left-radius: 25px;
+        border-top-right-radius: 25px;
+        font-size: 18px;
+    }
+
+    .txtProposal {
+        width: 250px;
+        margin: 0 auto;
+    }
+
+        .txtProposal p {
+            margin: 10px 0 0 0;
+            font-size: 12px;
+        }
+
+        .txtProposal textarea {
+            border-radius: 10px;
+            box-shadow: 0px 10px 17px -17px rgba(0,0,0,0.75);
+            margin-bottom: 15px;
+        }
+
+    .detail-entity {
+        margin: 10px 10px;
+    }
+
+    .uk-margin {
+        margin-left: 25px;
+    }
+</style>
+
+
+
+<div id="frame">
+    <input type="hidden" name="hiddenId" />
+    <div id="border-less"></div>
+    <br />
+    <div class="kia-pic uk-align-center"></div>
+    <div id="notification">
+        <div class="uk-align-left" id="notification-img"></div>
+        <p>با تشکر از خرید شما برای ارتقای کیفیت خدمات و جلب رضایت مشتری خواهشمندیم فرم نظر سنجی را کامل نمایید.</p>
+    </div>
+    <div class="range relative" style="padding:30px">
+       
+        <div>
+            <input type="hidden" id="hidden-lower-value" />
+            <input type="hidden" id="hidden-upper-value" />
+            <span class="example-val pull-left" id="lower-value"></span>
+            <span class="example-val" id="upper-value"></span>
+        </div>
+        <button class="btn btn-xs btn-info" id="btnRange">اعمال</button>
+    </div>
+    <div id="content">
+
+    </div>
+    <div class="txtProposal">
+        <p>انتقادات و پیشنهادات</p>
+        <textarea class="uk-textarea" name="offer" rows="5" style="resize:none"></textarea>
+    </div>
+</div>
+<button id="btnSubmit" class="uk-button uk-button-primary">ثبت</button>
+<script src="/Scripts/nouislider.js"></script>
+@section scripts {
+    <script type="text/javascript">
+          var code = @(ViewBag.Code != null ? ViewBag.Code : 0);
+
+        $(document).ready(function () {
+            getQuestionList();
+            $(document).on("change", ".question", function () {
+                console.log(0)
+                $(this).parents(".detail-entity").find(".active").removeClass("active");
+                $(this).parents("label").find("img").addClass("active");
+
+            });
+            range()
+            $("#btnRange").on("click", function () {
+                console.log($("#hidden-lower-value").val());
+                console.log($("#hidden-upper-value").val());
+                getList();
+            });
+        });
+        $("#btnSubmit").on("click", function (event) {
+            event.preventDefault();
+            var answerList = [];
+            $(".question:checked").each(function (index, element) {
+                var entity = { questionType: $(element).attr("data-type"), questionId: $(element).attr("data-id"), surveyAnswerType: $(element).attr("data-type") }
+                answerList.push(entity);
+                console.log(answerList);
+            });
+
+            $.post("/surveyui/saveAnswer", { code: code, answerList: answerList }, function (response) {
+                if (response.status == 200) {
+                    document.location = "/surveyui/confirm/";
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+
+        });
+
+        function getQuestionList() {
+            var params = getParam();
+            $.get("/surveyui/getQuestionList", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+        function range() {
+            var nonLinearSlider = document.getElementById('nonlinear');
+            noUiSlider.create(nonLinearSlider, {
+                connect: false,
+                start: [3],
+                step: 1,
+                range: {
+                    'min': [1],
+                    'max': [5]
+                }
+            });
+            var nodes = [
+                document.getElementById('lower-value'),
+                document.getElementById('upper-value')
+            ];
+
+            
+
+            var stepSliderValueElement = document.getElementById('slider-step-value');
+
+            stepSlider.noUiSlider.on('update', function (values, handle) {
+                stepSliderValueElement.innerHTML = values[handle];
+            });
+
+
+            //nonLinearSlider.noUiSlider.on('update', function (values, handle, unencoded, isTap, positions) {
+            //    nodes[handle].innerHTML = values[handle] + ', ' + positions[handle].toFixed(2) + 'گرم';
+            //    $("#lower-value").text(values[0])
+            //    $("#hidden-lower-value").val(values[0])
+            //    $("#upper-value").text(values[1])
+            //    $("#hidden-upper-value").val(values[1])
+            //});
+
+        }
+    </script>
+    <script id="template" type="text/x-jsrender">
+        <div class="container">
+            {{for list}}
+            <div class="detail-entity">
+                <p class="">{{:title}}</p>
+                <div id="tmpl1" class="col-md-12 appended-element-content singleChoice" style="margin:10px">
+                    <div class="col-md-12 ">
+                        <div class="form-inline form-element-content detail-entity">
+                            <input type="hidden" name="questionValueId" value="" />
+                            <label>
+                                <input type="radio" data-id="{{:id}}" class="question form-element v-middle" data-type="0" name="answer{{:id}}" />
+                                <img class="yellow" style="width:30px" src="/Content/Image/frowning-face-apple.png">
+                            </label>
+                            <div id="nonlinear{{:id}}" style="margin-bottom:30px"> </div>
+                            <label>
+                                <input type="radio" data-id="{{:id}}" class="question form-element v-middle" data-type="4" name="answer{{:id}}" />
+                                <img class="blue" style="width:30px" src="/Content/Image/slightly-frowning-face-apple.png">
+                            </label>
+                            <label>
+                                <input type="radio" data-id="{{:id}}" class="question form-element v-middle" data-type="4" name="answer{{:id}}" />
+                                <img class="blue" style="width:30px" src="/Content/Image/neutral-face-apple.png">
+                            </label>
+                            <label>
+                                <input type="radio" data-id="{{:id}}" class="question form-element v-middle" data-type="3" name="answer{{:id}}" />
+                                <img class="bluemild" style="width:30px" src="/Content/Image/smiling-face-with-smiling-eyes-apple.png">
+                            </label>
+                            <label>
+                                <input type="radio" data-id="{{:id}}" class="question form-element v-middle" data-type="4" name="answer{{:id}}" />
+                                <img class="blue" style="width:30px" src="/Content/Image/smiling-face-with-heart-eyes-apple.png">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            {{/for}}
+        </div>
+    </script>
+}

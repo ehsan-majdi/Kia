@@ -1,0 +1,93 @@
+﻿@{
+    ViewBag.Title = "EditCategory";
+}
+<style>
+    #btnSave {
+        background-color: #e57373;
+        transition: all 500ms ease;
+    }
+
+        #btnSave:hover {
+            background-color: red;
+            color: white;
+        }
+</style>
+<div class="container ">
+    <form>
+        <div id="form">
+            <input type="hidden" name="id" />
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="form-group">
+                        <label for="txtOrder">ترتیب دسته بندی</label>
+                        <input id="txtOrder" class="form-control" name="order" placeholder="ترتیب دسته بندی" required />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="form-group">
+                        <label for="txtTitle">عنوان دسته بندی</label>
+                        <input id="txtTitle" class="form-control" name="title" placeholder="عنوان دسته بندی" required />
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-md-offset-4 text-center">
+            <button class="btn" type="submit" id="btnSave" style="">ثبت دسته بندی جدید</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+
+        $(document).ready(function () {
+            load();
+
+            $("#btnSave").on("click", function (event) {
+                event.preventDefault();
+                if (checkForm("#form")) {
+                    var entity = getEntity("#form");
+                    loader(true);
+                    $.ajax({
+                        method: "POST",
+                        url: "/crm/SaveCategory",
+                        data: entity,
+                        success: function (response) {
+                            if (response.status == 200) {
+                                callbackAlert(response.message, function () {
+                                    document.location = "/crm/QuestionCategory/";
+                                });
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                            loader(false);
+                        }
+                    });
+                }
+            });
+        });
+        function load() {
+            if (id > 0) {
+                loader(true);
+                $.get("/crm/LoadCategory/" + id, function (response) {
+                    if (response.status == 200) {
+                        console.log(id);
+
+                        setEntity(response.data, "#form");
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                    loader(false);
+                });
+            }
+        }
+
+    </script>
+}

@@ -1,0 +1,225 @@
+﻿
+@{
+    ViewBag.Title = "ثبت علت برای وضعیت های کالا";
+}
+
+<div id="control-section">
+    <a id="btnAdd" href="#" class="btn btn-primary">
+        <i class="fa fa-plus v-middle" aria-hidden="true"></i>&nbsp;
+        <span>جدید</span>
+    </a>
+</div>
+
+<div id="content">
+
+</div>
+
+<div id="modalAdd" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">علت جدید</h4>
+            </div>
+            <div id="product-content" class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <input id="hiddenId" type="hidden" name="id" value="" />
+                        <div class="form-group">
+                            <label for="cmbStatus">وضعیت</label>
+                            <select id="cmbStatus" class="form-control" data-validate="required" name="orderDetailStatus">
+                                <option value="">...</option>
+                                <option value="7">کسری</option>
+                                <option value="9">لغو</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="txtText">متن علت</label>
+                            <input type="text" id="txtText" class="form-control" name="text" maxlength="255" data-validate="required, maxLength(255)" />
+                        </div>
+                        <div class="form-group">
+                            <label for="cmbActive">وضعیت</label>
+                            <select id="cmbActive" class="form-control" data-validate="required" name="active">
+                                <option value="">...</option>
+                                <option value="true">فعال</option>
+                                <option value="false">غیرفعال</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-12">
+                        <a id="btnSave" href="#" class="btn btn-success">ذخیره</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts {
+    <script type="text/javascript">
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(document).ready(function () {
+            getList();
+
+            $("#btnAdd").on("click", function (event) {
+                event.preventDefault();
+
+                $("#hiddenId, #cmbStatus, #txtText, #cmbActive").val("");
+                $("#modalAdd").modal("show");
+            });
+
+            $("#btnSave").on("click", function (event) {
+                event.preventDefault();
+                if (checkForm("#modalAdd")) {
+                    var entity = getEntity("#modalAdd");
+                    loader(true);
+                    $.ajax({
+                        method: "POST",
+                        url: "/order/saveReason",
+                        data: entity,
+                        success: function (response) {
+                            if (response.status == 200) {
+                                callbackAlert(response.message, function () {
+                                    $("#modalAdd").modal("hide");
+                                    getList();
+                                });
+                            }
+                            else {
+                                alert(response.message);
+                            }
+                            loader(false);
+                        }
+                    });
+                }
+            });
+
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف سایز اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/order/deleteReason/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+
+            $(document).on("click", ".active", function (event) {
+                loader(true);
+                var id = $(this).attr("data-id");
+                $.post("/order/activeReason/" + id, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        getList();
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+            $(document).on("click", ".inactive", function (event) {
+                loader(true);
+                var id = $(this).attr("data-id");
+                $.post("/order/inactiveReason/" + id, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        getList();
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+            $(document).on("click", ".edit", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                loader(true);
+                $.get("/order/loadReason/" + id, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        setEntity(response.data, "#modalAdd");
+                        $("#modalAdd").modal("show");
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+        });
+
+        function getList() {
+            var defaultEntity = { };
+
+            loader(true);
+            $.get("/order/getAllReasonList", defaultEntity, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th>وضعیت سفارش</th>
+                    <th>متن</th>
+                    <th>وضعیت</th>
+                    <th class="icon-col text-center">ویرایش</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td>{{:statusText}}</td>
+                    <td>{{:text}}</td>
+                    <td>
+                        {{if active}}
+                        <i class="fa fa-check green pointer inactive" data-id="{{:id}}" aria-hidden="true"></i>
+                        فعال
+                        {{else}}
+                        <i class="fa fa-times red pointer active" data-id="{{:id}}" aria-hidden="true"></i>
+                        غیرفعال
+                        {{/if}}
+                    </td>
+                    <td class="txt-al-c">
+                        <button class="edit btn btn-primary btn-xs" data-title="ویرایش" data-id="{{:id}}"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                    </td>
+                    <td class="txt-al-c">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}

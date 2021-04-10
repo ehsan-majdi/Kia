@@ -1,0 +1,41 @@
+﻿.tooltips {
+    position: relative;
+}
+
+    /* tooltips text */
+    .tooltips .tooltipstext {
+        visibility: hidden;
+        width: 100px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        padding: 5px 0;
+        border-radius: 6px;
+        /* Position the tooltips text */
+        position: absolute;
+        z-index: 1;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -60px;
+        /* Fade in tooltips */
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+        /* tooltips arrow */
+        .tooltips .tooltipstext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+
+    /* Show the tooltips text when you mouse over the tooltips container */
+    .tooltips:hover .tooltipstext {
+        visibility: visible;
+        opacity: 1;
+    }

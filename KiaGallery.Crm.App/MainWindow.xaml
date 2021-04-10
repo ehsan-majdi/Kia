@@ -1,0 +1,24 @@
+﻿<Window x:Class="KiaGallery.Crm.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KiaGallery.Crm.App"
+        mc:Ignorable="d"
+        x:Name="window"
+        Title="صفحه اصلی" Height="600" Width="380" FontFamily="IRANSans" WindowStartupLocation="Manual" ResizeMode="NoResize" Background="#f3f3f3" Loaded="Window_Loaded">
+
+    <Grid FlowDirection="RightToLeft">
+        <Image HorizontalAlignment="Center" Height="182" Margin="0,280,0,0" VerticalAlignment="Top" Width="202" Source="Image/RFID.png"/>
+        <Label Content="لطفا کارت را روی دستگاه قرار دهید" HorizontalAlignment="Center" Margin="0,467,0,0" VerticalAlignment="Top" FontWeight="Bold" Width="170"/>
+        <TextBox x:Name="txtBarcode" HorizontalAlignment="Center" Height="30" Padding="4" Margin="0,502,0,0" TextWrapping="Wrap" HorizontalContentAlignment="Center" VerticalAlignment="Top" Width="170" KeyDown="txtBarcode_KeyDown"/>
+
+        <Image HorizontalAlignment="Center" Height="167" Margin="0,10,0,0" VerticalAlignment="Top" Width="170" Source="Image/kia-gallery-logo-square.png"/>
+
+        <Label Content="کاربر:" HorizontalAlignment="Left" Margin="122,183,0,0" VerticalAlignment="Top" Width="37" HorizontalContentAlignment="Right" />
+        <Label Content="شعبه:" HorizontalAlignment="Left" Margin="122,218,0,0" VerticalAlignment="Top" Width="37" HorizontalContentAlignment="Right"/>
+
+        <Label x:Name="lblUsername" HorizontalAlignment="Left" Margin="164,183,0,0" VerticalAlignment="Top" Width="180"/>
+        <Label x:Name="lblBranchName" HorizontalAlignment="Left" Margin="164,218,0,0" VerticalAlignment="Top" Width="180"/>
+    </Grid>
+</Window>

@@ -1,0 +1,755 @@
+﻿<style type="text/css">
+    #orderFileName {
+        width: 200px;
+        border: solid 2px silver;
+        float: left;
+    }
+
+    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+        vertical-align: middle;
+    }
+
+    .circle {
+        border: 1px solid silver;
+        border-radius: 70%;
+        max-width: 350px;
+        overflow: hidden;
+        height: 350px;
+        vertical-align: middle;
+    }
+
+    #clear {
+        margin-right: calc(50% - 175px);
+    }
+</style>
+
+<div id="form" class="container">
+    <div class="row form-group">
+        <div class="col-xs-12">
+            <ul class="nav nav-pills nav-justified thumbnail setup-panel no-margin">
+                <li id="headerStep1" class="active">
+                    <a href="#step-1">
+                        <h4 class="list-group-item-heading">
+                            <i class="fa fa-user" aria-hidden="true"></i>&nbsp;
+                            مشخصات محصول
+                        </h4>
+                        <p class="list-group-item-text hidden-xs">اطلاعات فردی کاربر رو وارد کنید.</p>
+                    </a>
+                </li>
+                <li id="headerStep2" class="disabled">
+                    <a href="#step-2">
+                        <h4 class="list-group-item-heading">
+                            <i class="fa fa-diamond" aria-hidden="true"></i>&nbsp;
+                            سنگ ها
+                        </h4>
+                        <p class="list-group-item-text hidden-xs">انتخاب نوع سنگ های محصول</p>
+                    </a>
+                </li>
+                <li id="headerStep3" class="disabled">
+                    <a href="#step-3">
+                        <h4 class="list-group-item-heading">
+                            <i class="fa fa-road" aria-hidden="true"></i>&nbsp;
+                            چرم ها
+                        </h4>
+                        <p class="list-group-item-text hidden-xs">انتخاب نوع چرم های محصول</p>
+                    </a>
+                </li>
+                <li id="headerStep4" class="disabled">
+                    <a href="#step-4">
+                        <h4 class="list-group-item-heading">
+                            <i class="fa fa-picture-o" aria-hidden="true"></i>&nbsp;
+                            تصویر
+                        </h4>
+                        <p class="list-group-item-text hidden-xs">بارگذاری تصویر محصول</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row setup-content" id="step-1">
+        <div class="col-xs-12">
+            <div class="col-md-12 well">
+                <div id="step1" class="col-md-8 col-md-offset-2">
+                    <div class="form-group col-md-6">
+                        <label for="txtCode">کد</label>
+                        <input id="txtCode" type="text" class="form-control" name="code" maxlength="10" data-validate="maxLength(10)">
+                        <input type="hidden" value="" name="id" />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="txtBookCode">کد کتاب کد</label>
+                        <input id="txtBookCode" type="text" class="form-control" name="bookCode" maxlength="10" data-validate="required, maxLength(10)">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="txtTitle">عنوان</label>
+                        <input id="txtTitle" type="tel" class="form-control" name="title" maxlength="150" data-validate="required, maxLength(150)">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="cmbWorkshop">کارگاه اول</label>
+                        <select id="cmbWorkshop" class="cmbWorkshop form-control" name="workshopId" data-validate="required">
+                            <option value="">...</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="cmbWorkshop2">کارگاه دوم</label>
+                        <select id="cmbWorkshop2" class="cmbWorkshop form-control" name="workshopId2">
+                            <option value="">...</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="cmbProductType">نوع محصول</label>
+                        <select id="cmbProductType" class="form-control" name="productType" data-validate="required">
+                            <option value="">...</option>
+                            <option value="0">دستبند زنجير طلا</option>
+                            <option value="11">دستبند چرمی</option>
+                            <option value="12">دستبند ریلی</option>
+                            <option value="13">دستبند سنگی</option>
+                            <option value="16">دستبند نخی</option>
+                            <option value="1">گردنبند</option>
+                            <option value="2">گوشواره</option>
+                            <option value="3">انگشتر</option>
+                            <option value="4">آویزساعت</option>
+                            <option value="15">آویزساعت2</option>
+                            <option value="5">سنجاق بچگانه</option>
+                            <option value="6">ست</option>
+                            <option value="7">پابند</option>
+                            <option value="8">آویز</option>
+                            <option value="9">النگو</option>
+                            @if (User.IsInRole("admin") || User.IsInRole("plaque"))
+                            {
+                                <option value="14">پلاک لیزر</option>
+                            }
+                            <option value="10">خرج کار</option>
+                        </select>
+                    </div>
+
+                    <div id="formOuterWerkType" class="form-group col-md-12" style="display:none">
+                        <div class="form-group col-md-6">
+                            <label>نوع خرج کار</label>
+                            <div>
+                                <input id="chkTwoLittleRings" type="checkbox" name="outerWerkTypeList" value="0">
+                                <label for="chkTwoLittleRings">دو حلقه چه کوچک (زنجیر ساعت) </label>
+                            </div>
+                            <div>
+                                <input id="chkTwoBigRings" type="checkbox" name="outerWerkTypeList" value="1">
+                                <label for="chkTwoBigRings">دو حلقه چه بزرگ (دستبند) </label>
+                            </div>
+                            <div>
+                                <input id="chkTwoSidesRing" type="checkbox" name="outerWerkTypeList" value="2">
+                                <label for="chkTwoSidesRing">دو طرف حلقه چه (دستبند) </label>
+                            </div>
+                            <div>
+                                <input id="chkSize4" type="checkbox" name="outerWerkTypeList" value="3">
+                                <label for="chkSize4">سایز 4 </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>نوع خرج کار</label>
+                            <div>
+                                <input id="chkSize6" type="checkbox" name="outerWerkTypeList" value="4">
+                                <label for="chkSize6">سایز 6</label>
+                            </div>
+                            <div>
+                                <input id="chkSize8" type="checkbox" name="outerWerkTypeList" value="5">
+                                <label for="chkSize8">سایز 8 </label>
+                            </div>
+                            <div>
+                                <input id="chkTiny" type="checkbox" name="outerWerkTypeList" value="6">
+                                <label for="chkTiny">کوچک</label>
+                            </div>
+                            <div>
+                                <input id="chkMedium" type="checkbox" name="outerWerkTypeList" value="7">
+                                <label for="chkMedium">متوسط</label>
+                            </div>
+                            <div>
+                                <input id="chkBig" type="checkbox" name="outerWerkTypeList" value="8">
+                                <label for="chkBig">بزرگ</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="txtOuterWerkPlacement">جایگاه خرج کار</label>
+                            <input id="txtOuterWerkPlacement" class="form-control" name="outerWerkPlacement" maxlength="14">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="cmbOuterWerkCategory">دسته بندی خرج کار</label>
+                            <select id="cmbOuterWerkCategory" class="form-control" name="outerWerkCategory" data-validate="">
+                                <option value="">...</option>
+                                <option value="0">سنگی</option>
+                                <option value="1">چرمی</option>
+                                <option value="2">هردو</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>رنگ طلا</label>
+                        <div>
+                            <input id="chkGold" type="checkbox" name="goldColor" value="true">
+                            <label for="chkGold">زرد</label>
+                        </div>
+                        <div>
+                            <input id="chkRosegold" type="checkbox" name="rosegoldColor" value="true">
+                            <label for="chkRosegold">رزگلد </label>
+                        </div>
+                        <div>
+                            <input id="chkWhite" type="checkbox" name="whiteColor" value="true">
+                            <label for="chkWhite">سفید</label>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="cmbGoldType">نوع طلا</label>
+                        <select id="cmbGoldType" class="form-control" name="goldType" data-validate="required">
+                            <option value="">...</option>
+                            <option value="0">هر دو</option>
+                            <option value="1">مات</option>
+                            <option value="2">براق</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="cmbGoldType">جنسیت</label>
+                        <select id="cmbGoldType" class="form-control" name="sex" data-validate="required">
+                            <option value="">...</option>
+                            <option value="0">هر دو</option>
+                            <option value="1">مردانه</option>
+                            <option value="2">زنانه</option>
+                            <option value="3">کودک</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="txtWeight">وزن</label>
+                        <input id="txtWeight" type="tel" class="form-control" name="weight" maxlength="10" data-validate="required, float">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="txtSilverWeight">وزن نقره</label>
+                        <input id="txtSilverWeight" type="tel" class="form-control" name="silverWeight" maxlength="10" data-validate="required, float">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="cmbSize">سایز</label>
+                        <select id="cmbSize" class="form-control" name="sizeId">
+                            <option value="">...</option>
+                        </select>
+                    </div>
+                    <div style="display:none" id="cmbRingSizeType" class="form-group col-md-6">
+                        <label for="cmbSize">انگشتر دو سایز</label>
+                        <select id="cmbSize" class="form-control" name="ringSizeType">
+                            <option value="">...</option>
+                            <option value="true">هست</option>
+                            <option value="false">نیست</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="cmbNormalSizeValue">سایز نرمال</label>
+                        <select id="cmbNormalSizeValue" class="form-control" name="normalSizeValueId">
+                            <option value="">...</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="txtStoneCount">تعداد سنگ</label>
+                        <input id="txtStoneCount" type="tel" class="form-control number-only" name="stoneCount" maxlength="10" data-validate="required, number">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="txtStonePrice">قیمت سنگ</label>
+                        <input id="txtStonePrice" type="tel" class="form-control money-separator" name="stonePrice" maxlength="14" data-validate="required, number">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="txtLeatherCount">تعداد چرم</label>
+                        <input id="txtLeatherCount" type="tel" class="form-control number-only" name="leatherCount" maxlength="10" data-validate="required, number">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="txtLeatherPrice">قیمت چرم</label>
+                        <input id="txtLeatherPrice" type="tel" class="form-control money-separator" name="leatherPrice" maxlength="14" data-validate="required, number">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="txtWage">اجرت</label>
+                        <input id="txtWage" type="tel" class="form-control money-separator" name="wage" maxlength="14" data-validate="required, number">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="cmbActive">وضعیت</label>
+                        <select id="cmbActive" class="form-control" data-validate="required" name="active">
+                            <option value="">...</option>
+                            <option value="true">فعال</option>
+                            <option value="false">غیرفعال</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="txtNewDay">تعداد روز جدید</label>
+                        <input id="txtNewDay" type="tel" class="form-control number-only" name="newDay" maxlength="14" data-validate="number">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="cmbCanLoop">تعداد دور چرم</label>
+                        <select id="cmbCanLoop" class="form-control" data-validate="required" name="canLoop">
+                            <option value="">...</option>
+                            <option value="true">دارد</option>
+                            <option value="false">ندارد</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="cmbCollection">کالکشن</label>
+                        <select id="cmbCollection" class="form-control" data-validate="" name="productCollectionId">
+                            <option value="">...</option>
+                            @foreach (var item in ViewBag.CollectionList)
+                            {
+                                <option value="@item.Id">@item.Title</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="cmbNotOrderable"> قابل سفارش برای کارگاه</label>
+                        <select id="cmbNotOrderable" class="form-control" data-validate="" name="notOrderable">
+                            <option value="">...</option>
+                            <option value="false">هست</option>
+                            <option value="true">نیست</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="cmbSpecialProduct">محصول ویژه</label>
+                        <select id="cmbSpecialProduct" class="form-control" data-validate="required" name="specialProduct">
+                            <option value="">...</option>
+                            <option value="true">بله</option>
+                            <option value="false">خیر</option>
+                        </select>
+                    </div>
+                    @if (User.IsInRole("admin") || User.IsInRole("product"))
+                    {
+                        @*<div class="form-group col-md-6">
+                                <label for="cmbNotOrderableForBranch"> قابل سفارش برای شعبه</label>
+                                <select id="cmbNotOrderableForBranch" class="form-control" data-validate="" name="notOrderableForBranch">
+                                    <option value="">...</option>
+                                    <option value="false">هست</option>
+                                    <option value="true">نیست</option>
+                                </select>
+                            </div>*@
+                        <div class="form-group col-md-6">
+                            <label for="cmbOnlyForWorkshop"> مخصوص ساخت کارگاه</label>
+                            <select id="cmbOnlyForWorkshop" class="form-control" data-validate="" name="onlyForWorkshop">
+                                <option value="">...</option>
+                                <option value="true">هست</option>
+                                <option value="false">نیست</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6 earringBack">
+                            <label for="cmbEarringBack"> پشت گوشواره</label>
+                            <select id="cmbEarringBack" class="form-control" data-validate="" name="earringBack">
+                                <option value="">...</option>
+                                <option value="true">بله</option>
+                                <option value="false">خیر</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="cmbWorkshopTag">برچسب کارگاه</label>
+                            <select id="cmbWorkshopTag" class=" form-control" name="workShopTagId" data-validate="">
+                                <option value="">...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label>در دسترس برای نوع شعبه</label>
+                            <div style="display: inline">
+                                <div>
+                                    <input id="chkOrderableBranchType" type="checkbox" name="orderableBranchType">
+                                    <label for="chkOrderableBranchType">شعب</label>
+                                </div>
+                                <div>
+                                    <input id="chkOrderableSolicitorshipType" type="checkbox" name="orderableSolicitorshipType">
+                                    <label for="chkOrderableSolicitorshipType">نمایندگی  </label>
+                                </div>
+                                <div>
+                                    <input id="chkOrderableCoWorkerType" type="checkbox" name="orderableCoWorkerType">
+                                    <label for="chkOrderableCoWorkerType">همکار</label>
+                                </div>
+                                <div>
+                                    <input id="chkOrderableOtherType" type="checkbox" name="orderableOtherType">
+                                    <label for="chkOrderableOtherType">سایر</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                    <div class="form-group inline-block w100">
+                        <button id="btnNextStep1" type="submit" class="btn btn-primary pull-left">
+                            <span>بعدی</span>&nbsp;
+                            <i class="fa fa-arrow-left v-middle" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row setup-content" id="step-2">
+        <div class="col-xs-12">
+            <div class="col-md-12 well">
+                <div id="step2" class="col-xs-12">
+                    <img id="orderFileName" style="display: none" />
+                    <div id="stoneContent" class="col-xs-12">
+
+                    </div>
+                    <div class="form-group col-xs-12" style="margin-top: 25px;">
+                        <button id="btnPrevStep2" type="submit" class="btn btn-primary pull-right">
+                            <i class="fa fa-arrow-right v-middle" aria-hidden="true"></i>&nbsp;
+                            <span>قبلی</span>
+                        </button>
+                        <button id="btnNextStep2" type="submit" class="btn btn-primary pull-left">
+                            <span>بعدی</span>&nbsp;
+                            <i class="fa fa-arrow-left v-middle" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row setup-content" id="step-3">
+        <div class="col-xs-12">
+            <div class="col-md-12 well">
+                <div id="step3" class="col-xs-12">
+                    <div id="leatherContent" class="col-xs-12">
+
+                    </div>
+                    <div class="form-group col-xs-12" style="margin-top: 25px;">
+                        <button id="btnPrevStep3" type="submit" class="btn btn-primary pull-right">
+                            <i class="fa fa-arrow-right v-middle" aria-hidden="true"></i>&nbsp;
+                            <span>قبلی</span>
+                        </button>
+                        <button id="btnNextStep3" type="submit" class="btn btn-primary pull-left">
+                            <span>بعدی</span>&nbsp;
+                            <i class="fa fa-arrow-left v-middle" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row setup-content" id="step-4">
+        <div class="col-xs-12">
+            <div class="col-md-12 well">
+                <div class="col-md-12">
+                    @*<button id="btnUploadNewImage" class="btn btn-primary">
+                            <i class="fa fa-plus v-middle" aria-hidden="true"></i>&nbsp;
+                            <span>تصویر جدید</span>
+                        </button>*@
+                    <div id="contentFiles" class="table-data table-responsive">
+                        <h4 class="txt-al-c no-image">تصویری یافت نشد</h4>
+
+                        <table class="table-image table hidden">
+                            <thead>
+                                <tr>
+                                    <th class="hidden-xs">نوع</th>
+                                    <th>عنوان</th>
+                                    <th></th>
+                                    <th class="icon-col text-center">حذف</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-body-image"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group col-xs-12">
+                    <button id="btnPrevStep4" type="submit" class="btn btn-primary pull-right">
+                        <i class="fa fa-arrow-right v-middle" aria-hidden="true"></i>&nbsp;
+                        <span>قبلی</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button id="btnSave" type="submit" class="btn btn-success">
+        <i class="fa fa-floppy-o v-middle" aria-hidden="true"></i>&nbsp;
+        ذخیره
+    </button>
+</div>
+
+<div id="modalUploadFile" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">تصویر جدید</h4>
+            </div>
+            <div class="modal-body">
+                <div id="screenshot" class="form-group txt-al-c">
+                    <div class="form-group txt-al-c circle" id="clear">
+                        <div>
+                            <img id="screenshot-img" style="display:none;width:348px;height:349px;object-fit:cover;">
+                        </div>
+                        <img id="imgUserImage" src="~/content/image/kia-gallery-logo-square.png" style="height:350px;max-width: 350px;" />
+                        <video class="videostream" autoplay style="display:none;max-width: 348px;height:349px;object-fit:cover;"></video>
+                    </div>
+                    <p><button class="hidden" id="screenshot-button" disabled>Take screenshot</button></p>
+                    <div class="form-group">
+                        <input id="file" type="file" class="hidden" />
+                        <input id="hiddenTypeTitle" type="hidden" />
+                        <div class="progress hidden">
+                            <div id="progressBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                <span class="sr-only">45%</span>
+                            </div>
+                        </div>
+                        <select id="cmbFileType" class="form-control">
+                            <option value="">...</option>
+                            <option value="0">زمینه سفید</option>
+                            <option value="4">مدل</option>
+                            @*<option class="capture-button camera" value="5">دوربین</option>*@
+                            <option value="1">سفارش</option>
+                            <option value="2">ربات و سایت</option>
+                            <option value="3">سایر</option>
+                        </select>
+                    </div>
+                    <div id="contentFileDetail"> </div>
+
+                    <div class="form-group txt-al-c">
+                        <i id="openFile" class="fa fa-upload btn btn-success btn-icon" aria-hidden="true"></i>
+
+                        <i class="capture-button btn btn-info fa fa-camera" style="display: none;"></i>
+                        <i style="display:none;" id="btnSubmitImage" class="btn btn-success fa fa-check"></i>
+                    </div>
+                    <input type="hidden" id="camreImageName" />
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        var id = @(ViewBag.Id != null ? ViewBag.Id : 0);
+
+        $(document).ready(function () {
+            $(".earringBack").hide()
+            $("#cmbFileType").on("change", function () {
+                var fileTypeTitle;
+                switch ($(this).val()) {
+                    case "0":
+                        fileTypeTitle = "Shop";
+                        break;
+                    case "1":
+                        fileTypeTitle = "Order";
+                        break;
+                    case "2":
+                        fileTypeTitle = "Gallery";
+                        break;
+                    case "3":
+                        fileTypeTitle = "Other";
+                        break;
+                    case "4":
+                        fileTypeTitle = "Model";
+                        break;
+                    case "5":
+                        fileTypeTitle = "Camera";
+                        break;
+                }
+
+                $("#hiddenTypeTitle").val(fileTypeTitle)
+                if ($(this).val() == 0) {
+
+                    $(".capture-button").show()
+
+                    //$("video").on("click", function () {
+                    //    $(".capture-button").show()
+                    //})
+                }
+                else {
+                    $("#openFile").show();
+                    $(".capture-button").hide();
+                    $(".camera").hide();
+                    $("#screenshot-img").hide();
+                    $("#imgUserImage").show();
+                    $("#btnSubmitImage").hide();
+                    $(".camera").show()
+
+                }
+            });
+            $("#openFile").on("click", function () {
+
+
+                if ($("#cmbFileType").val() != "") {
+                    if ($("#cmbFileType").val() == 5) {
+
+                    }
+                    $("#file").click();
+                }
+                else {
+                    alert("ابتدا نوع فایل را مشخص کنید.");
+                }
+            });
+            $("#cmbWorkshop").on("change", function () {
+                loadRemoteSelect("#cmbWorkshopTag", "/product/getWorkshopTag", { id: $(this).val() }, "id", "value", "...", function () {
+                });
+            });
+            $("#file").on("change", function () {
+                var files = $("#file").prop("files");
+                $("#fileList").empty();
+                for (var i = 0; i < files.length; i++) {
+                    var template = $.templates("#templateFile");
+                    var htmlOutput = template.render(files[i]);
+                    $("#fileList").append(htmlOutput);
+                }
+            });
+
+            $("#btnUploadNewImage").on("click", function () {
+                $("#openFile").show();
+                $("#btnSubmitImage").hide();
+
+                $("#screenshot-img").hide()
+                $("#imgUserImage").show()
+                $(".capture-button").hide()
+                $(".camera").show()
+            });
+
+            $(".capture-button").on("click", function () {
+                $("#btnSubmitImage").hide();
+                $("#screenshot-img").hide();
+                $(".videostream").show();
+                $("#imgUserImage").hide();
+            });
+            $("video").on("click", function () {
+                $(".videostream").hide();
+                $("#imgUserImage").hide();
+                $("#screenshot-img").show();
+            });
+
+            $("#btnSubmitImage").on("click", function () {
+
+                addFile($("#cmbFileType").val(), $("#camreImageName").val());
+                $("#btnSubmitImage").hide();
+                $("#modalUploadFile").modal('hide');
+                alert("بارگذاری فایل با موفقیت انجام شد.")
+            })
+        });
+        const constraints = {
+            video: { width: { min: 800 }, height: { min: 600 } }
+
+        };
+
+        const captureVideoButton =
+            document.querySelector('#screenshot .capture-button');
+        const screenshotButton = document.querySelector('#screenshot-button');
+        const img = document.querySelector('#screenshot img');
+        const video = document.querySelector('#screenshot video');
+        const canvas = document.createElement('canvas');
+        function handleError(error) {
+        }
+        captureVideoButton.onclick = function () {
+            navigator.mediaDevices.getUserMedia(constraints).
+                then(handleSuccess).catch(handleError);
+        };
+        screenshotButton.onclick = video.onclick = function () {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            // Other browsers will fall back to image/png
+            img.src = canvas.toDataURL('image/webp');
+
+            $.post("/product/UploadCameraImage?path=Product", { base64: img.src, fileName: "image.png" }, function (response) {
+                if (response.status == 200) {
+                    $("#camreImageName").val(response.data.name);
+                    $("#btnSubmitImage").show();
+                }
+            });
+        };
+        function handleSuccess(stream) {
+            screenshotButton.disabled = false;
+            video.srcObject = stream;
+        }
+    </script>
+    <script src="~/Scripts/ProductScript.js"></script>
+    <script id="stoneTemplate" type="text/html">
+        <div class="stone-list col-xs-12 no-padding" data-order="{{order}}" style="margin-bottom: 30px;">
+            <div style="margin-bottom: 10px;">
+                <h5 class="inline-block">سنگ شماره {{order}}</h5>
+            </div>
+            <div class="row" style="margin-bottom: 10px;">
+                <input type="button" class="stone-type btn btn-default" data-order="{{order}}" value="براق" data-type="0" />
+                <input type="button" class="stone-type btn btn-default" data-order="{{order}}" value="رسوبی" data-type="1" />
+                <input type="button" class="stone-type btn btn-default" data-order="{{order}}" value="مروارید" data-type="2" />
+                <input type="button" class="stone-type btn btn-default" data-order="{{order}}" value="سنگ دستبند چرمی" data-type="4" />
+                <input type="button" class="stone-type btn btn-default" data-order="{{order}}" value="دستبند سنگی" data-type="5" />
+                <select id="cmbStoneShape{{order}}" data-order="{{order}}" class="shape form-control inline-block" style="width: 150px">
+                    <option value="0">دایره</option>
+                    <option value="1">مارکیز</option>
+                    <option value="2">اشک</option>
+                    <option value="3">مثلث</option>
+                    <option value="4">مربع</option>
+                    <option value="5">مستطیل</option>
+                    <option value="6">بیضی</option>
+                    <option value="7">سایر</option>
+                </select>
+                <select class="form-control shape-size inline-block" style="width: 150px;" data-order="{{order}}">
+                    <option value="">....</option>
+                </select>
+            </div>
+            @foreach (KiaGallery.Model.Context.Stone item in ViewBag.StoneList)
+            {
+                <div class="stone col-xs-3 col-md-2 col-lg-1 no-padding">
+                    <div class="stone-item relative" data-order="{{order}}" data-stone-id="@item.Id" data-stone-type="@((int)item.StoneType)" data-toggle="tooltip" title="@item.Name">
+                        <figure style="padding: 10px;">
+                            <img src="/image/stone/150x150/@item.FileName" class="w100" />
+                        </figure>
+                        <i class="fa fa-check-square-o stone-checkbox" aria-hidden="true"></i>
+                    </div>
+                    <div class="inline-block txt-al-c w100" style="overflow: hidden; white-space: nowrap; padding: 3px 5px;"><input type="radio" class="default-stone" name="default-{{order}}" data-order="{{order}}" value="@item.Id" disabled /></div>
+                </div>
+            }
+        </div>
+    </script>
+
+    <script id="leatherTemplate" type="text/html">
+        <div class="leather-list col-xs-12 no-padding" data-order="{{order}}">
+            <div style="margin-bottom: 10px;">
+                <h5>چرم شماره {{order}}</h5>
+                <input type="button" class="leather-type btn btn-default" data-order="{{order}}" value="لوله ای" data-type="0" />
+                <input type="button" class="leather-type btn btn-default" data-order="{{order}}" value="دوخت" data-type="1" />
+                <input type="button" class="leather-type btn btn-default" data-order="{{order}}" value="بافت" data-type="2" />
+                <input type="button" class="leather-type btn btn-default" data-order="{{order}}" value="ریلی" data-type="3" />
+                <input type="button" class="leather-type btn btn-default" data-order="{{order}}" value="مردانه" data-type="4" />
+                <input type="button" class="leather-type btn btn-default" data-order="{{order}}" value="رشته ای" data-type="5" />
+            </div>
+
+            @foreach (KiaGallery.Model.Context.Leather item in ViewBag.LeatherList)
+            {
+                <div class="leather-item col-xs-3 col-md-2 col-lg-1 relative" data-order="{{order}}" data-leather-id="@item.Id" data-leather-type="@((int)item.LeatherType)" data-toggle="tooltip" title="@item.Name">
+                    <figure style="padding: 10px;">
+                        <img src="/image/leather/150x150/@item.FileName" class="w100" />
+                    </figure>
+                    <i class="fa fa-check-square-o leather-checkbox" aria-hidden="true"></i>
+                </div>
+            }
+        </div>
+    </script>
+
+    <script id="templateFileDetail" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th class="txt-al-c">نام فایل</th>
+                    <th class="icon-col text-center">دانلود</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td class="ltr txt-al-l">
+                        <div>
+                            {{if fileName.substring(0, 3).toLowerCase() == "img"}}
+                            <span class="m-file-icon"><i class="fa fa-image"></i></span>
+                            {{/if}}
+                            {{if fileName.substring(0, 2).toLowerCase() == "dt"}}
+                            <span class="m-file-icon"><i class="fa fa-file"></i></span>
+                            {{/if}}
+                            <span class="inline-block">
+                                {{:fileName}}
+                            </span>
+                        </div>
+                    </td>
+                    <td class="txt-al-c" style="margin-right: 20px;">
+                        <a href="/marquisFile/download/file/{{:fileId}}/{{:fileName}}"><i class="fa fa-download" aria-hidden="true"></i></a>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+    </script>
+}

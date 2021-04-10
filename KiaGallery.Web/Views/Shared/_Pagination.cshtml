@@ -1,0 +1,33 @@
+﻿<ul class="pagination">
+    {{if page - 1 > 0}}
+    <li><a class="page-number v-middle" href="#" data-page="0" style="padding-top: 6px"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
+    {{/if}}
+    {{if page - 4 > 0 && page + 1 > pageCount}}
+    <li><a class="page-number" href="#" data-page="{{:page - 5}}">{{:page - 4}}</a></li>
+    {{/if}}
+    {{if page - 3 > 0 && page + 2 > pageCount}}
+    <li><a class="page-number" href="#" data-page="{{:page - 4}}">{{:page - 3}}</a></li>
+    {{/if}}
+    {{if page - 2 > 0}}
+    <li><a class="page-number" href="#" data-page="{{:page - 3}}">{{:page - 2}}</a></li>
+    {{/if}}
+    {{if page - 1 > 0}}
+    <li><a class="page-number" href="#" data-page="{{:page - 2}}">{{:page - 1}}</a></li>
+    {{/if}}
+    <li class="active"><a class="page-number" href="#">{{:page}}</a></li>
+    {{if page + 1 <= pageCount}}
+    <li><a class="page-number" href="#" data-page="{{:page}}">{{:page + 1}}</a></li>
+    {{/if}}
+    {{if page + 2 <= pageCount}}
+    <li><a class="page-number" href="#" data-page="{{:page + 1}}">{{:page + 2}}</a></li>
+    {{/if}}
+    {{if page + 3 <= pageCount && page - 2 <= 0}}
+    <li><a class="page-number" href="#" data-page="{{:page + 2}}">{{:page + 3}}</a></li>
+    {{/if}}
+    {{if page + 4 <= pageCount && page - 1 <= 0}}
+    <li><a class="page-number" href="#" data-page="{{:page + 3}}">{{:page + 4}}</a></li>
+    {{/if}}
+    {{if page + 1 <= pageCount}}
+    <li><a class="page-number v-middle" href="#" data-page="{{:pageCount - 1}}" style="padding-top: 6px"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a></li>
+    {{/if}}
+</ul>

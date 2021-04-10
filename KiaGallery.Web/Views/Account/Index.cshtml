@@ -1,0 +1,292 @@
+﻿
+@{
+    ViewBag.Title = "مدیریت کاربران";
+}
+
+<link href="~/Content/ios-switch-rtl.css" rel="stylesheet" />
+<style>
+    #deactivefilter-title {
+        margin-right: 15px;
+        font-weight: 500
+    }
+
+    #deactivefilter {
+        display: inline-block;
+    }
+</style>
+<div id="control-section">
+    <a href="/account/add" class="btn btn-primary">
+        <i class="fa fa-plus v-middle" aria-hidden="true"></i>&nbsp;
+        <span>جدید</span>
+    </a>
+
+</div>
+<div id="deactivefilter" class="pull-left">
+    <h5>فقط کاربران غیر فعال</h5>
+    <div class="filter-item"><div class="checkbox ios-switch"><label><input class="chkDeactive" type="checkbox" name="deactive" value="true" style="position:absolute"><span id="deactivefilter-title"></span></label></div></div>
+</div>
+<br />
+<div id="control-section" class="form-inline">
+    <input id="txtTerm" type="text" name="term" class="form-control" />
+    @*<select id="cmbActive" class="form-control" data-validate="required" name="active">
+        <option value="">وضعیت ...</option>
+        <option value="true">فعال</option>
+        <option value="false">غیرفعال</option>
+    </select>*@
+    <select id="cmbWorkshop" class="form-control" name="workshopId">
+        <option value="">انتخاب کارگاه</option>
+    </select>
+    <select id="cmbBranch" class="form-control" name="branchId">
+        <option value="">انتخاب شعبه</option>
+    </select>
+    <input id="btnSearch" type="button" value="جستجو" class="btn btn-primary" />
+</div>
+
+<div id="content">
+
+</div>
+
+<div id="changePasswordModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">تغییر گذرواژه</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input id="hiddenId" type="hidden" />
+                    <label>گذرواژه جدید</label>
+                    <input id="txtNewPassword" type="password" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label>تکرار گذرواژه</label>
+                    <input id="txtConfirmNewPassword" type="password" class="form-control" />
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btnChangePassword" type="button" class="btn btn-success btn-password btn-control">ثبت</button>
+                <button type="button" class="btn btn-danger btn-password btn-control" data-dismiss="modal">لغو</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script type="text/javascript">
+        $(window).on('hashchange', function () {
+            getList();
+        });
+
+        $(document).ready(function () {
+            getList();
+            loadRemoteSelect("#cmbWorkshop", "/workshop/getAll", null, "id", "name", "انتخاب کارگاه ...", function () {
+                loadRemoteSelect("#cmbBranch", "/branch/getAll", null, "id", "name", "انتخاب شعبه ...", function () {
+                    load();
+                });
+            });
+            $(document).on("click", ".delete", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                confirmMessage("آیا از حذف کاربر اطمینان دارید؟", function () {
+                    loader(true);
+                    $.post("/account/delete/" + id, function (response) {
+                        loader(false);
+                        if (response.status == 200) {
+                            callbackAlert(response.message, function () {
+                                getList();
+                            });
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    })
+                });
+            });
+            $(document).on("change", ".chkDeactive", function (event) {
+                if ($(this).prop("checked")) {
+                    var param = { deactive: true }
+                    manipulateParam(param, "page");
+                }
+                else {
+                    removeParam(["deactive", "page"]);
+                }
+            });
+
+            $(document).on("click", ".reset-password", function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-id");
+                $("#hiddenId").val(id);
+                $("#txtNewPassword").val("");
+                $("#txtConfirmNewPassword").val("");
+
+                $("#changePasswordModal").modal('show');
+            });
+
+            $("#btnChangePassword").on("click", function (event) {
+                event.preventDefault();
+                var entity = {
+                    userId: $("#hiddenId").val(),
+                    newPassword: $("#txtNewPassword").val(),
+                    confirmNewPassword: $("#txtConfirmNewPassword").val()
+                }
+
+                if (entity.newPassword && entity.newPassword.length < 6) {
+                    alert("رمز عبور باید حداقل 6 حرف باشد.")
+                    return;
+                }
+
+                if (entity.newPassword != entity.confirmNewPassword) {
+                    alert("رمز عبور و تکرار آن برابر نیست.")
+                    return;
+                }
+
+                loader(true);
+                $.post("/account/resetPassword", entity, function (response) {
+                    loader(false);
+                    if (response.status == 200) {
+                        callbackAlert(response.message, function () {
+                            $("#changePasswordModal").modal('hide');
+                        });
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+            $(document).on("click", "#btnSearch", function (event) {
+                event.preventDefault();
+                manipulateParam({ branchId: $("#cmbBranch").val(), workshopId: $("#cmbWorkshop").val(), term: $("#txtTerm").val(), active: $("#cmbActive").val() }, "page");
+            });
+
+        });
+
+        function getList() {
+            updateForm();
+
+            var defaultEntity = {
+                page: 0,
+                count: 50,
+                term: null,
+                branchId: null,
+                workshopId: null,
+                active: null
+            }
+
+            var newParams = getParam();
+            var params = $.extend(defaultEntity, newParams);
+
+            //if (params["term"]) {
+            //    $("#txtTerm").val(params["term"]);
+            //}
+
+            loader(true);
+            $.get("/account/search", params, function (response) {
+                if (response.status == 200) {
+                    var data = response.data;
+                    var template = $.templates("#template");
+                    var htmlOutput = template.render(data);
+                    $("#content").html(htmlOutput);
+                }
+                else {
+                    alert(response.message);
+                }
+                loader(false);
+            });
+        }
+
+
+        function updateForm() {
+            var params = getParam();
+            //is Deactive
+            if (params["deactive"]) {
+                $(".chkDeactive").prop("checked", true);
+            }
+            else {
+                $(".chkDeactive").prop("checked", false);
+            }
+            // term
+            if (params["term"]) {
+                $("#txtTerm").val(params["term"]);
+            }
+            else {
+                $("#txtTerm").val("");
+            }
+
+            // branch
+            if (params["branchId"]) {
+                $("#cmbBranch").val(params["branchId"]);
+            }
+            else {
+                $("#cmbBranch").val("");
+            }
+
+            // workshop
+            if (params["workshopId"]) {
+                $("#cmbWorkshop").val(params["workshopId"]);
+            }
+            else {
+                $("#cmbWorkshop").val("");
+            }
+
+            // active
+            if (params["active"]) {
+                $("#cmbActive").val(params["active"]);
+            }
+            else {
+                $("#cmbActive").val("");
+            }
+        }
+
+    </script>
+
+    <script id="template" type="text/x-jsrender">
+        <table class="table table-data table-responsive">
+            <thead>
+                <tr>
+                    <th class="hidden-xs">نام</th>
+                    <th class="hidden-xs">نام خانوادگی</th>
+                    <th>نام کاربری</th>
+                    <th class="hidden-xs">کارگاه</th>
+                    <th class="hidden-xs">شعبه</th>
+                    <th class="hidden-xs hidden-sm">وضعیت</th>
+                    <th class="icon-col text-center">گذرواژه</th>
+                    <th class="icon-col text-center">ویرایش</th>
+                    <th class="icon-col text-center">حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{for list}}
+                <tr>
+                    <td class="hidden-xs">{{:firstName}}</td>
+                    <td class="hidden-xs">{{:lastName}}</td>
+                    <td>{{:username}}</td>
+                    <td class="hidden-xs">{{:workshopName}}</td>
+                    <td class="hidden-xs">{{:branchName}}</td>
+                    <td class="hidden-xs hidden-sm">
+                        {{if active}}
+                        فعال
+                        {{else}}
+                        غیرفعال
+                        {{/if}}
+                    </td>
+                    <td class="txt-al-c">
+                        <button class="reset-password btn btn-success btn-xs" data-title="بازنشانی گذرواژه" data-id="{{:id}}"><i class="fa fa-key" aria-hidden="true"></i></button>
+                    </td>
+                    <td class="txt-al-c">
+                        <a href="/account/edit/{{:id}}" class="btn btn-primary btn-xs" data-title="ویرایش"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    </td>
+                    <td class="txt-al-c">
+                        <button class="delete btn btn-danger btn-xs" data-title="حذف" data-id="{{:id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                {{/for}}
+            </tbody>
+        </table>
+        <div class="clearfix"></div>
+        @Html.Partial("_Pagination")
+    </script>
+}
